@@ -177,3 +177,45 @@ CREATE TABLE IF NOT EXISTS ztb_yard_vehicles (
     appointments JSONB DEFAULT '[]'::jsonb,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
+
+-- 11. Entradas de Mercancía (Goods Receipts / MIGO)
+CREATE TABLE IF NOT EXISTS ztb_goods_receipts (
+    id SERIAL PRIMARY KEY,
+    gr_number VARCHAR(30) UNIQUE NOT NULL,
+    delivery_note VARCHAR(50),
+    vendor_name VARCHAR(150) NOT NULL,
+    sap_po_number VARCHAR(30) NOT NULL,
+    receipt_type VARCHAR(20) DEFAULT 'PO',
+    status VARCHAR(20) DEFAULT 'PENDING',
+    warehouse_id VARCHAR(20) DEFAULT 'WH001',
+    items JSONB DEFAULT '[]'::jsonb,
+    created_at VARCHAR(30),
+    created_timestamp TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+
+-- 12. Salidas de Mercancía (Goods Issues / VL02N)
+CREATE TABLE IF NOT EXISTS ztb_goods_issues (
+    id SERIAL PRIMARY KEY,
+    gi_number VARCHAR(30) UNIQUE NOT NULL,
+    customer_name VARCHAR(150) NOT NULL,
+    sap_so_number VARCHAR(30) NOT NULL,
+    delivery_number VARCHAR(50) NOT NULL,
+    picking_strategy VARCHAR(20) DEFAULT 'FEFO',
+    status VARCHAR(20) DEFAULT 'IN_PICKING',
+    warehouse_id VARCHAR(20) DEFAULT 'WH001',
+    items JSONB DEFAULT '[]'::jsonb,
+    created_at VARCHAR(30),
+    created_timestamp TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+
+-- 13. Toma de Inventario Físico (Inventory Counts / LI01N / LI20)
+CREATE TABLE IF NOT EXISTS ztb_inventory_counts (
+    id SERIAL PRIMARY KEY,
+    count_number VARCHAR(30) UNIQUE NOT NULL,
+    status VARCHAR(20) DEFAULT 'ACTIVE',
+    bins_total INTEGER DEFAULT 0,
+    bins_counted INTEGER DEFAULT 0,
+    warehouse_id VARCHAR(20) DEFAULT 'WH001',
+    created_at VARCHAR(30),
+    created_timestamp TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);

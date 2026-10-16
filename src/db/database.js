@@ -46,6 +46,9 @@ let inMemoryState = {
   materials: seedData.materials,
   stock: seedData.stock,
   transferOrders: seedData.transfer_orders,
+  goodsReceipts: seedData.goods_receipts || [],
+  goodsIssues: seedData.goods_issues || [],
+  inventoryCounts: seedData.inventory_counts || [],
   whSedes: seedData.wh_sedes,
   yardLocations: seedData.yard_locations,
   yardVehicles: seedData.yard_vehicles,
@@ -133,14 +136,10 @@ async function autoMigrateAndSeed() {
       console.log('[DB] ✅ Tablas maestras verificadas / creadas (ZTB_*).');
     }
 
-    // Verificar si las tablas maestras necesitan seed
-    const checkSedes = await pool.query('SELECT COUNT(*) FROM ztb_wh_sede');
-    const checkFue = await pool.query('SELECT COUNT(*) FROM ztb_fue_users');
-    if (parseInt(checkSedes.rows[0].count, 10) === 0 || parseInt(checkFue.rows[0].count, 10) === 0) {
-      console.log('[DB] 📥 Insertando registros demo en tablas vacías...');
-      await seedAllTables();
-      console.log('[DB] ✨ Registros demo sincronizados exitosamente.');
-    }
+    // Sincronizar registros enriquecidos de forma idempotente
+    console.log('[DB] 📥 Sincronizando registros demo enriquecidos en tablas...');
+    await seedAllTables();
+    console.log('[DB] ✨ Registros demo sincronizados exitosamente.');
 
     // Actualizar conteos de tablas
     await refreshTableCounts();
@@ -187,66 +186,149 @@ async function seedAllTables() {
   }
 
   // 3. Tipos de Almacenamiento
-  for (const st of seedData.storage_types) {
-    await pool.query(`
-      INSERT INTO ztb_storage_types (type_code, description, sections)
-      VALUES ($1, $2, $3)
-    `, [st.type_code, st.description, JSON.stringify(st.sections)]);
+  const countStorageTypes = await pool.query('SELECT COUNT(*) FROM ztb_storage_types');
+  if (parseInt(countStorageTypes.rows[0].count, 10) === 0) {
+    for (const st of seedData.storage_types) {
+      await pool.query(`
+        INSERT INTO ztb_storage_types (type_code, description, sections)
+        VALUES ($1, $2, $3)
+      `, [st.type_code, st.description, JSON.stringify(st.sections)]);
+    }
   }
 
   // 4. Bins
   for (const b of seedData.bins) {
-    await pool.query(`
-      INSERT INTO ztb_bins (id, bin_code, bin_type, storage_type_id, storage_section_id, max_weight, max_volume, status, has_stock, stock_qty, warehouse_id)
-      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
-      ON CONFLICT (id) DO NOTHING
-    `, [b.id, b.bin_code, b.bin_type, b.storage_type_id, b.storage_section_id, b.max_weight, b.max_volume, b.status, b.has_stock, b.stock_qty, b.warehouse_id]);
+    try {
+      await pool.query(`
+        INSERT INTO ztb_bins (id, bin_code, bin_type, storage_type_id, storage_section_id, max_weight, max_volume, status, has_stock, stock_qty, warehouse_id)
+        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
+        ON CONFLICT (bin_code) DO UPDATE SET
+          status = EXCLUDED.status,
+          has_stock = EXCLUDED.has_stock,
+          stock_qty = EXCLUDED.stock_qty
+      `, [b.id, b.bin_code, b.bin_type, b.storage_type_id, b.storage_section_id, b.max_weight, b.max_volume, b.status, b.has_stock, b.stock_qty, b.warehouse_id]);
+    } catch (e) {
+      // fallback ignore
+    }
   }
 
   // 5. Materiales
   for (const m of seedData.materials) {
-    await pool.query(`
-      INSERT INTO ztb_materials (id, sap_code, description, type, base_unit, stock_total, batch_managed)
-      VALUES ($1, $2, $3, $4, $5, $6, $7)
-      ON CONFLICT (id) DO NOTHING
-    `, [m.id, m.sap_code, m.description, m.type, m.base_unit, m.stock_total, m.batch_managed]);
+    try {
+      await pool.query(`
+        INSERT INTO ztb_materials (id, sap_code, description, type, base_unit, stock_total, batch_managed)
+        VALUES ($1, $2, $3, $4, $5, $6, $7)
+        ON CONFLICT (sap_code) DO UPDATE SET
+          description = EXCLUDED.description,
+          stock_total = EXCLUDED.stock_total
+      `, [m.id, m.sap_code, m.description, m.type, m.base_unit, m.stock_total, m.batch_managed]);
+    } catch (e) {
+      // fallback ignore
+    }
   }
 
   // 6. Stock
   for (const st of seedData.stock) {
-    await pool.query(`
-      INSERT INTO ztb_stock (bin_code, sap_code, description, batch_number, qty, unit, status, expiry_date)
-      VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
-    `, [st.bin_code, st.sap_code, st.description, st.batch_number, st.qty, st.unit, st.status, st.expiry_date]);
+    try {
+      const existing = await pool.query('SELECT id FROM ztb_stock WHERE bin_code = $1 AND sap_code = $2 LIMIT 1', [st.bin_code, st.sap_code]);
+      if (existing.rows.length === 0) {
+        await pool.query(`
+          INSERT INTO ztb_stock (bin_code, sap_code, description, batch_number, qty, unit, status, expiry_date)
+          VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+        `, [st.bin_code, st.sap_code, st.description, st.batch_number, st.qty, st.unit, st.status, st.expiry_date]);
+      }
+    } catch (e) {
+      // fallback ignore
+    }
   }
 
   // 7. Transfer Orders
   for (const to of seedData.transfer_orders) {
-    await pool.query(`
-      INSERT INTO ztb_transfer_orders (to_number, to_type, from_bin, to_bin, material_code, material_desc, planned_qty, unit, status, created_at)
-      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
-      ON CONFLICT (to_number) DO NOTHING
-    `, [to.to_number, to.to_type, to.from_bin, to.to_bin, to.material_code, to.material_desc, to.planned_qty, to.unit, to.status, to.created_at]);
+    try {
+      await pool.query(`
+        INSERT INTO ztb_transfer_orders (to_number, to_type, from_bin, to_bin, material_code, material_desc, planned_qty, unit, status, created_at)
+        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
+        ON CONFLICT (to_number) DO NOTHING
+      `, [to.to_number, to.to_type, to.from_bin, to.to_bin, to.material_code, to.material_desc, to.planned_qty, to.unit, to.status, to.created_at]);
+    } catch (e) {
+      // fallback ignore
+    }
   }
 
   // 8. Yard Locations
   for (const yl of seedData.yard_locations) {
-    await pool.query(`
-      INSERT INTO ztb_yard_locations (code, description, status, type, current_vehicle)
-      VALUES ($1, $2, $3, $4, $5)
-      ON CONFLICT (code) DO NOTHING
-    `, [yl.code, yl.description, yl.status, yl.type, JSON.stringify(yl.current_vehicle)]);
+    try {
+      await pool.query(`
+        INSERT INTO ztb_yard_locations (code, description, status, type, current_vehicle)
+        VALUES ($1, $2, $3, $4, $5)
+        ON CONFLICT (code) DO NOTHING
+      `, [yl.code, yl.description, yl.status, yl.type, JSON.stringify(yl.current_vehicle)]);
+    } catch (e) {
+      // fallback ignore
+    }
   }
 
   // 9. Yard Vehicles
-  for (const yv of seedData.yard_vehicles) {
-    await pool.query(`
-      INSERT INTO ztb_yard_vehicles (license_plate, carrier, status, appointments)
-      VALUES ($1, $2, $3, $4)
-    `, [yv.license_plate, yv.carrier, yv.status, JSON.stringify(yv.appointments)]);
+  try {
+    const countYardVeh = await pool.query('SELECT COUNT(*) FROM ztb_yard_vehicles');
+    if (parseInt(countYardVeh.rows[0].count, 10) === 0) {
+      for (const yv of seedData.yard_vehicles) {
+        await pool.query(`
+          INSERT INTO ztb_yard_vehicles (license_plate, carrier, status, appointments)
+          VALUES ($1, $2, $3, $4)
+        `, [yv.license_plate, yv.carrier, yv.status, JSON.stringify(yv.appointments)]);
+      }
+    }
+  } catch (e) {
+    // fallback ignore
   }
 
-  // 10. FUE Users
+  // 10. Goods Receipts
+  if (seedData.goods_receipts) {
+    for (const gr of seedData.goods_receipts) {
+      try {
+        await pool.query(`
+          INSERT INTO ztb_goods_receipts (gr_number, delivery_note, vendor_name, sap_po_number, receipt_type, status, warehouse_id, items, created_at)
+          VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
+          ON CONFLICT (gr_number) DO NOTHING
+        `, [gr.gr_number, gr.delivery_note, gr.vendor_name, gr.sap_po_number, gr.receipt_type || 'PO', gr.status || 'PENDING', gr.warehouse_id || 'WH001', JSON.stringify(gr.items || []), gr.created_at]);
+      } catch (e) {
+        // fallback ignore
+      }
+    }
+  }
+
+  // 11. Goods Issues
+  if (seedData.goods_issues) {
+    for (const gi of seedData.goods_issues) {
+      try {
+        await pool.query(`
+          INSERT INTO ztb_goods_issues (gi_number, customer_name, sap_so_number, delivery_number, picking_strategy, status, warehouse_id, items, created_at)
+          VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
+          ON CONFLICT (gi_number) DO NOTHING
+        `, [gi.gi_number, gi.customer_name, gi.sap_so_number, gi.delivery_number, gi.picking_strategy || 'FEFO', gi.status || 'IN_PICKING', gi.warehouse_id || 'WH001', JSON.stringify(gi.items || []), gi.created_at]);
+      } catch (e) {
+        // fallback ignore
+      }
+    }
+  }
+
+  // 12. Inventory Counts
+  if (seedData.inventory_counts) {
+    for (const ic of seedData.inventory_counts) {
+      try {
+        await pool.query(`
+          INSERT INTO ztb_inventory_counts (count_number, status, bins_total, bins_counted, warehouse_id, created_at)
+          VALUES ($1, $2, $3, $4, $5, $6)
+          ON CONFLICT (count_number) DO NOTHING
+        `, [ic.count_number, ic.status || 'ACTIVE', ic.bins_total || 0, ic.bins_counted || 0, ic.warehouse_id || 'WH001', ic.created_at]);
+      } catch (e) {
+        // fallback ignore
+      }
+    }
+  }
+
+  // 13. FUE Users
   if (Array.isArray(SAPMockData.INITIAL_USERS)) {
     for (const u of SAPMockData.INITIAL_USERS) {
       const userId = String(u.id || u.Usuarios);
@@ -272,11 +354,19 @@ async function seedAllTables() {
 async function refreshTableCounts() {
   if (!pool || !isConnected) return;
   try {
-    const tables = ['ztb_wh_sede', 'ztb_warehouses', 'ztb_bins', 'ztb_materials', 'ztb_stock', 'ztb_transfer_orders', 'ztb_yard_locations', 'ztb_fue_users'];
+    const tables = [
+      'ztb_wh_sede', 'ztb_warehouses', 'ztb_bins', 'ztb_materials', 'ztb_stock',
+      'ztb_transfer_orders', 'ztb_yard_locations', 'ztb_goods_receipts',
+      'ztb_goods_issues', 'ztb_inventory_counts', 'ztb_fue_users'
+    ];
     const counts = {};
     for (const t of tables) {
-      const res = await pool.query(`SELECT COUNT(*) FROM ${t}`);
-      counts[t] = parseInt(res.rows[0].count, 10);
+      try {
+        const res = await pool.query(`SELECT COUNT(*) FROM ${t}`);
+        counts[t] = parseInt(res.rows[0].count, 10);
+      } catch (e) {
+        counts[t] = 0;
+      }
     }
     dbInfo.tableCounts = counts;
   } catch (e) {
@@ -405,6 +495,171 @@ async function getTransferOrders() {
     }));
   }
   return inMemoryState.transferOrders;
+}
+
+async function updateTransferOrderStatus(id, status) {
+  if (pool && isConnected) {
+    await pool.query(`UPDATE ztb_transfer_orders SET status = $1 WHERE id = $2 OR to_number = $2`, [status, id]);
+  }
+  const to = inMemoryState.transferOrders.find(t => String(t.id) === String(id) || t.to_number === id);
+  if (to) to.status = status;
+  return true;
+}
+
+// --- GOODS RECEIPTS (MIGO / Entrada de Mercancías) ---
+async function getGoodsReceipts() {
+  if (pool && isConnected) {
+    const res = await pool.query('SELECT * FROM ztb_goods_receipts ORDER BY id DESC');
+    return res.rows.map(r => ({
+      id: String(r.id),
+      gr_number: r.gr_number,
+      delivery_note: r.delivery_note,
+      vendor_name: r.vendor_name,
+      sap_po_number: r.sap_po_number,
+      receipt_type: r.receipt_type,
+      status: r.status,
+      warehouse_id: r.warehouse_id,
+      items: r.items,
+      created_at: r.created_at
+    }));
+  }
+  return inMemoryState.goodsReceipts;
+}
+
+async function createGoodsReceipt(data) {
+  const grNumber = data.gr_number || `GR-2026-${String(Date.now()).slice(-4)}`;
+  const dateStr = data.created_at || new Date().toISOString().split('T')[0];
+  const item = {
+    id: String(Date.now()),
+    gr_number: grNumber,
+    delivery_note: data.delivery_note || `DN-${grNumber}`,
+    vendor_name: data.vendor_name || 'Proveedor SAP Homologado',
+    sap_po_number: data.sap_po_number || '450009999',
+    receipt_type: data.receipt_type || 'PO',
+    status: data.status || 'PENDING',
+    warehouse_id: data.warehouse_id || 'WH001',
+    items: data.items || [],
+    created_at: dateStr
+  };
+  inMemoryState.goodsReceipts.unshift(item);
+
+  if (pool && isConnected) {
+    const res = await pool.query(`
+      INSERT INTO ztb_goods_receipts (gr_number, delivery_note, vendor_name, sap_po_number, receipt_type, status, warehouse_id, items, created_at)
+      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
+      RETURNING id
+    `, [item.gr_number, item.delivery_note, item.vendor_name, item.sap_po_number, item.receipt_type, item.status, item.warehouse_id, JSON.stringify(item.items), item.created_at]);
+    item.id = String(res.rows[0].id);
+  }
+  return item;
+}
+
+async function confirmGoodsReceipt(id) {
+  if (pool && isConnected) {
+    await pool.query(`UPDATE ztb_goods_receipts SET status = 'CONFIRMED' WHERE id = $1 OR gr_number = $1`, [id]);
+  }
+  const found = inMemoryState.goodsReceipts.find(g => String(g.id) === String(id) || g.gr_number === id);
+  if (found) found.status = 'CONFIRMED';
+  return true;
+}
+
+// --- GOODS ISSUES (VL02N / Salida de Mercancías) ---
+async function getGoodsIssues() {
+  if (pool && isConnected) {
+    const res = await pool.query('SELECT * FROM ztb_goods_issues ORDER BY id DESC');
+    return res.rows.map(r => ({
+      id: String(r.id),
+      gi_number: r.gi_number,
+      customer_name: r.customer_name,
+      sap_so_number: r.sap_so_number,
+      delivery_number: r.delivery_number,
+      picking_strategy: r.picking_strategy,
+      status: r.status,
+      warehouse_id: r.warehouse_id,
+      items: r.items,
+      created_at: r.created_at
+    }));
+  }
+  return inMemoryState.goodsIssues;
+}
+
+async function createGoodsIssue(data) {
+  const giNumber = data.gi_number || `GI-2026-${String(Date.now()).slice(-4)}`;
+  const dateStr = data.created_at || new Date().toISOString().split('T')[0];
+  const item = {
+    id: String(Date.now()),
+    gi_number: giNumber,
+    customer_name: data.customer_name || 'Cliente Corporativo',
+    sap_so_number: data.sap_so_number || '80009999',
+    delivery_number: data.delivery_number || `DEL-${giNumber}`,
+    picking_strategy: data.picking_strategy || 'FEFO',
+    status: data.status || 'IN_PICKING',
+    warehouse_id: data.warehouse_id || 'WH001',
+    items: data.items || [],
+    created_at: dateStr
+  };
+  inMemoryState.goodsIssues.unshift(item);
+
+  if (pool && isConnected) {
+    const res = await pool.query(`
+      INSERT INTO ztb_goods_issues (gi_number, customer_name, sap_so_number, delivery_number, picking_strategy, status, warehouse_id, items, created_at)
+      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
+      RETURNING id
+    `, [item.gi_number, item.customer_name, item.sap_so_number, item.delivery_number, item.picking_strategy, item.status, item.warehouse_id, JSON.stringify(item.items), item.created_at]);
+    item.id = String(res.rows[0].id);
+  }
+  return item;
+}
+
+async function confirmGoodsIssue(id) {
+  if (pool && isConnected) {
+    await pool.query(`UPDATE ztb_goods_issues SET status = 'DISPATCHED' WHERE id = $1 OR gi_number = $1`, [id]);
+  }
+  const found = inMemoryState.goodsIssues.find(g => String(g.id) === String(id) || g.gi_number === id);
+  if (found) found.status = 'DISPATCHED';
+  return true;
+}
+
+// --- INVENTORY COUNTS (LI01N, LI11N, LI20) ---
+async function getInventoryCounts() {
+  if (pool && isConnected) {
+    const res = await pool.query('SELECT * FROM ztb_inventory_counts ORDER BY id DESC');
+    return res.rows.map(r => ({
+      id: String(r.id),
+      count_number: r.count_number,
+      status: r.status,
+      bins_total: r.bins_total,
+      bins_counted: r.bins_counted,
+      warehouse_id: r.warehouse_id,
+      created_at: r.created_at
+    }));
+  }
+  return inMemoryState.inventoryCounts;
+}
+
+async function createInventoryCount(data) {
+  const countNumber = data.count_number || `INV-2026-${String(Date.now()).slice(-3)}`;
+  const dateStr = data.created_at || new Date().toISOString().split('T')[0];
+  const item = {
+    id: String(Date.now()),
+    count_number: countNumber,
+    status: data.status || 'ACTIVE',
+    bins_total: data.bins_total || 20,
+    bins_counted: data.bins_counted || 0,
+    warehouse_id: data.warehouse_id || 'WH001',
+    created_at: dateStr
+  };
+  inMemoryState.inventoryCounts.unshift(item);
+
+  if (pool && isConnected) {
+    const res = await pool.query(`
+      INSERT INTO ztb_inventory_counts (count_number, status, bins_total, bins_counted, warehouse_id, created_at)
+      VALUES ($1, $2, $3, $4, $5, $6)
+      RETURNING id
+    `, [item.count_number, item.status, item.bins_total, item.bins_counted, item.warehouse_id, item.created_at]);
+    item.id = String(res.rows[0].id);
+  }
+  return item;
 }
 
 async function getKpiAlmacenesSedes() {
@@ -545,6 +800,15 @@ module.exports = {
   getMaterials,
   getStock,
   getTransferOrders,
+  updateTransferOrderStatus,
+  getGoodsReceipts,
+  createGoodsReceipt,
+  confirmGoodsReceipt,
+  getGoodsIssues,
+  createGoodsIssue,
+  confirmGoodsIssue,
+  getInventoryCounts,
+  createInventoryCount,
   getKpiAlmacenesSedes,
   getYardData,
   getFueData,

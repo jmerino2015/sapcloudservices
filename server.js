@@ -38,6 +38,20 @@ const MIME_TYPES = {
   '.ttf': 'font/ttf'
 };
 
+function readJsonBody(req) {
+  return new Promise((resolve) => {
+    let body = '';
+    req.on('data', chunk => { body += chunk; });
+    req.on('end', () => {
+      try {
+        resolve(body ? JSON.parse(body) : {});
+      } catch (e) {
+        resolve({});
+      }
+    });
+  });
+}
+
 const server = http.createServer(async (req, res) => {
   let reqUrl = decodeURIComponent(req.url.split('?')[0]);
 
@@ -164,31 +178,71 @@ const server = http.createServer(async (req, res) => {
     }
 
     if (reqUrl.includes('/kpis')) {
+      const stockList = await db.getStock();
+      const toList = await db.getTransferOrders();
+      const grList = await db.getGoodsReceipts();
+      const giList = await db.getGoodsIssues();
+      const openTOs = toList.filter(t => t.status === 'OPEN' || t.status === 'IN_PROGRESS').length;
+      const totalStock = stockList.reduce((acc, s) => acc + (s.qty || 0), 0);
       return res.end(JSON.stringify({
         success: true,
-        data: { totalStock: 1450, occupancyPct: 78, openTOs: 14, expiringBatches: 3, grToday: 12, giToday: 8 }
+        data: {
+          totalStock: Math.round(totalStock),
+          occupancyPct: 78.4,
+          openTOs: openTOs || 14,
+          expiringBatches: 3,
+          grToday: grList.length,
+          giToday: giList.length
+        }
       }));
     }
 
     if (reqUrl.includes('/to-performance')) {
+      const toList = await db.getTransferOrders();
+      const openCount = toList.filter(t => t.status === 'OPEN' || t.status === 'IN_PROGRESS').length;
+      const confCount = toList.filter(t => t.status === 'CONFIRMED').length;
       return res.end(JSON.stringify({
         success: true,
-        data: { open: 14, confirmedToday: 48, cancelledToday: 1, total: 63 }
+        data: { open: openCount, confirmedToday: confCount, cancelledToday: 1, total: toList.length }
       }));
     }
 
     if (reqUrl.includes('/stock-alerts')) {
+      const stockList = await db.getStock();
+      const expiring = stockList
+        .filter(s => s.expiry_date && s.expiry_date !== '—')
+        .map(s => ({
+          batch: s.batch_number,
+          material: s.description,
+          expiresAt: s.expiry_date,
+          qty: s.qty
+        }));
       return res.end(JSON.stringify({
         success: true,
-        expiringBatches: [
+        expiringBatches: expiring.length ? expiring : [
           { batch: 'BT202601', material: 'Cable UTP Cat6 305m', expiresAt: '2026-10-15', qty: 50 },
-          { batch: 'BT202602', material: 'Fibra Óptica 12H Multi-Modo', expiresAt: '2026-10-20', qty: 30 },
-          { batch: 'BT202603', material: 'Conector RJ45 Amphenol', expiresAt: '2026-10-30', qty: 200 }
+          { batch: 'BT202605', material: 'UPS 1500VA APC', expiresAt: '2026-11-20', qty: 12 }
         ]
       }));
     }
 
     if (reqUrl.startsWith('/api/transfer-orders')) {
+      if (req.method === 'POST') {
+        const parts = reqUrl.split('/');
+        // format: /api/transfer-orders/:id/start or /confirm or /cancel
+        const action = parts[parts.length - 1];
+        const id = parts[parts.length - 2];
+        if (action === 'start') {
+          await db.updateTransferOrderStatus(id, 'IN_PROGRESS');
+          return res.end(JSON.stringify({ success: true, message: 'OT iniciada' }));
+        } else if (action === 'confirm') {
+          await db.updateTransferOrderStatus(id, 'CONFIRMED');
+          return res.end(JSON.stringify({ success: true, message: 'OT confirmada' }));
+        } else if (action === 'cancel') {
+          await db.updateTransferOrderStatus(id, 'CANCELLED');
+          return res.end(JSON.stringify({ success: true, message: 'OT cancelada' }));
+        }
+      }
       const data = await db.getTransferOrders();
       return res.end(JSON.stringify({
         success: true,
@@ -216,38 +270,56 @@ const server = http.createServer(async (req, res) => {
     }
 
     if (reqUrl.startsWith('/api/gr')) {
+      if (req.method === 'POST') {
+        if (reqUrl.includes('/confirm')) {
+          const parts = reqUrl.split('/');
+          const id = parts[parts.length - 2];
+          await db.confirmGoodsReceipt(id);
+          return res.end(JSON.stringify({ success: true, message: 'Entrada confirmada' }));
+        }
+        const body = await readJsonBody(req);
+        const created = await db.createGoodsReceipt(body);
+        return res.end(JSON.stringify({ success: true, data: created }));
+      }
+      const data = await db.getGoodsReceipts();
       return res.end(JSON.stringify({
         success: true,
-        total: 3,
-        data: [
-          { id: '1', gr_number: 'GR-2026-001', vendor_name: 'Cisco Systems Peru S.A.C.', sap_po_number: '450009812', delivery_note: 'GR-99201', receipt_type: 'PO', status: 'CONFIRMED', created_at: '2026-09-27' },
-          { id: '2', gr_number: 'GR-2026-002', vendor_name: 'Panduit Latin America', sap_po_number: '450009815', delivery_note: 'GR-99205', receipt_type: 'PO', status: 'PENDING', created_at: '2026-09-27' },
-          { id: '3', gr_number: 'GR-2026-003', vendor_name: 'Schneider Electric Peru', sap_po_number: '450009820', delivery_note: 'GR-99210', receipt_type: 'PO', status: 'CONFIRMED', created_at: '2026-09-26' }
-        ]
+        total: data.length,
+        data
       }));
     }
 
     if (reqUrl.startsWith('/api/gi')) {
+      if (req.method === 'POST') {
+        if (reqUrl.includes('/confirm')) {
+          const parts = reqUrl.split('/');
+          const id = parts[parts.length - 2];
+          await db.confirmGoodsIssue(id);
+          return res.end(JSON.stringify({ success: true, message: 'Salida despachada' }));
+        }
+        const body = await readJsonBody(req);
+        const created = await db.createGoodsIssue(body);
+        return res.end(JSON.stringify({ success: true, data: created }));
+      }
+      const data = await db.getGoodsIssues();
       return res.end(JSON.stringify({
         success: true,
-        total: 3,
-        data: [
-          { id: '1', gi_number: 'GI-2026-001', customer_name: 'Banco de Crédito del Perú (BCP)', sap_so_number: '80004512', delivery_number: 'DEL-8000123', picking_strategy: 'FEFO', status: 'DISPATCHED', created_at: '2026-09-27' },
-          { id: '2', gi_number: 'GI-2026-002', customer_name: 'Interbank Telecomunicaciones', sap_so_number: '80004518', delivery_number: 'DEL-8000129', picking_strategy: 'FIFO', status: 'IN_PICKING', created_at: '2026-09-27' },
-          { id: '3', gi_number: 'GI-2026-003', customer_name: 'Minera Las Bambas S.A.', sap_so_number: '80004525', delivery_number: 'DEL-8000135', picking_strategy: 'FEFO', status: 'DISPATCHED', created_at: '2026-09-26' }
-        ]
+        total: data.length,
+        data
       }));
     }
 
     if (reqUrl.startsWith('/api/inventory-counts')) {
+      if (req.method === 'POST') {
+        const body = await readJsonBody(req);
+        const created = await db.createInventoryCount(body);
+        return res.end(JSON.stringify({ success: true, data: created }));
+      }
+      const data = await db.getInventoryCounts();
       return res.end(JSON.stringify({
         success: true,
-        total: 3,
-        data: [
-          { id: '1', count_number: 'INV-2026-001', status: 'ACTIVE', bins_total: 25, bins_counted: 18, warehouse_id: 'WH001', created_at: '2026-09-27' },
-          { id: '2', count_number: 'INV-2026-002', status: 'PLANNED', bins_total: 10, bins_counted: 0, warehouse_id: 'WH001', created_at: '2026-09-27' },
-          { id: '3', count_number: 'INV-2026-003', status: 'COUNTED', bins_total: 15, bins_counted: 15, warehouse_id: 'WH001', created_at: '2026-09-25' }
-        ]
+        total: data.length,
+        data
       }));
     }
 

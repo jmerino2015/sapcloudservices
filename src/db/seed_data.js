@@ -1,39 +1,27 @@
 /**
  * Dataset maestro de inicialización para la base de datos pública del Portal SAP Fiori
+ * Enriquecido con registros completos para WMS, MM, SD y Torre de Control
  */
 
 module.exports = {
   users: [
-    {
-      username: 'admin',
-      password_hash: 'admin',
-      full_name: 'Administrador SAP WM',
-      email: 'admin@fiori-portal.com',
-      role: 'admin',
-      initials: 'AD',
-      status: 'ACTIVE',
-      warehouses: ['WH001', 'WH002']
-    },
-    {
-      username: 'operator1',
-      password_hash: 'operator1',
-      full_name: 'Operador Zebra RF 01',
-      email: 'rf1@fiori-portal.com',
-      role: 'operator',
-      initials: 'RF',
-      status: 'ACTIVE',
-      warehouses: ['WH001']
-    }
+    { username: 'admin', password_hash: 'admin', full_name: 'Administrador SAP WM', email: 'admin@fiori-portal.com', role: 'admin', initials: 'AD', status: 'ACTIVE', warehouses: ['WH001', 'WH002', 'WH003', 'WH004'] },
+    { username: 'operator1', password_hash: 'operator1', full_name: 'Operador Zebra RF 01', email: 'rf1@fiori-portal.com', role: 'operator', initials: 'RF', status: 'ACTIVE', warehouses: ['WH001'] },
+    { username: 'supervisor', password_hash: 'super123', full_name: 'Supervisor de Patio y Despacho', email: 'super@fiori-portal.com', role: 'supervisor', initials: 'SP', status: 'ACTIVE', warehouses: ['WH001', 'WH002'] }
   ],
 
   warehouses: [
-    { id: 'WH001', code: 'WH001', name: 'Almacén Principal Central', location: 'Zona Industrial Norte (Callao)', status: 'ACTIVE', total_bins: 1450, occupied_bins: 1131, occupancy_pct: 78.00 },
-    { id: 'WH002', code: 'WH002', name: 'Almacén Secundario Sur', location: 'Zona Industrial Sur (Lurín)', status: 'ACTIVE', total_bins: 480, occupied_bins: 201, occupancy_pct: 42.00 }
+    { id: 'WH001', code: 'WH001', name: 'Almacén Principal Central (BCT)', location: 'Zona Industrial Norte (Callao / Puerto)', status: 'ACTIVE', total_bins: 1450, occupied_bins: 1131, occupancy_pct: 78.00 },
+    { id: 'WH002', code: 'WH002', name: 'Centro de Distribución Sur (Lurín)', location: 'Parque Industrial Praderas (Lurín Sur)', status: 'ACTIVE', total_bins: 480, occupied_bins: 201, occupancy_pct: 42.00 },
+    { id: 'WH003', code: 'WH003', name: 'Centro de Distribución Este (Ate)', location: 'Av. Nicolás Ayllón / Eucaliptos (Lima Este)', status: 'ACTIVE', total_bins: 820, occupied_bins: 725, occupancy_pct: 88.40 },
+    { id: 'WH004', code: 'WH004', name: 'Centro Logístico Regional Arequipa', location: 'Parque Industrial Río Seco (Cerro Colorado)', status: 'ACTIVE', total_bins: 650, occupied_bins: 488, occupancy_pct: 75.10 }
   ],
 
   storage_types: [
-    { type_code: '001', description: 'Almacenamiento en Racks High-Bay', sections: [{ id: 10, section_code: 'SEC-A' }, { id: 11, section_code: 'SEC-B' }] },
-    { type_code: '002', description: 'Zona de Picking Ágil', sections: [{ id: 20, section_code: 'PICK-01' }] },
+    { type_code: '001', description: 'Almacenamiento en Racks High-Bay', sections: [{ id: 10, section_code: 'SEC-A' }, { id: 11, section_code: 'SEC-B' }, { id: 12, section_code: 'SEC-C' }] },
+    { type_code: '002', description: 'Zona de Picking Ágil & Ergonomía', sections: [{ id: 20, section_code: 'PICK-01' }, { id: 21, section_code: 'PICK-02' }] },
+    { type_code: '003', description: 'Cámara Fría Climatizada (15°C a 25°C)', sections: [{ id: 30, section_code: 'COLD-01' }] },
+    { type_code: '004', description: 'Zona de Carga Pesada & Voluminosos', sections: [{ id: 40, section_code: 'HEAVY-01' }] },
     { type_code: '999', description: 'Bin Virtual Diferencias de Inventario', sections: [{ id: 99, section_code: 'DIFF-01' }] }
   ],
 
@@ -41,36 +29,147 @@ module.exports = {
     { id: 'BIN01', bin_code: 'A-01-01-01', bin_type: 'STANDARD', storage_type_id: 1, storage_section_id: 10, max_weight: 1000, max_volume: 5.5, status: 'ACTIVE', has_stock: true, stock_qty: 25, warehouse_id: 'WH001' },
     { id: 'BIN02', bin_code: 'A-01-01-02', bin_type: 'STANDARD', storage_type_id: 1, storage_section_id: 10, max_weight: 1000, max_volume: 5.5, status: 'ACTIVE', has_stock: true, stock_qty: 8, warehouse_id: 'WH001' },
     { id: 'BIN03', bin_code: 'A-01-02-01', bin_type: 'HEAVY', storage_type_id: 1, storage_section_id: 10, max_weight: 2500, max_volume: 12.0, status: 'ACTIVE', has_stock: true, stock_qty: 3, warehouse_id: 'WH001' },
-    { id: 'BIN04', bin_code: 'B-02-01-01', bin_type: 'PICKING', storage_type_id: 2, storage_section_id: 20, max_weight: 500, max_volume: 2.0, status: 'ACTIVE', has_stock: true, stock_qty: 40, warehouse_id: 'WH001' },
-    { id: 'BIN05', bin_code: 'B-02-02-01', bin_type: 'COLD', storage_type_id: 2, storage_section_id: 20, max_weight: 800, max_volume: 3.5, status: 'ACTIVE', has_stock: true, stock_qty: 2, warehouse_id: 'WH001' },
-    { id: 'BIN06', bin_code: 'C-03-01-01', bin_type: 'STANDARD', storage_type_id: 1, storage_section_id: 11, max_weight: 1000, max_volume: 5.5, status: 'ACTIVE', has_stock: false, stock_qty: 0, warehouse_id: 'WH001' },
-    { id: 'BIN07', bin_code: 'GR-RECEPCION', bin_type: 'STAGING', storage_type_id: 1, storage_section_id: 10, max_weight: 5000, max_volume: 50.0, status: 'ACTIVE', has_stock: true, stock_qty: 15, warehouse_id: 'WH001' },
-    { id: 'BIN08', bin_code: 'GI-EXPEDICION', bin_type: 'STAGING', storage_type_id: 2, storage_section_id: 20, max_weight: 5000, max_volume: 50.0, status: 'ACTIVE', has_stock: true, stock_qty: 10, warehouse_id: 'WH001' }
+    { id: 'BIN04', bin_code: 'A-01-02-02', bin_type: 'HEAVY', storage_type_id: 1, storage_section_id: 10, max_weight: 2500, max_volume: 12.0, status: 'ACTIVE', has_stock: true, stock_qty: 6, warehouse_id: 'WH001' },
+    { id: 'BIN05', bin_code: 'B-02-01-01', bin_type: 'PICKING', storage_type_id: 2, storage_section_id: 20, max_weight: 500, max_volume: 2.0, status: 'ACTIVE', has_stock: true, stock_qty: 40, warehouse_id: 'WH001' },
+    { id: 'BIN06', bin_code: 'B-02-01-02', bin_type: 'PICKING', storage_type_id: 2, storage_section_id: 20, max_weight: 500, max_volume: 2.0, status: 'ACTIVE', has_stock: true, stock_qty: 85, warehouse_id: 'WH001' },
+    { id: 'BIN07', bin_code: 'B-02-02-01', bin_type: 'COLD', storage_type_id: 3, storage_section_id: 30, max_weight: 800, max_volume: 3.5, status: 'ACTIVE', has_stock: true, stock_qty: 12, warehouse_id: 'WH001' },
+    { id: 'BIN08', bin_code: 'B-02-02-02', bin_type: 'COLD', storage_type_id: 3, storage_section_id: 30, max_weight: 800, max_volume: 3.5, status: 'ACTIVE', has_stock: true, stock_qty: 18, warehouse_id: 'WH001' },
+    { id: 'BIN09', bin_code: 'C-03-01-01', bin_type: 'STANDARD', storage_type_id: 1, storage_section_id: 11, max_weight: 1000, max_volume: 5.5, status: 'ACTIVE', has_stock: false, stock_qty: 0, warehouse_id: 'WH001' },
+    { id: 'BIN10', bin_code: 'C-03-01-02', bin_type: 'STANDARD', storage_type_id: 1, storage_section_id: 11, max_weight: 1000, max_volume: 5.5, status: 'ACTIVE', has_stock: true, stock_qty: 14, warehouse_id: 'WH001' },
+    { id: 'BIN11', bin_code: 'C-03-02-01', bin_type: 'STANDARD', storage_type_id: 1, storage_section_id: 11, max_weight: 1200, max_volume: 6.0, status: 'ACTIVE', has_stock: true, stock_qty: 15, warehouse_id: 'WH001' },
+    { id: 'BIN12', bin_code: 'C-03-02-02', bin_type: 'STANDARD', storage_type_id: 1, storage_section_id: 11, max_weight: 1200, max_volume: 6.0, status: 'ACTIVE', has_stock: true, stock_qty: 22, warehouse_id: 'WH001' },
+    { id: 'BIN13', bin_code: 'D-04-01-01', bin_type: 'STANDARD', storage_type_id: 1, storage_section_id: 12, max_weight: 1200, max_volume: 6.0, status: 'ACTIVE', has_stock: true, stock_qty: 20, warehouse_id: 'WH001' },
+    { id: 'BIN14', bin_code: 'D-04-01-02', bin_type: 'STANDARD', storage_type_id: 1, storage_section_id: 12, max_weight: 1200, max_volume: 6.0, status: 'ACTIVE', has_stock: false, stock_qty: 0, warehouse_id: 'WH001' },
+    { id: 'BIN15', bin_code: 'D-04-02-01', bin_type: 'HEAVY', storage_type_id: 4, storage_section_id: 40, max_weight: 3500, max_volume: 15.0, status: 'ACTIVE', has_stock: true, stock_qty: 4, warehouse_id: 'WH001' },
+    { id: 'BIN16', bin_code: 'D-04-02-02', bin_type: 'HEAVY', storage_type_id: 4, storage_section_id: 40, max_weight: 3500, max_volume: 15.0, status: 'ACTIVE', has_stock: true, stock_qty: 2, warehouse_id: 'WH001' },
+    { id: 'BIN17', bin_code: 'E-05-01-01', bin_type: 'PICKING', storage_type_id: 2, storage_section_id: 21, max_weight: 600, max_volume: 2.5, status: 'ACTIVE', has_stock: true, stock_qty: 150, warehouse_id: 'WH001' },
+    { id: 'BIN18', bin_code: 'E-05-01-02', bin_type: 'PICKING', storage_type_id: 2, storage_section_id: 21, max_weight: 600, max_volume: 2.5, status: 'ACTIVE', has_stock: true, stock_qty: 90, warehouse_id: 'WH001' },
+    { id: 'BIN19', bin_code: 'LUR-01-01', bin_type: 'STANDARD', storage_type_id: 1, storage_section_id: 10, max_weight: 1500, max_volume: 8.0, status: 'ACTIVE', has_stock: true, stock_qty: 35, warehouse_id: 'WH002' },
+    { id: 'BIN20', bin_code: 'LUR-01-02', bin_type: 'STANDARD', storage_type_id: 1, storage_section_id: 10, max_weight: 1500, max_volume: 8.0, status: 'ACTIVE', has_stock: true, stock_qty: 50, warehouse_id: 'WH002' },
+    { id: 'BIN21', bin_code: 'AQP-01-01', bin_type: 'STANDARD', storage_type_id: 1, storage_section_id: 10, max_weight: 1200, max_volume: 7.0, status: 'ACTIVE', has_stock: true, stock_qty: 28, warehouse_id: 'WH004' },
+    { id: 'BIN22', bin_code: 'GR-RECEPCION', bin_type: 'STAGING', storage_type_id: 1, storage_section_id: 10, max_weight: 8000, max_volume: 80.0, status: 'ACTIVE', has_stock: true, stock_qty: 75, warehouse_id: 'WH001' },
+    { id: 'BIN23', bin_code: 'GI-EXPEDICION', bin_type: 'STAGING', storage_type_id: 2, storage_section_id: 20, max_weight: 8000, max_volume: 80.0, status: 'ACTIVE', has_stock: true, stock_qty: 54, warehouse_id: 'WH001' }
   ],
 
   materials: [
-    { id: 'MAT001', sap_code: '4500001', description: 'Cable UTP Cat6 305m Belden', type: 'ROH', base_unit: 'BOB', stock_total: 450, batch_managed: true },
-    { id: 'MAT002', sap_code: '4500002', description: 'Switch 24 puertos PoE Cisco Catalyst', type: 'FERT', base_unit: 'EA', stock_total: 280, batch_managed: false },
-    { id: 'MAT003', sap_code: '4500003', description: 'Rack 42U 800mm Panduit', type: 'HALB', base_unit: 'EA', stock_total: 720, batch_managed: false },
-    { id: 'MAT004', sap_code: '4500004', description: 'Patch Panel 24p Cat6 Nexxt', type: 'ROH', base_unit: 'EA', stock_total: 150, batch_managed: false },
-    { id: 'MAT005', sap_code: '4500005', description: 'UPS 1500VA Line-Interactive APC', type: 'FERT', base_unit: 'EA', stock_total: 95, batch_managed: true }
+    { id: 'MAT001', sap_code: '4500001', description: 'Cable UTP Cat6 305m Belden Blue LSZH', type: 'ROH', base_unit: 'BOB', stock_total: 450, batch_managed: true },
+    { id: 'MAT002', sap_code: '4500002', description: 'Switch 24 puertos PoE Cisco Catalyst 9200-24P', type: 'FERT', base_unit: 'EA', stock_total: 280, batch_managed: false },
+    { id: 'MAT003', sap_code: '4500003', description: 'Rack 42U 800mm Panduit NetKey Modular', type: 'HALB', base_unit: 'EA', stock_total: 720, batch_managed: false },
+    { id: 'MAT004', sap_code: '4500004', description: 'Patch Panel 24p Cat6 Nexxt Solution blindado', type: 'ROH', base_unit: 'EA', stock_total: 150, batch_managed: false },
+    { id: 'MAT005', sap_code: '4500005', description: 'UPS 1500VA Smart-UPS APC SMT1500RMI2U', type: 'FERT', base_unit: 'EA', stock_total: 95, batch_managed: true },
+    { id: 'MAT006', sap_code: '4500006', description: 'Fibra Óptica Monomodo 24H Corning SMF-28e+', type: 'ROH', base_unit: 'M', stock_total: 2400, batch_managed: true },
+    { id: 'MAT007', sap_code: '4500007', description: 'Conector RJ45 blindado Cat6A Amphenol Pro', type: 'ROH', base_unit: 'PZA', stock_total: 1200, batch_managed: false },
+    { id: 'MAT008', sap_code: '4500008', description: 'Servidor Rack 2U Dell PowerEdge R750 Xeon Silver', type: 'FERT', base_unit: 'EA', stock_total: 18, batch_managed: true },
+    { id: 'MAT009', sap_code: '4500009', description: 'Transformador Seco Schneider Trihal 500kVA 22.9kV', type: 'FERT', base_unit: 'EA', stock_total: 6, batch_managed: true },
+    { id: 'MAT010', sap_code: '4500010', description: 'Gabinete Mural 9U 600mm Beher con puerta de vidrio', type: 'HALB', base_unit: 'EA', stock_total: 84, batch_managed: false },
+    { id: 'MAT011', sap_code: '4500011', description: 'Router de Borde Cisco ISR 4331/K9 Enterprise', type: 'FERT', base_unit: 'EA', stock_total: 35, batch_managed: true },
+    { id: 'MAT012', sap_code: '4500012', description: 'Transceiver SFP+ 10G Cisco SFP-10G-SR', type: 'ROH', base_unit: 'PZA', stock_total: 320, batch_managed: true },
+    { id: 'MAT013', sap_code: '4500013', description: 'Sensor IoT Temperatura & Humedad Honeywell LoRa', type: 'HALB', base_unit: 'EA', stock_total: 110, batch_managed: false },
+    { id: 'MAT014', sap_code: '4500014', description: 'Terminal Portátil Industrial Zebra TC26 Android', type: 'FERT', base_unit: 'EA', stock_total: 45, batch_managed: true },
+    { id: 'MAT015', sap_code: '4500015', description: 'Inversor Solar Híbrido Huawei SUN2000-10KTL', type: 'FERT', base_unit: 'EA', stock_total: 22, batch_managed: true },
+    { id: 'MAT016', sap_code: '4500016', description: 'Cámara Domo IP 4K Hikvision DarkFighter', type: 'FERT', base_unit: 'EA', stock_total: 65, batch_managed: false },
+    { id: 'MAT017', sap_code: '4500017', description: 'Batería Ciclo Profundo Gel 12V 200Ah Ritar', type: 'ROH', base_unit: 'EA', stock_total: 80, batch_managed: true },
+    { id: 'MAT018', sap_code: '4500018', description: 'Disyuntor Caja Moldeada ABB Tmax XT4 250A', type: 'HALB', base_unit: 'EA', stock_total: 42, batch_managed: false },
+    { id: 'MAT019', sap_code: '4500019', description: 'Bobina Cable Eléctrico Indeco NH-90 10mm² Verde', type: 'ROH', base_unit: 'BOB', stock_total: 210, batch_managed: true },
+    { id: 'MAT020', sap_code: '4500020', description: 'Tablero Eléctrico Adosable IP65 Rittal 800x600', type: 'HALB', base_unit: 'EA', stock_total: 29, batch_managed: false }
   ],
 
   stock: [
-    { bin_code: 'A-01-01-01', sap_code: '4500001', description: 'Cable UTP Cat6 305m', batch_number: 'BT202601', qty: 25, unit: 'BOB', status: 'OK', expiry_date: '2026-10-15' },
-    { bin_code: 'A-01-01-02', sap_code: '4500002', description: 'Switch 24p PoE Cisco', batch_number: '—', qty: 8, unit: 'EA', status: 'OK', expiry_date: '—' },
-    { bin_code: 'A-01-02-01', sap_code: '4500003', description: 'Rack 42U 800mm Panduit', batch_number: '—', qty: 3, unit: 'EA', status: 'LOW', expiry_date: '—' },
-    { bin_code: 'B-02-01-01', sap_code: '4500004', description: 'Patch Panel 24p Cat6', batch_number: '—', qty: 40, unit: 'EA', status: 'OK', expiry_date: '—' },
-    { bin_code: 'B-02-02-01', sap_code: '4500005', description: 'UPS 1500VA APC', batch_number: 'BT202605', qty: 2, unit: 'EA', status: 'CRITICAL', expiry_date: '2026-11-20' }
+    { bin_code: 'A-01-01-01', sap_code: '4500001', description: 'Cable UTP Cat6 305m Belden Blue', batch_number: 'BT202601', qty: 25, unit: 'BOB', status: 'OK', expiry_date: '2026-12-15' },
+    { bin_code: 'A-01-01-02', sap_code: '4500002', description: 'Switch 24p PoE Cisco Catalyst 9200', batch_number: '—', qty: 8, unit: 'EA', status: 'OK', expiry_date: '—' },
+    { bin_code: 'A-01-02-01', sap_code: '4500003', description: 'Rack 42U 800mm Panduit NetKey', batch_number: '—', qty: 3, unit: 'EA', status: 'LOW', expiry_date: '—' },
+    { bin_code: 'A-01-02-02', sap_code: '4500008', description: 'Servidor Dell PowerEdge R750', batch_number: 'DL-2026-09', qty: 6, unit: 'EA', status: 'OK', expiry_date: '—' },
+    { bin_code: 'B-02-01-01', sap_code: '4500004', description: 'Patch Panel 24p Cat6 Nexxt Solution', batch_number: '—', qty: 40, unit: 'EA', status: 'OK', expiry_date: '—' },
+    { bin_code: 'B-02-01-02', sap_code: '4500007', description: 'Conector RJ45 blindado Amphenol', batch_number: '—', qty: 85, unit: 'PZA', status: 'OK', expiry_date: '—' },
+    { bin_code: 'B-02-02-01', sap_code: '4500005', description: 'UPS 1500VA Smart-UPS APC SMT1500', batch_number: 'BT202605', qty: 12, unit: 'EA', status: 'CRITICAL', expiry_date: '2026-11-20' },
+    { bin_code: 'B-02-02-02', sap_code: '4500006', description: 'Fibra Óptica Monomodo 24H Corning', batch_number: 'CR-8819', qty: 1800, unit: 'M', status: 'OK', expiry_date: '2027-05-30' },
+    { bin_code: 'C-03-01-02', sap_code: '4500009', description: 'Transformador Trihal Schneider 500kVA', batch_number: 'SC-2026-X1', qty: 2, unit: 'EA', status: 'OK', expiry_date: '—' },
+    { bin_code: 'C-03-02-01', sap_code: '4500011', description: 'Router de Borde Cisco ISR 4331', batch_number: 'CS-2026-04', qty: 15, unit: 'EA', status: 'OK', expiry_date: '—' },
+    { bin_code: 'C-03-02-02', sap_code: '4500015', description: 'Inversor Solar Híbrido Huawei SUN2000', batch_number: 'HW-2026-88', qty: 22, unit: 'EA', status: 'OK', expiry_date: '—' },
+    { bin_code: 'D-04-01-01', sap_code: '4500010', description: 'Gabinete Mural 9U 600mm Beher', batch_number: '—', qty: 20, unit: 'EA', status: 'OK', expiry_date: '—' },
+    { bin_code: 'D-04-02-01', sap_code: '4500017', description: 'Batería Gel 12V 200Ah Ritar', batch_number: 'RT-2026-02', qty: 4, unit: 'EA', status: 'OK', expiry_date: '2028-06-15' },
+    { bin_code: 'D-04-02-02', sap_code: '4500018', description: 'Disyuntor ABB Tmax XT4 250A', batch_number: '—', qty: 2, unit: 'EA', status: 'OK', expiry_date: '—' },
+    { bin_code: 'E-05-01-01', sap_code: '4500012', description: 'Transceiver SFP+ 10G Cisco', batch_number: 'SFP-2026', qty: 150, unit: 'PZA', status: 'OK', expiry_date: '—' },
+    { bin_code: 'E-05-01-02', sap_code: '4500013', description: 'Sensor IoT Temp/Humedad Honeywell', batch_number: '—', qty: 90, unit: 'EA', status: 'OK', expiry_date: '—' },
+    { bin_code: 'LUR-01-01', sap_code: '4500019', description: 'Bobina Indeco NH-90 10mm² Verde', batch_number: 'IND-9012', qty: 35, unit: 'BOB', status: 'OK', expiry_date: '—' },
+    { bin_code: 'LUR-01-02', sap_code: '4500016', description: 'Cámara Domo IP 4K Hikvision', batch_number: 'HK-2026-33', qty: 50, unit: 'EA', status: 'OK', expiry_date: '—' },
+    { bin_code: 'AQP-01-01', sap_code: '4500014', description: 'Terminal Zebra TC26 Android', batch_number: 'ZB-2026-01', qty: 28, unit: 'EA', status: 'OK', expiry_date: '—' },
+    { bin_code: 'GR-RECEPCION', sap_code: '4500001', description: 'Cable UTP Cat6 305m Belden', batch_number: 'BT202608', qty: 30, unit: 'BOB', status: 'OK', expiry_date: '2027-01-10' },
+    { bin_code: 'GR-RECEPCION', sap_code: '4500002', description: 'Switch 24p PoE Cisco Catalyst', batch_number: '—', qty: 15, unit: 'EA', status: 'OK', expiry_date: '—' },
+    { bin_code: 'GR-RECEPCION', sap_code: '4500014', description: 'Terminal Zebra TC26 Android', batch_number: 'ZB-2026-02', qty: 12, unit: 'EA', status: 'INSPECTION', expiry_date: '—' },
+    { bin_code: 'GR-RECEPCION', sap_code: '4500020', description: 'Tablero Eléctrico Rittal IP65', batch_number: '—', qty: 18, unit: 'EA', status: 'OK', expiry_date: '—' },
+    { bin_code: 'GI-EXPEDICION', sap_code: '4500003', description: 'Rack 42U Panduit Modular', batch_number: '—', qty: 4, unit: 'EA', status: 'OK', expiry_date: '—' },
+    { bin_code: 'GI-EXPEDICION', sap_code: '4500005', description: 'UPS 1500VA Smart-UPS APC', batch_number: 'BT202604', qty: 8, unit: 'EA', status: 'OK', expiry_date: '2026-11-15' },
+    { bin_code: 'GI-EXPEDICION', sap_code: '4500011', description: 'Router de Borde Cisco ISR 4331', batch_number: 'CS-2026-02', qty: 6, unit: 'EA', status: 'OK', expiry_date: '—' },
+    { bin_code: 'GI-EXPEDICION', sap_code: '4500012', description: 'Transceiver SFP+ 10G Cisco', batch_number: 'SFP-2026', qty: 36, unit: 'PZA', status: 'OK', expiry_date: '—' }
   ],
 
   transfer_orders: [
-    { to_number: 'TO-2026-001', to_type: 'GR', from_bin: 'GR-RECEPCION', to_bin: 'A-01-01-01', material_code: '4500001', material_desc: 'Cable UTP Cat6 305m', planned_qty: 25, unit: 'BOB', status: 'OPEN', created_at: '2026-09-27 08:30' },
-    { to_number: 'TO-2026-002', to_type: 'GI', from_bin: 'A-01-01-02', to_bin: 'GI-EXPEDICION', material_code: '4500002', material_desc: 'Switch 24 puertos PoE', planned_qty: 8, unit: 'EA', status: 'OPEN', created_at: '2026-09-27 09:15' },
-    { to_number: 'TO-2026-003', to_type: 'TR', from_bin: 'A-01-02-01', to_bin: 'C-03-01-01', material_code: '4500003', material_desc: 'Rack 42U 800mm', planned_qty: 3, unit: 'EA', status: 'CONFIRMED', created_at: '2026-09-26 14:00' },
-    { to_number: 'TO-2026-004', to_type: 'GR', from_bin: 'GR-RECEPCION', to_bin: 'B-02-01-01', material_code: '4500004', material_desc: 'Patch Panel 24p Cat6', planned_qty: 40, unit: 'EA', status: 'OPEN', created_at: '2026-09-27 09:45' },
-    { to_number: 'TO-2026-005', to_type: 'GI', from_bin: 'B-02-02-01', to_bin: 'GI-EXPEDICION', material_code: '4500005', material_desc: 'UPS 1500VA Line-Interactive', planned_qty: 2, unit: 'EA', status: 'IN_PROGRESS', created_at: '2026-09-27 10:00' },
-    { to_number: 'TO-2026-006', to_type: 'TR', from_bin: 'B-02-01-01', to_bin: 'A-01-01-02', material_code: '4500002', material_desc: 'Switch 24 puertos PoE', planned_qty: 5, unit: 'EA', status: 'CONFIRMED', created_at: '2026-09-26 16:30' }
+    { to_number: 'TO-2026-001', to_type: 'GR', from_bin: 'GR-RECEPCION', to_bin: 'A-01-01-01', material_code: '4500001', material_desc: 'Cable UTP Cat6 305m Belden', planned_qty: 25, unit: 'BOB', status: 'OPEN', created_at: '2026-10-15 08:30' },
+    { to_number: 'TO-2026-002', to_type: 'GI', from_bin: 'A-01-01-02', to_bin: 'GI-EXPEDICION', material_code: '4500002', material_desc: 'Switch 24 puertos PoE Cisco', planned_qty: 8, unit: 'EA', status: 'OPEN', created_at: '2026-10-15 09:15' },
+    { to_number: 'TO-2026-003', to_type: 'TR', from_bin: 'A-01-02-01', to_bin: 'C-03-01-01', material_code: '4500003', material_desc: 'Rack 42U 800mm Panduit', planned_qty: 3, unit: 'EA', status: 'CONFIRMED', created_at: '2026-10-14 14:00' },
+    { to_number: 'TO-2026-004', to_type: 'GR', from_bin: 'GR-RECEPCION', to_bin: 'B-02-01-01', material_code: '4500004', material_desc: 'Patch Panel 24p Cat6 Nexxt', planned_qty: 40, unit: 'EA', status: 'OPEN', created_at: '2026-10-15 09:45' },
+    { to_number: 'TO-2026-005', to_type: 'GI', from_bin: 'B-02-02-01', to_bin: 'GI-EXPEDICION', material_code: '4500005', material_desc: 'UPS 1500VA APC Smart-UPS', planned_qty: 2, unit: 'EA', status: 'IN_PROGRESS', created_at: '2026-10-15 10:00' },
+    { to_number: 'TO-2026-006', to_type: 'TR', from_bin: 'B-02-01-01', to_bin: 'A-01-01-02', material_code: '4500002', material_desc: 'Switch 24 puertos PoE Cisco', planned_qty: 5, unit: 'EA', status: 'CONFIRMED', created_at: '2026-10-14 16:30' },
+    { to_number: 'TO-2026-007', to_type: 'GR', from_bin: 'GR-RECEPCION', to_bin: 'A-01-02-02', material_code: '4500008', material_desc: 'Servidor Dell PowerEdge R750', planned_qty: 2, unit: 'EA', status: 'OPEN', created_at: '2026-10-15 11:20' },
+    { to_number: 'TO-2026-008', to_type: 'TR', from_bin: 'C-03-01-02', to_bin: 'GI-EXPEDICION', material_code: '4500009', material_desc: 'Transformador Trihal 500kVA', planned_qty: 1, unit: 'EA', status: 'IN_PROGRESS', created_at: '2026-10-15 11:45' },
+    { to_number: 'TO-2026-009', to_type: 'GI', from_bin: 'B-02-01-02', to_bin: 'GI-EXPEDICION', material_code: '4500007', material_desc: 'Conector RJ45 blindado Amphenol', planned_qty: 50, unit: 'PZA', status: 'CONFIRMED', created_at: '2026-10-15 12:10' },
+    { to_number: 'TO-2026-010', to_type: 'GR', from_bin: 'GR-RECEPCION', to_bin: 'D-04-01-01', material_code: '4500010', material_desc: 'Gabinete Mural 9U Beher', planned_qty: 10, unit: 'EA', status: 'OPEN', created_at: '2026-10-15 12:30' },
+    { to_number: 'TO-2026-011', to_type: 'GR', from_bin: 'GR-RECEPCION', to_bin: 'C-03-02-01', material_code: '4500011', material_desc: 'Router Cisco ISR 4331/K9', planned_qty: 5, unit: 'EA', status: 'OPEN', created_at: '2026-10-15 13:00' },
+    { to_number: 'TO-2026-012', to_type: 'GI', from_bin: 'E-05-01-01', to_bin: 'GI-EXPEDICION', material_code: '4500012', material_desc: 'Transceiver SFP+ 10G Cisco', planned_qty: 20, unit: 'PZA', status: 'OPEN', created_at: '2026-10-15 13:15' },
+    { to_number: 'TO-2026-013', to_type: 'GR', from_bin: 'GR-RECEPCION', to_bin: 'C-03-02-02', material_code: '4500015', material_desc: 'Inversor Solar Huawei SUN2000', planned_qty: 8, unit: 'EA', status: 'CONFIRMED', created_at: '2026-10-14 15:20' },
+    { to_number: 'TO-2026-014', to_type: 'TR', from_bin: 'D-04-02-01', to_bin: 'GI-EXPEDICION', material_code: '4500017', material_desc: 'Batería Gel 12V 200Ah Ritar', planned_qty: 2, unit: 'EA', status: 'IN_PROGRESS', created_at: '2026-10-15 14:10' },
+    { to_number: 'TO-2026-015', to_type: 'GR', from_bin: 'GR-RECEPCION', to_bin: 'AQP-01-01', material_code: '4500014', material_desc: 'Terminal Zebra TC26 Android', planned_qty: 12, unit: 'EA', status: 'OPEN', created_at: '2026-10-15 14:45' },
+    { to_number: 'TO-2026-016', to_type: 'GI', from_bin: 'LUR-01-02', to_bin: 'GI-EXPEDICION', material_code: '4500016', material_desc: 'Cámara Domo IP Hikvision 4K', planned_qty: 15, unit: 'EA', status: 'CONFIRMED', created_at: '2026-10-15 15:00' }
+  ],
+
+  goods_receipts: [
+    { gr_number: 'GR-2026-001', delivery_note: 'GR-99201', vendor_name: 'Cisco Systems Peru S.A.C.', sap_po_number: '450009812', receipt_type: 'PO', status: 'CONFIRMED', created_at: '2026-10-15', warehouse_id: 'WH001' },
+    { gr_number: 'GR-2026-002', delivery_note: 'GR-99205', vendor_name: 'Panduit Latin America Ltd.', sap_po_number: '450009815', receipt_type: 'PO', status: 'PENDING', created_at: '2026-10-15', warehouse_id: 'WH001' },
+    { gr_number: 'GR-2026-003', delivery_note: 'GR-99210', vendor_name: 'Schneider Electric Peru S.A.', sap_po_number: '450009820', receipt_type: 'PO', status: 'CONFIRMED', created_at: '2026-10-14', warehouse_id: 'WH001' },
+    { gr_number: 'GR-2026-004', delivery_note: 'GR-99218', vendor_name: 'Dell Technologies Peru S.A.', sap_po_number: '450009825', receipt_type: 'PO', status: 'PENDING', created_at: '2026-10-15', warehouse_id: 'WH001' },
+    { gr_number: 'GR-2026-005', delivery_note: 'GR-99222', vendor_name: 'Belden Cable Corporation', sap_po_number: '450009830', receipt_type: 'PO', status: 'CONFIRMED', created_at: '2026-10-14', warehouse_id: 'WH001' },
+    { gr_number: 'GR-2026-006', delivery_note: 'GR-99228', vendor_name: 'Siemens Energy S.A.C.', sap_po_number: '450009835', receipt_type: 'PO', status: 'PENDING', created_at: '2026-10-15', warehouse_id: 'WH001' },
+    { gr_number: 'GR-2026-007', delivery_note: 'GR-99233', vendor_name: 'Honeywell Analytics Peru', sap_po_number: '450009840', receipt_type: 'PO', status: 'IN_INSPECTION', created_at: '2026-10-15', warehouse_id: 'WH001' },
+    { gr_number: 'GR-2026-008', delivery_note: 'GR-99240', vendor_name: 'Huawei del Perú S.A.C.', sap_po_number: '450009845', receipt_type: 'PO', status: 'CONFIRMED', created_at: '2026-10-13', warehouse_id: 'WH001' },
+    { gr_number: 'GR-2026-009', delivery_note: 'GR-99245', vendor_name: 'ABB Power Grids Peru S.A.', sap_po_number: '450009850', receipt_type: 'PO', status: 'CONFIRMED', created_at: '2026-10-13', warehouse_id: 'WH001' },
+    { gr_number: 'GR-2026-010', delivery_note: 'GR-99250', vendor_name: 'Eaton Power Solutions S.A.', sap_po_number: '450009855', receipt_type: 'PO', status: 'PENDING', created_at: '2026-10-15', warehouse_id: 'WH001' },
+    { gr_number: 'GR-2026-011', delivery_note: 'GR-99255', vendor_name: 'Zebra Technologies Peru', sap_po_number: '450009860', receipt_type: 'PO', status: 'IN_INSPECTION', created_at: '2026-10-15', warehouse_id: 'WH001' },
+    { gr_number: 'GR-2026-012', delivery_note: 'GR-99260', vendor_name: 'Hikvision Digital Technology', sap_po_number: '450009865', receipt_type: 'PO', status: 'CONFIRMED', created_at: '2026-10-15', warehouse_id: 'WH002' },
+    { gr_number: 'GR-2026-013', delivery_note: 'GR-99265', vendor_name: 'Indeco S.A. Cables Eléctricos', sap_po_number: '450009870', receipt_type: 'PO', status: 'CONFIRMED', created_at: '2026-10-14', warehouse_id: 'WH002' },
+    { gr_number: 'GR-2026-014', delivery_note: 'GR-99270', vendor_name: 'Rittal Sistemas Electrotécnicos', sap_po_number: '450009875', receipt_type: 'PO', status: 'PENDING', created_at: '2026-10-15', warehouse_id: 'WH001' },
+    { gr_number: 'GR-2026-015', delivery_note: 'GR-99275', vendor_name: 'Hewlett Packard Enterprise (HPE)', sap_po_number: '450009880', receipt_type: 'PO', status: 'CONFIRMED', created_at: '2026-10-14', warehouse_id: 'WH001' },
+    { gr_number: 'GR-2026-016', delivery_note: 'GR-99280', vendor_name: 'Fluke Networks Latin America', sap_po_number: '450009885', receipt_type: 'PO', status: 'PENDING', created_at: '2026-10-15', warehouse_id: 'WH004' }
+  ],
+
+  goods_issues: [
+    { gi_number: 'GI-2026-001', customer_name: 'Banco de Crédito del Perú (BCP)', sap_so_number: '80004512', delivery_number: 'DEL-8000123', picking_strategy: 'FEFO', status: 'DISPATCHED', created_at: '2026-10-15', warehouse_id: 'WH001' },
+    { gi_number: 'GI-2026-002', customer_name: 'Interbank Telecomunicaciones', sap_so_number: '80004518', delivery_number: 'DEL-8000129', picking_strategy: 'FIFO', status: 'IN_PICKING', created_at: '2026-10-15', warehouse_id: 'WH001' },
+    { gi_number: 'GI-2026-003', customer_name: 'Minera Las Bambas S.A.', sap_so_number: '80004525', delivery_number: 'DEL-8000135', picking_strategy: 'FEFO', status: 'DISPATCHED', created_at: '2026-10-14', warehouse_id: 'WH001' },
+    { gi_number: 'GI-2026-004', customer_name: 'Compañía Minera Antamina S.A.', sap_so_number: '80004530', delivery_number: 'DEL-8000140', picking_strategy: 'FIFO', status: 'PACKED', created_at: '2026-10-15', warehouse_id: 'WH001' },
+    { gi_number: 'GI-2026-005', customer_name: 'Alicorp S.A.A. — Planta Central Callao', sap_so_number: '80004535', delivery_number: 'DEL-8000145', picking_strategy: 'FEFO', status: 'DISPATCHED', created_at: '2026-10-14', warehouse_id: 'WH001' },
+    { gi_number: 'GI-2026-006', customer_name: 'Ferreyros S.A. Operaciones Minería', sap_so_number: '80004540', delivery_number: 'DEL-8000150', picking_strategy: 'FIFO', status: 'IN_PICKING', created_at: '2026-10-15', warehouse_id: 'WH001' },
+    { gi_number: 'GI-2026-007', customer_name: 'Southern Peru Copper Corp. (Cuajone)', sap_so_number: '80004545', delivery_number: 'DEL-8000155', picking_strategy: 'FEFO', status: 'READY', created_at: '2026-10-15', warehouse_id: 'WH001' },
+    { gi_number: 'GI-2026-008', customer_name: 'Sociedad Minera Cerro Verde S.A.A.', sap_so_number: '80004550', delivery_number: 'DEL-8000160', picking_strategy: 'FIFO', status: 'DISPATCHED', created_at: '2026-10-13', warehouse_id: 'WH004' },
+    { gi_number: 'GI-2026-009', customer_name: 'Unión de Cervecerías Backus y Johnston', sap_so_number: '80004555', delivery_number: 'DEL-8000165', picking_strategy: 'FEFO', status: 'IN_PICKING', created_at: '2026-10-15', warehouse_id: 'WH001' },
+    { gi_number: 'GI-2026-010', customer_name: 'Petroperú S.A. — Refinería Talara', sap_so_number: '80004560', delivery_number: 'DEL-8000170', picking_strategy: 'FIFO', status: 'PACKED', created_at: '2026-10-15', warehouse_id: 'WH001' },
+    { gi_number: 'GI-2026-011', customer_name: 'BBVA Perú Casa Matriz', sap_so_number: '80004565', delivery_number: 'DEL-8000175', picking_strategy: 'FEFO', status: 'READY', created_at: '2026-10-15', warehouse_id: 'WH001' },
+    { gi_number: 'GI-2026-012', customer_name: 'Claro Perú (América Móvil)', sap_so_number: '80004570', delivery_number: 'DEL-8000180', picking_strategy: 'FIFO', status: 'DISPATCHED', created_at: '2026-10-14', warehouse_id: 'WH001' },
+    { gi_number: 'GI-2026-013', customer_name: 'Entel Perú S.A.', sap_so_number: '80004575', delivery_number: 'DEL-8000185', picking_strategy: 'FIFO', status: 'IN_PICKING', created_at: '2026-10-15', warehouse_id: 'WH001' },
+    { gi_number: 'GI-2026-014', customer_name: 'Luz del Sur S.A.A.', sap_so_number: '80004580', delivery_number: 'DEL-8000190', picking_strategy: 'FEFO', status: 'DISPATCHED', created_at: '2026-10-13', warehouse_id: 'WH002' },
+    { gi_number: 'GI-2026-015', customer_name: 'Sedapal — Planta La Atarjea', sap_so_number: '80004585', delivery_number: 'DEL-8000195', picking_strategy: 'FIFO', status: 'PACKED', created_at: '2026-10-15', warehouse_id: 'WH003' },
+    { gi_number: 'GI-2026-016', customer_name: 'Grupo Gloria S.A. Planta Huachipa', sap_so_number: '80004590', delivery_number: 'DEL-8000200', picking_strategy: 'FEFO', status: 'READY', created_at: '2026-10-15', warehouse_id: 'WH003' }
+  ],
+
+  inventory_counts: [
+    { count_number: 'INV-2026-001', status: 'ACTIVE', bins_total: 25, bins_counted: 18, warehouse_id: 'WH001', created_at: '2026-10-15' },
+    { count_number: 'INV-2026-002', status: 'PLANNED', bins_total: 10, bins_counted: 0, warehouse_id: 'WH001', created_at: '2026-10-15' },
+    { count_number: 'INV-2026-003', status: 'COUNTED', bins_total: 15, bins_counted: 15, warehouse_id: 'WH001', created_at: '2026-10-14' },
+    { count_number: 'INV-2026-004', status: 'POSTED', bins_total: 30, bins_counted: 30, warehouse_id: 'WH001', created_at: '2026-10-12' },
+    { count_number: 'INV-2026-005', status: 'ACTIVE', bins_total: 40, bins_counted: 28, warehouse_id: 'WH002', created_at: '2026-10-15' },
+    { count_number: 'INV-2026-006', status: 'PLANNED', bins_total: 20, bins_counted: 0, warehouse_id: 'WH003', created_at: '2026-10-15' },
+    { count_number: 'INV-2026-007', status: 'COUNTED', bins_total: 18, bins_counted: 18, warehouse_id: 'WH004', created_at: '2026-10-14' },
+    { count_number: 'INV-2026-008', status: 'POSTED', bins_total: 24, bins_counted: 24, warehouse_id: 'WH002', created_at: '2026-10-11' }
   ],
 
   wh_sedes: [
@@ -178,19 +277,57 @@ module.exports = {
       raccs_cerrados: 16,
       cinco_s_score: 96.00,
       dias_sin_accidentes: 160
+    },
+    {
+      client: '100',
+      sede_id: "CD_AREQUIPA",
+      sede_nombre: "CD Arequipa (Cerro Colorado)",
+      centro_sap: "1040",
+      almacen_sap: "0040",
+      posiciones_totales: 7200,
+      posiciones_ocupadas: 5407,
+      posiciones_libres: 1793,
+      porcentaje_ocupabilidad: 75.10,
+      paletas_ingreso_hoy: 65,
+      paletas_salida_hoy: 70,
+      peso_ingreso_tn_hoy: 48.200,
+      peso_salida_tn_hoy: 52.400,
+      ot_pendientes_picking: 18,
+      ot_pendientes_recepcion: 6,
+      ot_pendientes_ubicacion: 12,
+      ot_pendientes_despacho: 5,
+      ot_pendientes_total: 41,
+      unidades_programadas: 10,
+      unidades_cargadas: 7,
+      unidades_en_proceso: 2,
+      unidades_pendientes: 1,
+      cumplimiento_ventana_7_10: 94.00,
+      eri_porcentaje: 99.20,
+      eru_porcentaje: 98.50,
+      bpa_porcentaje: 95.80,
+      precision_picking: 99.50,
+      pedidos_atendidos: 145,
+      otif_porcentaje: 96.50,
+      raccs_abiertos: 1,
+      raccs_cerrados: 12,
+      cinco_s_score: 93.00,
+      dias_sin_accidentes: 190
     }
   ],
 
   yard_locations: [
-    { code: "GATE-01", description: "Puerta Principal de Ingreso", status: "OCCUPIED", type: "GATE", current_vehicle: { license_plate: "F5A-892", carrier: "Transportes Rápido S.A.C." } },
-    { code: "GATE-02", description: "Puerta Secundaria de Salida", status: "AVAILABLE", type: "GATE", current_vehicle: null },
-    { code: "PARK-01", description: "Bahía de Espera 01", status: "OCCUPIED", type: "PARKING", current_vehicle: { license_plate: "B7C-412", driver_name: "Carlos Eduardo Mendoza", carrier: "Servicios Logísticos" } },
-    { code: "PARK-02", description: "Bahía de Espera 02", status: "AVAILABLE", type: "PARKING", current_vehicle: null },
-    { code: "PARK-03", description: "Bahía de Espera 03", status: "OCCUPIED", type: "PARKING", current_vehicle: { license_plate: "V9X-104", driver_name: "Jorge Luis Torres", carrier: "DHL Supply Chain" } },
-    { code: "M-01", description: "Muelle 01 Inbound (Entrada)", status: "OCCUPIED", type: "DOCK_DOOR", current_vehicle: { license_plate: "ABC-123", carrier: "Cisco Logistics / Transportes" } },
-    { code: "M-02", description: "Muelle 02 Outbound (Salida)", status: "OCCUPIED", type: "DOCK_DOOR", current_vehicle: { license_plate: "XYZ-789", carrier: "Express Cargo BCP" } },
-    { code: "M-03", description: "Muelle 03 Devoluciones", status: "AVAILABLE", type: "DOCK_DOOR", current_vehicle: null },
-    { code: "M-04", description: "Muelle 04 Carga Pesada", status: "AVAILABLE", type: "DOCK_DOOR", current_vehicle: null }
+    { code: "GATE-01", description: "Puerta Principal de Ingreso Norte", status: "OCCUPIED", type: "GATE", current_vehicle: { license_plate: "F5A-892", carrier: "Transportes Rápido S.A.C." } },
+    { code: "GATE-02", description: "Puerta Secundaria de Salida Sur", status: "AVAILABLE", type: "GATE", current_vehicle: null },
+    { code: "GATE-03", description: "Puerta Balanza & Control de Pesaje", status: "OCCUPIED", type: "GATE", current_vehicle: { license_plate: "T8W-502", carrier: "Transel Logística Minera" } },
+    { code: "PARK-01", description: "Bahía de Espera 01 (Inbound)", status: "OCCUPIED", type: "PARKING", current_vehicle: { license_plate: "B7C-412", driver_name: "Carlos Eduardo Mendoza", carrier: "Servicios Logísticos del Perú" } },
+    { code: "PARK-02", description: "Bahía de Espera 02 (Inbound)", status: "AVAILABLE", type: "PARKING", current_vehicle: null },
+    { code: "PARK-03", description: "Bahía de Espera 03 (Outbound)", status: "OCCUPIED", type: "PARKING", current_vehicle: { license_plate: "V9X-104", driver_name: "Jorge Luis Torres", carrier: "DHL Supply Chain Peru" } },
+    { code: "PARK-04", description: "Bahía de Espera 04 (Devoluciones)", status: "AVAILABLE", type: "PARKING", current_vehicle: null },
+    { code: "M-01", description: "Muelle 01 Inbound (Entrada de Carga)", status: "OCCUPIED", type: "DOCK_DOOR", current_vehicle: { license_plate: "ABC-123", carrier: "Cisco Logistics / Transportes" } },
+    { code: "M-02", description: "Muelle 02 Outbound (Salida Clientes BCP/Alicorp)", status: "OCCUPIED", type: "DOCK_DOOR", current_vehicle: { license_plate: "XYZ-789", carrier: "Express Cargo BCP" } },
+    { code: "M-03", description: "Muelle 03 Devoluciones & RMA", status: "AVAILABLE", type: "DOCK_DOOR", current_vehicle: null },
+    { code: "M-04", description: "Muelle 04 Carga Pesada & Maquinaria", status: "OCCUPIED", type: "DOCK_DOOR", current_vehicle: { license_plate: "P9L-331", carrier: "Ransa Comercial S.A." } },
+    { code: "M-05", description: "Muelle 05 Despacho Express Courier", status: "AVAILABLE", type: "DOCK_DOOR", current_vehicle: null }
   ],
 
   yard_vehicles: [
@@ -221,8 +358,20 @@ module.exports = {
     {
       license_plate: "P9L-331",
       carrier: "Ransa Comercial S.A.",
-      status: "PROGRAMADO",
+      status: "EN MUELLE",
       appointments: [{ appointment_num: "APT-2026-005", planned_arrival: "03:30 PM", operation_type: "INBOUND (Entrada)" }]
+    },
+    {
+      license_plate: "T8W-502",
+      carrier: "Transel Logística Minera",
+      status: "CHECK-IN (Esperando)",
+      appointments: [{ appointment_num: "APT-2026-006", planned_arrival: "04:15 PM", operation_type: "OUTBOUND (Salida)" }]
+    },
+    {
+      license_plate: "K3M-910",
+      carrier: "Scharff Logística Integrada",
+      status: "PROGRAMADO",
+      appointments: [{ appointment_num: "APT-2026-007", planned_arrival: "05:00 PM", operation_type: "INBOUND (Entrada)" }]
     }
   ]
 };
