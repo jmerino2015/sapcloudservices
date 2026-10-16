@@ -50,7 +50,7 @@ En cualquier conversación o sesión de trabajo sobre este proyecto:
   * `ux_horizon_consistency_audit`: Checklist de uniformidad visual (SideNavigation, KPI Strip, Shell Bar, paleta de colores).
   * `automated_testing`: Suites ABAP Unit aisladas con dobles de persistencia y pruebas OPA5 / QUnit.
   * `flp_content_management`: Launchpad App Manager (Semantic Objects, Target Mappings, Catalogs y PFCG).
-  * `deployment_lifecycle`: Despliegue vía gCTS y empaquetado MTAR en SAP BTP HTML5 Repo.
+  * `deployment_lifecycle`: Despliegue vía gCTS, empaquetado MTAR en SAP BTP HTML5 Repo, y pipeline CI/CD Multi-Cloud continuo (GitHub `main` -> Render 24/7 Web Service con Supabase PostgreSQL).
 
 ---
 

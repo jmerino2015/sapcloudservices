@@ -78,3 +78,6 @@ flowchart LR
    - Toda nueva exposición de servicio se realiza en OData V4 para máximo rendimiento y soporte de operaciones en lote / metadatos enriquecidos.
 5. **Uniformidad Visual Fiori Horizon Obligatoria:**
    - Todas las aplicaciones del portal comparten idéntica barra lateral `sap.tnt.SideNavigation`, paleta de colores para KPIs, iconos outline sobrios y botón interactivo `< Home`.
+6. **Sincronización Continua Multi-Cloud (GitHub -> Render & Supabase):**
+   - Todo cambio en esquemas (`src/db/schema.sql`), datasets semilla (`src/db/seed_data.js`) o lógica de servicios (`src/db/database.js`, `server.js`) debe sincronizarse con la base de datos pública en Supabase (`aws-1-us-west-2.pooler.supabase.com:5432`) y versionarse en GitHub (`main`), disparando el auto-despliegue del contenedor en Render (`https://sapcloudservices.onrender.com`).
+

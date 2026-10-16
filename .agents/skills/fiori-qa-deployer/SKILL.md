@@ -143,3 +143,53 @@ sap.ui.define([
   });
 });
 ```
+
+---
+
+## 6. Pipeline de Despliegue Continuo (CI/CD) & Sincronización Multi-Nube
+
+Este proyecto implementa una arquitectura cloud de alta disponibilidad (24/7) donde el código fuente, la infraestructura de ejecución y la base de datos pública están desacoplados y sincronizados automáticamente:
+
+```mermaid
+flowchart LR
+    A["Desarrollo Local / VS Code<br/>(Git Workspace)"] -->|"git push origin main"| B["GitHub Repository<br/>(sapcloudservices.git)"]
+    B -->|"Webhook Auto-Deploy"| C["Render Web Service<br/>(sapcloudservices.onrender.com)"]
+    C <-->|"PostgreSQL Pooler IPv4 (Port 5432)"| D["Supabase Cloud Database<br/>(aws-1-us-west-2.pooler...)"]
+    A <-->|"Init / Migrations (.env)"| D
+```
+
+### Arquitectura de Componentes
+1. **Control de Versiones & Pipeline (GitHub):**
+   - Repositorio: `https://github.com/jmerino2015/sapcloudservices.git`
+   - Rama principal de producción: `main`.
+   - Cada commit empujado a `main` dispara automáticamente la compilación del Dockerfile y el despliegue sin caída de servicio en Render.
+
+2. **Infraestructura de Hosting 24/7 (Render):**
+   - URL de Producción: `https://sapcloudservices.onrender.com`
+   - Configuración: `Dockerfile` basado en `node:20-alpine` (`ENV PORT=8080`, `EXPOSE 8080`).
+   - Variables de Entorno requeridas en Render Dashboard:
+     * `DATABASE_URL`: Cadena de conexión al pooler de Supabase.
+     * `NODE_ENV`: `production`.
+
+3. **Capa de Persistencia de Datos (Supabase PostgreSQL):**
+   - Servidor Pooler IPv4: `aws-1-us-west-2.pooler.supabase.com:5432`
+   - Base de datos: `postgres`
+   - **Regla Crítica de Redes:** NUNCA utilizar el dominio directo `db.vsuqjewodogswexkbcqr.supabase.co` en entornos que carezcan de soporte IPv6 nativo. Siempre utilizar el Connection Pooler transaccional o de sesión en el puerto `5432` o `6543`.
+
+### Protocolo de Actualizaciones Futuras
+Cuando se realicen nuevos desarrollos, modificaciones de tablas o adición de datos maestros:
+
+1. **Definir DDL:** Agregar las tablas en `src/db/schema.sql` usando nomenclatura Clean Core `ztb_*`.
+2. **Definir Dataset:** Incorporar los nuevos registros demo en `src/db/seed_data.js`.
+3. **Idempotencia en Database:** Implementar la lógica de inserción segura en `src/db/database.js` usando `ON CONFLICT (...) DO NOTHING` o `DO UPDATE` para evitar fallos por claves duplicadas.
+4. **Verificación Local:** Ejecutar `node src/db/init.js` para migrar y poblar Supabase en frío.
+5. **Pase a Producción:**
+   ```bash
+   git add .
+   git commit -m "feat(<modulo>): <descripcion de cambios y datos>"
+   git push origin main
+   ```
+6. **Auditoría Post-Despliegue:**
+   - Verificar estado del conector: `GET https://sapcloudservices.onrender.com/api/db/status`
+   - Verificar que los nuevos registros aparezcan en los endpoints respectivos (`/api/gr`, `/api/gi`, etc.).
+

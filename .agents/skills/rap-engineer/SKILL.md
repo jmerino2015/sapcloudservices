@@ -161,3 +161,19 @@ Toda exposición hacia Fiori se realiza exclusivamente en **OData V4 - UI**:
    - Tipo de Binding: `OData V4 - UI`
    - Nombre: `ZUI_GESTION_ORDEN_O4_UI`
    - Activación y publicación local o en BTP.
+
+---
+
+## 4. Gateway Transaccional de Servicios (PostgreSQL Supabase & Node REST)
+
+Cuando los servicios transaccionales operan en entornos cloud desacoplados (como Render + Supabase):
+
+1. **Patrón de Operaciones Transaccionales (CRUD + Acciones):**
+   - Lecturas ordenadas: `SELECT * FROM ztb_* ORDER BY id DESC`.
+   - Creación transaccional: Inserción de cabecera retornando identificador unívoco (`RETURNING id`), serializando arreglos complejos a `JSONB`.
+   - Acciones de Negocio: Endpoints semánticos (`/api/gr/:id/confirm`, `/api/gi/:id/confirm`, `/api/transfer-orders/:id/start`) equivalentes a acciones RAP (`action aprobarOrden`).
+2. **Cálculo Dinámico de Métricas (KPI Engine):**
+   - Las tarjetas superiores se alimentan dinámicamente consultando la persistencia activa (sumatoria de stock, conteo de OTs abiertas, lotes con fecha próxima de caducidad).
+3. **Resiliencia & Failover:**
+   - En caso de desconexión temporal de la base de datos externa, el motor conmuta automáticamente al estado en memoria (`inMemoryState`) sin generar errores 500 al frontend Fiori.
+

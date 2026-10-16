@@ -211,3 +211,16 @@ if (window.self !== window.top) {
 | CRUD transaccional estándar (Listas, Filtros, Edición Draft) | **Fiori Elements (List Report + Object Page)** | Impulsado 100% por anotaciones OData V4 / MDE. Menor TCO y mantenimiento cero de vistas. |
 | Dashboard ejecutivo con analítica personalizada y KPI tiles | **Fiori Elements (Overview Page) o Freestyle** | Si requiere integración con mapas o librerías externas (Leaflet, D3, Chart.js), usar Freestyle. |
 | Flujos de aprobación masiva con wizard o componentes visuales | **Freestyle o Fiori Elements + Controller Extension** | Mantener el piso estándar y extender únicamente la acción o sección particular. |
+
+---
+
+## 6. Integración Frontend con Backend en la Nube (Render & Supabase)
+
+1. **Servicio Centralizado `ApiService.js`:**
+   - Todas las llamadas REST/OData se direccionan de forma relativa a `/api/` (ej. `/api/gr`, `/api/gi`, `/api/inventory-counts`, `/api/transfer-orders`).
+   - Esto garantiza portabilidad total: funciona de forma idéntica en localhost (`http://localhost:8080`), en red local (`http://192.168.x.x:8080`) y en la nube pública (`https://sapcloudservices.onrender.com`).
+2. **Actualización Reactiva de UI:**
+   - Tras ejecutar una acción (como confirmar entrada de mercancías, iniciar OT o registrar conteo de inventario), refrescar inmediatamente el modelo local (`sap.ui.model.json.JSONModel`) o consultar nuevamente el endpoint correspondiente.
+3. **Manejo de Respuestas Enriquecidas:**
+   - La API pública retorna colecciones estándar `{ success: true, total: N, data: [...] }`. Los controladores de vistas deben vincular `data` directamente a tablas (`sap.m.Table` o `sap.ui.table.Table`) y utilizar `total` en los contadores de pestaña (`sap.m.IconTabFilter` count).
+

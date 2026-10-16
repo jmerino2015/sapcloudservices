@@ -145,3 +145,26 @@ Al modelar vistas de consumo que alimentan tarjetas analíticas superiores (KPI 
 
 * **Asociaciones On-Demand:** Evitar joins `LEFT OUTER JOIN` pesados innecesarios; usar `association` lazy que se resuelven únicamente cuando el campo o targetElement es solicitado en la consulta OData.
 * **Filtros Push-down:** Aprovechar `@Search.defaultSearchElement` y condiciones calculadas dentro del SELECT CDS para evitar procesamiento en memoria del servidor de aplicaciones.
+
+---
+
+## 5. Persistencia Híbrida Clean Core: Mapeo DDL a PostgreSQL (Supabase)
+
+Para soportar despliegues cloud híbridos o prototipado ágil manteniendo cumplimiento 100% Clean Core con S/4HANA:
+
+1. **Nomenclatura Estricta:** Todas las tablas de persistencia utilizan el prefijo `ztb_*` con nombres en singular o plural estandarizado:
+   * `ztb_materials` (Maestro MM)
+   * `ztb_bins` (Ubicaciones WM)
+   * `ztb_stock` (Stock por Lote MM-IM)
+   * `ztb_transfer_orders` (Órdenes de Traslado WM)
+   * `ztb_goods_receipts` (Entradas MIGO)
+   * `ztb_goods_issues` (Salidas VL02N)
+   * `ztb_inventory_counts` (Inventario Físico LI01N)
+   * `ztb_wh_sede` (Torre de Control de Almacenes)
+   * `ztb_fue_users` (Optimización FUE)
+2. **Campos Semánticos y de Auditoría Requeridos:**
+   * Llaves de negocio unívocas (`sap_code`, `bin_code`, `gr_number`, `gi_number`, `to_number`).
+   * Columnas temporales con zona horaria (`created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP`).
+   * Tipos JSONB para estructuras anidadas o variantes sin romper la 1ra forma normal de cabeceras (`items JSONB`, `appointments JSONB`).
+3. **Idempotencia de Esquemas:** Todo script DDL (`schema.sql`) debe utilizar cláusulas `CREATE TABLE IF NOT EXISTS` para permitir re-ejecuciones seguras en frío durante el ciclo de vida CI/CD.
+
