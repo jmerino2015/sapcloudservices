@@ -7,8 +7,18 @@
  * 3. Graceful in-memory fallback if DATABASE_URL is not yet configured or temporarily offline
  */
 
-require('dotenv').config();
-const { Pool } = require('pg');
+try {
+  require('dotenv').config();
+} catch (e) {
+  // Dotenv es opcional en cloud
+}
+
+let Pool = null;
+try {
+  Pool = require('pg').Pool;
+} catch (e) {
+  console.warn('[DB] ℹ️ Paquete pg no detectado; operando con dataset demo resiliente.');
+}
 const fs = require('fs');
 const path = require('path');
 const seedData = require('./seed_data');

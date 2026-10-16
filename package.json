@@ -5,6 +5,7 @@
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
+    "build": "npm install",
     "dev": "node server.js --open",
     "db:setup": "node src/db/init.js"
   },

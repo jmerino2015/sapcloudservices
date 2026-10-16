@@ -8,7 +8,11 @@ const http = require('http');
 const fs = require('fs');
 const path = require('path');
 const { exec } = require('child_process');
-require('dotenv').config();
+try {
+  require('dotenv').config();
+} catch (e) {
+  // Dotenv es opcional en entornos cloud como Render donde las variables se inyectan directamente
+}
 
 const db = require('./src/db/database');
 
