@@ -1,0 +1,164 @@
+/* ============================================================
+   SAP Icons — Local CSS with correct Unicode mappings
+   Font files downloaded from ui5.sap.com (official SAP source)
+   Unicode values from openui5 source: sap/ui/core/themes/base/
+   ============================================================ */
+
+@font-face {
+  font-family: 'SAP-icons';
+  src: url('./fonts/SAP-icons.woff2') format('woff2'),
+       url('./fonts/SAP-icons.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: block;
+}
+
+/* Base icon class */
+[class^="sap-icon--"],
+[class*=" sap-icon--"] {
+  font-family: 'SAP-icons' !important;
+  speak: none;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  display: inline-block;
+  vertical-align: middle;
+}
+
+/* ── Navigation ─────────────────────────────────── */
+.sap-icon--home::before            { content: "\e00c"; }
+.sap-icon--grid::before            { content: "\e03a"; }
+.sap-icon--nav-back::before        { content: "\e0ee"; }
+.sap-icon--menu2::before           { content: "\e0a3"; }
+.sap-icon--menu::before            { content: "\e0a3"; }
+.sap-icon--back-to-top::before     { content: "\e228"; }
+
+/* ── Common Actions ─────────────────────────────── */
+.sap-icon--search::before          { content: "\e00d"; }
+.sap-icon--add::before             { content: "\e02f"; }
+.sap-icon--edit::before            { content: "\e0ab"; }
+.sap-icon--delete::before          { content: "\e05c"; }
+.sap-icon--save::before            { content: "\e05e"; }
+.sap-icon--cancel::before          { content: "\e05c"; }
+.sap-icon--download::before        { content: "\e010"; }
+.sap-icon--upload::before          { content: "\e011"; }
+.sap-icon--print::before           { content: "\e01f"; }
+.sap-icon--filter::before          { content: "\e0a6"; }
+.sap-icon--sort::before            { content: "\e053"; }
+.sap-icon--refresh::before         { content: "\e0fb"; }
+.sap-icon--synchronize::before     { content: "\e0fb"; }
+.sap-icon--play::before            { content: "\e0f5"; }
+.sap-icon--accept::before          { content: "\e05b"; }
+.sap-icon--decline::before         { content: "\e05c"; }
+.sap-icon--copy::before            { content: "\e09e"; }
+.sap-icon--share::before           { content: "\e0de"; }
+.sap-icon--expand::before          { content: "\e1c0"; }
+.sap-icon--collapse::before        { content: "\e1bf"; }
+
+/* ── Status / Alerts ────────────────────────────── */
+.sap-icon--alert::before           { content: "\e101"; }
+.sap-icon--error::before           { content: "\e0b1"; }
+.sap-icon--warning::before         { content: "\e101"; }
+.sap-icon--information::before     { content: "\e04b"; }
+.sap-icon--status-positive::before { content: "\e05b"; }
+.sap-icon--status-negative::before { content: "\e0b1"; }
+.sap-icon--message-error::before   { content: "\e0b1"; }
+.sap-icon--message-warning::before { content: "\e101"; }
+.sap-icon--message-success::before { content: "\e05b"; }
+.sap-icon--message-information::before { content: "\e04b"; }
+.sap-icon--notification::before    { content: "\e05d"; }
+.sap-icon--bell::before            { content: "\e05d"; }
+
+/* ── Settings / Admin ───────────────────────────── */
+.sap-icon--settings::before        { content: "\e0a7"; }
+.sap-icon--action-settings::before { content: "\e0a7"; }
+.sap-icon--wrench::before          { content: "\e0f9"; }
+.sap-icon--key::before             { content: "\e0f3"; }
+.sap-icon--locked::before          { content: "\e038"; }
+.sap-icon--unlocked::before        { content: "\e039"; }
+.sap-icon--person-placeholder::before { content: "\e04d"; }
+.sap-icon--employee::before        { content: "\e071"; }
+.sap-icon--log::before             { content: "\e021"; }
+
+/* ── Warehouse Operations ───────────────────────── */
+/* GR - Goods Receipt */
+.sap-icon--journey-arrive::before  { content: "\e0ce"; } /* inbox */
+.sap-icon--inbox::before           { content: "\e0ce"; }
+/* GI - Goods Issue */
+.sap-icon--journey-depart::before  { content: "\e0cd"; } /* outbox */
+.sap-icon--outbox::before          { content: "\e0cd"; }
+/* Transfer */
+.sap-icon--transfer::before        { content: "\e1fd"; }
+.sap-icon--move::before            { content: "\e1fd"; }
+/* Stock/Inventory */
+.sap-icon--inventory::before       { content: "\e1f1"; }
+.sap-icon--product::before         { content: "\e1f1"; }
+/* Warehouse */
+.sap-icon--warehouse::before       { content: "\e1c2"; } /* factory */
+.sap-icon--factory::before         { content: "\e1c2"; }
+/* Materials */
+.sap-icon--batch-payments::before  { content: "\e0dd"; }
+.sap-icon--label::before           { content: "\e0dd"; }
+
+/* ── Charts / Analytics ─────────────────────────── */
+.sap-icon--bar-chart::before       { content: "\e0ef"; }
+.sap-icon--line-chart::before      { content: "\e0f0"; }
+.sap-icon--pie-chart::before       { content: "\e0f1"; }
+.sap-icon--table-chart::before     { content: "\e1a0"; }
+.sap-icon--table-view::before      { content: "\e1a0"; }
+.sap-icon--manager-insight::before { content: "\e0ef"; } /* bar-chart */
+.sap-icon--performance::before     { content: "\e0ef"; }
+
+/* ── Maps / Location ────────────────────────────── */
+.sap-icon--map::before             { content: "\e0c3"; }
+.sap-icon--map-2::before           { content: "\e0c3"; }
+.sap-icon--locate-me::before       { content: "\e0c4"; }
+.sap-icon--geographic-bubble-chart::before { content: "\e0c3"; }
+
+/* ── Documents / Files ──────────────────────────── */
+.sap-icon--document::before        { content: "\e003"; }
+.sap-icon--excel-attachment::before { content: "\e1c4"; }
+.sap-icon--pdf-attachment::before  { content: "\e1c3"; }
+.sap-icon--table-view::before      { content: "\e1a0"; }
+.sap-icon--list::before            { content: "\e053"; }
+.sap-icon--note::before            { content: "\e021"; }
+
+/* ── Buildings / Infrastructure ─────────────────── */
+.sap-icon--building::before        { content: "\e1dc"; }
+.sap-icon--office-building::before { content: "\e1dc"; }
+.sap-icon--home-share::before      { content: "\e00c"; }
+
+/* ── Network / Connectivity ─────────────────────── */
+.sap-icon--connected::before       { content: "\e41d"; }
+.sap-icon--disconnected::before    { content: "\e41e"; }
+.sap-icon--system-exit::before     { content: "\e0b7"; }
+.sap-icon--shipping-status::before { content: "\e3f2"; }
+
+/* ── Shipping / Logistics ───────────────────────── */
+.sap-icon--shipping::before        { content: "\e3f2"; }
+.sap-icon--truck::before           { content: "\e3f2"; }
+
+/* ── Misc ────────────────────────────────────────── */
+.sap-icon--tag::before             { content: "\e0dd"; }
+.sap-icon--calendar::before        { content: "\e023"; }
+.sap-icon--date-time::before       { content: "\e023"; }
+.sap-icon--clock::before           { content: "\e025"; }
+.sap-icon--history::before         { content: "\e03e"; }
+.sap-icon--attachment::before      { content: "\e01c"; }
+.sap-icon--email::before           { content: "\e00e"; }
+.sap-icon--phone::before           { content: "\e02b"; }
+.sap-icon--user-settings::before   { content: "\e04d"; }
+.sap-icon--open-command-field::before { content: "\e03a"; }
+.sap-icon--database::before        { content: "\e1d3"; }
+.sap-icon--it-system::before       { content: "\e1d3"; }
+.sap-icon--bookmark::before        { content: "\e041"; }
+.sap-icon--flag::before            { content: "\e046"; }
+.sap-icon--question-mark::before   { content: "\e04b"; }
+.sap-icon--collapse-group::before  { content: "\e1bf"; }
+.sap-icon--expand-group::before    { content: "\e1c0"; }
+.sap-icon--chevron-phase::before   { content: "\e1e0"; }
+.sap-icon--detail-view::before     { content: "\e1a0"; }

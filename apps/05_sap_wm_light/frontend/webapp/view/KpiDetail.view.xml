@@ -1,0 +1,70 @@
+<mvc:View
+  controllerName="wm.light.controller.KpiDetail"
+  xmlns:mvc="sap.ui.core.mvc"
+  xmlns="sap.m"
+  xmlns:mc="sap.suite.ui.microchart"
+  xmlns:layout="sap.ui.layout">
+
+  <Page id="kpiDetailPage" title="{detail>/title}" showNavButton="true" navButtonPress=".onNavBack" backgroundDesign="List">
+    
+    <headerContent>
+      <Button icon="sap-icon://refresh" press=".onRefresh" tooltip="Actualizar datos" />
+      <Button icon="sap-icon://download" press=".onExport" tooltip="Exportar a Excel" />
+    </headerContent>
+
+    <content>
+      <VBox class="sapUiResponsiveMargin" spacing="1rem">
+        
+        <!-- Chart Container -->
+        <Panel headerText="Evolución Histórica (Últimos 6 períodos)">
+          <FlexBox justifyContent="Center" alignItems="Center" class="sapUiMediumMarginTopBottom">
+            <mc:InteractiveLineChart 
+              selectionChanged=".onChartSelection"
+              points="{detail>/chartPoints}"
+              displayedPoints="6">
+              <mc:points>
+                <mc:InteractiveLineChartPoint 
+                  value="{detail>value}" 
+                  label="{detail>label}" 
+                  color="{detail>color}"
+                  selected="{detail>selected}" />
+              </mc:points>
+            </mc:InteractiveLineChart>
+          </FlexBox>
+        </Panel>
+
+        <!-- Data Table Container -->
+        <Panel headerText="Detalle Analítico de Operaciones">
+          <Table id="kpiDetailTable"
+            items="{detail>/tableData}"
+            noDataText="Sin registros detallados"
+            sticky="ColumnHeaders">
+            
+            <columns>
+              <Column><Text text="Período" /></Column>
+              <Column><Text text="Almacén" /></Column>
+              <Column><Text text="Métrica" /></Column>
+              <Column hAlign="End"><Text text="Valor" /></Column>
+              <Column hAlign="Center"><Text text="Estado" /></Column>
+            </columns>
+
+            <items>
+              <ColumnListItem>
+                <cells>
+                  <Text text="{detail>period}" />
+                  <Text text="{detail>warehouse}" />
+                  <Text text="{detail>metric}" />
+                  <ObjectNumber number="{detail>value}" unit="{detail>unit}" />
+                  <ObjectStatus text="{detail>statusText}" state="{detail>state}" />
+                </cells>
+              </ColumnListItem>
+            </items>
+
+          </Table>
+        </Panel>
+
+      </VBox>
+    </content>
+  </Page>
+
+</mvc:View>

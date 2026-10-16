@@ -1,0 +1,58 @@
+<mvc:View
+    controllerName="wm.light.controller.Layout2D"
+    xmlns="sap.m"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns:html="http://www.w3.org/1999/xhtml"
+    xmlns:core="sap.ui.core"
+    height="100%">
+    <Page title="Layout Virtual 2D" showNavButton="true" navButtonPress=".onNavBack" class="sapUiContentPadding">
+        <headerContent>
+            <Button icon="sap-icon://refresh" press=".loadLayoutData" />
+        </headerContent>
+        <content>
+            <!-- KPI Dashboard -->
+            <HBox class="sapUiSmallMarginBottom layout-kpi-container" justifyContent="SpaceBetween" wrap="Wrap">
+                <VBox class="kpi-card sapUiSmallMarginEnd sapUiTinyMarginBottom">
+                    <Text text="Total de Ubicaciones" class="kpi-label"/>
+                    <Text id="kpiTotal" text="-" class="kpi-value"/>
+                </VBox>
+                <VBox class="kpi-card kpi-card-empty sapUiSmallMarginEnd sapUiTinyMarginBottom">
+                    <Text text="Vacías" class="kpi-label"/>
+                    <Text id="kpiEmpty" text="-" class="kpi-value"/>
+                </VBox>
+                <VBox class="kpi-card kpi-card-partial sapUiSmallMarginEnd sapUiTinyMarginBottom">
+                    <Text text="Parciales" class="kpi-label"/>
+                    <Text id="kpiPartial" text="-" class="kpi-value"/>
+                </VBox>
+                <VBox class="kpi-card kpi-card-full sapUiSmallMarginEnd sapUiTinyMarginBottom">
+                    <Text text="Llenas" class="kpi-label"/>
+                    <Text id="kpiFull" text="-" class="kpi-value"/>
+                </VBox>
+                <VBox class="kpi-card kpi-card-blocked sapUiTinyMarginBottom">
+                    <Text text="Bloqueadas" class="kpi-label"/>
+                    <Text id="kpiBlocked" text="-" class="kpi-value"/>
+                </VBox>
+            </HBox>
+
+            <!-- Legend -->
+            <HBox alignItems="Center" class="sapUiTinyMarginBottom layout-legend-container" wrap="Wrap">
+                <html:div class="legend-box legend-empty"/>
+                <Text text="Vacía (0%)" class="sapUiSmallMarginEnd"/>
+                
+                <html:div class="legend-box legend-partial"/>
+                <Text text="Parcial (1-89%)" class="sapUiSmallMarginEnd"/>
+                
+                <html:div class="legend-box legend-full"/>
+                <Text text="Llena (90%+)" class="sapUiSmallMarginEnd"/>
+                
+                <html:div class="legend-box legend-blocked"/>
+                <Text text="Bloqueada" />
+            </HBox>
+
+            <!-- 2D Layout Container -->
+            <ScrollContainer horizontal="true" vertical="true" width="100%" height="80vh" class="layout-scroll-container">
+                <core:HTML id="layoutMapHtml" sanitizeContent="false" afterRendering=".onHtmlRendered"/>
+            </ScrollContainer>
+        </content>
+    </Page>
+</mvc:View>

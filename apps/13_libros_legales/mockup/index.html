@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SAP S/4HANA - Monitor de Localización Perú & Libros Contables</title>
+    <!-- SAP Fiori Horizons Styling -->
+    <link rel="stylesheet" href="styles.css">
+    <!-- FontAwesome for Premium Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        if (window.self !== window.top) {
+            document.body.classList.add('in-iframe');
+        }
+        window.addEventListener('message', function(event) {
+            if (event.data && event.data.type === 'SET_THEME') {
+                var isDark = (event.data.theme === 'dark' || event.data.theme === 'evening' || event.data.theme === 'sap_horizon_dark');
+                if (isDark) {
+                    document.documentElement.setAttribute('data-theme', 'evening');
+                    document.body.classList.add('sapTheme-sap_horizon_dark');
+                } else {
+                    document.documentElement.setAttribute('data-theme', 'morning');
+                    document.body.classList.remove('sapTheme-sap_horizon_dark');
+                }
+            }
+        });
+    </script>
+</head>
+<body>
+
+    <!-- SHELL BAR (CABECERA) -->
+    <header class="shell-bar">
+        <div class="shell-left">
+            <a class="sap-brand-badge" href="javascript:void(0)" onclick="goHome()" title="SAP Fiori Launchpad">
+                <img src="../../../img/sap-logo.svg" alt="SAP" class="sap-logo-svg" onerror="this.outerHTML='<span class=\'sap-logo-fallback\'>SAP</span>'" />
+            </a>
+            <button class="modal-back-btn" onclick="goHome()" title="Volver al Launchpad">
+                <i class="fas fa-chevron-left"></i> Home
+            </button>
+            <div class="shell-logo-container">
+                <span class="shell-title">SAP S/4HANA - LOCALIZACIÓN PERÚ &amp; LIBROS LEGALES SIRE</span>
+            </div>
+        </div>
+        
+        <div class="shell-right">
+            <div class="shell-search-bar">
+                <i class="fa-solid fa-magnifying-glass search-icon"></i>
+                <input type="text" class="shell-search-input" placeholder="Buscar libros, reportes o apps Fiori...">
+            </div>
+            <button class="shell-btn" title="Asistente SAP Joule AI">
+                <i class="far fa-circle-dot" style="font-size: 15px; color: #4db3ff;"></i>
+            </button>
+            <button class="shell-btn" title="Notificaciones" style="position:relative;">
+                <i class="fa-regular fa-bell"></i>
+                <span style="position:absolute; top:6px; right:6px; width:6px; height:6px; background:#e06a3b; border-radius:50%;"></span>
+            </button>
+            <button class="shell-btn" title="Configuración">
+                <i class="fa-solid fa-gear"></i>
+            </button>
+            <div class="user-profile" title="Perfil de Usuario: Especialista Contable">
+                EC
+            </div>
+        </div>
+    </header>
+
+    <!-- MAIN APP WRAPPER -->
+    <div class="app-container">
+        
+        <!-- SIDEBAR (MENU LATERAL) -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-toggle-container">
+                <!-- Inner toggle arrow -->
+            </div>
+            
+            <ul class="menu-list">
+                <li class="menu-category">Principal</li>
+                <li class="menu-item active" data-page="dashboard-general">
+                    <i class="fa-solid fa-chart-pie menu-icon"></i>
+                    <span class="menu-text">Dashboard General</span>
+                </li>
+                
+                <li class="menu-category">Configuración</li>
+                <li class="menu-item" data-page="config-base">
+                    <i class="fa-solid fa-sliders menu-icon"></i>
+                    <span class="menu-text">Mantenimiento Base</span>
+                </li>
+                
+                <li class="menu-category">Libros PLE (SUNAT)</li>
+                <li class="menu-item has-submenu" data-target="submenu-inv-bal">
+                    <i class="fa-solid fa-scale-balanced menu-icon"></i>
+                    <span class="menu-text">3. Inventarios y Balances</span>
+                    <i class="fa-solid fa-chevron-down submenu-arrow"></i>
+                </li>
+                <ul class="submenu" id="submenu-inv-bal">
+                    <li class="submenu-item" data-page="lib-bal-3-1">3.1 Situación Financiera</li>
+                    <li class="submenu-item" data-page="lib-bal-3-3">3.3 Saldo Cuenta 12 y 13</li>
+                    <li class="submenu-item" data-page="lib-bal-3-4">3.4 Saldo Cuenta 14</li>
+                    <li class="submenu-item" data-page="lib-bal-3-5">3.5 Saldo Cuenta 16 y 17</li>
+                    <li class="submenu-item" data-page="lib-bal-3-6">3.6 Saldo Cuenta 19</li>
+                    <li class="submenu-item" data-page="lib-bal-3-9">3.9 Saldo Cuenta 34</li>
+                    <li class="submenu-item" data-page="lib-bal-3-12">3.12 Saldo Cuenta 42 y 43</li>
+                    <li class="submenu-item" data-page="lib-bal-3-13">3.13 Saldo Cuenta 46 y 47</li>
+                    <li class="submenu-item" data-page="lib-bal-3-15">3.15 Saldo Cuenta 37 y 49</li>
+                    <li class="submenu-item" data-page="lib-bal-3-17">3.17 Balance Comprobación</li>
+                    <li class="submenu-item" data-page="lib-bal-3-19">3.19 Cambios Patrimonio</li>
+                    <li class="submenu-item" data-page="lib-bal-3-20">3.20 Estado de Resultados</li>
+                </ul>
+
+                <li class="menu-item has-submenu" data-target="submenu-diario">
+                    <i class="fa-solid fa-book menu-icon"></i>
+                    <span class="menu-text">5. Libro Diario</span>
+                    <i class="fa-solid fa-chevron-down submenu-arrow"></i>
+                </li>
+                <ul class="submenu" id="submenu-diario">
+                    <li class="submenu-item" data-page="diario-5-1">5.1 Libro Diario General</li>
+                    <li class="submenu-item" data-page="diario-5-3">5.3 Plan de Cuentas</li>
+                </ul>
+
+                <li class="menu-item" data-page="mayor-6-1">
+                    <i class="fa-solid fa-book-open menu-icon"></i>
+                    <span class="menu-text">6.1 Libro Mayor</span>
+                </li>
+
+                <li class="menu-item has-submenu" data-target="submenu-activos">
+                    <i class="fa-solid fa-cubes menu-icon"></i>
+                    <span class="menu-text">7. Activos Fijos</span>
+                    <i class="fa-solid fa-chevron-down submenu-arrow"></i>
+                </li>
+                <ul class="submenu" id="submenu-activos">
+                    <li class="submenu-item" data-page="af-7-1">7.1 Detalle Activos</li>
+                    <li class="submenu-item" data-page="af-7-3">7.3 Diferencia de Cambio</li>
+                    <li class="submenu-item" data-page="af-7-4">7.4 Arrendamiento Financ.</li>
+                </ul>
+
+                <li class="menu-item" data-page="kardex-13-1">
+                    <i class="fa-solid fa-warehouse menu-icon"></i>
+                    <span class="menu-text">13.1 Kardex Permanente</span>
+                </li>
+                
+                <li class="menu-category">Portal SIRE SUNAT</li>
+                <li class="menu-item has-submenu" data-target="submenu-sire-compras">
+                    <i class="fa-solid fa-cart-shopping menu-icon"></i>
+                    <span class="menu-text">8. Registro Compras (RCE)</span>
+                    <i class="fa-solid fa-chevron-down submenu-arrow"></i>
+                </li>
+                <ul class="submenu" id="submenu-sire-compras">
+                    <li class="submenu-item" data-page="sire-rce-propuesta">8.1 Propuesta RCE Compras</li>
+                    <li class="submenu-item" data-page="sire-rce-no-dom">8.2 Compras No Domicil.</li>
+                </ul>
+
+                <li class="menu-item" data-page="sire-rvie-propuesta">
+                    <i class="fa-solid fa-shop menu-icon"></i>
+                    <span class="menu-text">14.1 Registro Ventas (RVIE)</span>
+                </li>
+                
+                <li class="menu-category">Declaraciones & PDT</li>
+                <li class="menu-item has-submenu" data-target="submenu-pdt">
+                    <i class="fa-solid fa-file-invoice-dollar menu-icon"></i>
+                    <span class="menu-text">Declaraciones PDT</span>
+                    <i class="fa-solid fa-chevron-down submenu-arrow"></i>
+                </li>
+                <ul class="submenu" id="submenu-pdt">
+                    <li class="submenu-item" data-page="pdt-0601">PDT 0601 Planilla Elect.</li>
+                    <li class="submenu-item" data-page="pdt-0626">PDT 0626 Agentes Retenc.</li>
+                    <li class="submenu-item" data-page="pdt-0617">PDT 0617 Otras Retenciones</li>
+                    <li class="submenu-item" data-page="pdt-0710">PDT 0710 Balance Comprob.</li>
+                </ul>
+                
+                <li class="menu-category">Operaciones</li>
+                <li class="menu-item has-submenu" data-target="submenu-detracciones">
+                    <i class="fa-solid fa-percentage menu-icon"></i>
+                    <span class="menu-text">Detracciones y Retenc.</span>
+                    <i class="fa-solid fa-chevron-down submenu-arrow"></i>
+                </li>
+                <ul class="submenu" id="submenu-detracciones">
+                    <li class="submenu-item" data-page="detracciones-pagar">Monitor Detracciones</li>
+                    <li class="submenu-item" data-page="detracciones-lote">Configuración Lote</li>
+                    <li class="submenu-item" data-page="detracciones-pago">Registro Pago Detrac.</li>
+                    <li class="submenu-item" data-page="padrones-actualizar">Actualización Padrones</li>
+                    <li class="submenu-item" data-page="retenciones-electronicas">Retenciones Electrónicas</li>
+                </ul>
+
+                <li class="menu-item has-submenu" data-target="submenu-tesoreria">
+                    <i class="fa-solid fa-landmark menu-icon"></i>
+                    <span class="menu-text">Bancos y Conciliación</span>
+                    <i class="fa-solid fa-chevron-down submenu-arrow"></i>
+                </li>
+                <ul class="submenu" id="submenu-tesoreria">
+                    <li class="submenu-item" data-page="tesoreria-pagos">Gestión Pago Proveedores</li>
+                    <li class="submenu-item" data-page="multicash-extracto">Extractos Bancarios</li>
+                    <li class="submenu-item" data-page="conciliacion-dashboard">Reporte Conciliación</li>
+                </ul>
+            </ul>
+            <!-- Fixed Bottom Item -->
+            <div class="sidebar-fixed-bottom">
+                <div class="menu-item" data-page="config-base">
+                    <i class="fa-solid fa-gear menu-icon"></i>
+                    <span class="menu-text">Administración</span>
+                </div>
+            </div>
+        </aside>
+
+        <!-- WORK AREA -->
+        <main class="content-area">
+            
+            <!-- Page Title Block -->
+            <div class="page-title-block">
+                <h1 class="page-title" id="page-title">Mantenimiento Base - Parámetros de Localización</h1>
+                <div class="status-badge success" id="conn-status">
+                    <i class="fa-solid fa-circle-check" style="margin-right: 5px;"></i> SAP S/4HANA Online
+                </div>
+            </div>
+
+            <!-- Filter Bar / Selector de Contexto -->
+            <section class="filter-bar">
+                <div class="filter-group">
+                    <label class="filter-label">Sociedad (Company Code)</label>
+                    <select class="filter-select" id="sociedad-select">
+                        <option value="PE01">PE01 - SAP Perú Corporativo</option>
+                        <option value="PE02">PE02 - Industrias Limatambo S.A.</option>
+                        <option value="PE03">PE03 - Logística del Pacífico</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label class="filter-label">Ejercicio Fiscal (Year)</label>
+                    <select class="filter-select" id="ejercicio-select">
+                        <option value="2026">2026</option>
+                        <option value="2025">2025</option>
+                        <option value="2024">2024</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label class="filter-label">Periodo Mensual</label>
+                    <select class="filter-select" id="periodo-select">
+                        <option value="07">07 - Julio</option>
+                        <option value="06">06 - Junio</option>
+                        <option value="05">05 - Mayo</option>
+                        <option value="04">04 - Abril</option>
+                        <option value="03">03 - Marzo</option>
+                        <option value="02">02 - Febrero</option>
+                        <option value="01">01 - Enero</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label class="filter-label">Tipo de Reporte / Libro</label>
+                    <select class="filter-select" id="tipo-libro-select">
+                        <!-- Carga dinámica por javascript según el menú seleccionado -->
+                    </select>
+                </div>
+                <button class="btn-primary" id="btn-ejecutar">
+                    <i class="fa-solid fa-play"></i> Ejecutar
+                </button>
+            </section>
+
+            <!-- Dashboard / Summary cards -->
+            <section class="summary-cards" id="summary-cards">
+                <!-- Carga dinámica -->
+            </section>
+
+            <!-- Grid container / data table -->
+            <section class="grid-container">
+                <div class="grid-toolbar">
+                    <span class="toolbar-title" id="grid-title">Registros Contables en memoria (SAP HANA)</span>
+                    <div class="toolbar-actions">
+                        <button class="btn-secondary" id="btn-validar">
+                            <i class="fa-solid fa-cloud-arrow-up"></i> Validar SUNAT
+                        </button>
+                        <button class="btn-primary" id="btn-descargar">
+                            <i class="fa-solid fa-download"></i> Descargar PLE (.TXT)
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="table-wrapper">
+                    <table class="sap-table" id="data-table">
+                        <thead>
+                            <tr id="table-headers">
+                                <!-- Cabeceras dinámicas -->
+                            </tr>
+                        </thead>
+                        <tbody id="table-body">
+                            <!-- Datos dinámicos -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Dashboard View Container -->
+            <div id="dashboard-view" class="dashboard-view">
+                
+                <!-- Row 1: KPI Cards (Fiori Horizon Standard) -->
+                <div class="col-span-12 db-kpi-row">
+                    <div class="card" style="border: 1px solid #eaedf1; border-radius: 12px; box-shadow: 0 1px 4px rgba(0,0,0,0.04);">
+                        <span class="card-title" style="font-size: 13px; font-weight: 600; color: #64748b; text-transform: uppercase;">Cumplimiento Libros (PLE)</span>
+                        <span class="card-value" style="font-size: 28px; font-weight: 800; color: #107e3e;">100%</span>
+                        <div class="card-footer trend-up" style="font-size: 12px; color: #64748b;">
+                            <i class="fa-solid fa-circle-check" style="color: #107e3e;"></i>
+                            <span>Todos los libros generados</span>
+                        </div>
+                    </div>
+                    <div class="card" style="border: 1px solid #eaedf1; border-radius: 12px; box-shadow: 0 1px 4px rgba(0,0,0,0.04);">
+                        <span class="card-title" style="font-size: 13px; font-weight: 600; color: #64748b; text-transform: uppercase;">Conciliación SIRE Compras</span>
+                        <span class="card-value" style="font-size: 28px; font-weight: 800; color: #1e293b;">92%</span>
+                        <div class="card-footer trend-up" style="font-size: 12px; color: #64748b;">
+                            <i class="fa-solid fa-arrow-trend-up" style="color: #0a6ed1;"></i>
+                            <span>44 de 48 facturas conciliadas</span>
+                        </div>
+                    </div>
+                    <div class="card" style="border: 1px solid #eaedf1; border-radius: 12px; box-shadow: 0 1px 4px rgba(0,0,0,0.04);">
+                        <span class="card-title" style="font-size: 13px; font-weight: 600; color: #64748b; text-transform: uppercase;">Detracciones por Pagar</span>
+                        <span class="card-value" style="font-size: 28px; font-weight: 800; color: #e06a3b;">S/. 2,650</span>
+                        <div class="card-footer trend-down" style="font-size: 12px; color: #64748b;">
+                            <i class="fa-solid fa-hourglass-half" style="color: #e06a3b;"></i>
+                            <span>2 facturas pendientes de lote</span>
+                        </div>
+                    </div>
+                    <div class="card" style="border: 1px solid #eaedf1; border-radius: 12px; box-shadow: 0 1px 4px rgba(0,0,0,0.04);">
+                        <span class="card-title" style="font-size: 13px; font-weight: 600; color: #64748b; text-transform: uppercase;">Bloqueos de RUC (No Habidos)</span>
+                        <span class="card-value" style="font-size: 28px; font-weight: 800; color: #e06a3b;">2 RUCs</span>
+                        <div class="card-footer trend-down" style="font-size: 12px; color: #64748b;">
+                            <i class="fa-solid fa-ban" style="color: #e06a3b;"></i>
+                            <span>Validación automática activa</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Row 2: Charts and Tables -->
+                <!-- Left: SIRE Reconciliación Chart -->
+                <div class="col-span-6 db-chart-card">
+                    <span class="db-chart-title"><i class="fa-solid fa-chart-simple"></i> Estado de Conciliación SIRE & Ventas RVIE</span>
+                    <div class="progress-ring-container">
+                        <div class="progress-ring-circular"></div>
+                        <div class="progress-ring-info">
+                            <span class="progress-ring-value">92.3% Reconciliado</span>
+                            <span class="progress-ring-desc">Emparejado automático por Droid SAP HANA</span>
+                        </div>
+                    </div>
+                    <div class="bar-chart-container">
+                        <div class="bar-row">
+                            <span class="bar-label">8.1 Propuesta RCE</span>
+                            <div class="bar-track"><div class="bar-fill" style="width: 92%;"></div></div>
+                            <span class="bar-value">92%</span>
+                        </div>
+                        <div class="bar-row">
+                            <span class="bar-label">14.1 Registro RVIE</span>
+                            <div class="bar-track"><div class="bar-fill" style="width: 100%; background-color: var(--sap-success);"></div></div>
+                            <span class="bar-value">100%</span>
+                        </div>
+                        <div class="bar-row">
+                            <span class="bar-label">Detracciones Conciliadas</span>
+                            <div class="bar-track"><div class="bar-fill" style="width: 80%; background-color: var(--sap-warning);"></div></div>
+                            <span class="bar-value">80%</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right: SUNAT Calendar and OSE Status -->
+                <div class="col-span-6 db-chart-card">
+                    <span class="db-chart-title"><i class="fa-solid fa-calendar-days"></i> Calendario de Vencimientos SUNAT (Julio 2026)</span>
+                    <div class="calendar-grid">
+                        <span class="calendar-day-header">D</span>
+                        <span class="calendar-day-header">L</span>
+                        <span class="calendar-day-header">M</span>
+                        <span class="calendar-day-header">M</span>
+                        <span class="calendar-day-header">J</span>
+                        <span class="calendar-day-header">V</span>
+                        <span class="calendar-day-header">S</span>
+                        
+                        <span class="calendar-day"></span>
+                        <span class="calendar-day"></span>
+                        <span class="calendar-day"></span>
+                        <span class="calendar-day">1</span>
+                        <span class="calendar-day">2</span>
+                        <span class="calendar-day">3</span>
+                        <span class="calendar-day">4</span>
+                        
+                        <span class="calendar-day">5</span>
+                        <span class="calendar-day">6</span>
+                        <span class="calendar-day">7</span>
+                        <span class="calendar-day">8</span>
+                        <span class="calendar-day">9</span>
+                        <span class="calendar-day">10</span>
+                        <span class="calendar-day">11</span>
+                        
+                        <span class="calendar-day">12</span>
+                        <span class="calendar-day">13</span>
+                        <span class="calendar-day">14</span>
+                        <span class="calendar-day">15</span>
+                        <span class="calendar-day">16</span>
+                        <span class="calendar-day">17</span>
+                        <span class="calendar-day highlight" title="Vencimiento PLE/SIRE">18</span>
+                        
+                        <span class="calendar-day">19</span>
+                        <span class="calendar-day">20</span>
+                        <span class="calendar-day">21</span>
+                        <span class="calendar-day">22</span>
+                        <span class="calendar-day today" title="Hoy (Localización S/4HANA)">23</span>
+                        <span class="calendar-day">24</span>
+                        <span class="calendar-day">25</span>
+                        
+                        <span class="calendar-day">26</span>
+                        <span class="calendar-day">27</span>
+                        <span class="calendar-day">28</span>
+                        <span class="calendar-day">29</span>
+                        <span class="calendar-day">30</span>
+                        <span class="calendar-day">31</span>
+                        <span class="calendar-day"></span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 10px; font-size: 12px; border-top: 1px solid var(--sap-border); padding-top: 8px;">
+                        <span>Vencimiento RUC dígito 7: <strong>18-Ago-2026</strong></span>
+                        <span class="status-badge success"><i class="fa-solid fa-plug" style="margin-right: 4px;"></i> WS OSE Conectado</span>
+                    </div>
+                </div>
+
+                <!-- Row 3: Recent Activity -->
+                <div class="col-span-12 db-chart-card">
+                    <span class="db-chart-title"><i class="fa-solid fa-clock-rotate-left"></i> Actividad Reciente del Sistema SAP HANA</span>
+                    <ul class="activity-list">
+                        <li class="activity-item">
+                            <span class="activity-time">Hace 5 min</span>
+                            <div class="activity-dot success"></div>
+                            <div class="activity-content">
+                                Lote de pago detracciones <strong>LOTE-202607-0025</strong> generado para Banco de la Nación.
+                            </div>
+                        </li>
+                        <li class="activity-item">
+                            <span class="activity-time">Hace 2 horas</span>
+                            <div class="activity-dot success"></div>
+                            <div class="activity-content">
+                                Extracto bancario diario <strong>EXT-BCP-20260723</strong> cargado e importado vía MultiCash. 92% autoconciliado.
+                            </div>
+                        </li>
+                        <li class="activity-item">
+                            <span class="activity-time">Ayer</span>
+                            <div class="activity-dot warning"></div>
+                            <div class="activity-content">
+                                Detectada inconsistencia en RCE para proveedor <em>Inversiones Lima S.A.</em> (Diferencia de IGV de S/. 50.00).
+                            </div>
+                        </li>
+                        <li class="activity-item">
+                            <span class="activity-time">23-Jul-2026</span>
+                            <div class="activity-dot error"></div>
+                            <div class="activity-content">
+                                Bloqueo preventivo de pago aplicado al proveedor RUC 20998877665 (Estado SUNAT: No Habido).
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+
+            </div>
+
+        </main>
+
+        <!-- CHATBOT DRAWER (JOULE RIGHT PANEL) -->
+        <aside class="chatbot-drawer" id="chatbot-drawer">
+            <div class="chat-header">
+                <div class="chat-header-title">
+                    <div class="joule-avatar">D</div>
+                    <span>Droid Asistente Virtual</span>
+                </div>
+                <button class="shell-btn" id="chat-close" title="Ocultar Asistente">
+                    <i class="fa-solid fa-chevron-right"></i>
+                </button>
+            </div>
+            
+            <div class="chat-body" id="chat-messages">
+                <div class="chat-bubble bot">
+                    Hola, soy <strong>Droid Asistente Virtual</strong>, tu copiloto de IA en SAP. Puedo ayudarte a auditar tus libros contables, consultar fechas de vencimiento de SUNAT o guiarte en el proceso de conciliación del SIRE. ¿En qué te puedo ayudar hoy?
+                    <div class="bot-suggested-actions">
+                        <button class="suggested-action-btn" data-query="¿Hay inconsistencias en el SIRE de Compras?">
+                            <i class="fa-solid fa-triangle-exclamation"></i> ¿Inconsistencias en RCE de Compras?
+                        </button>
+                        <button class="suggested-action-btn" data-query="Generar lote de detracciones pendientes">
+                            <i class="fa-solid fa-file-invoice-dollar"></i> Generar lote de detracciones
+                        </button>
+                        <button class="suggested-action-btn" data-query="¿Cómo funciona la conciliación de extractos?">
+                            <i class="fa-solid fa-circle-info"></i> ¿Cómo conciliar extractos?
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="chat-footer">
+                <input type="text" class="chat-input" id="chat-input" placeholder="Pregúntale a Droid Asistente Virtual sobre impuestos, PLE o SIRE...">
+                <button class="chat-send-btn" id="chat-send-btn">
+                    <i class="fa-solid fa-paper-plane"></i>
+                </button>
+            </div>
+        </aside>
+
+        <!-- Floating Chat Trigger Button (when drawer is collapsed) -->
+        <div class="chat-toggle-floating hidden" id="chat-toggle-floating" title="Abrir Droid Asistente Virtual">
+            <i class="fa-solid fa-wand-magic-sparkles"></i>
+        </div>
+
+    </div>
+
+    <!-- Interactive script linking functionality -->
+    <script src="app.js"></script>
+    <script>
+        function goHome() {
+            if (window.parent && window.parent.PortalApp && typeof window.parent.PortalApp.closeModal === 'function') {
+                window.parent.PortalApp.closeModal();
+            } else {
+                window.location.href = '../../index.html';
+            }
+        }
+    </script>
+</body>
+</html>

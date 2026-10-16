@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SAP TM — Gestión de Transporte Terrestre</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <style>
+    :root {
+      --sapShellColor: #072340;
+      --sapBackgroundColor: #edeff0;
+      --sapCardBg: #ffffff;
+      --sapTextColor: #32363a;
+      --sapTextSecondary: #6a6d70;
+      --sapHighlightColor: #0854a0;
+      --sapSuccessColor: #107e3e;
+      --sapSuccessBg: #edf8f2;
+      --sapWarningColor: #e9730c;
+      --sapWarningBg: #fef3eb;
+      --sapCriticalColor: #bb0000;
+      --sapBorderColor: #d9d9d9;
+    }
+
+    body.dark-theme {
+      --sapShellColor: #1d232a;
+      --sapBackgroundColor: #12171d;
+      --sapCardBg: #1d232a;
+      --sapTextColor: #f5f6f7;
+      --sapTextSecondary: #a9b4c2;
+      --sapHighlightColor: #4db3ff;
+      --sapBorderColor: #2c3645;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: '72', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      background-color: var(--sapBackgroundColor);
+      color: var(--sapTextColor);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Top Bar */
+    .tm-header {
+      background-color: var(--sapShellColor);
+      color: #ffffff;
+      padding: 12px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    }
+    .tm-header-title {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 17px;
+      font-weight: 600;
+    }
+    .tm-header-title i {
+      color: #58d5ba;
+      font-size: 20px;
+    }
+    .tm-header-badge {
+      background: rgba(255,255,255,0.15);
+      font-size: 11px;
+      padding: 3px 8px;
+      border-radius: 4px;
+      font-weight: 500;
+      letter-spacing: 0.5px;
+    }
+
+    /* Content */
+    .tm-container {
+      padding: 20px 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      flex: 1;
+    }
+
+    /* KPI Grid */
+    .tm-kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 16px;
+    }
+    .tm-kpi-card {
+      background: var(--sapCardBg);
+      border-radius: 6px;
+      padding: 16px 20px;
+      border: 1px solid var(--sapBorderColor);
+      box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      border-top: 3px solid var(--sapHighlightColor);
+    }
+    .tm-kpi-label {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--sapTextSecondary);
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+    }
+    .tm-kpi-val {
+      font-size: 28px;
+      font-weight: 300;
+      color: var(--sapTextColor);
+      display: flex;
+      align-items: baseline;
+      gap: 6px;
+    }
+    .tm-kpi-val.success { color: var(--sapSuccessColor); font-weight: 600; }
+    .tm-kpi-sub {
+      font-size: 12px;
+      color: var(--sapTextSecondary);
+    }
+
+    /* Main Card / Table */
+    .tm-card {
+      background: var(--sapCardBg);
+      border-radius: 6px;
+      border: 1px solid var(--sapBorderColor);
+      box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+      overflow: hidden;
+    }
+    .tm-card-header {
+      padding: 16px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--sapBorderColor);
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    .tm-card-title {
+      font-size: 15px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .tm-filters {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .tm-input {
+      padding: 6px 12px;
+      border-radius: 4px;
+      border: 1px solid var(--sapBorderColor);
+      background: transparent;
+      color: var(--sapTextColor);
+      font-size: 13px;
+    }
+    .tm-select {
+      padding: 6px 10px;
+      border-radius: 4px;
+      border: 1px solid var(--sapBorderColor);
+      background: var(--sapCardBg);
+      color: var(--sapTextColor);
+      font-size: 13px;
+      cursor: pointer;
+    }
+
+    /* Table */
+    .tm-table-wrap {
+      overflow-x: auto;
+    }
+    .tm-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+      text-align: left;
+    }
+    .tm-table th {
+      background: rgba(0,0,0,0.02);
+      padding: 12px 16px;
+      font-weight: 600;
+      color: var(--sapTextSecondary);
+      border-bottom: 1px solid var(--sapBorderColor);
+    }
+    .tm-table td {
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--sapBorderColor);
+      vertical-align: middle;
+    }
+    .tm-table tr:hover {
+      background: rgba(8, 84, 160, 0.04);
+    }
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 3px 8px;
+      border-radius: 12px;
+      font-size: 11px;
+      font-weight: 600;
+    }
+    .status-en-ruta { background: #e0f2fe; color: #0284c7; }
+    .status-cargando { background: #fef3c7; color: #b45309; }
+    .status-completado { background: #dcfce7; color: #15803d; }
+    .status-alerta { background: #fee2e2; color: #b91c1c; }
+
+    .truck-tag {
+      font-weight: 600;
+      color: var(--sapHighlightColor);
+    }
+
+    body.in-iframe .tm-header {
+      display: none !important;
+    }
+  </style>
+</head>
+<body>
+
+  <header class="tm-header">
+    <div class="tm-header-title">
+      <a href="javascript:void(0)" onclick="goHome()" title="SAP Fiori Launchpad" style="display:inline-flex; align-items:center; text-decoration:none;">
+        <img src="../../../img/sap-logo.svg" alt="SAP" style="height:20px;" onerror="this.outerHTML='<span style=\'background:#0854a0;color:#fff;padding:2px 5px;border-radius:3px;font-weight:bold;font-size:11px;\'>SAP</span>'" />
+      </a>
+      <button onclick="goHome()" title="Volver al Launchpad" style="background:transparent; border:1px solid rgba(255,255,255,0.3); color:#fff; padding:4px 10px; border-radius:4px; font-size:12px; cursor:pointer; display:inline-flex; align-items:center; gap:6px; margin-right:6px;">
+        <i class="fas fa-chevron-left"></i> Home
+      </button>
+      <i class="fas fa-truck-moving" style="margin-left:4px;"></i>
+      <span>SAP TM — Gestión de Transporte Terrestre</span>
+      <span class="tm-header-badge">S/4HANA TM v2026</span>
+    </div>
+    <div>
+      <span style="font-size: 12px; color: #9bbad8;"><i class="fas fa-circle" style="color: #58d5ba; font-size: 8px;"></i> Sincronizado en tiempo real</span>
+    </div>
+  </header>
+
+  <main class="tm-container">
+    <!-- KPIs -->
+    <div class="tm-kpi-grid">
+      <div class="tm-kpi-card" style="border-top-color:#0d9488;">
+        <span class="tm-kpi-label">Flota en Tránsito</span>
+        <div class="tm-kpi-val">42 <span style="font-size:14px; color:var(--sapTextSecondary);">unidades</span></div>
+        <span class="tm-kpi-sub">87% de capacidad operativa</span>
+      </div>
+
+      <div class="tm-kpi-card" style="border-top-color:#107e3e;">
+        <span class="tm-kpi-label">Cumplimiento en Ruta (OTIF)</span>
+        <div class="tm-kpi-val success">98.2% <i class="fas fa-arrow-trend-up" style="font-size:16px;"></i></div>
+        <span class="tm-kpi-sub">+1.4% vs promedio mensual</span>
+      </div>
+
+      <div class="tm-kpi-card" style="border-top-color:#0854a0;">
+        <span class="tm-kpi-label">Volumen Despachado Hoy</span>
+        <div class="tm-kpi-val">850 <span style="font-size:14px; color:var(--sapTextSecondary);">TN</span></div>
+        <span class="tm-kpi-sub">1,240 Paletas consolidadas</span>
+      </div>
+
+      <div class="tm-kpi-card" style="border-top-color:#d97706;">
+        <span class="tm-kpi-label">Costo Medio / TN Flete</span>
+        <div class="tm-kpi-val">$42.50 <span style="font-size:14px; color:var(--sapTextSecondary);">USD</span></div>
+        <span class="tm-kpi-sub">Optimizado por ruteo dinámico</span>
+      </div>
+    </div>
+
+    <!-- Live Fleet Table -->
+    <div class="tm-card">
+      <div class="tm-card-header">
+        <div class="tm-card-title">
+          <i class="fas fa-route" style="color:var(--sapHighlightColor);"></i>
+          <span>Monitoreo de Flota Terrestre y Despachos Activos</span>
+        </div>
+        <div class="tm-filters">
+          <input type="text" id="searchInput" class="tm-input" placeholder="Buscar placa, chofer o destino..." onkeyup="filterTable()" />
+          <select id="statusFilter" class="tm-select" onchange="filterTable()">
+            <option value="ALL">Todos los Estados</option>
+            <option value="EN RUTA">En Ruta</option>
+            <option value="CARGANDO">En Carga</option>
+            <option value="ENTREGADO">Entregado</option>
+            <option value="RETRASO">Con Retraso</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="tm-table-wrap">
+        <table class="tm-table" id="fleetTable">
+          <thead>
+            <tr>
+              <th>Placa / Unidad</th>
+              <th>Vehículo</th>
+              <th>Conductor</th>
+              <th>Origen / Centro</th>
+              <th>Destino</th>
+              <th>Carga</th>
+              <th>Ventana / ETA</th>
+              <th>Estatus</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span class="truck-tag">F5A-892</span></td>
+              <td>Volvo FH 540 Semi-trailer</td>
+              <td>Carlos Mendoza R.</td>
+              <td>CD Eucaliptos (Lima)</td>
+              <td>Arequipa Hub Central</td>
+              <td>28.5 TN (98%)</td>
+              <td>Hoy 16:30</td>
+              <td><span class="status-badge status-en-ruta"><i class="fas fa-truck-fast"></i> En Ruta</span></td>
+            </tr>
+            <tr>
+              <td><span class="truck-tag">B8C-441</span></td>
+              <td>Mercedes Actros 2645</td>
+              <td>Jorge Morales V.</td>
+              <td>CD Callao (Planta)</td>
+              <td>Trujillo Almacén Norte</td>
+              <td>24.0 TN (92%)</td>
+              <td>Hoy 18:00</td>
+              <td><span class="status-badge status-en-ruta"><i class="fas fa-truck-fast"></i> En Ruta</span></td>
+            </tr>
+            <tr>
+              <td><span class="truck-tag">D1K-902</span></td>
+              <td>Scania R500 V8</td>
+              <td>Raúl Quispe H.</td>
+              <td>CD Praderas (Sur)</td>
+              <td>Chiclayo Distribución</td>
+              <td>31.0 TN (100%)</td>
+              <td>Hoy 19:15</td>
+              <td><span class="status-badge status-alerta"><i class="fas fa-triangle-exclamation"></i> Retraso (+35m)</span></td>
+            </tr>
+            <tr>
+              <td><span class="truck-tag">Z3P-710</span></td>
+              <td>Volvo FM 420</td>
+              <td>Marcos Huamán C.</td>
+              <td>CD Eucaliptos (Lima)</td>
+              <td>Huancayo Terminal</td>
+              <td>18.2 TN (85%)</td>
+              <td>Hoy 14:00</td>
+              <td><span class="status-badge status-cargando"><i class="fas fa-boxes-packing"></i> Cargando</span></td>
+            </tr>
+            <tr>
+              <td><span class="truck-tag">M9T-320</span></td>
+              <td>Freightliner Cascadia</td>
+              <td>Alberto Salas E.</td>
+              <td>CD Callao (Puerto)</td>
+              <td>Piura Centro Logístico</td>
+              <td>29.4 TN (96%)</td>
+              <td>Ayer 22:30</td>
+              <td><span class="status-badge status-completado"><i class="fas fa-check-circle"></i> Entregado</span></td>
+            </tr>
+            <tr>
+              <td><span class="truck-tag">K4V-119</span></td>
+              <td>MAN TGX 26.480</td>
+              <td>Esteban Vega G.</td>
+              <td>CD Praderas (Sur)</td>
+              <td>Cusco Almacén Andino</td>
+              <td>22.0 TN (90%)</td>
+              <td>Hoy 21:00</td>
+              <td><span class="status-badge status-en-ruta"><i class="fas fa-truck-fast"></i> En Ruta</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    function filterTable() {
+      const q = document.getElementById('searchInput').value.toLowerCase();
+      const status = document.getElementById('statusFilter').value;
+      const rows = document.querySelectorAll('#fleetTable tbody tr');
+
+      rows.forEach(row => {
+        const text = row.innerText.toLowerCase();
+        const matchesQuery = !q || text.includes(q);
+        const matchesStatus = (status === 'ALL') || row.innerText.toUpperCase().includes(status);
+
+        row.style.display = (matchesQuery && matchesStatus) ? '' : 'none';
+      });
+    }
+
+    function goHome() {
+      if (window.parent && window.parent.PortalApp && typeof window.parent.PortalApp.closeModal === 'function') {
+        window.parent.PortalApp.closeModal();
+      } else {
+        window.location.href = '../../../index.html';
+      }
+    }
+
+    if (window.self !== window.top) {
+      document.body.classList.add('in-iframe');
+    }
+
+    // Theme support
+    window.addEventListener('message', function(e) {
+      if (e.data && e.data.type === 'SET_THEME') {
+        if (e.data.theme === 'dark') {
+          document.body.classList.add('dark-theme');
+        } else {
+          document.body.classList.remove('dark-theme');
+        }
+      }
+    });
+  </script>
+</body>
+</html>

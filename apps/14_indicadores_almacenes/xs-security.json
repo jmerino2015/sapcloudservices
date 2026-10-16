@@ -1,0 +1,32 @@
+{
+  "xsappname": "com-empresa-indicadoresalmacenes",
+  "tenant-mode": "dedicated",
+  "description": "Configuración de Seguridad XSUAA para Torre de Control WMS Multi-Sede",
+  "scopes": [
+    {
+      "name": "$XSAPPNAME.WmsViewer",
+      "description": "Visualización de Indicadores Torre de Control WMS"
+    },
+    {
+      "name": "$XSAPPNAME.WmsManager",
+      "description": "Gestión y Sincronización Avanzada Torre de Control WMS"
+    }
+  ],
+  "role-templates": [
+    {
+      "name": "WmsViewerRole",
+      "description": "Rol de Consulta de Indicadores WMS",
+      "scope-references": [
+        "$XSAPPNAME.WmsViewer"
+      ]
+    },
+    {
+      "name": "WmsManagerRole",
+      "description": "Rol de Gestión y Operaciones WMS Multi-Sede",
+      "scope-references": [
+        "$XSAPPNAME.WmsViewer",
+        "$XSAPPNAME.WmsManager"
+      ]
+    }
+  ]
+}

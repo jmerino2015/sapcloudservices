@@ -1,0 +1,121 @@
+<core:FragmentDefinition
+    xmlns="sap.m"
+    xmlns:f="sap.ui.layout.form"
+    xmlns:core="sap.ui.core"
+    xmlns:u="sap.ui.unified">
+
+    <Dialog
+        title="Registro de Nota de Crédito (Devolución de Stock e Importe — Req. N° 1)"
+        contentWidth="900px"
+        resizable="true"
+        draggable="true">
+        <content>
+            <VBox class="sapUiSmallMargin">
+
+                <!-- Banner OCR Reconocimiento Automático (Req N° 2) -->
+                <Panel class="sapUiTinyMarginBottom" headerText="Escáner DROID OCR — Selección de Documento PDF Pre-cargado">
+                    <VBox class="sapUiTinyMargin">
+                        <Label text="Seleccione una Nota de Crédito PDF Pre-cargada para la Simulación Demo:" bold="true" class="sapUiTinyMarginBottom" />
+                        <HBox alignItems="Center" class="sapUiSmallMarginBottom">
+                            <Select selectedKey="{ncForm>/selectedSamplePdf}" width="26rem" change=".onSamplePdfChange" class="sapUiTinyMarginEnd">
+                                <core:Item key="PDF_1" text="📄 Nota_Credito_FC01-0004921_Devolucion.pdf (380 KB)" />
+                                <core:Item key="PDF_2" text="📄 Nota_Credito_FC02-0001842_Ajuste.pdf (295 KB)" />
+                            </Select>
+                            <Button
+                                text="🔍 Escanear NC con OCR"
+                                icon="sap-icon://scan"
+                                type="Emphasized"
+                                press=".onSimulateOcrNc" />
+                        </HBox>
+
+                        <HBox alignItems="Center" class="sapUiTinyMarginPadding portalHeroBanner" style="background:#f1f5f9; border:1px solid #cbd5e1; border-radius:8px; padding:12px;">
+                            <core:Icon src="sap-icon://pdf-attachment" size="2.5rem" color="#d93b3b" class="sapUiSmallMarginEnd" />
+                            <VBox class="sapUiSmallMarginEnd">
+                                <Label text="{ncForm>/samplePdfName}" bold="true" />
+                                <Text text="Documento PDF pre-cargado listo para extracción OCR automática de Sociedad, Folio NC, Devolución/Ajuste, Importe y Sello de Tienda." class="small-muted-text" />
+                            </VBox>
+                            <ToolbarSpacer />
+                            <ObjectStatus text="{= ${ncForm>/ocrExecuted} ? '✅ OCR AI Completado' : '📄 Documento Listo' }" state="{= ${ncForm>/ocrExecuted} ? 'Success' : 'Information' }" />
+                        </HBox>
+
+                        <MessageStrip
+                            id="msgOcrNcResult"
+                            text="{ncForm>/ocrStatusText}"
+                            type="{ncForm>/ocrStatusType}"
+                            visible="{= !!${ncForm>/ocrStatusText} }"
+                            showIcon="true"
+                            class="sapUiTinyMarginTop" />
+                    </VBox>
+                </Panel>
+
+                <f:SimpleForm
+                    editable="true"
+                    layout="ResponsiveGridLayout"
+                    labelSpanXL="4" labelSpanL="4" labelSpanM="4" labelSpanS="12"
+                    adjustLabelSpan="false"
+                    columnsXL="2" columnsL="2" columnsM="2">
+                    <f:content>
+                        <core:Title text="1. Modalidad &amp; Devolución de Compras (Req. N° 1)" />
+
+                        <Label text="Modalidad Nota de Crédito" required="true" />
+                        <Select selectedKey="{ncForm>/tipoNc}" width="100%">
+                            <core:Item key="DEVOLUCION_STOCK" text="01 - Devolución de Stock (Mercadería / Devolución Compras)" />
+                            <core:Item key="AJUSTE_IMPORTE" text="02 - Ajuste de Importe / Descuento Comercial" />
+                        </Select>
+
+                        <Label text="Orden de Compra SAP (OC)" required="true" />
+                        <Select selectedKey="{ncForm>/ordenCompra}" width="100%" change=".onNcPoChange">
+                            <core:Item key="4540012337" text="4540012337 - Adquisición Mercadería &amp; TI" />
+                            <core:Item key="4540012338" text="4540012338 - Suministros Industriales" />
+                        </Select>
+
+                        <Label text="Nota Devolución Mercadería (Compras)" required="true" />
+                        <Input value="{ncForm>/notaDevolucion}" placeholder="Ej. DEV-2026-00412" tooltip="Asocia la devolución a los ingresos de la misma Orden de Compra" />
+
+                        <Label text="Parte de Ingreso Original" />
+                        <Input value="{ncForm>/parteIngresoOriginal}" editable="false" />
+
+                        <Label text="Sociedad SAP" required="true" />
+                        <Select selectedKey="{ncForm>/sociedad}" width="100%">
+                            <core:Item key="P202 Superdeporte Plus Perú SAC" text="P202 Superdeporte Plus Perú SAC" />
+                            <core:Item key="P101 Droid Perú SAC" text="P101 Droid Perú SAC" />
+                        </Select>
+
+                        <core:Title text="2. Comprobante NC SUNAT &amp; Importes Auditados" />
+
+                        <Label text="Folio SUNAT Nota de Crédito" required="true" />
+                        <Input value="{ncForm>/folioNc}" placeholder="Ej. FC01-0004921" />
+
+                        <Label text="Motivo de la Devolución / Ajuste" required="true" />
+                        <Input value="{ncForm>/motivo}" placeholder="Ej. Devolución por falla de calidad en lote de mercadería" />
+
+                        <Label text="Sello de Tienda / Almacén (OCR)" />
+                        <Input value="{ncForm>/selloTienda}" editable="false" />
+
+                        <Label text="Importe Neto &amp; IGV (18%)" required="true" />
+                        <HBox alignItems="Center">
+                            <Input value="{ncForm>/montoNeto}" width="7rem" class="sapUiTinyMarginEnd" placeholder="Neto" />
+                            <Input value="{ncForm>/igv}" width="6rem" class="sapUiTinyMarginEnd" placeholder="IGV" />
+                            <Input value="{ncForm>/montoTotal}" width="7rem" placeholder="Total" />
+                        </HBox>
+
+                        <Label text="Adjuntar XML UBL 2.1 / PDF" />
+                        <u:FileUploader buttonText="Examinar NC XML/PDF" placeholder="Seleccione archivo XML o PDF de Nota de Crédito" width="100%" />
+                    </f:content>
+                </f:SimpleForm>
+
+            </VBox>
+        </content>
+        <beginButton>
+            <Button
+                text="Registrar y Contabilizar Nota de Crédito"
+                icon="sap-icon://save"
+                type="Emphasized"
+                press=".onSaveCreditNote" />
+        </beginButton>
+        <endButton>
+            <Button text="Cancelar" type="Transparent" press=".onCloseCreditNoteDialog" />
+        </endButton>
+    </Dialog>
+
+</core:FragmentDefinition>

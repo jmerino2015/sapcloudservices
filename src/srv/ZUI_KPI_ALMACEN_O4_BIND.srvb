@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<srvb:serviceBinding xmlns:srvb="http://www.sap.com/adt/srvb"
+  name="ZUI_KPI_ALMACEN_O4_BIND"
+  serviceDefinition="ZUI_KPI_ALMACEN_O4"
+  bindingType="ODATA_V4_UI"
+  category="0"
+  description="Service Binding OData V4 (UI) - Torre de Control WMS Multi-Sede"
+  state="ACTIVE">
+  <srvb:service
+    name="ZUI_KPI_ALMACEN_O4"
+    version="0001">
+    <srvb:implementation
+      type="RAP_MANAGED"
+      rootEntity="KpiAlmacenSede" />
+  </srvb:service>
+  <srvb:publishInfo
+    published="true"
+    serviceUrl="/sap/opu/odata4/sap/zui_kpi_almacen_o4/srvd/sap/zui_kpi_almacen_o4/0001/"
+    publishedBy="RAP_ENGINEER"
+    publishedTimestamp="2026-10-02T02:25:00Z" />
+</srvb:serviceBinding>

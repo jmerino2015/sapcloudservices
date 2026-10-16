@@ -1,0 +1,227 @@
+<mvc:View
+    controllerName="sap.crm.customerportal.controller.Service"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m"
+    xmlns:f="sap.f"
+    xmlns:form="sap.ui.layout.form"
+    xmlns:core="sap.ui.core"
+    xmlns:layout="sap.ui.layout">
+
+    <Page id="servicePage" title="{i18n>serviceTitle}" showNavButton="false">
+        <content>
+            <IconTabBar
+                id="serviceIconTabBar"
+                select=".onTabSelect"
+                expanded="true"
+                class="sapUiResponsiveContentPadding">
+                <items>
+
+                    <!-- ======================================================== -->
+                    <!-- TAB 1: CREAR TICKET CON CASE DEFLECTION EN VIVO          -->
+                    <!-- ======================================================== -->
+                    <IconTabFilter
+                        key="create"
+                        icon="sap-icon://add-contact"
+                        text="Crear Caso (con Deflexión IA)">
+                        
+                        <VBox class="sapUiMediumMargin">
+                            <MessageStrip
+                                text="Sistema de Autogestión con Deflexión Inteligente (Case Deflection). A medida que redactas tu consulta, el motor de IA buscará artículos en la Base de Conocimientos para resolver tu inquietud sin esperas."
+                                type="Information"
+                                showIcon="true"
+                                class="sapUiSmallMarginBottom" />
+
+                            <form:SimpleForm
+                                id="ticketCreateForm"
+                                editable="true"
+                                layout="ResponsiveGridLayout"
+                                labelSpanXL="3"
+                                labelSpanL="3"
+                                labelSpanM="4"
+                                labelSpanS="12"
+                                adjustLabelSpan="false"
+                                emptySpanXL="2"
+                                emptySpanL="2"
+                                columnsXL="1"
+                                columnsL="1"
+                                columnsM="1">
+                                <form:content>
+                                    <core:Title text="Tipificación y Clasificación del Caso" />
+
+                                    <Label text="Tipo de Solicitud" required="true" />
+                                    <Select id="inpTicketType" width="100%" change=".onTicketTypeChange">
+                                        <core:Item key="GARANTIA" text="Solicitud de Garantía de Producto (RMA)" />
+                                        <core:Item key="RECLAMO" text="Reclamo Comercial o Discrepancia de Factura" />
+                                        <core:Item key="CONSULTA" text="Consulta Técnica y Soporte de Ingeniería" />
+                                    </Select>
+
+                                    <Label text="Nivel de Prioridad (SLA)" required="true" />
+                                    <Select id="inpTicketPriority" width="100%">
+                                        <core:Item key="URGENTE" text="Urgente - Detención de Planta (SLA: 4 Horas)" />
+                                        <core:Item key="ALTA" text="Alta - Afecta Operación Parcial (SLA: 12 Horas)" />
+                                        <core:Item key="MEDIA" text="Media - Requerimiento Estándar (SLA: 24 Horas)" />
+                                        <core:Item key="BAJA" text="Baja - Consulta General (SLA: 48 Horas)" />
+                                    </Select>
+
+                                    <Label text="Cola de Atención Sugerida" />
+                                    <Input id="inpQueue" value="Garantías &amp; Calidad" editable="false" />
+
+                                    <Label text="Pedido de Venta Relacionado (S/4HANA)" />
+                                    <Select id="inpRelatedOrder" width="100%" items="{/salesOrders}">
+                                        <core:Item key="{orderNumber}" text="Pedido #{orderNumber} - {statusText} ({deliveryAddress})" />
+                                    </Select>
+
+                                    <core:Title text="Detalle del Requerimiento" />
+
+                                    <Label text="Asunto / Título" required="true" />
+                                    <Input
+                                        id="inpSubject"
+                                        placeholder="Escribe el título (ej. fisura en rodamiento, calibración de presostato, duda de factura)..."
+                                        liveChange=".onLiveCheckDeflection" />
+
+                                    <Label text="Descripción Detallada" required="true" />
+                                    <TextArea
+                                        id="inpDescription"
+                                        rows="3"
+                                        placeholder="Describe el síntoma o requerimiento técnico..."
+                                        liveChange=".onLiveCheckDeflection" />
+
+                                    <!-- LIVE CASE DEFLECTION SMART CONTAINER -->
+                                    <Label text="" />
+                                    <VBox id="deflectionBox" visible="false" class="caseDeflectionBox">
+                                        <HBox alignItems="Center" class="sapUiTinyMarginBottom">
+                                            <core:Icon src="sap-icon://lightbulb" color="#16a34a" size="1.2rem" class="sapUiTinyMarginEnd" />
+                                            <Title text="💡 Recomendaciones Inteligentes (Case Deflection):" level="H4" class="sapUiPositiveElement" />
+                                        </HBox>
+                                        <Text text="Encontramos estos artículos oficiales en la Base de Conocimientos que podrían responder de inmediato tu consulta:" class="sapUiTinyMarginBottom sapUiLightText" />
+                                        <VBox id="deflectionItemsContainer" />
+                                    </VBox>
+
+                                    <Label text="Archivos Adjuntos" />
+                                    <HBox alignItems="Center">
+                                        <Button
+                                            text="Adjuntar Fotografías / Informes Técnicos"
+                                            icon="sap-icon://attachment"
+                                            press=".onSimulateAttachment"
+                                            class="sapUiTinyMarginEnd" />
+                                        <Text id="txtAttachmentCount" text="Sin archivos seleccionados" class="sapUiTinyText sapUiLightText" />
+                                    </HBox>
+
+                                    <Label text="" />
+                                    <Button
+                                        text="Crear Ticket de Soporte"
+                                        type="Emphasized"
+                                        icon="sap-icon://headset"
+                                        press=".onSubmitTicket"
+                                        enabled="{session>/permissions/canCreateTicket}"
+                                        class="sapUiSmallMarginTop" />
+                                </form:content>
+                            </form:SimpleForm>
+                        </VBox>
+                    </IconTabFilter>
+
+                    <!-- ======================================================== -->
+                    <!-- TAB 2: SEGUIMIENTO DE TICKETS & SLAs                     -->
+                    <!-- ======================================================== -->
+                    <IconTabFilter
+                        key="myTickets"
+                        icon="sap-icon://headset"
+                        text="Mis Casos y Semaforización SLA">
+
+                        <Table
+                            id="ticketsTable"
+                            items="{/tickets}"
+                            mode="SingleSelectMaster"
+                            noDataText="No hay tickets de soporte registrados">
+                            <headerToolbar>
+                                <OverflowToolbar>
+                                    <Title text="Casos Registrados en Service Cloud" level="H3" />
+                                    <ToolbarSpacer />
+                                    <SearchField width="260px" placeholder="Buscar por ID o asunto..." liveChange=".onSearchTicket" />
+                                </OverflowToolbar>
+                            </headerToolbar>
+                            <columns>
+                                <Column><Text text="Nº Ticket" class="sapUiBoldText" /></Column>
+                                <Column><Text text="Tipo" /></Column>
+                                <Column minScreenWidth="Tablet" demandPopin="true"><Text text="Asunto" /></Column>
+                                <Column><Text text="Prioridad" /></Column>
+                                <Column><Text text="Semáforo SLA" /></Column>
+                                <Column minScreenWidth="Desktop" demandPopin="true"><Text text="Especialista Asignado" /></Column>
+                                <Column><Text text="Estado" /></Column>
+                                <Column hAlign="Center"><Text text="Interacción" /></Column>
+                            </columns>
+                            <items>
+                                <ColumnListItem type="Navigation" press=".onOpenTicketTimeline">
+                                    <cells>
+                                        <Text text="{ticketId}" class="sapUiBoldText" />
+                                        <Text text="{typeName}" />
+                                        <Text text="{subject}" />
+                                        <ObjectStatus
+                                            text="{priorityText}"
+                                            state="{parts: [{path: 'priority'}], formatter: '.formatPriorityState'}" />
+                                        <ObjectStatus
+                                            text="{slaStatusText}"
+                                            state="{parts: [{path: 'slaStatus'}], formatter: '.formatSlaState'}"
+                                            icon="{= ${slaStatus} === 'ON_TIME' ? 'sap-icon://accept' : (${slaStatus} === 'WARNING' ? 'sap-icon://alert' : 'sap-icon://error') }" />
+                                        <Text text="{assignedAgent}" />
+                                        <ObjectStatus text="{status}" state="{statusState}" />
+                                        <Button
+                                            text="Ver Chat &amp; SLA"
+                                            icon="sap-icon://discussion-2"
+                                            type="Ghost"
+                                            press=".onOpenTicketTimeline" />
+                                    </cells>
+                                </ColumnListItem>
+                            </items>
+                        </Table>
+                    </IconTabFilter>
+
+                    <!-- ======================================================== -->
+                    <!-- TAB 3: BASE DE CONOCIMIENTOS FEDERADA (KNOWLEDGE)        -->
+                    <!-- ======================================================== -->
+                    <IconTabFilter
+                        key="faq"
+                        icon="sap-icon://sys-help"
+                        text="Base de Conocimientos Federada">
+                        
+                        <VBox class="sapUiMediumMargin">
+                            <SearchField
+                                id="faqSearch"
+                                placeholder="Buscar artículos en la Base de Conocimientos..."
+                                liveChange=".onSearchFaq"
+                                class="sapUiSmallMarginBottom" />
+
+                            <VBox id="faqContainer" items="{/faqs}">
+                                <Panel
+                                    expandable="true"
+                                    expanded="false"
+                                    class="sapUiTinyMarginBottom fioriCardCustom">
+                                    <headerToolbar>
+                                        <OverflowToolbar>
+                                            <core:Icon src="sap-icon://document-text" color="#0854a0" />
+                                            <Title text="{title}" level="H4" />
+                                            <ToolbarSpacer />
+                                            <ObjectStatus text="{category}" state="Information" class="sapUiTinyMarginEnd" />
+                                            <Text text="{views} lecturas | 👍 {usefulVotes} útiles" class="sapUiTinyText sapUiLightText" />
+                                        </OverflowToolbar>
+                                    </headerToolbar>
+                                    <content>
+                                        <VBox class="sapUiSmallMargin">
+                                            <Text text="{content}" class="sapUiSmallMarginBottom" />
+                                            <HBox alignItems="Center">
+                                                <Text text="¿Fue útil este artículo? " class="sapUiTinyText sapUiLightText sapUiTinyMarginEnd" />
+                                                <Button text="Sí (Útil)" icon="sap-icon://thumb-up" type="Ghost" class="sapUiTinyMarginEnd" press=".onVoteUseful" />
+                                                <Button text="No" icon="sap-icon://thumb-down" type="Ghost" press=".onVoteNotUseful" />
+                                            </HBox>
+                                        </VBox>
+                                    </content>
+                                </Panel>
+                            </VBox>
+                        </VBox>
+                    </IconTabFilter>
+
+                </items>
+            </IconTabBar>
+        </content>
+    </Page>
+</mvc:View>

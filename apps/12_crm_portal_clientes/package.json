@@ -1,0 +1,20 @@
+{
+  "name": "sap-c4c-customer-portal",
+  "version": "1.0.0",
+  "description": "Portal de Clientes B2B/B2C integrado con SAP CRM y SAP S/4HANA en SAP Fiori / OpenUI5",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "keywords": [
+    "sap",
+    "fiori",
+    "openui5",
+    "sapui5",
+    "c4c",
+    "s4hana",
+    "customer-portal"
+  ],
+  "author": "SAP Fiori Developer",
+  "license": "UNLICENSED"
+}

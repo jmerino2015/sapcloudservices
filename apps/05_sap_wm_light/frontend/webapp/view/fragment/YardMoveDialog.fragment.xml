@@ -1,0 +1,28 @@
+<core:FragmentDefinition
+  xmlns="sap.m"
+  xmlns:core="sap.ui.core"
+  xmlns:layout="sap.ui.layout">
+  <Dialog title="Registrar Movimiento en Patio" contentWidth="450px">
+    <content>
+      <layout:VerticalLayout width="100%" class="sapUiContentPadding">
+        
+        <Label text="Vehículo a Mover" required="true" />
+        <Select selectedKey="{move>/vehicle_id}" width="100%" items="{moveData>/vehicles}">
+          <core:Item key="{moveData>id}" text="{moveData>license_plate} - {moveData>carrier}" />
+        </Select>
+
+        <Label text="Ubicación Destino" class="sapUiTinyMarginTop" required="true" />
+        <Select selectedKey="{move>/to_location_id}" width="100%" items="{moveData>/locations}">
+          <core:Item key="{moveData>id}" text="{moveData>code} ({moveData>type})" />
+        </Select>
+
+      </layout:VerticalLayout>
+    </content>
+    <beginButton>
+      <Button text="Mover" type="Emphasized" press=".onSaveMove" />
+    </beginButton>
+    <endButton>
+      <Button text="Cancelar" press=".onCloseMove" />
+    </endButton>
+  </Dialog>
+</core:FragmentDefinition>

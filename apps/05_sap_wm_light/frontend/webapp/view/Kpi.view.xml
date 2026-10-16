@@ -1,0 +1,121 @@
+<mvc:View
+  controllerName="wm.light.controller.Kpi"
+  xmlns:mvc="sap.ui.core.mvc"
+  xmlns="sap.m"
+  xmlns:layout="sap.ui.layout"
+  xmlns:mc="sap.suite.ui.microchart"
+  xmlns:f="sap.f">
+
+  <Page title="Indicadores de Gestión (KPIs)" showNavButton="false" backgroundDesign="List">
+    <content>
+      
+      <VBox class="sapUiResponsiveMargin" spacing="1rem">
+        
+        <!-- 1. Recepción y Almacenamiento (Inbound) -->
+        <Panel headerText="1. Recepción y Almacenamiento (Inbound)" expandable="true" expanded="true">
+          <layout:HorizontalLayout allowWrapping="true">
+            
+            <GenericTile class="sapUiTinyMarginBegin sapUiTinyMarginTop tileLayout" header="Tiempo de ciclo (Recepción)" subheader="Últimos 5 días (Horas)" press=".onTilePress">
+              <customData><core:CustomData key="kpiId" value="inboundCycle" xmlns:core="sap.ui.core" /></customData>
+              <TileContent>
+                <mc:LineMicroChart size="Responsive" threshold="2.5" leftTopLabel="3.2h" rightTopLabel="2.4h" leftBottomLabel="Lun" rightBottomLabel="Vie">
+                  <mc:lines>
+                    <mc:LineMicroChartLine points="{kpi>/inbound/cycleTrend}">
+                      <mc:LineMicroChartEmphasizedPoint x="{x}" y="{y}" show="{show}" color="{color}"/>
+                    </mc:LineMicroChartLine>
+                  </mc:lines>
+                </mc:LineMicroChart>
+              </TileContent>
+            </GenericTile>
+
+            <GenericTile class="sapUiTinyMarginBegin sapUiTinyMarginTop tileLayout" header="Tasa de devoluciones" subheader="Actual vs Objetivo" press=".onTilePress">
+              <customData><core:CustomData key="kpiId" value="inboundReturns" xmlns:core="sap.ui.core" /></customData>
+              <TileContent unit="%">
+                <mc:BulletMicroChart size="Responsive" targetValue="3" minValue="0" maxValue="10" showValueMarker="true">
+                  <mc:actual>
+                    <mc:BulletMicroChartData value="{kpi>/inbound/returnsRate}" color="Critical" />
+                  </mc:actual>
+                  <mc:thresholds>
+                    <mc:BulletMicroChartData value="0" color="Good" />
+                    <mc:BulletMicroChartData value="3" color="Good" />
+                    <mc:BulletMicroChartData value="5" color="Critical" />
+                    <mc:BulletMicroChartData value="10" color="Error" />
+                  </mc:thresholds>
+                </mc:BulletMicroChart>
+              </TileContent>
+            </GenericTile>
+
+            <GenericTile class="sapUiTinyMarginBegin sapUiTinyMarginTop tileLayout" header="Exactitud del inventario" subheader="Físico vs Sistema" press=".onTilePress">
+              <customData><core:CustomData key="kpiId" value="inboundAccuracy" xmlns:core="sap.ui.core" /></customData>
+              <TileContent>
+                <mc:RadialMicroChart size="Responsive" percentage="{kpi>/inbound/inventoryAccuracy}" valueColor="Good" />
+              </TileContent>
+            </GenericTile>
+
+          </layout:HorizontalLayout>
+        </Panel>
+
+        <!-- 2. Preparación y Despacho (Outbound) -->
+        <Panel headerText="2. Preparación y Despacho (Outbound)" expandable="true" expanded="true">
+          <layout:HorizontalLayout allowWrapping="true">
+            
+            <GenericTile class="sapUiTinyMarginBegin sapUiTinyMarginTop tileLayout" header="Productividad Picking" subheader="Líneas por hr (Turnos)" press=".onTilePress">
+              <customData><core:CustomData key="kpiId" value="outboundPicking" xmlns:core="sap.ui.core" /></customData>
+              <TileContent>
+                <mc:ColumnMicroChart size="Responsive" columns="{kpi>/outbound/pickingTrend}">
+                  <mc:ColumnMicroChartData value="{value}" color="{color}" label="{label}" />
+                </mc:ColumnMicroChart>
+              </TileContent>
+            </GenericTile>
+
+            <GenericTile class="sapUiTinyMarginBegin sapUiTinyMarginTop tileLayout" header="Pedidos perfectos" subheader="Perfect Order Rate" press=".onTilePress">
+              <customData><core:CustomData key="kpiId" value="outboundPerfect" xmlns:core="sap.ui.core" /></customData>
+              <TileContent>
+                <mc:HarveyBallMicroChart size="Responsive" total="100" totalScale="%" showTotal="true" showFractions="true">
+                  <mc:items>
+                    <mc:HarveyBallMicroChartItem fraction="{kpi>/outbound/perfectOrder}" fractionScale="%" color="Good" />
+                  </mc:items>
+                </mc:HarveyBallMicroChart>
+              </TileContent>
+            </GenericTile>
+
+            <GenericTile class="sapUiTinyMarginBegin sapUiTinyMarginTop tileLayout" header="OTIF (On-Time In-Full)" subheader="Exactitud en entrega" press=".onTilePress">
+              <customData><core:CustomData key="kpiId" value="outboundOtif" xmlns:core="sap.ui.core" /></customData>
+              <TileContent unit="%">
+                <mc:ComparisonMicroChart size="Responsive" data="{kpi>/outbound/otifData}">
+                  <mc:ComparisonMicroChartData title="{title}" value="{value}" color="{color}" />
+                </mc:ComparisonMicroChart>
+              </TileContent>
+            </GenericTile>
+
+          </layout:HorizontalLayout>
+        </Panel>
+
+        <!-- 3. Utilización y Capacidad -->
+        <Panel headerText="3. Utilización y Capacidad" expandable="true" expanded="true">
+          <layout:HorizontalLayout allowWrapping="true">
+            
+            <GenericTile class="sapUiTinyMarginBegin sapUiTinyMarginTop tileLayout" header="Ocupación del almacén" subheader="Ubicaciones físicas" press=".onTilePress">
+              <customData><core:CustomData key="kpiId" value="utilizationOccupancy" xmlns:core="sap.ui.core" /></customData>
+              <TileContent>
+                <mc:RadialMicroChart size="Responsive" percentage="{kpi>/utilization/occupancy}" valueColor="{= ${kpi>/utilization/occupancy} > 90 ? 'Error' : 'Good' }" />
+              </TileContent>
+            </GenericTile>
+
+            <GenericTile class="sapUiTinyMarginBegin sapUiTinyMarginTop tileLayout" header="Costo por pedido/línea" subheader="Eficiencia financiera (USD)" press=".onTilePress">
+              <customData><core:CustomData key="kpiId" value="utilizationCost" xmlns:core="sap.ui.core" /></customData>
+              <TileContent>
+                <mc:ComparisonMicroChart size="Responsive" data="{kpi>/utilization/costData}">
+                  <mc:ComparisonMicroChartData title="{title}" value="{value}" color="{color}" />
+                </mc:ComparisonMicroChart>
+              </TileContent>
+            </GenericTile>
+
+          </layout:HorizontalLayout>
+        </Panel>
+
+      </VBox>
+    </content>
+  </Page>
+
+</mvc:View>

@@ -1,0 +1,29 @@
+<core:FragmentDefinition
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core"
+>
+    <SelectDialog
+        title="Buscar Cliente"
+        class="sapUiPopupWithPadding"
+        items="{localClienteModel>/items}"
+        search=".handleSolicitanteSearch"
+        liveChange=".handleSolicitanteSearch"
+        confirm=".handleSolicitanteClose"
+        cancel=".handleSolicitanteClose"
+        growing="true"
+        growingThreshold="20"
+    >
+        <CustomListItem>
+            <HBox
+                width="100%"
+                alignItems="Center"
+                class="sapUiSmallMarginBeginEnd sapUiTinyMarginTopBottom"
+            >
+                <ObjectIdentifier
+                    title="{localClienteModel>Nombre} {localClienteModel>ApellidoPaterno} {localClienteModel>ApellidoMaterno}"
+                    text="{localClienteModel>Kunnr}"
+                />
+            </HBox>
+        </CustomListItem>
+    </SelectDialog>
+</core:FragmentDefinition>

@@ -1,0 +1,823 @@
+<mvc:View
+    controllerName="com.droidconsulting.entregasRendir.controller.Main"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m"
+    xmlns:f="sap.f"
+    xmlns:card="sap.f.cards"
+    xmlns:cssgrid="sap.ui.layout.cssgrid"
+    xmlns:core="sap.ui.core"
+    xmlns:html="http://www.w3.org/1999/xhtml">
+
+    <Page id="mainPage" title="Solución Entregas a Rendir y Viáticos (FI-TV / CO)" showNavButton="false">
+        <headerContent>
+            <!-- Navigation Back to Tile Menu -->
+            <Button
+                icon="sap-icon://menu2"
+                text="⬅️ Menú Principal"
+                type="Emphasized"
+                press=".onNavToMenu"
+                visible="{= ${app>/activeSubProcess} !== 'MENU' &amp;&amp; !${app>/isMobileDemo} }"
+                class="sapUiTinyMarginEnd" />
+            <!-- Mobile Mode Toggle Button -->
+            <Button
+                id="btnToggleMobile"
+                icon="sap-icon://iphone"
+                text="{= ${app>/isMobileDemo} ? '💻 Vista Escritorio' : '📱 Modo Celular (Demo)' }"
+                type="{= ${app>/isMobileDemo} ? 'Emphasized' : 'Default' }"
+                press=".onToggleMobileDemo"
+                class="sapUiTinyMarginEnd" />
+            <Button icon="sap-icon://nav-back" tooltip="Regresar al Launchpad SAP" press=".onNavToLaunchpad" />
+        </headerContent>
+        <content>
+
+            <!-- ============================================================
+                 VISTA 0: MENÚ INICIAL DE TILES (CUANDO ACTIVE SUBPROCESS ES 'MENU')
+                 ============================================================ -->
+            <VBox class="sapUiSmallMargin" visible="{= ${app>/activeSubProcess} === 'MENU' &amp;&amp; !${app>/isMobileDemo} }">
+
+                <Panel headerText="Menú Principal de Aplicaciones — Entregas a Rendir y Viáticos" class="sapUiSmallMarginBottom">
+                    <VBox class="sapUiTinyMargin">
+                        <Text text="Seleccione una aplicación para gestionar los procesos operativos BPD, OCR de comprobantes o consultar indicadores:" class="sapUiSmallMarginBottom" />
+
+                        <cssgrid:CSSGrid
+                            gridTemplateColumns="repeat(auto-fill, minmax(17rem, 1fr))"
+                            gridGap="1.25rem"
+                            class="sapUiSmallMarginBottom">
+
+                            <!-- Tile 0: Dashboard de Indicadores -->
+                            <GenericTile
+                                header="📊 Dashboard de Indicadores"
+                                subheader="KPIs de Gestión &amp; Trazabilidad"
+                                press=".onSelectSubProcess"
+                                data:processKey="DASHBOARD"
+                                xmlns:data="http://schemas.sap.com/sapui5/extension/sap.ui.core.CustomData/1"
+                                class="sapUiTinyMargin">
+                                <tileContent>
+                                    <TileContent footer="Analytics &amp; Detalle">
+                                        <NumericContent value="42.3K" scale="PEN" valueColor="Good" indicator="Up" icon="sap-icon://bar-chart" />
+                                    </TileContent>
+                                </tileContent>
+                            </GenericTile>
+
+                            <!-- Tile 1: Entregas a Rendir (Con OCR & MIGO) -->
+                            <GenericTile
+                                header="Entregas a rendir"
+                                subheader="OCR de Comprobantes &amp; MIGO"
+                                press=".onSelectSubProcess"
+                                data:processKey="ENTREGAS"
+                                xmlns:data="http://schemas.sap.com/sapui5/extension/sap.ui.core.CustomData/1"
+                                class="sapUiTinyMargin">
+                                <tileContent>
+                                    <TileContent footer="Flujo 10 Pasos FI">
+                                        <ImageContent src="sap-icon://money-bills" />
+                                    </TileContent>
+                                </tileContent>
+                            </GenericTile>
+
+                            <!-- Tile 2: Viajes y Viáticos -->
+                            <GenericTile
+                                header="Viajes y viáticos"
+                                subheader="Automatiza tus gastos de viajes"
+                                press=".onSelectSubProcess"
+                                data:processKey="VIAJES"
+                                xmlns:data="http://schemas.sap.com/sapui5/extension/sap.ui.core.CustomData/1"
+                                class="sapUiTinyMargin">
+                                <tileContent>
+                                    <TileContent footer="Pasajes &amp; Viáticos">
+                                        <ImageContent src="sap-icon://flight" />
+                                    </TileContent>
+                                </tileContent>
+                            </GenericTile>
+
+                            <!-- Tile 3: Cajas Chicas -->
+                            <GenericTile
+                                header="Cajas chicas"
+                                subheader="Saldos claros y reposición"
+                                press=".onSelectSubProcess"
+                                data:processKey="CAJA_CHICA"
+                                xmlns:data="http://schemas.sap.com/sapui5/extension/sap.ui.core.CustomData/1"
+                                class="sapUiTinyMargin">
+                                <tileContent>
+                                    <TileContent footer="Arqueos &amp; Reposición">
+                                        <ImageContent src="sap-icon://piggy-bank" />
+                                    </TileContent>
+                                </tileContent>
+                            </GenericTile>
+
+                            <!-- Tile 4: Extensión por Criticidad (Req N° 3) -->
+                            <GenericTile
+                                header="🚨 Extensión por Criticidad"
+                                subheader="Desembolso esporádico urgente"
+                                press=".onOpenCriticalExtensionDialog"
+                                class="sapUiTinyMargin">
+                                <tileContent>
+                                    <TileContent footer="Req N° 3 BPD">
+                                        <ImageContent src="sap-icon://flash" />
+                                    </TileContent>
+                                </tileContent>
+                            </GenericTile>
+
+                            <!-- Tile 5: Liquidación PV SD (Req N° 4) -->
+                            <GenericTile
+                                header="🏬 Liquidación PV SD"
+                                subheader="Cuenta Puente FI (104102)"
+                                press=".onSelectSubProcess"
+                                data:processKey="PV_SD_BRIDGE"
+                                xmlns:data="http://schemas.sap.com/sapui5/extension/sap.ui.core.CustomData/1"
+                                class="sapUiTinyMargin">
+                                <tileContent>
+                                    <TileContent footer="Req N° 4 BPD">
+                                        <ImageContent src="sap-icon://retail-store" />
+                                    </TileContent>
+                                </tileContent>
+                            </GenericTile>
+
+                            <!-- Tile 6: Gastos de Kilometraje -->
+                            <GenericTile
+                                header="Gastos de kilometraje"
+                                subheader="Rinde tus trayectos de ruta"
+                                press=".onSelectSubProcess"
+                                data:processKey="KILOMETRAJE"
+                                xmlns:data="http://schemas.sap.com/sapui5/extension/sap.ui.core.CustomData/1"
+                                class="sapUiTinyMargin">
+                                <tileContent>
+                                    <TileContent footer="Control de Rutas KM">
+                                        <ImageContent src="sap-icon://car" />
+                                    </TileContent>
+                                </tileContent>
+                            </GenericTile>
+
+                            <!-- Tile 7: Firma Digital ✨ -->
+                            <GenericTile
+                                header="Firma Digital ✨"
+                                subheader="Respaldo legal en rendiciones"
+                                press=".onSelectSubProcess"
+                                data:processKey="FIRMA_DIGITAL"
+                                xmlns:data="http://schemas.sap.com/sapui5/extension/sap.ui.core.CustomData/1"
+                                class="sapUiTinyMargin">
+                                <tileContent>
+                                    <TileContent footer="Certificado PKI Legal">
+                                        <ImageContent src="sap-icon://signature" />
+                                    </TileContent>
+                                </tileContent>
+                            </GenericTile>
+
+                            <!-- Tile 8: 📱 Modo Celular (Demo) -->
+                            <GenericTile
+                                header="📱 Modo Celular (Demo)"
+                                subheader="Simulador Smartphone Mobile"
+                                press=".onToggleMobileDemo"
+                                class="sapUiTinyMargin">
+                                <tileContent>
+                                    <TileContent footer="Demo Presentación Mobile">
+                                        <ImageContent src="sap-icon://iphone" />
+                                    </TileContent>
+                                </tileContent>
+                            </GenericTile>
+
+                        </cssgrid:CSSGrid>
+                    </VBox>
+                </Panel>
+            </VBox>
+
+
+            <!-- ============================================================
+                 VISTA ESCRITORIO DE SUB-PROCESOS Y MÓDULOS BPD
+                 ============================================================ -->
+            <VBox class="sapUiSmallMargin" visible="{= ${app>/activeSubProcess} !== 'MENU' &amp;&amp; !${app>/isMobileDemo} }">
+
+                <!-- 📊 DASHBOARD DE INDICADORES DE GESTIÓN -->
+                <VBox id="panelDashboard" visible="{= ${app>/activeSubProcess} === 'DASHBOARD' }">
+                    <Panel headerText="📊 Dashboard de Indicadores de Gestión &amp; Trazabilidad (FI-TV / CO)" class="sapUiSmallMarginBottom">
+                        <headerToolbar>
+                            <OverflowToolbar>
+                                <Button text="⬅️ Menú Principal" icon="sap-icon://menu2" press=".onNavToMenu" class="sapUiTinyMarginEnd" />
+                                <Title text="Resumen Ejecutivo &amp; KPIs de Rendición de Cuentas" level="H3" />
+                                <ToolbarSpacer />
+                                <ObjectStatus text="Actualizado: En Vivo SAP" state="Success" icon="sap-icon://sys-enter-2" />
+                            </OverflowToolbar>
+                        </headerToolbar>
+
+                        <VBox class="sapUiSmallPadding">
+
+                            <!-- ROW 1: 4 KPI CARDS -->
+                            <cssgrid:CSSGrid
+                                gridTemplateColumns="repeat(auto-fill, minmax(16rem, 1fr))"
+                                gridGap="1rem"
+                                class="sapUiSmallMarginBottom">
+
+                                <f:Card>
+                                    <f:header>
+                                        <card:Header title="Monto Total Rendido" subtitle="Año 2026 acumulado" statusText="+14.2% vs 2025" iconSrc="sap-icon://lead" />
+                                    </f:header>
+                                    <f:content>
+                                        <VBox class="sapUiSmallMargin" alignItems="Center">
+                                            <ObjectNumber number="{app>/dashboard/kpis/montoTotalRendido}" unit="PEN" state="Success" class="sapUiTinyMarginBottom" />
+                                            <Text text="Sustentado con comprobantes XML/PDF" class="small-muted-text" />
+                                        </VBox>
+                                    </f:content>
+                                </f:Card>
+
+                                <f:Card>
+                                    <f:header>
+                                        <card:Header title="Solicitudes en Rendición" subtitle="Pendientes de Cierre FI" statusText="18 Solicitudes" iconSrc="sap-icon://pending" />
+                                    </f:header>
+                                    <f:content>
+                                        <VBox class="sapUiSmallMargin" alignItems="Center">
+                                            <ObjectNumber number="{app>/dashboard/kpis/montoPendiente}" unit="PEN" state="Warning" class="sapUiTinyMarginBottom" />
+                                            <Text text="Monto pendiente de liquidación" class="small-muted-text" />
+                                        </VBox>
+                                    </f:content>
+                                </f:Card>
+
+                                <f:Card>
+                                    <f:header>
+                                        <card:Header title="Tiempo Promedio de Cierre" subtitle="Eficiencia del Proceso" statusText="-35% tiempo" iconSrc="sap-icon://stopwatch" />
+                                    </f:header>
+                                    <f:content>
+                                        <VBox class="sapUiSmallMargin" alignItems="Center">
+                                            <Title text="{app>/dashboard/kpis/tiempoPromedioCierre}" level="H1" class="sapUiTinyMarginBottom" />
+                                            <Text text="Promedio desde OP hasta Compensación FI" class="small-muted-text" />
+                                        </VBox>
+                                    </f:content>
+                                </f:Card>
+
+                                <f:Card>
+                                    <f:header>
+                                        <card:Header title="Validación SUNAT" subtitle="Cumplimiento Tributario" statusText="Web Service OK" iconSrc="sap-icon://accept" />
+                                    </f:header>
+                                    <f:content>
+                                        <VBox class="sapUiSmallMargin" alignItems="Center">
+                                            <Title text="{app>/dashboard/kpis/cumplimientoSunat}" level="H1" class="sapUiTinyMarginBottom" />
+                                            <Text text="Comprobantes XML auditados en SUNAT" class="small-muted-text" />
+                                        </VBox>
+                                    </f:content>
+                                </f:Card>
+
+                            </cssgrid:CSSGrid>
+
+                            <!-- ROW 2: DETALLE TABLAS -->
+                            <Panel headerText="Detalle de Rendiciones, Saldos y Ajustes por Colaborador" class="sapUiSmallMarginBottom">
+                                <Table items="{app>/dashboard/detailedMetrics}">
+                                    <columns>
+                                        <Column><Text text="Centro Costos" /></Column>
+                                        <Column><Text text="Solicitante / Colaborador" /></Column>
+                                        <Column><Text text="Monto Anticipo OP" /></Column>
+                                        <Column><Text text="Monto Rendido" /></Column>
+                                        <Column><Text text="Saldo / Diferencia" /></Column>
+                                        <Column><Text text="Tipo Ajuste" /></Column>
+                                        <Column><Text text="Estado Auditoría" /></Column>
+                                    </columns>
+                                    <items>
+                                        <ColumnListItem highlight="{path: 'app>estado', formatter: '.statusState'}">
+                                            <cells>
+                                                <Text text="{app>ceco}" />
+                                                <Text text="{app>solicitante}" />
+                                                <ObjectNumber number="{app>anticipo}" unit="PEN" />
+                                                <ObjectNumber number="{app>rendido}" unit="PEN" />
+                                                <ObjectNumber number="{app>saldo}" unit="PEN" state="{= ${app>saldo} &gt;= 0 ? 'Success' : 'Warning' }" />
+                                                <Text text="{app>saldoTipo}" />
+                                                <ObjectStatus text="{app>estado}" state="{path: 'app>estado', formatter: '.statusState'}" />
+                                            </cells>
+                                        </ColumnListItem>
+                                    </items>
+                                </Table>
+                            </Panel>
+
+                        </VBox>
+                    </Panel>
+                </VBox>
+
+
+                <!-- 1. SUB-PROCESO: ENTREGAS A RENDIR (CON NOTA DE INGRESO MIGO & OCR REQ 5,6) -->
+                <VBox id="panelEntregas" visible="{= ${app>/activeSubProcess} === 'ENTREGAS' }">
+                    <Panel headerText="Sub-Proceso 1: Entregas a Rendir — Trazabilidad &amp; Flujo de Proceso Visual (10 Pasos FI)" class="sapUiSmallMarginBottom">
+                        <headerToolbar>
+                            <OverflowToolbar>
+                                <Button text="⬅️ Menú Principal" icon="sap-icon://menu2" press=".onNavToMenu" class="sapUiTinyMarginEnd" />
+                                <Title text="Flujo Operativo de Aprobación &amp; Rendición" level="H3" />
+                                <ToolbarSpacer />
+                                <SegmentedButton selectedKey="{app>/entregasViewMode}">
+                                    <items>
+                                        <SegmentedButtonItem key="FLOW" text="🔄 Flujo de Proceso Visual" icon="sap-icon://process" />
+                                        <SegmentedButtonItem key="LIST" text="📋 Vista Listado Tabular" icon="sap-icon://table-view" />
+                                    </items>
+                                </SegmentedButton>
+                                <SearchField id="searchClaims" placeholder="Buscar por Nro, Solicitante..." width="14rem" liveChange=".onSearchClaims" class="sapUiTinyMarginBegin" />
+                                <Button text="➕ Nueva Rendición" icon="sap-icon://add" type="Emphasized" press=".onOpenNewClaimDialog" />
+                            </OverflowToolbar>
+                        </headerToolbar>
+
+                        <!-- A. VISTA FLUJO DE PROCESO VISUAL DINÁMICO (TARJETAS DIAGRAMADAS POR EXPEDIENTE) -->
+                        <VBox visible="{= ${app>/entregasViewMode} === 'FLOW' || !${app>/entregasViewMode} }" class="sapUiTinyMarginTop">
+                            <VBox items="{app>/claims}">
+                                <items>
+                                    <VBox class="portalFlowCard sapUiSmallMarginBottom">
+                                        <!-- Header de la Solicitud -->
+                                        <HBox justifyContent="SpaceBetween" alignItems="Center" class="sapUiTinyMarginBottom">
+                                            <VBox>
+                                                <HBox alignItems="Center">
+                                                    <ObjectIdentifier title="{app>id}" class="sapUiSmallMarginEnd" />
+                                                    <ObjectStatus text="{app>motivo}" state="Information" icon="sap-icon://bookmark" bold="true" />
+                                                </HBox>
+                                                <HBox alignItems="Center" class="sapUiTinyMarginTop">
+                                                    <Text text="Solicitante: {app>solicitante} ({app>ceco})" class="sapUiSmallMarginEnd" />
+                                                    <Text text=" • " class="sapUiTinyMarginEnd" />
+                                                    <Text text="MIGO: {app>notaIngreso}" class="small-muted-text" />
+                                                </HBox>
+                                            </VBox>
+                                            <VBox alignItems="End">
+                                                <HBox alignItems="Center">
+                                                    <ObjectNumber number="{app>monto}" unit="{app>moneda}" state="Success" class="sapUiSmallMarginEnd" />
+                                                    <ObjectStatus text="{app>stepLabel}" state="{= ${app>currentStep} === 10 ? 'Success' : 'Warning' }" icon="sap-icon://process" />
+                                                </HBox>
+                                                <ProgressIndicator
+                                                    percentValue="{= ${app>currentStep} * 10 }"
+                                                    displayValue="{= ${app>currentStep} * 10 }% ({app>currentStep}/10 Pasos)"
+                                                    state="{= ${app>currentStep} === 10 ? 'Success' : 'Warning' }"
+                                                    width="16rem"
+                                                    class="sapUiTinyMarginTop" />
+                                            </VBox>
+                                        </HBox>
+
+                                        <!-- Diagrama de Flujo de Proceso Stepper (10 Pasos Visuales Conectados) -->
+                                        <HBox wrap="NoWrap" class="process-flow-container sapUiTinyMarginTop">
+                                            <!-- Step 1 -->
+                                            <VBox alignItems="Center" class="flow-step {= ${app>currentStep} &gt; 1 ? 'completed' : (${app>currentStep} === 1 ? 'active' : '') }">
+                                                <HBox class="flow-step-circle"><Text text="{= ${app>currentStep} &gt; 1 ? '✓' : '1' }" /></HBox>
+                                                <Text text="1. Solicitud OP" class="flow-step-title" />
+                                                <Text text="Empleado" class="flow-step-actor" />
+                                            </VBox>
+                                            <HBox class="flow-line {= ${app>currentStep} &gt; 1 ? 'completed' : '' }" />
+
+                                            <!-- Step 2 -->
+                                            <VBox alignItems="Center" class="flow-step {= ${app>currentStep} &gt; 2 ? 'completed' : (${app>currentStep} === 2 ? 'active' : '') }">
+                                                <HBox class="flow-step-circle"><Text text="{= ${app>currentStep} &gt; 2 ? '✓' : '2' }" /></HBox>
+                                                <Text text="2. Código FI" class="flow-step-title" />
+                                                <Text text="Contabilidad" class="flow-step-actor" />
+                                            </VBox>
+                                            <HBox class="flow-line {= ${app>currentStep} &gt; 2 ? 'completed' : '' }" />
+
+                                            <!-- Step 3 -->
+                                            <VBox alignItems="Center" class="flow-step {= ${app>currentStep} &gt; 3 ? 'completed' : (${app>currentStep} === 3 ? 'active' : '') }">
+                                                <HBox class="flow-step-circle"><Text text="{= ${app>currentStep} &gt; 3 ? '✓' : '3' }" /></HBox>
+                                                <Text text="3. Aprobación OP" class="flow-step-title" />
+                                                <Text text="Jefatura" class="flow-step-actor" />
+                                            </VBox>
+                                            <HBox class="flow-line {= ${app>currentStep} &gt; 3 ? 'completed' : '' }" />
+
+                                            <!-- Step 4 -->
+                                            <VBox alignItems="Center" class="flow-step {= ${app>currentStep} &gt; 4 ? 'completed' : (${app>currentStep} === 4 ? 'active' : '') }">
+                                                <HBox class="flow-step-circle"><Text text="{= ${app>currentStep} &gt; 4 ? '✓' : '4' }" /></HBox>
+                                                <Text text="4. Desembolso" class="flow-step-title" />
+                                                <Text text="Tesorería" class="flow-step-actor" />
+                                            </VBox>
+                                            <HBox class="flow-line {= ${app>currentStep} &gt; 4 ? 'completed' : '' }" />
+
+                                            <!-- Step 5 -->
+                                            <VBox alignItems="Center" class="flow-step {= ${app>currentStep} &gt; 5 ? 'completed' : (${app>currentStep} === 5 ? 'active' : '') }">
+                                                <HBox class="flow-step-circle"><Text text="{= ${app>currentStep} &gt; 5 ? '✓' : '5' }" /></HBox>
+                                                <Text text="5. Rendición OCR" class="flow-step-title" />
+                                                <Text text="Empleado" class="flow-step-actor" />
+                                            </VBox>
+                                            <HBox class="flow-line {= ${app>currentStep} &gt; 5 ? 'completed' : '' }" />
+
+                                            <!-- Step 6 -->
+                                            <VBox alignItems="Center" class="flow-step {= ${app>currentStep} &gt; 6 ? 'completed' : (${app>currentStep} === 6 ? 'active' : '') }">
+                                                <HBox class="flow-step-circle"><Text text="{= ${app>currentStep} &gt; 6 ? '✓' : '6' }" /></HBox>
+                                                <Text text="6. Aprobación Gasto" class="flow-step-title" />
+                                                <Text text="Jefatura" class="flow-step-actor" />
+                                            </VBox>
+                                            <HBox class="flow-line {= ${app>currentStep} &gt; 7 ? 'completed' : '' }" />
+
+                                            <!-- Step 7 -->
+                                            <VBox alignItems="Center" class="flow-step {= ${app>currentStep} &gt; 7 ? 'completed' : (${app>currentStep} === 7 ? 'active' : '') }">
+                                                <HBox class="flow-step-circle"><Text text="{= ${app>currentStep} &gt; 7 ? '✓' : '7' }" /></HBox>
+                                                <Text text="7. SUNAT" class="flow-step-title" />
+                                                <Text text="Validación" class="flow-step-actor" />
+                                            </VBox>
+                                            <HBox class="flow-line {= ${app>currentStep} &gt; 8 ? 'completed' : '' }" />
+
+                                            <!-- Step 8 -->
+                                            <VBox alignItems="Center" class="flow-step {= ${app>currentStep} &gt; 8 ? 'completed' : (${app>currentStep} === 8 ? 'active' : '') }">
+                                                <HBox class="flow-step-circle"><Text text="{= ${app>currentStep} &gt; 8 ? '✓' : '8' }" /></HBox>
+                                                <Text text="8. SAP MIGO" class="flow-step-title" />
+                                                <Text text="Contabilidad" class="flow-step-actor" />
+                                            </VBox>
+                                            <HBox class="flow-line {= ${app>currentStep} &gt; 9 ? 'completed' : '' }" />
+
+                                            <!-- Step 9 -->
+                                            <VBox alignItems="Center" class="flow-step {= ${app>currentStep} &gt; 9 ? 'completed' : (${app>currentStep} === 9 ? 'active' : '') }">
+                                                <HBox class="flow-step-circle"><Text text="{= ${app>currentStep} &gt; 9 ? '✓' : '9' }" /></HBox>
+                                                <Text text="9. Liquidación" class="flow-step-title" />
+                                                <Text text="Contabilidad" class="flow-step-actor" />
+                                            </VBox>
+                                            <HBox class="flow-line {= ${app>currentStep} === 10 ? 'completed' : '' }" />
+
+                                            <!-- Step 10 -->
+                                            <VBox alignItems="Center" class="flow-step {= ${app>currentStep} === 10 ? 'completed' : '' }">
+                                                <HBox class="flow-step-circle"><Text text="{= ${app>currentStep} === 10 ? '✓' : '10' }" /></HBox>
+                                                <Text text="10. Cierre FI" class="flow-step-title" />
+                                                <Text text="Compensado" class="flow-step-actor" />
+                                            </VBox>
+                                        </HBox>
+
+                                        <!-- Botones de Acción Operativa del Diagrama -->
+                                        <HBox justifyContent="End" alignItems="Center" class="sapUiTinyMarginTop">
+                                            <Text text="Doc SAP: {app>codigoFI} / {app>sapDoc}" class="small-muted-text sapUiSmallMarginEnd" />
+                                            <Button
+                                                text="⚡ Avanzar Siguiente Paso"
+                                                icon="sap-icon://navigation-right-arrow"
+                                                type="Emphasized"
+                                                press=".onAdvanceStep"
+                                                enabled="{= ${app>currentStep} &lt; 10 }"
+                                                class="sapUiTinyMarginEnd" />
+                                            <Button
+                                                text="⚙️ Operar Expediente (10 Pasos)"
+                                                icon="sap-icon://action"
+                                                type="Default"
+                                                press=".onOpenProcessFlowDialog" />
+                                        </HBox>
+                                    </VBox>
+                                </items>
+                            </VBox>
+                        </VBox>
+
+                        <!-- B. VISTA LISTADO TABULAR (CON MINI-BARRA DE FLUJO POR FILA) -->
+                        <VBox visible="{= ${app>/entregasViewMode} === 'LIST' }">
+                            <Table id="tableClaims" items="{app>/claims}">
+                                <columns>
+                                    <Column><Text text="Nro. Solicitud" /></Column>
+                                    <Column><Text text="Fecha" /></Column>
+                                    <Column><Text text="Solicitante" /></Column>
+                                    <Column><Text text="Nota de Ingreso (MIGO)" /></Column>
+                                    <Column><Text text="Monto" /></Column>
+                                    <Column width="18rem"><Text text="Flujo de Proceso Visual (10 Pasos)" /></Column>
+                                    <Column><Text text="Código FI / Doc SAP" /></Column>
+                                    <Column><Text text="Estado SAP" /></Column>
+                                    <Column><Text text="Acción Operativa" /></Column>
+                                </columns>
+                                <items>
+                                    <ColumnListItem highlight="{path: 'app>estado', formatter: '.statusState'}">
+                                        <cells>
+                                            <ObjectIdentifier title="{app>id}" />
+                                            <Text text="{app>fecha}" />
+                                            <Text text="{app>solicitante}" />
+                                            <ObjectStatus text="{app>notaIngreso}" state="Information" icon="sap-icon://supplier" />
+                                            <ObjectNumber number="{app>monto}" unit="{app>moneda}" />
+                                            <!-- Mini Stepper Visual en la Tabla -->
+                                            <VBox>
+                                                <ObjectStatus text="{app>stepLabel}" state="{= ${app>currentStep} === 10 ? 'Success' : 'Warning' }" icon="sap-icon://process" class="sapUiTinyMarginBottom" />
+                                                <ProgressIndicator percentValue="{= ${app>currentStep} * 10 }" displayValue="{app>currentStep}/10" state="{= ${app>currentStep} === 10 ? 'Success' : 'Warning' }" />
+                                            </VBox>
+                                            <VBox>
+                                                <Text text="{app>codigoFI}" class="sapUiTinyMarginBottom" />
+                                                <Text text="{app>sapDoc}" class="small-muted-text" />
+                                            </VBox>
+                                            <ObjectStatus text="{app>estado}" state="{path: 'app>estado', formatter: '.statusState'}" />
+                                            <HBox>
+                                                <Button text="⚡ Avanzar Paso" icon="sap-icon://navigation-right-arrow" type="Emphasized" press=".onAdvanceStep" enabled="{= ${app>currentStep} &lt; 10 }" class="sapUiTinyMarginEnd" />
+                                                <Button text="⚙️ 10 Pasos" icon="sap-icon://action" type="Transparent" press=".onOpenProcessFlowDialog" />
+                                            </HBox>
+                                        </cells>
+                                    </ColumnListItem>
+                                </items>
+                            </Table>
+                        </VBox>
+
+                    </Panel>
+                </VBox>
+
+                <!-- 2. SUB-PROCESO: CAJAS CHICAS (CON EXTENSIÓN CRITICIDAD REQ N° 3 & LIQUIDACIÓN PV SD REQ N° 4) -->
+                <VBox id="panelCajaChica" visible="{= ${app>/activeSubProcess} === 'CAJA_CHICA' }">
+                    <Panel headerText="Sub-Proceso 3: Cajas Chicas — Extensión Esporádica por Criticidad (Req. N° 3)" class="sapUiSmallMarginBottom">
+                        <headerToolbar>
+                            <OverflowToolbar>
+                                <Button text="⬅️ Menú Principal" icon="sap-icon://menu2" press=".onNavToMenu" class="sapUiTinyMarginEnd" />
+                                <Title text="Cajas Chicas &amp; Solicitudes de Extensión Urgente" level="H3" />
+                                <ToolbarSpacer />
+                                <Button text="🚨 Solicitar Extensión por Criticidad" icon="sap-icon://flash" type="Emphasized" press=".onOpenCriticalExtensionDialog" class="sapUiTinyMarginEnd" />
+                                <Button text="🏬 Liquidar PV SD (Cuenta Puente)" icon="sap-icon://retail-store" press=".onProcessPvBridgeSettlement" />
+                            </OverflowToolbar>
+                        </headerToolbar>
+
+                        <Table items="{app>/pettyCash}" class="sapUiSmallMarginBottom">
+                            <columns>
+                                <Column><Text text="Código Caja" /></Column>
+                                <Column><Text text="Nombre Caja Chica" /></Column>
+                                <Column><Text text="Custodio" /></Column>
+                                <Column><Text text="Fondo Fijo" /></Column>
+                                <Column><Text text="Saldo Disponible" /></Column>
+                                <Column><Text text="Paso Operativo" /></Column>
+                                <Column><Text text="Estado SAP" /></Column>
+                                <Column><Text text="Acción" /></Column>
+                            </columns>
+                            <items>
+                                <ColumnListItem highlight="{path: 'app>estado', formatter: '.statusState'}">
+                                    <cells>
+                                        <ObjectIdentifier title="{app>id}" />
+                                        <Text text="{app>caja}" />
+                                        <Text text="{app>custodio}" />
+                                        <ObjectNumber number="{app>fondoFijo}" unit="PEN" />
+                                        <ObjectNumber number="{app>saldoDisponible}" unit="PEN" state="Success" />
+                                        <ObjectStatus text="{app>stepLabel}" state="Warning" icon="sap-icon://process" />
+                                        <ObjectStatus text="{app>estado}" state="{path: 'app>estado', formatter: '.statusState'}" />
+                                        <Button text="⚡ Solicitar Reposición" icon="sap-icon://money-bills" type="Emphasized" press=".onAdvanceStep" />
+                                    </cells>
+                                </ColumnListItem>
+                            </items>
+                        </Table>
+
+                        <!-- Tabla de Extensiones Esporádicas Autorizadas (Req N° 3) -->
+                        <Panel headerText="Registro de Extensiones Esporádicas por Criticidad (Aprobación Abreviada Req. N° 3)">
+                            <Table items="{app>/criticalExtensions}">
+                                <columns>
+                                    <Column><Text text="Nro. Extensión" /></Column>
+                                    <Column><Text text="Caja Chica Destino" /></Column>
+                                    <Column><Text text="Monto Adicional" /></Column>
+                                    <Column><Text text="Nivel Criticidad" /></Column>
+                                    <Column><Text text="Justificación de la Emergencia" /></Column>
+                                    <Column><Text text="Fecha" /></Column>
+                                    <Column><Text text="Aprobación Express" /></Column>
+                                </columns>
+                                <items>
+                                    <ColumnListItem highlight="Success">
+                                        <cells>
+                                            <ObjectIdentifier title="{app>id}" />
+                                            <Text text="{app>cajaId}" />
+                                            <ObjectNumber number="{app>monto}" unit="PEN" state="Warning" />
+                                            <ObjectStatus text="{app>criticidad}" state="Error" icon="sap-icon://alert" />
+                                            <Text text="{app>motivo}" />
+                                            <Text text="{app>fecha}" />
+                                            <ObjectStatus text="{app>estado}" state="Success" icon="sap-icon://accept" />
+                                        </cells>
+                                    </ColumnListItem>
+                                </items>
+                            </Table>
+                        </Panel>
+                    </Panel>
+                </VBox>
+
+                <!-- 3. LIQUIDACIÓN PUNTOS DE VENTA (PV SD) & CUENTA PUENTE (REQ. N° 4) -->
+                <VBox id="panelPvBridge" visible="{= ${app>/activeSubProcess} === 'PV_SD_BRIDGE' }">
+                    <Panel headerText="Sub-Proceso: Liquidación de Puntos de Venta (PV SD) &amp; Cuenta Puente FI (Req. N° 4)" class="sapUiSmallMarginBottom">
+                        <headerToolbar>
+                            <OverflowToolbar>
+                                <Button text="⬅️ Menú Principal" icon="sap-icon://menu2" press=".onNavToMenu" class="sapUiTinyMarginEnd" />
+                                <Title text="Compensación Automática PV SD ➔ Caja Chica Portal" level="H3" />
+                                <ToolbarSpacer />
+                                <Button text="🔄 Ejecutar Liquidación &amp; Compensación PV SD" icon="sap-icon://synchronize" type="Emphasized" press=".onProcessPvBridgeSettlement" />
+                            </OverflowToolbar>
+                        </headerToolbar>
+
+                        <Table items="{app>/posSettlements}">
+                            <columns>
+                                <Column><Text text="ID Liquidación" /></Column>
+                                <Column><Text text="Centro de Beneficio (PV SD)" /></Column>
+                                <Column><Text text="Venta del Día (SD)" /></Column>
+                                <Column><Text text="Cuenta Puente FI" /></Column>
+                                <Column><Text text="Fecha Operación" /></Column>
+                                <Column><Text text="Estado Compensación SAP" /></Column>
+                                <Column><Text text="Acción" /></Column>
+                            </columns>
+                            <items>
+                                <ColumnListItem highlight="Success">
+                                    <cells>
+                                        <ObjectIdentifier title="{app>id}" />
+                                        <Text text="{app>centroBeneficio}" />
+                                        <ObjectNumber number="{app>ventaDia}" unit="PEN" state="Success" />
+                                        <ObjectStatus text="{app>cuentaPuente}" state="Information" icon="sap-icon://account" />
+                                        <Text text="{app>fecha}" />
+                                        <ObjectStatus text="{app>compensacionSap}" state="Success" icon="sap-icon://accept" />
+                                        <Button text="Ver Asiento FI" icon="sap-icon://document" press=".onProcessPvBridgeSettlement" />
+                                    </cells>
+                                </ColumnListItem>
+                            </items>
+                        </Table>
+                    </Panel>
+                </VBox>
+
+                <!-- 4. SUB-PROCESO: VIAJES Y VIÁTICOS -->
+                <VBox id="panelViajes" visible="{= ${app>/activeSubProcess} === 'VIAJES' }">
+                    <Panel headerText="Sub-Proceso 2: Viajes y Viáticos (Flujo Operativo)" class="sapUiSmallMarginBottom">
+                        <headerToolbar>
+                            <OverflowToolbar>
+                                <Button text="⬅️ Menú Principal" icon="sap-icon://menu2" press=".onNavToMenu" class="sapUiTinyMarginEnd" />
+                                <Title text="Solicitudes de Viáticos y Pasajes" level="H3" />
+                                <ToolbarSpacer />
+                                <Button text="➕ Nueva Solicitud de Viático" icon="sap-icon://add" type="Emphasized" press=".onOpenNewClaimDialog" />
+                            </OverflowToolbar>
+                        </headerToolbar>
+
+                        <Table items="{app>/travels}">
+                            <columns>
+                                <Column><Text text="Nro. Solicitud" /></Column>
+                                <Column><Text text="Fecha" /></Column>
+                                <Column><Text text="Viajero" /></Column>
+                                <Column><Text text="Destino" /></Column>
+                                <Column><Text text="Monto Total" /></Column>
+                                <Column><Text text="Paso del Flujo" /></Column>
+                                <Column><Text text="Estado SAP" /></Column>
+                                <Column><Text text="Acción Operativa" /></Column>
+                            </columns>
+                            <items>
+                                <ColumnListItem highlight="{path: 'app>estado', formatter: '.statusState'}">
+                                    <cells>
+                                        <ObjectIdentifier title="{app>id}" />
+                                        <Text text="{app>fecha}" />
+                                        <Text text="{app>viajero}" />
+                                        <Text text="{app>destino}" />
+                                        <ObjectNumber number="{app>totalGeneral}" unit="PEN" />
+                                        <ObjectStatus text="{app>stepLabel}" state="Warning" icon="sap-icon://process" />
+                                        <ObjectStatus text="{app>estado}" state="{path: 'app>estado', formatter: '.statusState'}" />
+                                        <HBox>
+                                            <Button text="⚡ Avanzar Paso" icon="sap-icon://navigation-right-arrow" type="Emphasized" press=".onAdvanceStep" enabled="{= ${app>currentStep} &lt; 10 }" class="sapUiTinyMarginEnd" />
+                                            <Button text="⚙️ Operar 10 Pasos" icon="sap-icon://action" type="Transparent" press=".onOpenProcessFlowDialog" />
+                                        </HBox>
+                                    </cells>
+                                </ColumnListItem>
+                            </items>
+                        </Table>
+                    </Panel>
+                </VBox>
+
+                <!-- 5. SUB-PROCESO: GASTOS DE KILOMETRAJE -->
+                <VBox id="panelKilometraje" visible="{= ${app>/activeSubProcess} === 'KILOMETRAJE' }">
+                    <Panel headerText="Sub-Proceso 4: Rendición de Gastos de Kilometraje" class="sapUiSmallMarginBottom">
+                        <headerToolbar>
+                            <OverflowToolbar>
+                                <Button text="⬅️ Menú Principal" icon="sap-icon://menu2" press=".onNavToMenu" class="sapUiTinyMarginEnd" />
+                                <Title text="Rutas y Peajes Rendidos" level="H3" />
+                            </OverflowToolbar>
+                        </headerToolbar>
+
+                        <Table items="{app>/mileage}">
+                            <columns>
+                                <Column><Text text="Nro. Rendición" /></Column>
+                                <Column><Text text="Fecha" /></Column>
+                                <Column><Text text="Conductor" /></Column>
+                                <Column><Text text="Ruta Recorrida" /></Column>
+                                <Column><Text text="KM" /></Column>
+                                <Column><Text text="Total Reembolso" /></Column>
+                                <Column><Text text="Paso del Flujo" /></Column>
+                                <Column><Text text="Acción" /></Column>
+                            </columns>
+                            <items>
+                                <ColumnListItem highlight="{path: 'app>estado', formatter: '.statusState'}">
+                                    <cells>
+                                        <ObjectIdentifier title="{app>id}" />
+                                        <Text text="{app>fecha}" />
+                                        <Text text="{app>conductor}" />
+                                        <Text text="{app>ruta}" />
+                                        <Text text="{app>km} KM" />
+                                        <ObjectNumber number="{app>totalReembolso}" unit="PEN" />
+                                        <ObjectStatus text="{app>stepLabel}" state="Warning" icon="sap-icon://process" />
+                                        <Button text="⚡ Avanzar Paso" icon="sap-icon://navigation-right-arrow" type="Emphasized" press=".onAdvanceStep" />
+                                    </cells>
+                                </ColumnListItem>
+                            </items>
+                        </Table>
+                    </Panel>
+                </VBox>
+
+                <!-- 6. SUB-PROCESO: FIRMA DIGITAL ✨ -->
+                <VBox id="panelFirmaDigital" visible="{= ${app>/activeSubProcess} === 'FIRMA_DIGITAL' }">
+                    <Panel headerText="Sub-Proceso 5: Firma Digital &amp; Validación Legal PKI" class="sapUiSmallMarginBottom">
+                        <headerToolbar>
+                            <OverflowToolbar>
+                                <Button text="⬅️ Menú Principal" icon="sap-icon://menu2" press=".onNavToMenu" class="sapUiTinyMarginEnd" />
+                                <Title text="Firma Digital y Certificados Legalizados" level="H3" />
+                            </OverflowToolbar>
+                        </headerToolbar>
+
+                        <Table items="{app>/digitalSignatures}">
+                            <columns>
+                                <Column><Text text="ID Registro" /></Column>
+                                <Column><Text text="Documento Firmado" /></Column>
+                                <Column><Text text="Firmante Autorizado" /></Column>
+                                <Column><Text text="Fecha y Hora" /></Column>
+                                <Column><Text text="Certificado PKI" /></Column>
+                                <Column><Text text="Hash SHA-256" /></Column>
+                                <Column><Text text="Estado Legal" /></Column>
+                            </columns>
+                            <items>
+                                <ColumnListItem highlight="Success">
+                                    <cells>
+                                        <ObjectIdentifier title="{app>id}" />
+                                        <Text text="{app>documento}" />
+                                        <Text text="{app>firmante}" />
+                                        <Text text="{app>fechaFirma}" />
+                                        <ObjectStatus text="{app>certificado}" state="Information" icon="sap-icon://key" />
+                                        <Text text="{app>hashSha256}" class="mono-text" />
+                                        <ObjectStatus text="{app>estado}" state="Success" icon="sap-icon://accept" />
+                                    </cells>
+                                </ColumnListItem>
+                            </items>
+                        </Table>
+                    </Panel>
+                </VBox>
+
+            </VBox>
+
+
+            <!-- ============================================================
+                 VISTA SIMULADOR MOBILE / CELULAR (DEMO DE PRESENTACIÓN)
+                 ============================================================ -->
+            <VBox class="sapUiSmallMargin" visible="{= ${app>/isMobileDemo} }">
+                <HBox justifyContent="Center">
+                    <VBox class="mobile-simulator-wrapper">
+                        <!-- Phone Frame -->
+                        <html:div class="mobile-device-frame">
+                            <html:div class="mobile-notch">
+                                <html:div class="mobile-camera-dot"></html:div>
+                            </html:div>
+
+                            <html:div class="mobile-screen">
+                                <html:div class="mobile-header-bar">
+                                    <html:span>📱 SAP Fiori Mobile</html:span>
+                                    <html:span style="font-size:12px; opacity:0.8;">10:45 AM</html:span>
+                                </html:div>
+
+                                <VBox class="sapUiSmallMargin">
+                                    <Title text="Gestión de gastos" level="H3" class="sapUiTinyMarginBottom" />
+                                    <Text text="Hola, Carlos Mendoza (Consultor)" class="sapUiSmallMarginBottom" />
+
+                                    <Button text="➕ Nueva Solicitud (Con OCR)" icon="sap-icon://add" type="Emphasized" press=".onOpenNewClaimDialog" class="sapUiSmallMarginBottom" />
+
+                                    <VBox class="mobile-card-item">
+                                        <HBox alignItems="Center">
+                                            <core:Icon src="sap-icon://bar-chart" size="1.5rem" class="sapUiSmallMarginEnd" color="#0a6ed1" />
+                                            <VBox>
+                                                <Label text="Dashboard Indicadores 📊" />
+                                                <Text text="S/ 42,300.00 Total Rendido" />
+                                            </VBox>
+                                        </HBox>
+                                    </VBox>
+
+                                    <VBox class="mobile-card-item">
+                                        <HBox alignItems="Center">
+                                            <core:Icon src="sap-icon://flash" size="1.5rem" class="sapUiSmallMarginEnd" color="#e66c37" />
+                                            <VBox>
+                                                <Label text="Extensión Criticidad 🚨" />
+                                                <Text text="Aprobación Express Adicional" />
+                                            </VBox>
+                                        </HBox>
+                                    </VBox>
+
+                                    <VBox class="mobile-card-item">
+                                        <HBox alignItems="Center">
+                                            <core:Icon src="sap-icon://money-bills" size="1.5rem" class="sapUiSmallMarginEnd" color="#0a6ed1" />
+                                            <VBox>
+                                                <Label text="Entregas a rendir (OCR)" />
+                                                <Text text="Flujo Operativo de 10 Pasos Activo" />
+                                            </VBox>
+                                        </HBox>
+                                    </VBox>
+
+                                    <VBox class="mobile-card-item">
+                                        <HBox alignItems="Center">
+                                            <core:Icon src="sap-icon://flight" size="1.5rem" class="sapUiSmallMarginEnd" color="#0a6ed1" />
+                                            <VBox>
+                                                <Label text="Viajes y viáticos" />
+                                                <Text text="Control de Pasajes y Viáticos" />
+                                            </VBox>
+                                        </HBox>
+                                    </VBox>
+
+                                    <VBox class="mobile-card-item">
+                                        <HBox alignItems="Center">
+                                            <core:Icon src="sap-icon://piggy-bank" size="1.5rem" class="sapUiSmallMarginEnd" color="#0a6ed1" />
+                                            <VBox>
+                                                <Label text="Cajas chicas" />
+                                                <Text text="S/ 1,240.50 Saldo disponible" />
+                                            </VBox>
+                                        </HBox>
+                                    </VBox>
+
+                                    <VBox class="mobile-card-item">
+                                        <HBox alignItems="Center">
+                                            <core:Icon src="sap-icon://signature" size="1.5rem" class="sapUiSmallMarginEnd" color="#107e3e" />
+                                            <VBox>
+                                                <Label text="Firma Digital ✨" />
+                                                <Text text="Respaldo PKI Validado" />
+                                            </VBox>
+                                        </HBox>
+                                    </VBox>
+
+                                </VBox>
+
+                                <html:div class="mobile-bottom-nav">
+                                    <html:div class="mobile-nav-item active"><html:i class="fas fa-home"></html:i><html:span>Inicio</html:span></html:div>
+                                    <html:div class="mobile-nav-item"><html:i class="fas fa-plus-circle"></html:i><html:span>Rendición</html:span></html:div>
+                                    <html:div class="mobile-nav-item"><html:i class="fas fa-list"></html:i><html:span>Historial</html:span></html:div>
+                                    <html:div class="mobile-nav-item"><html:i class="fas fa-user"></html:i><html:span>Perfil</html:span></html:div>
+                                </html:div>
+                            </html:div>
+                        </html:div>
+                    </VBox>
+                </HBox>
+            </VBox>
+
+        </content>
+    </Page>
+</mvc:View>

@@ -1,0 +1,186 @@
+<mvc:View
+    controllerName="c4c.leadmanagement.controller.SupplyChain"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m"
+    xmlns:f="sap.f"
+    xmlns:layout="sap.ui.layout"
+    xmlns:viz="sap.viz.ui5.controls"
+    xmlns:viz.feeds="sap.viz.ui5.controls.common.feeds"
+    xmlns:viz.data="sap.viz.ui5.data"
+    xmlns:micro="sap.suite.ui.microchart"
+    displayBlock="true"
+    height="100%">
+    
+    <f:FlexibleColumnLayout id="fcl" backgroundDesign="Solid">
+        <f:beginColumnPages>
+            <Page showHeader="true" showNavButton="true" navButtonPress=".onNavBack" title="Supply Chain Planning">
+                <content>
+                    <HBox fitContainer="true" height="100%" class="sapUiSmallMargin">
+                        
+                        <!-- Panel 1: Map & Overview (30%) -->
+                        <VBox width="30%" class="sapUiSmallMarginEnd" height="100%">
+                            <!-- Overview Card -->
+                            <Panel headerText="Overview" class="sapUiTinyMarginBottom" expandable="true" expanded="true">
+                                <headerToolbar>
+                                    <Toolbar>
+                                        <Title text="Overview" />
+                                        <ToolbarSpacer />
+                                        <Link text="Attribute Filters" />
+                                    </Toolbar>
+                                </headerToolbar>
+                                <content>
+                                    <VBox>
+                                        <Label text="Alerts by Severity:" />
+                                        <HBox renderType="Bare" width="100%" class="sapUiTinyMarginTop">
+                                            <VBox width="66.7%" class="sapUiTinyMarginEnd" style="background-color: #e52929; border-radius: 4px; padding: 2px; align-items: center;">
+                                                <Text text="66.7%" style="color: white; font-size: 12px; font-weight: bold;"/>
+                                            </VBox>
+                                            <VBox width="33.3%" style="background-color: #e9730c; border-radius: 4px; padding: 2px; align-items: center;">
+                                                <Text text="33.3%" style="color: white; font-size: 12px; font-weight: bold;"/>
+                                            </VBox>
+                                        </HBox>
+                                    </VBox>
+                                </content>
+                            </Panel>
+
+                            <!-- Map Card -->
+                            <Panel id="mapPanel" height="100%">
+                                <headerToolbar>
+                                    <Toolbar>
+                                        <Title text="Map" />
+                                        <ToolbarSpacer />
+                                        <Label text="1 minute ago" />
+                                        <Button icon="sap-icon://refresh" type="Transparent" />
+                                        <Button icon="sap-icon://grid" type="Transparent" />
+                                    </Toolbar>
+                                </headerToolbar>
+                                <content>
+                                    <VBox id="mapArea" height="450px" width="100%" />
+                                </content>
+                            </Panel>
+                        </VBox>
+
+                        <!-- Panel 2: Alerts List (30%) -->
+                        <VBox width="30%" class="sapUiSmallMarginEnd" height="100%">
+                            <Title text="Alerts" level="H2" class="sapUiTinyMarginBottom" />
+                            <Panel height="100%" class="sapUiNoContentPadding">
+                                <List id="alertsList" items="{/Alerts}" mode="SingleSelectMaster" selectionChange=".onAlertSelect">
+                                    <headerToolbar>
+                                        <Toolbar>
+                                            <Title text="Items ({/AlertsCount})" />
+                                            <ToolbarSpacer />
+                                            <SearchField width="50%" />
+                                        </Toolbar>
+                                    </headerToolbar>
+                                    <items>
+                                        <CustomListItem type="Active">
+                                            <HBox class="sapUiSmallMargin">
+                                                <CheckBox class="sapUiTinyMarginEnd" />
+                                                <VBox width="100%">
+                                                    <HBox justifyContent="SpaceBetween">
+                                                        <Text text="Subscription: {title}" class="sapUiTinyMarginBottom" />
+                                                        <Text text="{qty}" class="sapUiTinyMarginBottom" />
+                                                    </HBox>
+                                                    <Title text="{desc}" level="H4" class="sapUiTinyMarginBottom" />
+                                                    <Text text="Detailed Information:" class="sapUiTinyMarginBottom" style="color: #666;"/>
+                                                    <Text text="Location ID: {locId}" />
+                                                    <Text text="Location: {locName}" />
+                                                    <Text text="Material Number: {matId}" />
+                                                    <Text text="Material Description: {matDesc}" />
+                                                </VBox>
+                                            </HBox>
+                                        </CustomListItem>
+                                    </items>
+                                </List>
+                            </Panel>
+                        </VBox>
+
+                        <!-- Panel 3: Details & Charts (40%) -->
+                        <VBox width="40%" height="100%">
+                            <HBox justifyContent="SpaceBetween" alignItems="Center" class="sapUiTinyMarginBottom">
+                                <Title text="Sales Order Confirmed Late" level="H2" />
+                                <HBox>
+                                    <Button text="Snooze" type="Transparent" icon="sap-icon://navigation-down-arrow" iconPosition="End" />
+                                    <Button text="Go To" type="Transparent" icon="sap-icon://navigation-down-arrow" iconPosition="End" />
+                                    <Button text="Navigate To" type="Transparent" icon="sap-icon://navigation-down-arrow" iconPosition="End" />
+                                </HBox>
+                            </HBox>
+                            
+                            <IconTabBar expandable="false" applyContentPadding="false">
+                                <items>
+                                    <IconTabFilter text="Alert Charts">
+                                        <Panel>
+                                            <viz:Popover id="idPopOver"></viz:Popover>
+                                            <viz:VizFrame id="idVizFrame" uiConfig="{applicationSet:'fiori'}"
+                                                height="350px" width="100%" vizType="column">
+                                                <viz:dataset>
+                                                    <viz.data:FlattenedDataset data="{/ChartData}">
+                                                        <viz.data:dimensions>
+                                                            <viz.data:DimensionDefinition name="Status" value="{status}" />
+                                                        </viz.data:dimensions>
+                                                        <viz.data:measures>
+                                                            <viz.data:MeasureDefinition name="Impacted Quantity" value="{quantity}" />
+                                                        </viz.data:measures>
+                                                    </viz.data:FlattenedDataset>
+                                                </viz:dataset>
+
+                                                <viz:feeds>
+                                                    <viz.feeds:FeedItem id='valueAxisFeed' uid="valueAxis" type="Measure"
+                                                        values="Impacted Quantity" />
+                                                    <viz.feeds:FeedItem id='categoryAxisFeed' uid="categoryAxis" type="Dimension"
+                                                        values="Status" />
+                                                </viz:feeds>
+                                            </viz:VizFrame>
+                                        </Panel>
+                                    </IconTabFilter>
+                                    <IconTabFilter text="Sales Orders">
+                                        <Text text="Sales Orders Data" />
+                                    </IconTabFilter>
+                                    <IconTabFilter text="Procedure Playbooks (1)">
+                                        <Text text="Playbooks" />
+                                    </IconTabFilter>
+                                </items>
+                            </IconTabBar>
+
+                            <Title text="Sales Orders" level="H3" class="sapUiMediumMarginTop sapUiSmallMarginBottom" />
+                            <Panel>
+                                <Table items="{/SalesOrders}">
+                                    <headerToolbar>
+                                        <Toolbar>
+                                            <Title text="Sales Orders" />
+                                            <ToolbarSpacer />
+                                            <SearchField width="30%" />
+                                            <Button icon="sap-icon://filter" />
+                                            <Button icon="sap-icon://action-settings" />
+                                        </Toolbar>
+                                    </headerToolbar>
+                                    <columns>
+                                        <Column><Text text="Order / Item" /></Column>
+                                        <Column demandPopin="true" minScreenWidth="Tablet"><Text text="Requested Date" /></Column>
+                                        <Column demandPopin="true" minScreenWidth="Tablet"><Text text="Requested Quantity" /></Column>
+                                        <Column demandPopin="true" minScreenWidth="Tablet"><Text text="Customer" /></Column>
+                                        <Column demandPopin="true" minScreenWidth="Tablet"><Text text="Total Revenue" /></Column>
+                                        <Column demandPopin="true" minScreenWidth="Tablet"><Text text="Revenue at Risk" /></Column>
+                                    </columns>
+                                    <items>
+                                        <ColumnListItem>
+                                            <cells>
+                                                <Text text="{orderItem}" />
+                                                <Text text="{reqDate}" />
+                                                <Text text="{reqQty}" />
+                                                <Text text="{customer}" />
+                                                <Text text="{totalRev}" />
+                                                <Text text="{revRisk}" />
+                                            </cells>
+                                        </ColumnListItem>
+                                    </items>
+                                </Table>
+                            </Panel>
+                        </VBox>
+
+                    </HBox>
+                </content>
+            </Page>
+        </f:beginColumnPages>
+    </f:FlexibleColumnLayout>
+</mvc:View>

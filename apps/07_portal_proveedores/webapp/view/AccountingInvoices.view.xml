@@ -1,0 +1,118 @@
+<mvc:View
+    controllerName="com.antigravity.portalProveedores.controller.AccountingInvoices"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core">
+
+    <Page id="accountingInvoicesPage" title="{i18n>accInvTitle}" showNavButton="true" navButtonPress=".onNavBack">
+        <content>
+            <VBox class="sapUiSmallMargin">
+
+                <!-- Header info -->
+                <Panel class="sapUiSmallMarginBottom">
+                    <HBox wrap="Wrap" justifyContent="SpaceBetween" alignItems="Center">
+                        <VBox>
+                            <HBox>
+                                <Label text="Usuario Contable:" class="sapUiTinyMarginEnd" bold="true" />
+                                <Text text="SISTEMAS SISTEMAS" />
+                            </HBox>
+                            <HBox>
+                                <Label text="Sociedad:" class="sapUiTinyMarginEnd" bold="true" />
+                                <Text text="P202 Superdeporte Plus Perú SAC" />
+                            </HBox>
+                        </VBox>
+                        <ObjectStatus text="Rol Contabilidad" state="Information" icon="sap-icon://employee" />
+                    </HBox>
+                </Panel>
+
+                <!-- Filters -->
+                <Panel expandable="true" expanded="true" class="sapUiSmallMarginBottom">
+                    <HBox wrap="Wrap" alignItems="End">
+                        <VBox class="sapUiSmallMarginEnd">
+                            <Label text="Fecha Inicio:*" />
+                            <DatePicker id="accDateFrom" value="27/01/2020" displayFormat="dd/MM/yyyy" width="10rem" />
+                        </VBox>
+
+                        <VBox class="sapUiSmallMarginEnd">
+                            <Label text="Fecha Fin:*" />
+                            <DatePicker id="accDateTo" value="27/02/2024" displayFormat="dd/MM/yyyy" width="10rem" />
+                        </VBox>
+
+                        <VBox class="sapUiSmallMarginEnd">
+                            <Label text="Estado:" />
+                            <Select id="accSelectStatus" selectedKey="ALL" change=".onFilterSearch" width="12rem">
+                                <core:Item key="ALL" text="Todos" />
+                                <core:Item key="PRE_REGISTRADO" text="Pre-Registrado" />
+                                <core:Item key="CONTABILIZADO" text="Contabilizado en SAP" />
+                                <core:Item key="RECHAZADO" text="Rechazado" />
+                            </Select>
+                        </VBox>
+
+                        <VBox class="sapUiSmallMarginEnd">
+                            <Label text="Buscar:" />
+                            <SearchField id="accSearch" placeholder="Buscar RUC, comprobante..." width="14rem" liveChange=".onFilterSearch" />
+                        </VBox>
+
+                        <HBox>
+                            <Button text="{i18n>preRegBtnGo}" type="Emphasized" press=".onFilterSearch" class="sapUiTinyMarginEnd" />
+                            <Button text="{i18n>preRegBtnReset}" type="Transparent" press=".onFilterReset" />
+                        </HBox>
+                    </HBox>
+                </Panel>
+
+                <!-- Table for Accountants -->
+                <Table
+                    id="tableAccInvoices"
+                    mode="SingleSelectLeft"
+                    items="{app>/accountingInvoices}"
+                    class="sapUiResponsiveMargin">
+                    <headerToolbar>
+                        <OverflowToolbar>
+                            <Title text="Total Documentos ({= ${app>/accountingInvoices}.length })" level="H3" />
+                            <ToolbarSpacer />
+                            <Button text="{i18n>accInvBtnPostSAP}" icon="sap-icon://accept" type="Emphasized" press=".onOpenReviewDialog" />
+                            <Button text="{i18n>accInvBtnReject}" icon="sap-icon://decline" type="Reject" press=".onOpenRejectDialog" />
+                            <Button text="{i18n>preRegBtnExport}" icon="sap-icon://excel-attachment" press=".onExportExcel" />
+                        </OverflowToolbar>
+                    </headerToolbar>
+                    <columns>
+                        <Column><Text text="{i18n>colRuc}" /></Column>
+                        <Column><Text text="{i18n>colRazonSocial}" /></Column>
+                        <Column><Text text="{i18n>colComprobante}" /></Column>
+                        <Column><Text text="{i18n>colOC}" /></Column>
+                        <Column><Text text="{i18n>invHistColFechaEmision}" /></Column>
+                        <Column><Text text="{i18n>colFechaRegistro}" /></Column>
+                        <Column><Text text="{i18n>colImporte}" /></Column>
+                        <Column><Text text="{i18n>colEjercicio}" /></Column>
+                        <Column><Text text="{i18n>colDocSAP}" /></Column>
+                        <Column><Text text="{i18n>colDocFI}" /></Column>
+                        <Column><Text text="{i18n>colGrupoCompras}" /></Column>
+                        <Column><Text text="{i18n>colCorrelativoSCP}" /></Column>
+                        <Column><Text text="{i18n>colEstado}" /></Column>
+                    </columns>
+                    <items>
+                        <ColumnListItem highlight="{path: 'app>estado', formatter: '.formatter.statusState'}">
+                            <cells>
+                                <Text text="{app>ruc}" />
+                                <Text text="{app>razonSocial}" />
+                                <Link text="{app>comprobante}" press=".onOpenReviewDialog" />
+                                <Text text="{app>oc}" />
+                                <Text text="{app>fechaEmision}" />
+                                <Text text="{app>fechaRegistro}" />
+                                <ObjectNumber number="{path: 'app>importe', formatter: '.formatter.currency'}" unit="{app>moneda}" />
+                                <Text text="{app>ejercicio}" />
+                                <ObjectIdentifier title="{app>documentoSAP}" />
+                                <Text text="{app>documentoFI}" />
+                                <Text text="{app>grupoCompras}" />
+                                <Text text="{app>correlativoSCP}" />
+                                <ObjectStatus text="{path: 'app>estado', formatter: '.formatter.statusText'}" state="{path: 'app>estado', formatter: '.formatter.statusState'}" />
+                            </cells>
+                        </ColumnListItem>
+                    </items>
+                </Table>
+
+            </VBox>
+        </content>
+    </Page>
+
+</mvc:View>

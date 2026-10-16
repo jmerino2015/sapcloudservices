@@ -1,0 +1,80 @@
+@AccessControl.authorizationCheck: #NOT_REQUIRED
+@EndUserText.label: 'KPIs Almacén por Sede - Root View Entity'
+@Metadata.allowExtensions: true
+
+define root view entity R_KpiAlmacenSede
+  as select from ztb_wh_sede as Sede
+  composition [0..*] of R_KpiAlmacenFamilia          as _Familias
+  composition [0..*] of R_KpiAlmacenUnidadTransporte as _Transportes
+{
+  key Sede.sede_id                      as SedeId,
+      Sede.sede_nombre                  as SedeNombre,
+      Sede.centro_sap                   as CentroSap,
+      Sede.almacen_sap                  as AlmacenSap,
+      
+      // 1. Ocupabilidad Global de Posiciones (LX03 / Trx Z)
+      Sede.posiciones_totales           as TotalPositions,
+      Sede.posiciones_ocupadas          as OccupiedPositions,
+      Sede.posiciones_libres            as FreePositions,
+      @Semantics.quantity.unitOfMeasure: 'PercentageUnit'
+      Sede.porcentaje_ocupabilidad      as OccupancyRate,
+
+      // 2. Flujo de Materiales / Recepción & Despacho (MB51)
+      Sede.paletas_ingreso_hoy          as PalletsInToday,
+      Sede.paletas_salida_hoy           as PalletsOutToday,
+      @Semantics.quantity.unitOfMeasure: 'WeightUnit'
+      Sede.peso_ingreso_tn_hoy          as WeightInTodayTN,
+      @Semantics.quantity.unitOfMeasure: 'WeightUnit'
+      Sede.peso_salida_tn_hoy           as WeightOutTodayTN,
+      Sede.unidad_peso                  as WeightUnit,
+      Sede.unidad_porcentaje            as PercentageUnit,
+
+      // 3. OTs Pendientes de Almacén (LT23)
+      Sede.ot_pendientes_picking        as OpenOtPicking,
+      Sede.ot_pendientes_recepcion      as OpenOtReceiving,
+      Sede.ot_pendientes_ubicacion      as OpenOtPutaway,
+      Sede.ot_pendientes_despacho       as OpenOtDispatch,
+      Sede.ot_pendientes_total          as TotalOpenOt,
+
+      // 4. Resumen Unidades de Transporte (VL06F / Drivin)
+      Sede.unidades_programadas         as ScheduledUnitsCount,
+      Sede.unidades_cargadas            as LoadedUnitsCount,
+      Sede.unidades_en_proceso          as InProcessUnitsCount,
+      Sede.unidades_pendientes          as PendingUnitsCount,
+      @Semantics.quantity.unitOfMeasure: 'PercentageUnit'
+      Sede.cumplimiento_ventana_7_10    as Units7to10AmComplianceRate,
+
+      // 5. Indicadores de Calidad & Operación (Excel / OneDrive)
+      @Semantics.quantity.unitOfMeasure: 'PercentageUnit'
+      Sede.eri_porcentaje               as EriPercentage,
+      @Semantics.quantity.unitOfMeasure: 'PercentageUnit'
+      Sede.eru_porcentaje               as EruPercentage,
+      @Semantics.quantity.unitOfMeasure: 'PercentageUnit'
+      Sede.bpa_porcentaje               as BpaPercentage,
+      @Semantics.quantity.unitOfMeasure: 'PercentageUnit'
+      Sede.precision_picking            as PickingAccuracy,
+      Sede.pedidos_atendidos            as OrdersFulfilledCount,
+      @Semantics.quantity.unitOfMeasure: 'PercentageUnit'
+      Sede.otif_porcentaje              as OtifPercentage,
+      Sede.raccs_abiertos               as RaccsOpenCount,
+      Sede.raccs_cerrados               as RaccsClosedCount,
+      @Semantics.quantity.unitOfMeasure: 'PercentageUnit'
+      Sede.cinco_s_score                as FiveSScore,
+      Sede.dias_sin_accidentes          as DaysWithoutAccidents,
+
+      // Auditoría y Control de Concurrencia (Clean Core ETag)
+      @Semantics.user.createdBy: true
+      Sede.created_by                   as CreatedBy,
+      @Semantics.systemDateTime.createdAt: true
+      Sede.created_at                   as CreatedAt,
+      @Semantics.user.lastChangedBy: true
+      Sede.last_changed_by              as LastChangedBy,
+      @Semantics.systemDateTime.lastChangedAt: true
+      Sede.last_changed_at              as LastChangedAt,
+      @Semantics.systemDateTime.localInstanceLastChangedAt: true
+      Sede.local_last_changed_at        as LocalLastChangedAt,
+
+      // Asociaciones / Composiciones
+      _Familias,
+      _Transportes
+}

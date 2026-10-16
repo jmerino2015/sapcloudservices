@@ -1,0 +1,54 @@
+<mvc:View
+    controllerName="com.antigravity.portalProveedores.controller.Launchpad"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m"
+    xmlns:f="sap.f"
+    xmlns:card="sap.f.cards"
+    xmlns:cssgrid="sap.ui.layout.cssgrid"
+    xmlns:core="sap.ui.core">
+
+    <Page id="launchpadPage" showHeader="true" title="SAP Fiori Launchpad">
+        <headerContent>
+            <Button icon="sap-icon://log" tooltip="Cerrar Sesión" press=".onLogout" type="Transparent" />
+            <Avatar initials="VP" displaySize="S" displayShape="Circle" class="sapUiTinyMarginBegin" />
+        </headerContent>
+        <content>
+            <VBox class="sapUiResponsivePadding">
+
+                <!-- Welcome Header -->
+                <VBox class="portalHeroBanner sapUiResponsivePadding sapUiMediumMarginBottom" style="border-radius: 8px;">
+                    <Title text="Bienvenido al Launchpad Empresarial SAP Fiori" level="H1" class="sapUiTinyMarginBottom" />
+                    <Text text="Seleccione la aplicación a la que desea ingresar para continuar con sus actividades" />
+                </VBox>
+
+                <!-- SAP Fiori Launchpad Tiles Group -->
+                <Title text="Mis Aplicaciones (2)" level="H3" class="sapUiSmallMarginBottom" />
+
+                <cssgrid:CSSGrid
+                    gridTemplateColumns="repeat(auto-fill, minmax(22rem, 1fr))"
+                    gridGap="1.5rem"
+                    class="sapUiMediumMarginBottom">
+
+                    <!-- TILE 1: Portal de Proveedores -->
+                    <GenericTile
+                        header="Portal de Proveedores"
+                        subheader="Gestión de compras, facturas, MIGO/HES y pre-registro DROID IA"
+                        press=".onNavToProviderPortal"
+                        frameType="TwoByOne"
+                        class="portalFioriLaunchpadTile sapUiSmallMarginEnd">
+                        <TileContent>
+                            <NumericContent
+                                value="35"
+                                indicator="Up"
+                                valueColor="Good"
+                                icon="sap-icon://supplier" />
+                        </TileContent>
+                    </GenericTile>
+
+                </cssgrid:CSSGrid>
+
+            </VBox>
+        </content>
+    </Page>
+
+</mvc:View>

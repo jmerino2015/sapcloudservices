@@ -1,0 +1,223 @@
+/* ==========================================================================
+   ENTREGAS A RENDIR & VIÁTICOS - MOBILE SIMULATOR & PROCESS FLOW STYLES
+   ========================================================================== */
+
+/* Process Flow Stepper Bar */
+.process-flow-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #ffffff;
+  border: 1px solid #d9d9d9;
+  border-radius: 8px;
+  padding: 16px 20px;
+  margin-bottom: 20px;
+  overflow-x: auto;
+}
+
+.flow-step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  min-width: 110px;
+  text-align: center;
+}
+
+.flow-step-circle {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: #e2e8f0;
+  color: #64748b;
+  font-weight: 700;
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 6px;
+  border: 2px solid #cbd5e1;
+  transition: all 0.3s;
+}
+
+.flow-step.completed .flow-step-circle {
+  background: #0a6ed1;
+  border-color: #0a6ed1;
+  color: #ffffff;
+}
+
+.flow-step.active .flow-step-circle {
+  background: #f59e0b;
+  border-color: #d97706;
+  color: #ffffff;
+  box-shadow: 0 0 0 4px rgba(245, 158, 11, 0.25);
+}
+
+.flow-step-title {
+  font-size: 11px;
+  font-weight: 700;
+  color: #334155;
+  line-height: 1.2;
+}
+
+.flow-step-actor {
+  font-size: 10px;
+  color: #0a6ed1;
+  font-weight: 600;
+  margin-top: 2px;
+}
+
+.flow-line {
+  flex: 1;
+  height: 3px;
+  background: #cbd5e1;
+  margin: 0 4px;
+  margin-top: -24px;
+}
+
+.flow-line.completed {
+  background: #0a6ed1;
+}
+
+/* --------------------------------------------------------------------------
+   MOBILE SIMULATOR DEVICE FRAME
+   -------------------------------------------------------------------------- */
+.mobile-simulator-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px 0;
+  background: rgba(15, 23, 42, 0.05);
+  border-radius: 16px;
+  margin-top: 10px;
+}
+
+.mobile-device-frame {
+  width: 375px;
+  height: 740px;
+  background: #1e293b;
+  border-radius: 44px;
+  padding: 12px;
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.35), 0 0 0 2px rgba(255, 255, 255, 0.1);
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Notch & Status Bar */
+.mobile-notch {
+  width: 140px;
+  height: 24px;
+  background: #0f172a;
+  border-bottom-left-radius: 14px;
+  border-bottom-right-radius: 14px;
+  position: absolute;
+  top: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 100;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.mobile-camera-dot {
+  width: 10px;
+  height: 10px;
+  background: #334155;
+  border-radius: 50%;
+}
+
+.mobile-screen {
+  width: 100%;
+  height: 100%;
+  background: #f8fafc;
+  border-radius: 34px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+.mobile-header-bar {
+  background: #354a5f;
+  color: #ffffff;
+  padding: 34px 16px 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-weight: 700;
+  font-size: 15px;
+}
+
+.mobile-bottom-nav {
+  height: 56px;
+  background: #ffffff;
+  border-top: 1px solid #e2e8f0;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  position: sticky;
+  bottom: 0;
+  z-index: 90;
+}
+
+.mobile-nav-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  color: #64748b;
+  font-size: 10px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.mobile-nav-item.active {
+  color: #0a6ed1;
+}
+
+.mobile-nav-item i {
+  font-size: 16px;
+}
+
+.mobile-card-item {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 14px;
+  margin-bottom: 12px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+}
+
+.flow-card-navy {
+  background: #1e3a8a !important;
+  color: #ffffff !important;
+  border-radius: 8px;
+  padding: 10px;
+}
+
+.flow-card-blue {
+  background: #3b82f6 !important;
+  color: #ffffff !important;
+  border-radius: 8px;
+  padding: 10px;
+}
+
+.flow-card-text {
+  color: #ffffff !important;
+  font-weight: bold;
+}
+
+.small-muted-text {
+  font-size: 11px !important;
+  opacity: 0.8 !important;
+}
+
+.mono-text {
+  font-size: 10px !important;
+  font-family: monospace !important;
+}
+
+

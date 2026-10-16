@@ -1,0 +1,85 @@
+<mvc:View controllerName="wm.light.controller.Admin"
+  xmlns:mvc="sap.ui.core.mvc" xmlns="sap.m" xmlns:f="sap.f">
+  <Page id="adminPage" title="{i18n>adminTitle}" showNavButton="false" backgroundDesign="List">
+    <content>
+      <VBox class="sapUiResponsivePadding">
+        <IconTabBar id="adminTabs" select=".onTabSelect" expandable="false">
+          <items>
+            <IconTabFilter icon="sap-icon://employee" text="{i18n>adminTabUsers}" key="users">
+              <Table id="usersTable" items="{admin>/users}" noDataText="{i18n>msgNoData}">
+                <headerToolbar>
+                  <Toolbar>
+                    <Title text="{i18n>adminTabUsers}" level="H4"/>
+                    <ToolbarSpacer/>
+                    <Button icon="sap-icon://add" type="Emphasized" text="{i18n>adminUserCreate}" press=".onCreateUser"/>
+                  </Toolbar>
+                </headerToolbar>
+                <columns>
+                  <Column><Text text="{i18n>adminUserName}"/></Column>
+                  <Column><Text text="{i18n>adminUserEmail}"/></Column>
+                  <Column><Text text="{i18n>adminUserRole}"/></Column>
+                  <Column><Text text="{i18n>adminUserStatus}"/></Column>
+                </columns>
+                <items>
+                  <ColumnListItem>
+                    <cells>
+                      <ObjectIdentifier title="{admin>name}" text="{admin>initials}"/>
+                      <Text text="{admin>email}"/>
+                      <ObjectStatus
+                        text="{admin>role}"
+                        state="{= ${admin>role} === 'admin' ? 'Warning' : 'None'}"
+                        icon="{= ${admin>role} === 'admin' ? 'sap-icon://manager' : 'sap-icon://employee'}"/>
+                      <ObjectStatus
+                        text="{= ${admin>status} === 'ACTIVE' ? ${i18n>adminUserActive} : ${i18n>adminUserInactive}}"
+                        state="{= ${admin>status} === 'ACTIVE' ? 'Success' : 'Error'}"
+                        icon="{= ${admin>status} === 'ACTIVE' ? 'sap-icon://accept' : 'sap-icon://decline'}"/>
+                    </cells>
+                  </ColumnListItem>
+                </items>
+              </Table>
+            </IconTabFilter>
+
+            <IconTabFilter icon="sap-icon://connected" text="{i18n>adminTabSap}" key="sap">
+              <VBox class="sapUiSmallMargin">
+                <Title text="{i18n>adminTabSap}" titleStyle="H4" class="sapUiSmallMarginBottom"/>
+                <MessageStrip id="sapStatusStrip"
+                  text="{admin>/sapStatusText}"
+                  type="{admin>/sapStatusType}"
+                  showIcon="true"
+                  class="sapUiSmallMarginBottom"/>
+                <HBox gap="0.5rem">
+                  <Button text="{i18n>adminSapTestConnection}" icon="sap-icon://connected" type="Default" press=".onTestSap"/>
+                  <Button text="{i18n>adminSapSyncNow}"        icon="sap-icon://synchronize" type="Emphasized" press=".onSapSync"/>
+                </HBox>
+                <Title text="Historial de sincronizaciones" titleStyle="H5" class="sapUiSmallMarginTop sapUiSmallMarginBottom"/>
+                <Table id="syncTable" items="{admin>/syncLogs}" noDataText="{i18n>msgNoData}">
+                  <columns>
+                    <Column><Text text="Tipo"/></Column>
+                    <Column><Text text="Estado"/></Column>
+                    <Column><Text text="Registros"/></Column>
+                    <Column><Text text="Duración"/></Column>
+                    <Column><Text text="Fecha"/></Column>
+                  </columns>
+                  <items>
+                    <ColumnListItem>
+                      <cells>
+                        <Text text="{admin>sync_type}"/>
+                        <ObjectStatus
+                          text="{admin>status}"
+                          state="{= ${admin>status} === 'SUCCESS' ? 'Success' : 'Error'}"
+                          icon="{= ${admin>status} === 'SUCCESS' ? 'sap-icon://accept' : 'sap-icon://message-error'}"/>
+                        <Text text="{admin>records_synced}"/>
+                        <Text text="{= (${admin>duration_ms}||0) + ' ms'}"/>
+                        <Text text="{parts:[{path:'admin>finished_at'}],formatter:'.formatDate'}"/>
+                      </cells>
+                    </ColumnListItem>
+                  </items>
+                </Table>
+              </VBox>
+            </IconTabFilter>
+          </items>
+        </IconTabBar>
+      </VBox>
+    </content>
+  </Page>
+</mvc:View>

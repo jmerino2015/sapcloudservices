@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Portal de Proveedores SAP - Gestión de órdenes de compra, facturas y entregas" />
+    <title>Portal de Proveedores</title>
+
+    <script
+        id="sap-ui-bootstrap"
+        src="https://ui5.sap.com/resources/sap-ui-core.js"
+        data-sap-ui-theme="sap_horizon"
+        data-sap-ui-libs="sap.m,sap.f,sap.ui.layout,sap.ui.unified,sap.uxap,sap.suite.ui.microchart"
+        data-sap-ui-compatVersion="edge"
+        data-sap-ui-async="true"
+        data-sap-ui-frameOptions="allow"
+        data-sap-ui-onInit="module:sap/ui/core/ComponentSupport"
+        data-sap-ui-resourceroots='{"com.antigravity.portalProveedores": "./"}'
+    ></script>
+</head>
+<body class="sapUiBody" id="content">
+    <div
+        data-sap-ui-component
+        data-name="com.antigravity.portalProveedores"
+        data-id="container"
+        data-settings='{"id": "portalProveedores"}'
+        data-handle-validation="true"
+    ></div>
+    <script>
+        if (window.self !== window.top) {
+            document.body.classList.add('in-iframe');
+        }
+        window.addEventListener('message', function(e) {
+            if (e.data && e.data.type === 'SET_THEME') {
+                var isDark = e.data.theme === 'dark';
+                if (window.sap && sap.ui && sap.ui.getCore) {
+                    try {
+                        sap.ui.getCore().applyTheme(isDark ? 'sap_horizon_dark' : 'sap_horizon');
+                    } catch(err) {}
+                }
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,100 @@
+<mvc:View
+    controllerName="com.antigravity.portalProveedores.controller.ExpenseClaims"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m"
+    xmlns:f="sap.f"
+    xmlns:card="sap.f.cards"
+    xmlns:cssgrid="sap.ui.layout.cssgrid"
+    xmlns:core="sap.ui.core">
+
+    <Page id="expenseClaimsPage" title="Portal de Gastos a Rendir" showNavButton="true" navButtonPress=".onNavBack">
+        <content>
+            <VBox class="sapUiSmallMargin">
+
+                <!-- Header Banner -->
+                <Panel class="sapUiSmallMarginBottom">
+                    <HBox wrap="Wrap" justifyContent="SpaceBetween" alignItems="Center">
+                        <VBox>
+                            <HBox>
+                                <Label text="Módulo:" class="sapUiTinyMarginEnd" bold="true" />
+                                <Text text="Rendición de Gastos y Viáticos" />
+                            </HBox>
+                            <HBox>
+                                <Label text="Empresa:" class="sapUiTinyMarginEnd" bold="true" />
+                                <Text text="SERVICIOS EMPRESARIALES S.A.C." />
+                            </HBox>
+                        </VBox>
+                        <ObjectStatus text="Gestión de Viáticos y Comprobantes" state="Information" icon="sap-icon://travel-expense" />
+                    </HBox>
+                </Panel>
+
+                <!-- Filter Bar -->
+                <Panel expandable="true" expanded="true" class="sapUiSmallMarginBottom">
+                    <HBox wrap="Wrap" alignItems="End">
+                        <VBox class="sapUiSmallMarginEnd">
+                            <Label text="Buscar:" />
+                            <SearchField id="searchExpenses" placeholder="Buscar por Nro, Solicitante, Motivo..." width="16rem" liveChange=".onFilterSearch" />
+                        </VBox>
+
+                        <VBox class="sapUiSmallMarginEnd">
+                            <Label text="Estado:" />
+                            <Select id="selectExpenseStatus" selectedKey="ALL" change=".onFilterSearch" width="12rem">
+                                <core:Item key="ALL" text="Todos" />
+                                <core:Item key="BORRADOR" text="Borrador" />
+                                <core:Item key="EN_APROBACION" text="En Aprobación" />
+                                <core:Item key="APROBADO" text="Aprobado" />
+                                <core:Item key="REEMBOLSADO" text="Reembolsado" />
+                            </Select>
+                        </VBox>
+
+                        <HBox>
+                            <Button text="Ir" type="Emphasized" press=".onFilterSearch" class="sapUiTinyMarginEnd" />
+                            <Button text="Restablecer" type="Transparent" press=".onFilterReset" />
+                        </HBox>
+                    </HBox>
+                </Panel>
+
+                <!-- Expense Claims Table -->
+                <Table
+                    id="tableExpenseClaims"
+                    items="{app>/expenseClaims}"
+                    class="sapUiResponsiveMargin">
+                    <headerToolbar>
+                        <OverflowToolbar>
+                            <Title text="Rendiciones de Gastos ({= ${app>/expenseClaims}.length })" level="H3" />
+                            <ToolbarSpacer />
+                            <Button text="Nueva Rendición" icon="sap-icon://add" type="Emphasized" press=".onOpenNewClaimDialog" />
+                            <Button text="Exportar datos" icon="sap-icon://excel-attachment" press=".onExportExcel" />
+                        </OverflowToolbar>
+                    </headerToolbar>
+                    <columns>
+                        <Column><Text text="Nro. Rendición" /></Column>
+                        <Column><Text text="Fecha" /></Column>
+                        <Column><Text text="Solicitante" /></Column>
+                        <Column><Text text="Motivo / Viaje" /></Column>
+                        <Column><Text text="Centro Costos" /></Column>
+                        <Column><Text text="Monto Total" /></Column>
+                        <Column><Text text="Comprobantes" /></Column>
+                        <Column><Text text="Estado" /></Column>
+                    </columns>
+                    <items>
+                        <ColumnListItem highlight="{path: 'app>estado', formatter: '.formatter.statusState'}">
+                            <cells>
+                                <ObjectIdentifier title="{app>id}" />
+                                <Text text="{app>fecha}" />
+                                <Text text="{app>solicitante}" />
+                                <Text text="{app>motivo}" />
+                                <Text text="{app>ceco}" />
+                                <ObjectNumber number="{path: 'app>monto', formatter: '.formatter.currency'}" unit="{app>moneda}" />
+                                <Text text="{app>comprobantesCount} adjuntos" />
+                                <ObjectStatus text="{path: 'app>estado', formatter: '.formatter.statusText'}" state="{path: 'app>estado', formatter: '.formatter.statusState'}" />
+                            </cells>
+                        </ColumnListItem>
+                    </items>
+                </Table>
+
+            </VBox>
+        </content>
+    </Page>
+
+</mvc:View>

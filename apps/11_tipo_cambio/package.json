@@ -1,0 +1,20 @@
+{
+  "name": "scm-fx-manager",
+  "version": "1.0.0",
+  "description": "Aplicación SAP Fiori de Gestión Inteligente de Tipos de Cambio y Simulación de Impacto Logístico (MM/SD/FI)",
+  "main": "webapp/index.html",
+  "scripts": {
+    "start": "npx -y serve webapp -p 8080"
+  },
+  "keywords": [
+    "sapui5",
+    "fiori",
+    "sap",
+    "tcurr",
+    "ob08",
+    "scm",
+    "finance"
+  ],
+  "author": "Antigravity SAP Fiori PMO & UX Team",
+  "license": "UNLICENSED"
+}

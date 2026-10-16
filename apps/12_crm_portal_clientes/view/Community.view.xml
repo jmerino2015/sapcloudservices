@@ -1,0 +1,195 @@
+<mvc:View
+    controllerName="sap.crm.customerportal.controller.Community"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m"
+    xmlns:f="sap.f"
+    xmlns:core="sap.ui.core"
+    xmlns:layout="sap.ui.layout">
+
+    <Page id="communityPage" title="{i18n>communityTitle}" showNavButton="false">
+        <headerContent>
+            <Button
+                text="Crear Tema en Foro"
+                icon="sap-icon://comment"
+                type="Emphasized"
+                press=".onOpenNewPostDialog"
+                tooltip="Publicar nueva consulta o aporte en la comunidad" />
+        </headerContent>
+
+        <content>
+            <VBox class="sapUiResponsiveContentPadding">
+                
+                <!-- Gamification Profile Mini Bar -->
+                <layout:Grid defaultSpan="XL3 L3 M6 S12" class="sapUiSmallMarginBottom">
+                    <VBox class="sapUiContentPadding fioriCardCustom" style="background:#f7f9fa; border:1px solid #e2e8f0;">
+                        <Text text="Nivel de Reputación" class="sapUiTinyText sapUiLightText" />
+                        <Title text="{gamification>/userLevel}" level="H3" class="sapUiPositiveElement" />
+                        <Text text="Posición #1 en la Comunidad" class="sapUiTinyText" />
+                    </VBox>
+
+                    <VBox class="sapUiContentPadding fioriCardCustom" style="background:#f7f9fa; border:1px solid #e2e8f0;">
+                        <Text text="Puntos de Contribución" class="sapUiTinyText sapUiLightText" />
+                        <Title text="{gamification>/userPoints} pts" level="H2" />
+                        <ProgressIndicator percentValue="{gamification>/levelProgressPercent}" displayValue="{gamification>/levelProgressPercent}% hacia Master Elite" state="Information" class="sapUiTinyMarginTop" />
+                    </VBox>
+
+                    <VBox class="sapUiContentPadding fioriCardCustom" style="background:#f7f9fa; border:1px solid #e2e8f0;">
+                        <Text text="Insignias Desbloqueadas" class="sapUiTinyText sapUiLightText" />
+                        <Title text="4 Insignias" level="H3" />
+                        <Text text="Estatus: Super Contribuidor" class="sapUiTinyText sapUiPositiveElement" />
+                    </VBox>
+
+                    <VBox class="sapUiContentPadding fioriCardCustom" style="background:#f7f9fa; border:1px solid #e2e8f0;">
+                        <Text text="Foros Activos" class="sapUiTinyText sapUiLightText" />
+                        <Title text="3 Grupos Técnicos" level="H3" />
+                        <Text text="Moderados por especialistas SAP" class="sapUiTinyText" />
+                    </VBox>
+                </layout:Grid>
+
+                <IconTabBar
+                    id="communityIconTabBar"
+                    select=".onTabSelect"
+                    expanded="true"
+                    class="sapUiResponsiveContentPadding">
+                    <items>
+
+                        <!-- ======================================================== -->
+                        <!-- TAB 1: FOROS DE DISCUSIÓN & GRUPOS TEMÁTICOS             -->
+                        <!-- ======================================================== -->
+                        <IconTabFilter
+                            key="forums"
+                            icon="sap-icon://discussion-2"
+                            text="Foros de Discusión &amp; Grupos">
+                            
+                            <List id="forumsList" items="{/communityForums}" noDataText="No hay debates en este grupo">
+                                <headerToolbar>
+                                    <OverflowToolbar>
+                                        <Title text="Debates Técnicos y Foros de Colaboración B2B" level="H3" />
+                                        <ToolbarSpacer />
+                                        <Button text="Nuevo Tema" icon="sap-icon://add" press=".onOpenNewPostDialog" type="Emphasized" />
+                                    </OverflowToolbar>
+                                </headerToolbar>
+                                <CustomListItem press=".onViewForumThread" type="Navigation">
+                                    <VBox class="sapUiSmallMargin">
+                                        <HBox justifyContent="SpaceBetween" alignItems="Center">
+                                            <HBox alignItems="Center">
+                                                <core:Icon src="sap-icon://group" color="#0854a0" class="sapUiTinyMarginEnd" />
+                                                <Text text="{title}" class="sapUiBoldText sapUiSmallMarginEnd" />
+                                                <ObjectStatus text="{category}" state="Information" class="sapUiTinyMarginEnd" />
+                                                <ObjectStatus text="{= ${solved} ? '✅ Resuelto' : 'En Debate' }" state="{= ${solved} ? 'Success' : 'Warning' }" />
+                                            </HBox>
+                                            <Text text="{date}" class="sapUiTinyText sapUiLightText" />
+                                        </HBox>
+                                        <Text text="{content}" class="sapUiSmallMarginTopBottom sapUiSmallText" maxLines="2" />
+                                        <HBox justifyContent="SpaceBetween" alignItems="Center">
+                                            <Text text="Publicado por: {author} ({authorRank})" class="sapUiTinyText sapUiLightText" />
+                                            <HBox alignItems="Center">
+                                                <Text text="👍 {likes} Me gusta" class="sapUiTinyMarginEnd sapUiTinyText" />
+                                                <Text text="💬 {repliesCount} Respuestas" class="sapUiTinyText" />
+                                            </HBox>
+                                        </HBox>
+                                    </VBox>
+                                </CustomListItem>
+                            </List>
+                        </IconTabFilter>
+
+                        <!-- ======================================================== -->
+                        <!-- TAB 2: FEEDS DE CHATTER TRANSACCIONALES                  -->
+                        <!-- ======================================================== -->
+                        <IconTabFilter
+                            key="chatter"
+                            icon="sap-icon://feed"
+                            text="Feeds de Chatter Transaccionales">
+                            
+                            <VBox class="sapUiSmallMargin">
+                                <MessageStrip
+                                    text="Feeds de colaboración social (Chatter) vinculados a registros de Pedidos S/4HANA, Cotizaciones y Deals PRM."
+                                    type="Information"
+                                    showIcon="true"
+                                    class="sapUiSmallMarginBottom" />
+
+                                <FeedInput
+                                    placeholder="Comparte una actualización en el feed de Chatter o menciona a un colega con @..."
+                                    post=".onPostChatter"
+                                    class="sapUiSmallMarginBottom" />
+
+                                <List items="{/chatterFeeds}">
+                                    <FeedListItem
+                                        sender="{author}"
+                                        icon="{avatar}"
+                                        info="{recordType} - #{recordId}"
+                                        timestamp="{date}"
+                                        text="{text}" />
+                                </List>
+                            </VBox>
+                        </IconTabFilter>
+
+                        <!-- ======================================================== -->
+                        <!-- TAB 3: GAMIFICACIÓN, INSIGNIAS & LEADERBOARD             -->
+                        <!-- ======================================================== -->
+                        <IconTabFilter
+                            key="gamification"
+                            icon="sap-icon://award"
+                            text="Gamificación &amp; Insignias">
+                            
+                            <VBox class="sapUiSmallMargin">
+                                <Title text="Tus Insignias y Logros Obtenidos" level="H3" class="sapUiSmallMarginBottom" />
+                                <layout:Grid defaultSpan="XL3 L3 M6 S12" class="sapUiSmallMarginBottom">
+                                    <!-- Badges Cards -->
+                                    <VBox class="gamificationBadgeCard">
+                                        <core:HTML content="&lt;div class='badgeIconCircle'&gt;🏆&lt;/div&gt;" />
+                                        <Title text="Super Contribuidor" level="H4" />
+                                        <Text text="+10 respuestas aceptadas en foros técnicos" class="sapUiTinyText sapUiLightText" />
+                                        <ObjectStatus text="Desbloqueada" state="Success" class="sapUiTinyMarginTop" />
+                                    </VBox>
+
+                                    <VBox class="gamificationBadgeCard">
+                                        <core:HTML content="&lt;div class='badgeIconCircle'&gt;🛡️&lt;/div&gt;" />
+                                        <Title text="Partner Gold Certified" level="H4" />
+                                        <Text text="Certificación anual PRM aprobada" class="sapUiTinyText sapUiLightText" />
+                                        <ObjectStatus text="Desbloqueada" state="Success" class="sapUiTinyMarginTop" />
+                                    </VBox>
+
+                                    <VBox class="gamificationBadgeCard">
+                                        <core:HTML content="&lt;div class='badgeIconCircle'&gt;🛒&lt;/div&gt;" />
+                                        <Title text="Comprador Estrella" level="H4" />
+                                        <Text text="+$100K USD en órdenes autogestionadas" class="sapUiTinyText sapUiLightText" />
+                                        <ObjectStatus text="Desbloqueada" state="Success" class="sapUiTinyMarginTop" />
+                                    </VBox>
+
+                                    <VBox class="gamificationBadgeCard">
+                                        <core:HTML content="&lt;div class='badgeIconCircle'&gt;⚡&lt;/div&gt;" />
+                                        <Title text="Einstein Deflector" level="H4" />
+                                        <Text text="5 casos resueltos mediante Knowledge" class="sapUiTinyText sapUiLightText" />
+                                        <ObjectStatus text="Desbloqueada" state="Success" class="sapUiTinyMarginTop" />
+                                    </VBox>
+                                </layout:Grid>
+
+                                <Title text="Tabla de Posiciones de la Comunidad (Leaderboard)" level="H3" class="sapUiMediumMarginTop sapUiSmallMarginBottom" />
+                                <Table items="{gamification>/leaderboard}">
+                                    <columns>
+                                        <Column width="60px"><Text text="Lugar" class="sapUiBoldText" /></Column>
+                                        <Column><Text text="Miembro / Empresa" class="sapUiBoldText" /></Column>
+                                        <Column><Text text="Nivel" /></Column>
+                                        <Column hAlign="End"><Text text="Puntos de Reputación" class="sapUiBoldText" /></Column>
+                                    </columns>
+                                    <items>
+                                        <ColumnListItem>
+                                            <cells>
+                                                <Text text="#{gamification>rank}" class="sapUiBoldText" />
+                                                <Text text="{gamification>name}" class="sapUiBoldText" />
+                                                <ObjectStatus text="{gamification>badge}" state="Information" />
+                                                <Text text="{gamification>points} pts" class="sapUiPositiveElement sapUiBoldText" />
+                                            </cells>
+                                        </ColumnListItem>
+                                    </items>
+                                </Table>
+                            </VBox>
+                        </IconTabFilter>
+
+                    </items>
+                </IconTabBar>
+            </VBox>
+        </content>
+    </Page>
+</mvc:View>

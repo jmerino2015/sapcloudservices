@@ -1,0 +1,25 @@
+{
+  "name": "portal-soluciones-sap-fiori",
+  "version": "1.0.0",
+  "description": "Portal de Soluciones SAP Fiori Horizon",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js --open",
+    "db:setup": "node src/db/init.js"
+  },
+  "keywords": [
+    "sap",
+    "fiori",
+    "horizon",
+    "joule",
+    "wms",
+    "ocr"
+  ],
+  "author": "SAP Solution Portal",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^18.0.8",
+    "pg": "^8.23.1"
+  }
+}

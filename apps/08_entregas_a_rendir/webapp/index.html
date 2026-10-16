@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Entregas a Rendir y Viáticos — SAP Fiori Application" />
+    <title>Entregas a Rendir y Viáticos</title>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" />
+    <link rel="stylesheet" href="css/style.css" />
+
+    <script
+        id="sap-ui-bootstrap"
+        src="https://ui5.sap.com/resources/sap-ui-core.js"
+        data-sap-ui-theme="sap_horizon"
+        data-sap-ui-libs="sap.m,sap.f,sap.ui.layout,sap.ui.unified,sap.uxap"
+        data-sap-ui-compatVersion="edge"
+        data-sap-ui-async="true"
+        data-sap-ui-onInit="module:sap/ui/core/ComponentSupport"
+        data-sap-ui-resourceroots='{"com.droidconsulting.entregasRendir": "./"}'
+    ></script>
+</head>
+<body class="sapUiBody" id="content">
+    <div
+        data-sap-ui-component
+        data-name="com.droidconsulting.entregasRendir"
+        data-id="container"
+        data-settings='{"id": "entregasRendir"}'
+        data-handle-validation="true"
+    ></div>
+    <script>
+        window.addEventListener('message', function(e) {
+            if (e.data && e.data.type === 'SET_THEME') {
+                var isDark = e.data.theme === 'dark';
+                if (window.sap && sap.ui && sap.ui.getCore) {
+                    try {
+                        sap.ui.getCore().applyTheme(isDark ? 'sap_horizon_dark' : 'sap_horizon');
+                    } catch(err) {}
+                }
+            }
+        });
+    </script>
+</body>
+</html>

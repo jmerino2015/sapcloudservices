@@ -1,0 +1,310 @@
+<mvc:View
+    controllerName="sap.crm.customerportal.controller.Sales"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core"
+    xmlns:layout="sap.ui.layout">
+
+    <Page id="salesPage" title="Ventas &amp; B2B Commerce" showNavButton="false">
+        <headerContent>
+            <Button
+                icon="sap-icon://cart"
+                text="Cotización ({session>/cartCount})"
+                type="Emphasized"
+                press=".onOpenCartDialog"
+                tooltip="Ver productos seleccionados para cotización" />
+        </headerContent>
+
+        <content>
+            <IconTabBar
+                id="salesIconTabBar"
+                select=".onTabSelect"
+                expanded="true"
+                class="sapUiResponsiveContentPadding">
+                <items>
+                    
+                    <!-- ======================================================== -->
+                    <!-- TAB 1: CATÁLOGO B2B Y COTIZACIONES                  -->
+                    <!-- ======================================================== -->
+                    <IconTabFilter
+                        key="catalog"
+                        icon="sap-icon://product"
+                        text="Catálogo &amp; Cotizaciones">
+                        
+                        <!-- Search & Filter Bar -->
+                        <OverflowToolbar class="sapUiSmallMarginBottom">
+                            <SearchField
+                                id="catalogSearch"
+                                width="340px"
+                                placeholder="Buscar por SKU, nombre o descripción..."
+                                liveChange=".onSearchProduct" />
+                            
+                            <Select
+                                id="categoryFilter"
+                                change=".onFilterCategory"
+                                items="{/categories}"
+                                width="280px">
+                                <core:Item key="{id}" text="{name}" />
+                            </Select>
+
+                            <ToolbarSpacer />
+
+                            <Button
+                                icon="sap-icon://lead"
+                                text="Mis Cotizaciones ({/quotes/length})"
+                                press=".onOpenQuotesHistoryDialog"
+                                type="Transparent" />
+                        </OverflowToolbar>
+
+                        <!-- High-Performance B2B Product Table -->
+                        <Table
+                            id="productsTable"
+                            items="{/products}"
+                            noDataText="No se encontraron productos coincidentes en el catálogo"
+                            growing="true"
+                            growingThreshold="20">
+                            <headerToolbar>
+                                <OverflowToolbar>
+                                    <Title text="Catálogo Oficial de Equipos &amp; Repuestos Industriales ({/products/length} ítems)" level="H3" />
+                                    <ToolbarSpacer />
+                                    <Text text="Precios con 25% desc. Partner Gold aplicable" class="sapUiTinyText sapUiPositiveElement" />
+                                </OverflowToolbar>
+                            </headerToolbar>
+                            <columns>
+                                <Column width="160px"><Text text="SKU" design="Bold" /></Column>
+                                <Column minScreenWidth="Tablet" demandPopin="false"><Text text="Descripción del Producto" design="Bold" /></Column>
+                                <Column minScreenWidth="Desktop" demandPopin="true"><Text text="Categoría" /></Column>
+                                <Column minScreenWidth="Tablet" demandPopin="true" hAlign="Center"><Text text="Stock ERP" /></Column>
+                                <Column minScreenWidth="Desktop" demandPopin="true" hAlign="Center"><Text text="Despacho" /></Column>
+                                <Column hAlign="End"><Text text="Precio Lista" /></Column>
+                                <Column hAlign="End"><Text text="Precio Partner" design="Bold" /></Column>
+                                <Column hAlign="Center" width="120px"><Text text="Cantidad" /></Column>
+                                <Column hAlign="Center" width="130px"><Text text="Acción" /></Column>
+                            </columns>
+                            <items>
+                                <ColumnListItem>
+                                    <cells>
+                                        <HBox alignItems="Center">
+                                            <core:Icon src="{icon}" color="#0854a0" size="1.2rem" class="sapUiTinyMarginEnd" />
+                                            <Text text="{sku}" class="sapUiBoldText" />
+                                        </HBox>
+
+                                        <VBox>
+                                            <Text text="{name}" class="sapUiBoldText" />
+                                            <Text text="{description}" class="sapUiTinyText sapUiLightText" maxLines="2" />
+                                        </VBox>
+
+                                        <ObjectStatus text="{categoryName}" state="Information" />
+
+                                        <ObjectStatus
+                                            text="{= ${stockStatus} === 'InStock' ? ${stock} + ' un.' : 'Crítico: ' + ${stock} + ' un.' }"
+                                            state="{= ${stockStatus} === 'InStock' ? 'Success' : 'Warning' }"
+                                            icon="{= ${stockStatus} === 'InStock' ? 'sap-icon://accept' : 'sap-icon://alert' }" />
+
+                                        <Text text="{leadTimeDays} días hábiles" />
+
+                                        <Text text="{parts: [{path: 'unitPrice'}, {path: 'currency'}], formatter: '.formatCurrency'}" />
+
+                                        <Text text="{parts: [{path: 'partnerPrice'}, {path: 'currency'}], formatter: '.formatCurrency'}" class="sapUiBoldText sapUiPositiveElement" />
+
+                                        <StepInput
+                                            min="{minOrder}"
+                                            value="{minOrder}"
+                                            width="100px" />
+
+                                        <Button
+                                            text="Agregar"
+                                            icon="sap-icon://cart-plus"
+                                            type="Emphasized"
+                                            press=".onAddProductFromTable" />
+                                    </cells>
+                                </ColumnListItem>
+                            </items>
+                        </Table>
+                    </IconTabFilter>
+
+                    <!-- ======================================================== -->
+                    <!-- TAB 2: B2B COMMERCE & PEDIDO RÁPIDO MASIVO               -->
+                    <!-- ======================================================== -->
+                    <IconTabFilter
+                        key="b2bcommerce"
+                        icon="sap-icon://cart-4"
+                        text="B2B Commerce &amp; Reorden">
+                        
+                        <VBox class="sapUiSmallMargin">
+                            
+                            <!-- Quick Reorder Lists -->
+                            <Title text="Listas de Reorden Frecuente (1 Clic)" level="H3" class="sapUiSmallMarginBottom" />
+                            <layout:Grid defaultSpan="XL6 L6 M12 S12" class="sapUiSmallMarginBottom">
+                                <VBox class="sapUiContentPadding fioriCardCustom" style="background:#ffffff; border:1px solid #cbd5e1;">
+                                    <HBox justifyContent="SpaceBetween" alignItems="Center">
+                                        <VBox>
+                                            <Title text="Pack Mantenimiento Planta Chancado" level="H4" />
+                                            <Text text="3 posiciones habituales (Rodamientos + Sellos + Alineación)" class="sapUiTinyText sapUiLightText" />
+                                        </VBox>
+                                        <Title text="$6,415.00 USD" level="H3" class="sapUiPositiveElement" />
+                                    </HBox>
+                                    <Button text="Reordenar Pack Completo en 1 Clic" icon="sap-icon://cart-plus" type="Emphasized" press=".onReorderPack1" class="sapUiSmallMarginTop" />
+                                </VBox>
+
+                                <VBox class="sapUiContentPadding fioriCardCustom" style="background:#ffffff; border:1px solid #cbd5e1;">
+                                    <HBox justifyContent="SpaceBetween" alignItems="Center">
+                                        <VBox>
+                                            <Title text="Reposición de Válvulas y Actuadores Línea B" level="H4" />
+                                            <Text text="6x Válvula Mariposa DN300 ANSI 300" class="sapUiTinyText sapUiLightText" />
+                                        </VBox>
+                                        <Title text="$9,720.00 USD" level="H3" class="sapUiPositiveElement" />
+                                    </HBox>
+                                    <Button text="Reordenar Pack Completo en 1 Clic" icon="sap-icon://cart-plus" type="Emphasized" press=".onReorderPack2" class="sapUiSmallMarginTop" />
+                                </VBox>
+                            </layout:Grid>
+
+                            <!-- Mass Quick SKU Order -->
+                            <Panel headerText="Pedido Masivo Rápido por Matriz de SKUs" class="sapUiMediumMarginTop fioriCardCustom">
+                                <VBox class="sapUiSmallMargin">
+                                    <Text text="Ingresa los códigos SKU y cantidades separados por coma (ej. MOT-IND-75KW, 4):" class="sapUiTinyMarginBottom sapUiLightText" />
+                                    <TextArea id="txtMassOrder" rows="3" width="100%" value="MOT-IND-75KW, 2&#10;VALV-MAR-DN300, 4&#10;ROD-ESF-SKF22320, 10" />
+                                    <Button text="Procesar y Cargar a Carrito con Descuentos por Volumen" icon="sap-icon://upload" type="Emphasized" press=".onProcessMassOrder" class="sapUiSmallMarginTop" />
+                                </VBox>
+                            </Panel>
+
+                        </VBox>
+                    </IconTabFilter>
+
+                    <!-- ======================================================== -->
+                    <!-- TAB 3: SEGUIMIENTO DE PEDIDOS (SAP S/4HANA)              -->
+                    <!-- ======================================================== -->
+                    <IconTabFilter
+                        key="orders"
+                        icon="sap-icon://shipping-status"
+                        text="Seguimiento de Pedidos (S/4HANA)">
+                        
+                        <Table
+                            id="ordersTable"
+                            items="{/salesOrders}"
+                            mode="SingleSelectMaster"
+                            selectionChange=".onSelectOrder"
+                            noDataText="No hay pedidos registrados en SAP S/4HANA">
+                            <headerToolbar>
+                                <OverflowToolbar>
+                                    <Title text="Órdenes de Venta S/4HANA" level="H3" />
+                                    <ToolbarSpacer />
+                                    <SearchField width="240px" placeholder="Filtrar por Nº de Pedido..." liveChange=".onSearchOrder" />
+                                </OverflowToolbar>
+                            </headerToolbar>
+                            <columns>
+                                <Column><Text text="Nº Pedido S/4" design="Bold" /></Column>
+                                <Column minScreenWidth="Tablet" demandPopin="true"><Text text="Fecha Creación" /></Column>
+                                <Column minScreenWidth="Desktop" demandPopin="true"><Text text="Entrega Estimada" /></Column>
+                                <Column><Text text="Estado de Entrega" /></Column>
+                                <Column minScreenWidth="Tablet" demandPopin="true"><Text text="Guía / Transportista" /></Column>
+                                <Column hAlign="End"><Text text="Importe Total" design="Bold" /></Column>
+                                <Column hAlign="Center"><Text text="Acción" /></Column>
+                            </columns>
+                            <items>
+                                <ColumnListItem type="Navigation" press=".onViewOrderDetail">
+                                    <cells>
+                                        <Text text="{orderNumber}" class="sapUiBoldText" />
+                                        <Text text="{orderDate}" />
+                                        <Text text="{deliveryDate}" />
+                                        <ObjectStatus
+                                            text="{statusText}"
+                                            state="{parts: [{path: 'status'}], formatter: '.formatOrderStatusState'}"
+                                            icon="{parts: [{path: 'status'}], formatter: '.formatOrderStatusIcon'}" />
+                                        <VBox>
+                                            <Text text="{carrier}" class="sapUiBoldText" />
+                                            <Text text="{trackingCode}" class="sapUiTinyText sapUiLightText" />
+                                        </VBox>
+                                        <Text text="{parts: [{path: 'totalGross'}, {path: 'currency'}], formatter: '.formatCurrency'}" class="sapUiBoldText" />
+                                        <Button
+                                            text="Rastrear"
+                                            icon="sap-icon://journey-arrive"
+                                            type="Ghost"
+                                            press=".onViewOrderDetail" />
+                                    </cells>
+                                </ColumnListItem>
+                            </items>
+                        </Table>
+                    </IconTabFilter>
+
+                    <!-- ======================================================== -->
+                    <!-- TAB 4: ESTADO DE CUENTA Y FACTURAS                       -->
+                    <!-- ======================================================== -->
+                    <IconTabFilter
+                        key="invoices"
+                        icon="sap-icon://receipt"
+                        text="Estado de Cuenta &amp; Facturación">
+                        
+                        <!-- Financial Summary KPIs -->
+                        <layout:Grid defaultSpan="XL4 L4 M4 S12" class="sapUiSmallMarginBottom">
+                            <VBox class="sapUiContentPadding fioriCardCustom" style="background: #f7f9fa; border: 1px solid #e0e0e0;">
+                                <Text text="Línea de Crédito Autorizada" class="sapUiTinyText sapUiLightText" />
+                                <Title text="{parts: [{path: 'customer/creditLimit'}, {path: 'customer/currency'}], formatter: '.formatCurrency'}" level="H2" />
+                                <ProgressIndicator percentValue="31" displayValue="31% Utilizado" state="Information" class="sapUiTinyMarginTop" />
+                            </VBox>
+
+                            <VBox class="sapUiContentPadding fioriCardCustom" style="background: #f7f9fa; border: 1px solid #e0e0e0;">
+                                <Text text="Crédito Disponible Actual" class="sapUiTinyText sapUiLightText" />
+                                <Title text="{parts: [{path: 'customer/creditAvailable'}, {path: 'customer/currency'}], formatter: '.formatCurrency'}" level="H2" class="sapUiPositiveElement" />
+                                <Text text="Condición comercial: Crédito 30 días" class="sapUiTinyText" />
+                            </VBox>
+
+                            <VBox class="sapUiContentPadding fioriCardCustom" style="background: #f7f9fa; border: 1px solid #e0e0e0;">
+                                <Text text="Total Facturado Pendiente" class="sapUiTinyText sapUiLightText" />
+                                <Title text="$27,066.00 USD" level="H2" class="sapUiCriticalElement" />
+                                <Text text="1 Factura vencida - $4,616.00 USD" class="sapUiTinyText sapUiNegativeElement" />
+                            </VBox>
+                        </layout:Grid>
+
+                        <Table
+                            id="invoicesTable"
+                            items="{/invoices}"
+                            noDataText="No hay facturas registradas">
+                            <headerToolbar>
+                                <OverflowToolbar>
+                                    <Title text="Historial de Facturas Emitidas (SAP S/4HANA)" level="H3" />
+                                    <ToolbarSpacer />
+                                    <Button icon="sap-icon://excel-attachment" text="Exportar a Excel" press=".onExportInvoices" type="Transparent" />
+                                </OverflowToolbar>
+                            </headerToolbar>
+                            <columns>
+                                <Column><Text text="Nº Factura" design="Bold" /></Column>
+                                <Column minScreenWidth="Tablet" demandPopin="true"><Text text="Ref. Pedido" /></Column>
+                                <Column minScreenWidth="Tablet" demandPopin="true"><Text text="Fecha Emisión" /></Column>
+                                <Column><Text text="Vencimiento" /></Column>
+                                <Column minScreenWidth="Desktop" demandPopin="true" hAlign="End"><Text text="Neto" /></Column>
+                                <Column minScreenWidth="Desktop" demandPopin="true" hAlign="End"><Text text="IVA (19%)" /></Column>
+                                <Column hAlign="End"><Text text="Total Bruto" design="Bold" /></Column>
+                                <Column><Text text="Estado" /></Column>
+                                <Column hAlign="Center"><Text text="Documento" /></Column>
+                            </columns>
+                            <items>
+                                <ColumnListItem>
+                                    <cells>
+                                        <Text text="{invoiceNumber}" class="sapUiBoldText" />
+                                        <Text text="{salesOrderRef}" />
+                                        <Text text="{issueDate}" />
+                                        <Text text="{dueDate}" />
+                                        <Text text="{parts: [{path: 'netAmount'}, {path: 'currency'}], formatter: '.formatCurrency'}" />
+                                        <Text text="{parts: [{path: 'taxAmount'}, {path: 'currency'}], formatter: '.formatCurrency'}" />
+                                        <Text text="{parts: [{path: 'grossTotal'}, {path: 'currency'}], formatter: '.formatCurrency'}" class="sapUiBoldText" />
+                                        <ObjectStatus text="{statusText}" state="{statusState}" />
+                                        <HBox justifyContent="Center">
+                                            <Button
+                                                icon="sap-icon://pdf-attachment"
+                                                text="PDF"
+                                                type="Ghost"
+                                                press=".onPreviewInvoicePdf"
+                                                tooltip="Previsualizar factura legal en PDF" />
+                                        </HBox>
+                                    </cells>
+                                </ColumnListItem>
+                            </items>
+                        </Table>
+                    </IconTabFilter>
+
+                </items>
+            </IconTabBar>
+        </content>
+    </Page>
+</mvc:View>

@@ -1,0 +1,112 @@
+<mvc:View
+    controllerName="com.antigravity.portalProveedores.controller.PaymentHistory"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core">
+
+    <Page id="paymentHistoryPage" title="{i18n>payHistTitle}" showNavButton="true" navButtonPress=".onNavBack">
+        <content>
+            <VBox class="sapUiSmallMargin">
+
+                <!-- Header Info Banner -->
+                <Panel class="sapUiSmallMarginBottom">
+                    <HBox wrap="Wrap" justifyContent="SpaceBetween" alignItems="Center">
+                        <VBox>
+                            <HBox>
+                                <Label text="Nombre:" class="sapUiTinyMarginEnd" bold="true" />
+                                <Text text="Juana Droid" />
+                            </HBox>
+                            <HBox>
+                                <Label text="Proveedor:" class="sapUiTinyMarginEnd" bold="true" />
+                                <Text text="{app>/user/name}" />
+                            </HBox>
+                        </VBox>
+                        <VBox>
+                            <HBox>
+                                <Label text="RUC:" class="sapUiTinyMarginEnd" bold="true" />
+                                <Text text="{app>/user/nif}" />
+                            </HBox>
+                            <HBox>
+                                <Label text="Sociedad:" class="sapUiTinyMarginEnd" bold="true" />
+                                <Text text="{app>/user/sociedad}" />
+                            </HBox>
+                        </VBox>
+                    </HBox>
+                </Panel>
+
+                <!-- Filter Bar -->
+                <Panel expandable="true" expanded="true" class="sapUiSmallMarginBottom">
+                    <HBox wrap="Wrap" alignItems="End">
+                        <VBox class="sapUiSmallMarginEnd">
+                            <Label text="{i18n>commonSearch}:" />
+                            <SearchField id="searchPay" placeholder="{i18n>payHistSearchPlaceholder}" width="16rem" liveChange=".onFilterSearch" />
+                        </VBox>
+
+                        <VBox class="sapUiSmallMarginEnd">
+                            <Label text="{i18n>payHistDateFrom}" />
+                            <DatePicker id="dpPayFrom" value="27/02/2020" displayFormat="dd/MM/yyyy" width="10rem" />
+                        </VBox>
+
+                        <VBox class="sapUiSmallMarginEnd">
+                            <Label text="{i18n>payHistDateTo}" />
+                            <DatePicker id="dpPayTo" value="27/02/2024" displayFormat="dd/MM/yyyy" width="10rem" />
+                        </VBox>
+
+                        <HBox>
+                            <Button text="{i18n>preRegBtnGo}" type="Emphasized" press=".onFilterSearch" class="sapUiTinyMarginEnd" />
+                            <Button text="{i18n>preRegBtnReset}" type="Transparent" press=".onFilterReset" class="sapUiTinyMarginEnd" />
+                            <Button text="Adaptar filtros" type="Transparent" />
+                        </HBox>
+                    </HBox>
+                </Panel>
+
+                <!-- Payment History Table -->
+                <Table
+                    id="tablePaymentHistory"
+                    items="{app>/paymentHistory}"
+                    class="sapUiResponsiveMargin">
+                    <headerToolbar>
+                        <OverflowToolbar>
+                            <Title text="Total Historial de Pagos ({= ${app>/paymentHistory}.length })" level="H3" />
+                            <ToolbarSpacer />
+                            <Button text="{i18n>preRegBtnExport}" icon="sap-icon://excel-attachment" type="Emphasized" press=".onExportExcel" />
+                            <Button icon="sap-icon://action-settings" />
+                        </OverflowToolbar>
+                    </headerToolbar>
+                    <columns>
+                        <Column><Text text="{i18n>payHistColDenominacion}" /></Column>
+                        <Column><Text text="{i18n>payHistColDocSAP}" /></Column>
+                        <Column><Text text="{i18n>payHistColDocComp}" /></Column>
+                        <Column><Text text="{i18n>payHistColBanco}" /></Column>
+                        <Column><Text text="{i18n>payHistColFechaPago}" /></Column>
+                        <Column><Text text="{i18n>payHistColDocRef}" /></Column>
+                        <Column><Text text="{i18n>payHistColFechaDoc}" /></Column>
+                        <Column><Text text="{i18n>payHistColFechaCont}" /></Column>
+                        <Column><Text text="{i18n>payHistColImporteDoc}" /></Column>
+                        <Column><Text text="{i18n>payHistColImporteRetenido}" /></Column>
+                        <Column><Text text="{i18n>payHistColImporteDetraccion}" /></Column>
+                    </columns>
+                    <items>
+                        <ColumnListItem>
+                            <cells>
+                                <Text text="{app>denominacion}" />
+                                <ObjectIdentifier title="{app>documentoSAP}" />
+                                <Text text="{app>nroDocCompensacion}" />
+                                <ObjectStatus text="{app>bancoPagador}" state="Success" icon="sap-icon://money-bills" />
+                                <Text text="{app>fechaPago}" />
+                                <Text text="{app>nroDocRef}" />
+                                <Text text="{app>fechaDocumento}" />
+                                <Text text="{app>fechaContabilizacion}" />
+                                <ObjectNumber number="{path: 'app>importeDocumento', formatter: '.formatter.currency'}" unit="{app>moneda}" />
+                                <ObjectNumber number="{path: 'app>importeRetenido', formatter: '.formatter.currency'}" unit="{app>moneda}" />
+                                <ObjectNumber number="{path: 'app>importeDetraccion', formatter: '.formatter.currency'}" unit="{app>moneda}" />
+                            </cells>
+                        </ColumnListItem>
+                    </items>
+                </Table>
+
+            </VBox>
+        </content>
+    </Page>
+
+</mvc:View>

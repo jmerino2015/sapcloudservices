@@ -1,0 +1,118 @@
+<mvc:View
+  controllerName="wm.light.controller.DispatchPrint"
+  xmlns:mvc="sap.ui.core.mvc"
+  xmlns="sap.m"
+  xmlns:f="sap.ui.layout.form"
+  xmlns:core="sap.ui.core"
+  xmlns:l="sap.ui.layout">
+
+  <Page title="Etiqueta de Despacho" showNavButton="false" class="sapUiContentPadding">
+    <l:Splitter height="100%">
+      
+      <!-- Panel Izquierdo: Formulario -->
+      <VBox fitContainer="true" class="sapUiSmallMargin">
+        <layoutData>
+          <l:SplitterLayoutData size="35%" />
+        </layoutData>
+        <f:SimpleForm id="dispatchForm" editable="true" layout="ResponsiveGridLayout" title="Datos de Despacho">
+          <f:content>
+            <Label text="To (Company)" />
+            <Input value="{dispatchModel>/toCompany}" liveChange=".onLiveChange" />
+            <Label text="To (Address)" />
+            <Input value="{dispatchModel>/toAddress}" liveChange=".onLiveChange" />
+            
+            <Label text="From (Sender)" />
+            <Input value="{dispatchModel>/fromCompany}" liveChange=".onLiveChange" />
+
+            <Label text="Lot Number" />
+            <Input value="{dispatchModel>/lotNumber}" liveChange=".onLiveChange" />
+
+            <Label text="Ref Number" />
+            <Input value="{dispatchModel>/refNumber}" liveChange=".onLiveChange" />
+
+            <Label text="Ship Date" />
+            <Input value="{dispatchModel>/shipDate}" liveChange=".onLiveChange" />
+
+            <Label text="Weight" />
+            <Input value="{dispatchModel>/weight}" liveChange=".onLiveChange" />
+
+            <Label text="Delivery Instruction" />
+            <Input value="{dispatchModel>/instruction}" liveChange=".onLiveChange" />
+
+            <Label text="Item nr. / Barcode" />
+            <Input value="{dispatchModel>/barcode}" liveChange=".onLiveChange" />
+          </f:content>
+        </f:SimpleForm>
+        
+        <Button text="Imprimir Etiqueta" icon="sap-icon://print" type="Emphasized" press=".onPrint" class="sapUiSmallMarginTop" />
+      </VBox>
+
+      <!-- Panel Derecho: Vista Previa -->
+      <VBox id="printAreaWrapperDispatch" class="sapUiSmallMargin labelPreviewArea" alignContent="Center" justifyContent="Center" width="100%" height="100%">
+        <layoutData>
+          <l:SplitterLayoutData size="65%" />
+        </layoutData>
+        <core:HTML content="&lt;div id='dispatchContainer' class='dispatch-container'&gt;
+            
+            &lt;!-- Fila 1: P y TO --&gt;
+            &lt;div class='dispatch-row dispatch-row-1'&gt;
+              &lt;div class='dispatch-p'&gt;P&lt;/div&gt;
+              &lt;div class='dispatch-to'&gt;
+                &lt;div class='dispatch-to-label'&gt;TO:&lt;/div&gt;
+                &lt;div class='dispatch-to-details'&gt;
+                  &lt;div class='dispatch-company' id='lblDispToComp'&gt;&lt;/div&gt;
+                  &lt;div class='dispatch-address' id='lblDispToAdd'&gt;&lt;/div&gt;
+                &lt;/div&gt;
+              &lt;/div&gt;
+            &lt;/div&gt;
+            
+            &lt;!-- Fila 2: Priority Mail --&gt;
+            &lt;div class='dispatch-row dispatch-row-2'&gt;
+              PRIORITY MAIL
+            &lt;/div&gt;
+
+            &lt;!-- Fila 3: FROM --&gt;
+            &lt;div class='dispatch-row dispatch-row-3'&gt;
+              &lt;b&gt;FROM:&lt;/b&gt; &lt;span id='lblDispFrom'&gt;&lt;/span&gt;
+            &lt;/div&gt;
+
+            &lt;!-- Fila 4: Lot y Ref --&gt;
+            &lt;div class='dispatch-row dispatch-row-4'&gt;
+              &lt;div class='dispatch-col-left'&gt;
+                &lt;b&gt;LOT NUMBER:&lt;/b&gt; &lt;span class='disp-value' id='lblDispLot'&gt;&lt;/span&gt;
+              &lt;/div&gt;
+              &lt;div class='dispatch-col-right'&gt;
+                &lt;b&gt;REF NUMBER:&lt;/b&gt; &lt;span class='disp-value' id='lblDispRef'&gt;&lt;/span&gt;
+              &lt;/div&gt;
+            &lt;/div&gt;
+
+            &lt;!-- Fila 5: Date y Weight --&gt;
+            &lt;div class='dispatch-row dispatch-row-5'&gt;
+              &lt;div class='dispatch-col-left'&gt;
+                &lt;b&gt;SHIP DATE:&lt;/b&gt; &lt;span class='disp-value' id='lblDispDate'&gt;&lt;/span&gt;
+              &lt;/div&gt;
+              &lt;div class='dispatch-col-right'&gt;
+                &lt;b&gt;WEIGHT:&lt;/b&gt; &lt;span class='disp-value' id='lblDispWeight'&gt;&lt;/span&gt;
+              &lt;/div&gt;
+            &lt;/div&gt;
+
+            &lt;!-- Fila 6: Bottom Icons and Barcode --&gt;
+            &lt;div class='dispatch-row dispatch-row-6'&gt;
+              &lt;div class='dispatch-col-left-bottom'&gt;
+                &lt;div class='dispatch-instruction' style='height: 100%; font-size: 18px; padding: 15px;'&gt;
+                  Delivery instruction:&lt;br&gt;
+                  &lt;span id='lblDispInst'&gt;&lt;/span&gt;
+                &lt;/div&gt;
+              &lt;/div&gt;
+              &lt;div class='dispatch-col-right-bottom'&gt;
+                &lt;div style='font-size: 14px; font-weight: bold; margin-bottom: 5px;'&gt;Item nr.:&lt;/div&gt;
+                &lt;svg id='dispatchBarcodeImage'&gt;&lt;/svg&gt;
+              &lt;/div&gt;
+            &lt;/div&gt;
+
+          &lt;/div&gt;" />
+      </VBox>
+
+    </l:Splitter>
+  </Page>
+</mvc:View>

@@ -1,0 +1,194 @@
+<core:FragmentDefinition
+    xmlns="sap.m"
+    xmlns:f="sap.ui.layout.form"
+    xmlns:core="sap.ui.core"
+    xmlns:u="sap.ui.unified">
+
+    <Dialog
+        title="Pre-Registro de Factura con Lectura OCR (Req. N° 2)"
+        contentWidth="920px"
+        resizable="true"
+        draggable="true">
+        <content>
+            <VBox class="sapUiSmallMargin">
+
+                <!-- Banner OCR Reconocimiento Automático (Req N° 2) -->
+                <Panel class="sapUiTinyMarginBottom" headerText="Escáner DROID OCR — Selección de Documento PDF Pre-cargado">
+                    <VBox class="sapUiTinyMargin">
+                        <Label text="Seleccione un Documento PDF Pre-cargado para la Simulación Demo:" bold="true" class="sapUiTinyMarginBottom" />
+                        <HBox alignItems="Center" class="sapUiSmallMarginBottom">
+                            <Select selectedKey="{dialog>/selectedSamplePdf}" width="26rem" change=".onSamplePdfChange" class="sapUiTinyMarginEnd">
+                                <core:Item key="PDF_1" text="📄 Factura_F001-0063045_Superdeporte.pdf (512 KB)" />
+                                <core:Item key="PDF_2" text="📄 Factura_Electronica_F002-0098412_Droid.pdf (410 KB)" />
+                                <core:Item key="PDF_3" text="📄 Guia_Remision_GR01-004120.pdf (290 KB)" />
+                            </Select>
+                            <Button
+                                text="🔍 Escanear PDF y Leer Información"
+                                icon="sap-icon://scan"
+                                type="Emphasized"
+                                press=".onSimulateOcrPreRegister" />
+                        </HBox>
+
+                        <HBox alignItems="Center" class="sapUiTinyMarginPadding portalHeroBanner" style="background:#f1f5f9; border:1px solid #cbd5e1; border-radius:8px; padding:12px;">
+                            <core:Icon src="sap-icon://pdf-attachment" size="2.5rem" color="#d93b3b" class="sapUiSmallMarginEnd" />
+                            <VBox class="sapUiSmallMarginEnd">
+                                <Label text="{dialog>/samplePdfName}" bold="true" />
+                                <Text text="Documento PDF pre-cargado listo para extracción OCR automática de Sociedad, Folio SUNAT, Importe, IGV y Sello de Almacén." class="small-muted-text" />
+                            </VBox>
+                            <ToolbarSpacer />
+                            <ObjectStatus text="{= ${dialog>/ocrExecuted} ? '✅ OCR AI Completado' : '📄 Documento Listo' }" state="{= ${dialog>/ocrExecuted} ? 'Success' : 'Information' }" />
+                        </HBox>
+
+                        <MessageStrip
+                            id="msgOcrPreRegResult"
+                            text="{dialog>/ocrStatusText}"
+                            type="{dialog>/ocrStatusType}"
+                            visible="{= !!${dialog>/ocrStatusText} }"
+                            showIcon="true"
+                            class="sapUiTinyMarginTop" />
+                    </VBox>
+                </Panel>
+
+                <f:SimpleForm
+                    editable="true"
+                    layout="ResponsiveGridLayout"
+                    labelSpanXL="4" labelSpanL="4" labelSpanM="4" labelSpanS="12"
+                    adjustLabelSpan="false"
+                    columnsXL="2" columnsL="2" columnsM="2"
+                    singleContainerFullWidth="false">
+                    <f:content>
+                        <core:Title text="1. Datos Principales &amp; OCR" />
+
+                        <Label text="Sociedad SAP (OCR)" required="true" />
+                        <Select selectedKey="{dialog>/sociedad}" width="100%">
+                            <core:Item key="P202 Superdeporte Plus Perú SAC" text="P202 Superdeporte Plus Perú SAC" />
+                            <core:Item key="P101 Droid Perú SAC" text="P101 Droid Perú SAC" />
+                        </Select>
+
+                        <Label text="{i18n>preRegDialogSerieCorrelativo}" required="true" />
+                        <HBox>
+                            <Input value="{dialog>/serie}" width="6rem" class="sapUiTinyMarginEnd" />
+                            <Input value="{dialog>/correlativo}" width="10rem" />
+                        </HBox>
+
+                        <Label text="{i18n>preRegDialogFechaCont}" />
+                        <DatePicker value="{dialog>/fechaCont}" displayFormat="dd/MM/yyyy" />
+
+                        <Label text="{i18n>preRegDialogFechaEmision}" required="true" />
+                        <DatePicker value="{dialog>/fechaEmision}" displayFormat="dd/MM/yyyy" />
+
+                        <Label text="{i18n>preRegDialogImporteTotal}" />
+                        <HBox alignItems="Center">
+                            <Input value="{dialog>/importeTotal}" width="10rem" class="sapUiTinyMarginEnd" />
+                            <Text text="{dialog>/moneda}" />
+                        </HBox>
+
+                        <core:Title text="2. Condiciones, Sello de Tienda &amp; Contabilidad" />
+
+                        <Label text="{i18n>preRegDialogClaseDoc}" />
+                        <Select selectedKey="{dialog>/claseDoc}" width="100%">
+                            <core:Item key="01 - Factura" text="01 - Factura" />
+                            <core:Item key="03 - Boleta" text="03 - Boleta" />
+                            <core:Item key="07 - Nota de Crédito" text="07 - Nota de Crédito (Devolución Stock/Importe)" />
+                        </Select>
+
+                        <Label text="Sello de Tienda / Almacén (OCR)" />
+                        <Input value="{dialog>/selloTienda}" editable="false" />
+
+                        <Label text="{i18n>preRegDialogCondPago}" />
+                        <Input value="{dialog>/condicionPago}" editable="false" />
+
+                        <Label text="{i18n>preRegDialogDetraccion}" />
+                        <Select
+                            items="{app>/detracciones}"
+                            selectedKey="{dialog>/detraccion}"
+                            width="100%">
+                            <core:Item key="{app>code}" text="{app>name}" />
+                        </Select>
+
+                        <Label text="{i18n>preRegDialogImpuesto}" />
+                        <HBox alignItems="Center">
+                            <Input value="{dialog>/importeIGV}" width="10rem" class="sapUiTinyMarginEnd" />
+                            <Text text="{dialog>/moneda}" />
+                        </HBox>
+                    </f:content>
+                </f:SimpleForm>
+
+                <IconTabBar select=".onTabSelect" class="sapUiSmallMarginTop">
+                    <items>
+                        <IconTabFilter icon="sap-icon://product" text="{i18n>preRegTabArticles}">
+                            <Table items="{dialog>/selectedItems}">
+                                <columns>
+                                    <Column><Text text="OC" /></Column>
+                                    <Column><Text text="Pos. OC" /></Column>
+                                    <Column><Text text="Nro Guía" /></Column>
+                                    <Column><Text text="Descripción Material/Servicio" /></Column>
+                                    <Column><Text text="Cant. Entrega" /></Column>
+                                    <Column><Text text="Importe" /></Column>
+                                </columns>
+                                <items>
+                                    <ColumnListItem>
+                                        <cells>
+                                            <Text text="{dialog>ordenCompra}" />
+                                            <Text text="{dialog>posOC}" />
+                                            <Text text="{dialog>notaEntrega}" />
+                                            <Text text="{dialog>descripcion}" />
+                                            <Text text="{dialog>cantEntrega}" />
+                                            <ObjectNumber number="{path: 'dialog>importe', formatter: '.formatter.currency'}" unit="{dialog>moneda}" />
+                                        </cells>
+                                    </ColumnListItem>
+                                </items>
+                            </Table>
+                        </IconTabFilter>
+
+                        <IconTabFilter icon="sap-icon://pdf-attachment" text="{i18n>preRegTabAttachPDF}">
+                            <VBox class="sapUiSmallMargin">
+                                <u:FileUploader
+                                    buttonText="Seleccionar PDF"
+                                    fileType="pdf"
+                                    placeholder="Seleccione el sustento de la factura en formato PDF"
+                                    width="100%" />
+                                <Text
+                                    text="{= ${dialog>/attachedPdfName} !== '' ? 'Archivo adjunto: ' + ${dialog>/attachedPdfName} : 'Ningún archivo PDF adjuntado aún.' }"
+                                    class="sapUiSmallMarginTop" />
+                            </VBox>
+                        </IconTabFilter>
+
+                        <IconTabFilter icon="sap-icon://attachment" text="{i18n>preRegTabAttachXML}">
+                            <VBox class="sapUiSmallMargin">
+                                <HBox alignItems="Center">
+                                    <u:FileUploader
+                                        buttonText="Seleccionar XML"
+                                        fileType="xml"
+                                        placeholder="Cargar XML UBL 2.1 de Factura Electrónica"
+                                        width="20rem"
+                                        class="sapUiSmallMarginEnd" />
+                                    <Button
+                                        text="{i18n>preRegBtnLoadXML}"
+                                        icon="sap-icon://upload"
+                                        type="Emphasized"
+                                        press=".onSimulateXmlUpload" />
+                                </HBox>
+                                <Text
+                                    text="{= ${dialog>/attachedXmlName} !== '' ? 'XML Cargado y Validado: ' + ${dialog>/attachedXmlName} : 'Cargue el XML para extraer campos e inspeccionar validaciones SUNAT.' }"
+                                    class="sapUiSmallMarginTop" />
+                            </VBox>
+                        </IconTabFilter>
+                    </items>
+                </IconTabBar>
+
+            </VBox>
+        </content>
+        <beginButton>
+            <Button
+                text="{i18n>preRegBtnSaveInvoice}"
+                icon="sap-icon://save"
+                type="Emphasized"
+                press=".onSavePreRegisterInvoice" />
+        </beginButton>
+        <endButton>
+            <Button text="{i18n>preRegBtnClose}" type="Transparent" press=".onClosePreRegDialog" />
+        </endButton>
+    </Dialog>
+
+</core:FragmentDefinition>

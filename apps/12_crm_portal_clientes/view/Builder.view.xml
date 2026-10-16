@@ -1,0 +1,255 @@
+<mvc:View
+    controllerName="sap.crm.customerportal.controller.Builder"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m"
+    xmlns:f="sap.f"
+    xmlns:core="sap.ui.core"
+    xmlns:layout="sap.ui.layout">
+
+    <Page id="builderPage" title="{i18n>builderTitle}" showNavButton="false">
+        <headerContent>
+            <Button
+                text="Publicar Cambios de Experiencia"
+                icon="sap-icon://save"
+                type="Emphasized"
+                press=".onPublishExperience"
+                tooltip="Guardar y desplegar nueva versión del portal para todos los usuarios" />
+        </headerContent>
+
+        <content>
+            <VBox class="sapUiResponsiveContentPadding">
+                
+                <IconTabBar
+                    id="builderIconTabBar"
+                    select=".onTabSelect"
+                    expanded="true"
+                    class="sapUiResponsiveContentPadding">
+                    <items>
+
+                        <!-- ======================================================== -->
+                        <!-- TAB 1: EXPERIENCE BUILDER VISUAL CANVAS (LWC)            -->
+                        <!-- ======================================================== -->
+                        <IconTabFilter
+                            key="canvas"
+                            icon="sap-icon://wrench"
+                            text="Editor Visual de Componentes (LWC)">
+                            
+                            <layout:Grid defaultSpan="XL4 L4 M12 S12" class="sapUiSmallMarginBottom">
+                                
+                                <!-- Left Component Toolbox -->
+                                <Panel headerText="Librería de Componentes (LWC)" class="fioriCardCustom">
+                                    <List items="{builderConfig>/components}">
+                                        <CustomListItem>
+                                            <HBox justifyContent="SpaceBetween" alignItems="Center" class="sapUiSmallMargin">
+                                                <VBox>
+                                                    <Text text="{builderConfig>name}" class="sapUiBoldText" />
+                                                    <Text text="{builderConfig>type}" class="sapUiTinyText sapUiLightText" />
+                                                </VBox>
+                                                <Switch state="{builderConfig>visible}" change=".onToggleComponentVisibility" />
+                                            </HBox>
+                                        </CustomListItem>
+                                    </List>
+                                </Panel>
+
+                                <!-- Right Canvas Live Preview -->
+                                <VBox class="builderCanvas">
+                                    <layoutData>
+                                        <layout:GridData span="XL8 L8 M12 S12" />
+                                    </layoutData>
+
+                                    <HBox justifyContent="SpaceBetween" alignItems="Center" class="sapUiSmallMarginBottom">
+                                        <Title text="Lienzo de Diseño Visual (Live Canvas Preview)" level="H4" />
+                                        <ObjectStatus text="Plantilla: {builderConfig>/activeTemplate}" state="Information" />
+                                    </HBox>
+
+                                    <!-- Canvas Component Cards -->
+                                    <VBox class="builderComponentCard">
+                                        <HBox justifyContent="SpaceBetween">
+                                            <HBox alignItems="Center">
+                                                <core:Icon src="sap-icon://chalkboard" color="#0854a0" class="sapUiTinyMarginEnd" />
+                                                <Text text="Componente 1: Hero Banner de Bienvenida &amp; Audiencias" class="sapUiBoldText" />
+                                            </HBox>
+                                            <ObjectStatus text="LWC Layout" state="Information" />
+                                        </HBox>
+                                        <Text text="Renderiza banners personalizados según el país, industria y rol del cliente." class="sapUiTinyText sapUiLightText" />
+                                    </VBox>
+
+                                    <VBox class="builderComponentCard">
+                                        <HBox justifyContent="SpaceBetween">
+                                            <HBox alignItems="Center">
+                                                <core:Icon src="sap-icon://grid" color="#0854a0" class="sapUiTinyMarginEnd" />
+                                                <Text text="Componente 2: Cuadrícula de KPIs y Accesos Rápidos" class="sapUiBoldText" />
+                                            </HBox>
+                                            <ObjectStatus text="Fiori GenericTile" state="Information" />
+                                        </HBox>
+                                        <Text text="Muestra métricas de pedidos S/4, cotizaciones oficiales y facturas pendientes." class="sapUiTinyText sapUiLightText" />
+                                    </VBox>
+
+                                    <VBox class="builderComponentCard">
+                                        <HBox justifyContent="SpaceBetween">
+                                            <HBox alignItems="Center">
+                                                <core:Icon src="sap-icon://headset" color="#16a34a" class="sapUiTinyMarginEnd" />
+                                                <Text text="Componente 3: Case Deflection &amp; Knowledge Federado" class="sapUiBoldText" />
+                                            </HBox>
+                                            <ObjectStatus text="Einstein Deflection" state="Success" />
+                                        </HBox>
+                                        <Text text="Recomienda artículos en tiempo real para evitar la apertura innecesaria de tickets." class="sapUiTinyText sapUiLightText" />
+                                    </VBox>
+
+                                    <VBox class="builderComponentCard">
+                                        <HBox justifyContent="SpaceBetween">
+                                            <HBox alignItems="Center">
+                                                <core:Icon src="sap-icon://cart-4" color="#5b21b6" class="sapUiTinyMarginEnd" />
+                                                <Text text="Componente 4: Matriz de Reorden B2B &amp; Pedido Rápido" class="sapUiBoldText" />
+                                            </HBox>
+                                            <ObjectStatus text="B2B Commerce" state="Information" />
+                                        </HBox>
+                                        <Text text="Facilita pedidos masivos en 1 clic y escalas de descuento por volumen." class="sapUiTinyText sapUiLightText" />
+                                    </VBox>
+                                </VBox>
+                            </layout:Grid>
+                        </IconTabFilter>
+
+                        <!-- ======================================================== -->
+                        <!-- TAB 2: PLANTILLAS PRECONFIGURADAS                        -->
+                        <!-- ======================================================== -->
+                        <IconTabFilter
+                            key="templates"
+                            icon="sap-icon://dimension"
+                            text="Plantillas Preconfiguradas">
+                            
+                            <layout:Grid defaultSpan="XL4 L4 M6 S12" class="sapUiSmallMargin">
+                                <VBox class="sapUiContentPadding fioriCardCustom" style="background:#ffffff; border:1px solid #cbd5e1;">
+                                    <HBox alignItems="Center" class="sapUiSmallMarginBottom">
+                                        <core:Icon src="sap-icon://customer" size="2rem" color="#0854a0" class="sapUiSmallMarginEnd" />
+                                        <VBox>
+                                            <Title text="Customer Account Portal" level="H3" />
+                                            <Text text="Autogestión B2B para clientes" class="sapUiTinyText sapUiLightText" />
+                                        </VBox>
+                                    </HBox>
+                                    <Text text="Optimizado para consulta de pedidos S/4HANA, descarga de facturas y cotizaciones automáticas en CRM." class="sapUiSmallMarginBottom" />
+                                    <Button text="Plantilla Activa (Seleccionada)" type="Accept" icon="sap-icon://accept" press=".onSelectTemplate" />
+                                </VBox>
+
+                                <VBox class="sapUiContentPadding fioriCardCustom" style="background:#ffffff; border:1px solid #cbd5e1;">
+                                    <HBox alignItems="Center" class="sapUiSmallMarginBottom">
+                                        <core:Icon src="sap-icon://family-care" size="2rem" color="#5b21b6" class="sapUiSmallMarginEnd" />
+                                        <VBox>
+                                            <Title text="Partner Central" level="H3" />
+                                            <Text text="Portal de Canales y Distribuidores" class="sapUiTinyText sapUiLightText" />
+                                        </VBox>
+                                    </HBox>
+                                    <Text text="Enfocado en Deal Registration, protección de canales, cotizador CPQ con márgenes y certificaciones." class="sapUiSmallMarginBottom" />
+                                    <Button text="Cambiar a Partner Central" type="Emphasized" press=".onSelectTemplate" />
+                                </VBox>
+
+                                <VBox class="sapUiContentPadding fioriCardCustom" style="background:#ffffff; border:1px solid #cbd5e1;">
+                                    <HBox alignItems="Center" class="sapUiSmallMarginBottom">
+                                        <core:Icon src="sap-icon://headset" size="2rem" color="#16a34a" class="sapUiSmallMarginEnd" />
+                                        <VBox>
+                                            <Title text="Customer Service &amp; Help Center" level="H3" />
+                                            <Text text="Centro de Ayuda y Deflexión" class="sapUiTinyText sapUiLightText" />
+                                        </VBox>
+                                    </HBox>
+                                    <Text text="Maximiza la deflexión de tickets con Knowledge Base federada, Einstein Bots y foros comunitarios." class="sapUiSmallMarginBottom" />
+                                    <Button text="Cambiar a Help Center" type="Emphasized" press=".onSelectTemplate" />
+                                </VBox>
+                            </layout:Grid>
+                        </IconTabFilter>
+
+                        <!-- ======================================================== -->
+                        <!-- TAB 3: MOBILE PUBLISHER (iOS & ANDROID STUDIO)           -->
+                        <!-- ======================================================== -->
+                        <IconTabFilter
+                            key="mobile"
+                            icon="sap-icon://iphone"
+                            text="Mobile Publisher (iOS &amp; Android)">
+                            
+                            <layout:Grid defaultSpan="XL6 L6 M12 S12" class="sapUiSmallMargin">
+                                
+                                <!-- Left Form Configuration -->
+                                <VBox class="sapUiContentPadding fioriCardCustom">
+                                    <Title text="Configuración de Empaquetado Nativo" level="H3" class="sapUiSmallMarginBottom" />
+                                    
+                                    <Label text="Nombre de la Aplicación Móvil" />
+                                    <Input value="{mobileConfig>/appName}" editable="false" />
+
+                                    <Label text="Bundle Identifier" class="sapUiTinyMarginTop" />
+                                    <Input value="{mobileConfig>/bundleId}" editable="false" />
+
+                                    <Label text="Estado App Store (Apple iOS)" class="sapUiTinyMarginTop" />
+                                    <ObjectStatus text="{mobileConfig>/iosStoreStatus}" state="Success" icon="sap-icon://accept" />
+
+                                    <Label text="Estado Google Play (Android)" class="sapUiTinyMarginTop" />
+                                    <ObjectStatus text="{mobileConfig>/androidStoreStatus}" state="Success" icon="sap-icon://accept" />
+
+                                    <HBox alignItems="Center" class="sapUiMediumMarginTop">
+                                        <Button text="Generar Compilación Móvil" icon="sap-icon://cloud-check" type="Emphasized" press=".onBuildMobileApp" class="sapUiTinyMarginEnd" />
+                                        <Button text="Probar Notificación Push" icon="sap-icon://bell" type="Ghost" press=".onTestPushNotification" />
+                                    </HBox>
+                                </VBox>
+
+                                <!-- Right Smartphone Interactive Preview with Native Fiori Controls -->
+                                <VBox alignItems="Center">
+                                    <VBox class="fioriCardCustom" width="280px" style="background:#1e293b; padding:12px; border-radius:24px; box-shadow:0 8px 24px rgba(0,0,0,0.15);">
+                                        <VBox style="background:#f8fafc; padding:12px; border-radius:16px;">
+                                            <VBox style="background:#002d5a; padding:10px; border-radius:8px; margin-bottom:10px;" alignItems="Center">
+                                                <Title text="📱 Portal Móvil SAP" level="H4" titleStyle="H5" style="color:#ffffff;" />
+                                            </VBox>
+                                            <VBox style="background:#ffffff; padding:10px; border-radius:8px; margin-bottom:8px; border:1px solid #e2e8f0;">
+                                                <Text text="Pedidos Activos (3)" class="sapUiBoldText" />
+                                                <ObjectStatus text="#4500098231 - Despachado" state="Success" icon="sap-icon://shipping-status" />
+                                            </VBox>
+                                            <VBox style="background:#ffffff; padding:10px; border-radius:8px; margin-bottom:8px; border:1px solid #e2e8f0;">
+                                                <Text text="Crédito Disponible" class="sapUiBoldText" />
+                                                <Text text="$171,550 USD" class="sapUiPositiveElement sapUiBoldText" />
+                                            </VBox>
+                                            <VBox style="background:#f0fdf4; padding:10px; border-radius:8px; border:1px solid #86efac;" alignItems="Center">
+                                                <Text text="🤖 DROID IA Copilot Listo" class="sapUiPositiveElement sapUiBoldText" />
+                                            </VBox>
+                                        </VBox>
+                                    </VBox>
+                                    <Text text="Simulador de App Móvil Nativa (iOS &amp; Android)" class="sapUiTinyText sapUiLightText sapUiTinyMarginTop" />
+                                </VBox>
+                            </layout:Grid>
+                        </IconTabFilter>
+
+                        <!-- ======================================================== -->
+                        <!-- TAB 4: PERSONALIZACIÓN DINÁMICA DE AUDIENCIAS            -->
+                        <!-- ======================================================== -->
+                        <IconTabFilter
+                            key="audiences"
+                            icon="sap-icon://group"
+                            text="Segmentación de Audiencias">
+                            
+                            <Table items="{builderConfig>/audienceRules}" class="sapUiSmallMargin">
+                                <headerToolbar>
+                                    <OverflowToolbar>
+                                        <Title text="Reglas de Personalización Dinámica de Contenido" level="H3" />
+                                    </OverflowToolbar>
+                                </headerToolbar>
+                                <columns>
+                                    <Column><Text text="Audiencia Segmentada" class="sapUiBoldText" /></Column>
+                                    <Column><Text text="Criterios del CRM" /></Column>
+                                    <Column><Text text="Banner Dinámico Asignado" /></Column>
+                                    <Column><Text text="Lista de Precios" /></Column>
+                                </columns>
+                                <items>
+                                    <ColumnListItem>
+                                        <cells>
+                                            <Text text="{builderConfig>name}" class="sapUiBoldText" />
+                                            <ObjectStatus text="{builderConfig>criteria}" state="Information" />
+                                            <Text text="{builderConfig>banner}" />
+                                            <ObjectStatus text="{builderConfig>pricingTier}" state="Success" />
+                                        </cells>
+                                    </ColumnListItem>
+                                </items>
+                            </Table>
+                        </IconTabFilter>
+
+                    </items>
+                </IconTabBar>
+            </VBox>
+        </content>
+    </Page>
+</mvc:View>

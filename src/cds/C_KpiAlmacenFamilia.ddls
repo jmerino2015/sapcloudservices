@@ -1,0 +1,34 @@
+@AccessControl.authorizationCheck: #NOT_REQUIRED
+@EndUserText.label: 'Ocupabilidad por Familia - Consumo'
+@Metadata.allowExtensions: true
+@Search.searchable: true
+
+define view entity C_KpiAlmacenFamilia
+  provider contract transactional_query
+  as projection on R_KpiAlmacenFamilia
+{
+  key SedeId,
+      @Search.defaultSearchElement: true
+  key FamiliaId,
+      @Search.defaultSearchElement: true
+      @Search.fuzzinessThreshold: 0.8
+      FamiliaNombre,
+      
+      TotalPositions,
+      OccupiedPositions,
+      FreePositions,
+      @Semantics.quantity.unitOfMeasure: 'PercentageUnit'
+      OccupancyRate,
+      PercentageUnit,
+      CriticalityCode,
+      OperativeNotes,
+      
+      CreatedBy,
+      CreatedAt,
+      LastChangedBy,
+      LastChangedAt,
+      LocalLastChangedAt,
+      
+      // Asociación Padre Redireccionada
+      _Sede : redirected to parent C_KpiAlmacenSede
+}

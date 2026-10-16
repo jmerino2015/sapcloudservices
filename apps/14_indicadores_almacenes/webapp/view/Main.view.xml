@@ -1,0 +1,263 @@
+<mvc:View
+    controllerName="com.antigravity.indicadoresAlmacenes.controller.Main"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m"
+    xmlns:tnt="sap.tnt"
+    xmlns:core="sap.ui.core"
+    xmlns:layout="sap.ui.layout"
+    xmlns:f="sap.f"
+    displayBlock="true">
+
+    <!-- ===================================================================
+         ARQUITECTURA TNT: ToolPage con ToolHeader y SideNavigation
+         =================================================================== -->
+    <tnt:ToolPage id="toolPage" sideExpanded="{wms>/sideNavExpanded}">
+
+        <!-- ── 1. ToolHeader Superior (Fiori Horizon Estándar) ────────── -->
+        <tnt:header>
+            <tnt:ToolHeader class="wmsToolHeader">
+
+                <!-- Botón de apertura/cierre de SideNavigation -->
+                <Button
+                    id="btnToggleNav"
+                    icon="sap-icon://menu2"
+                    type="Transparent"
+                    tooltip="Alternar Menú Lateral"
+                    press=".onToggleSideNav" />
+
+                <!-- Botón de retorno al Launchpad (< Home) -->
+                <Button
+                    id="btnGoHome"
+                    icon="sap-icon://nav-back"
+                    text="Home"
+                    type="Transparent"
+                    tooltip="Volver al Launchpad"
+                    press=".goHome" />
+
+                <!-- Logo Oficial SAP -->
+                <HBox alignItems="Center" class="hideOnMobile sapUiTinyMarginEnd">
+                    <div class="sap-logo-badge" style="background:#0a6ed1; color:#ffffff; font-weight:700; font-size:12px; padding:2px 6px; border-radius:3px; letter-spacing:0.5px;">SAP</div>
+                </HBox>
+
+                <!-- Título de la Aplicación -->
+                <core:Icon src="sap-icon://chart-axis" size="1.25rem" class="sapUiTinyMarginBegin sapUiTinyMarginEnd" />
+                <Title text="{i18n>headerTitle}" titleStyle="H5" class="sapUiTinyMarginEnd" />
+                <Text text="Multi-Sede S/4HANA" class="textMuted fontSizeSmall hideOnMobile" />
+
+                <ToolbarSeparator />
+
+                <!-- Selector de Sede Operativa en la Cabecera -->
+                <Label text="{i18n>labelSede}" class="fontBold textMuted sapUiTinyMarginBegin hideOnMobile" />
+                <Select
+                    id="selectSedeOperativa"
+                    items="{wms>/sedesList}"
+                    selectedKey="{wms>/selectedSede}"
+                    change=".onSelectSede"
+                    width="240px">
+                    <core:Item key="{wms>key}" text="{wms>text}" />
+                </Select>
+
+                <ToolbarSpacer />
+
+                <!-- Selector de Intervalo de Sincronización -->
+                <Label text="{i18n>syncIntervalLabel}" class="fontBold textMuted hideOnMobile" />
+                <Select
+                    id="selectSyncInterval"
+                    selectedKey="{wms>/syncSettings/interval}"
+                    change=".onChangeSyncInterval"
+                    width="115px">
+                    <core:Item key="15" text="{i18n>sync15Min}" />
+                    <core:Item key="30" text="{i18n>sync30Min}" />
+                    <core:Item key="0" text="{i18n>syncManual}" />
+                </Select>
+
+                <!-- Countdown Regresivo Minimalista -->
+                <HBox id="countdownBadge" class="countdownBadgeBox" alignItems="Center">
+                    <core:Icon src="sap-icon://fob-watch" class="sapUiTinyMarginEnd" />
+                    <Text id="txtCountdown" text="14:59" class="countdownTimerText fontBold" />
+                </HBox>
+
+                <!-- Botón Sincronizar Ahora -->
+                <Button
+                    id="btnSyncNow"
+                    text="{i18n>syncNowBtn}"
+                    icon="sap-icon://synchronize"
+                    type="Transparent"
+                    press=".onSyncNow" />
+
+                <!-- Timestamp Última Actualización -->
+                <Text id="txtLastUpdate" text="{wms>/syncSettings/lastUpdate}" class="fontSizeTiny textMuted sapUiTinyMarginBeginEnd hideOnMobile" />
+
+                <ToolbarSeparator />
+
+                <!-- Acciones Rápidas -->
+                <Button
+                    tooltip="{i18n>exportBtn}"
+                    icon="sap-icon://excel-attachment"
+                    type="Transparent"
+                    press=".onExportData" />
+                <Button
+                    id="btnToggleFullScreen"
+                    tooltip="{i18n>fullscreenBtn}"
+                    icon="sap-icon://full-screen"
+                    type="Transparent"
+                    press=".onToggleFullScreen" />
+                <Button
+                    id="btnThemeToggle"
+                    tooltip="Alternar Tema Horizon (Claro / Oscuro)"
+                    icon="sap-icon://palette"
+                    type="Transparent"
+                    press=".onToggleTheme" />
+
+            </tnt:ToolHeader>
+        </tnt:header>
+
+        <!-- ── 2. SideNavigation Lateral (Patrón idéntico a WMS Light) ── -->
+        <tnt:sideContent>
+            <tnt:SideNavigation id="sideNav" itemSelect=".onNavSelect" selectedKey="{wms>/selectedOption}">
+                <tnt:item>
+                    <tnt:NavigationList>
+
+                        <!-- Grupo 1: Las 4 Opciones de Visualización WMS -->
+                        <tnt:NavigationListItem
+                            text="{i18n>option1Title}"
+                            icon="sap-icon://monitor-payments"
+                            key="opcion1" />
+
+                        <tnt:NavigationListItem
+                            text="{i18n>option2Title}"
+                            icon="sap-icon://workflow-tasks"
+                            key="opcion2" />
+
+                        <tnt:NavigationListItem
+                            text="{i18n>option3Title}"
+                            icon="sap-icon://alert"
+                            key="opcion3" />
+
+                        <tnt:NavigationListItem
+                            text="{i18n>option4Title}"
+                            icon="sap-icon://dimension"
+                            key="opcion4" />
+
+                        <!-- Grupo 2: Sedes Logísticas Disponibles -->
+                        <tnt:NavigationListItem
+                            text="Sedes Logísticas"
+                            icon="sap-icon://building"
+                            expanded="true">
+                            <tnt:NavigationListItem text="Todas las Sedes" icon="sap-icon://world" key="nav_sede_ALL" />
+                            <tnt:NavigationListItem text="CD Eucaliptos (1010)" icon="sap-icon://factory" key="nav_sede_CD_EUCALIPTOS" />
+                            <tnt:NavigationListItem text="CD Callao (1020)" icon="sap-icon://shipping-status" key="nav_sede_CD_CALLAO" />
+                            <tnt:NavigationListItem text="CD Praderas (1030)" icon="sap-icon://inventory" key="nav_sede_CD_PRADERAS" />
+                        </tnt:NavigationListItem>
+
+                    </tnt:NavigationList>
+                </tnt:item>
+
+                <!-- Opciones fijas en el pie del menú lateral -->
+                <tnt:fixedItem>
+                    <tnt:NavigationList>
+                        <tnt:NavigationListItem text="Administración" icon="sap-icon://action-settings" key="action_admin" />
+                        <tnt:NavigationListItem text="{i18n>syncNowBtn}" icon="sap-icon://synchronize" key="action_sync" />
+                        <tnt:NavigationListItem text="{i18n>exportBtn}" icon="sap-icon://excel-attachment" key="action_export" />
+                        <tnt:NavigationListItem text="{i18n>fullscreenBtn}" icon="sap-icon://full-screen" key="action_fullscreen" />
+                    </tnt:NavigationList>
+                </tnt:fixedItem>
+            </tnt:SideNavigation>
+        </tnt:sideContent>
+
+        <!-- ── 3. Main Content: Subheader Minimalista & Fragmentos ────── -->
+        <tnt:mainContents>
+            <Page
+                id="pageMainContent"
+                showHeader="false"
+                enableScrolling="true"
+                class="wmsPageContainer">
+                <content>
+
+                    <!-- Sub-barra minimalista Horizon: Título de Sección + SegmentedButton -->
+                    <Toolbar class="wmsSubHeaderToolbar sapUiSmallPaddingBeginEnd">
+                        <Title id="viewSectionTitle" text="{i18n>option1Title}" level="H3" class="wmsSectionTitle" />
+                        <Badge
+                            id="badgeCentroSap"
+                            text="Centro SAP: {wms>/currentKpi/CentroSap} | Alm: {wms>/currentKpi/AlmacenSap}"
+                            state="Information"
+                            class="sapUiSmallMarginBegin" />
+                        <ToolbarSpacer />
+
+                        <!-- SegmentedButton sincronizado con el SideNavigation -->
+                        <SegmentedButton
+                            id="viewModeSelector"
+                            selectedKey="{wms>/selectedOption}"
+                            selectionChange=".onSelectViewOption"
+                            class="wmsSegmentedTabs">
+                            <items>
+                                <SegmentedButtonItem
+                                    key="opcion1"
+                                    text="1. Operativo"
+                                    icon="sap-icon://monitor-payments"
+                                    tooltip="{i18n>option1Tooltip}" />
+                                <SegmentedButtonItem
+                                    key="opcion2"
+                                    text="2. Flujo del Día"
+                                    icon="sap-icon://workflow-tasks"
+                                    tooltip="{i18n>option2Tooltip}" />
+                                <SegmentedButtonItem
+                                    key="opcion3"
+                                    text="3. Excepciones"
+                                    icon="sap-icon://alert"
+                                    tooltip="{i18n>option3Tooltip}" />
+                                <SegmentedButtonItem
+                                    key="opcion4"
+                                    text="4. Multi-Sede"
+                                    icon="sap-icon://dimension"
+                                    tooltip="{i18n>option4Tooltip}" />
+                            </items>
+                        </SegmentedButton>
+                    </Toolbar>
+
+                    <!-- Contenedor dinámico de fragmentos -->
+                    <VBox class="wmsMainContentArea sapUiSmallPadding">
+
+                        <!-- Vista 1: Centro de Control Operativo -->
+                        <VBox
+                            id="containerOpcion1"
+                            visible="{= ${wms>/selectedOption} === 'opcion1' }">
+                            <core:Fragment
+                                fragmentName="com.antigravity.indicadoresAlmacenes.view.fragments.Opcion1ControlOperativo"
+                                type="XML" />
+                        </VBox>
+
+                        <!-- Vista 2: Flujo de Operación del Día -->
+                        <VBox
+                            id="containerOpcion2"
+                            visible="{= ${wms>/selectedOption} === 'opcion2' }">
+                            <core:Fragment
+                                fragmentName="com.antigravity.indicadoresAlmacenes.view.fragments.Opcion2FlujoOperacion"
+                                type="XML" />
+                        </VBox>
+
+                        <!-- Vista 3: Dashboard por Excepción -->
+                        <VBox
+                            id="containerOpcion3"
+                            visible="{= ${wms>/selectedOption} === 'opcion3' }">
+                            <core:Fragment
+                                fragmentName="com.antigravity.indicadoresAlmacenes.view.fragments.Opcion3DashboardExcepcion"
+                                type="XML" />
+                        </VBox>
+
+                        <!-- Vista 4: Vista Integral Multi-Sede -->
+                        <VBox
+                            id="containerOpcion4"
+                            visible="{= ${wms>/selectedOption} === 'opcion4' }">
+                            <core:Fragment
+                                fragmentName="com.antigravity.indicadoresAlmacenes.view.fragments.Opcion4VistaIntegral"
+                                type="XML" />
+                        </VBox>
+
+                    </VBox>
+                </content>
+            </Page>
+        </tnt:mainContents>
+
+    </tnt:ToolPage>
+</mvc:View>

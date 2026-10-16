@@ -1,0 +1,61 @@
+<mvc:View
+  controllerName="wm.light.controller.Locations"
+  xmlns:mvc="sap.ui.core.mvc"
+  xmlns:core="sap.ui.core"
+  xmlns="sap.m">
+
+  <Page id="locationsPage" title="{i18n>locationsTitle}" showNavButton="false" backgroundDesign="List">
+    <subHeader>
+      <Bar>
+        <contentLeft>
+          <Select id="whSelect" items="{wh>/items}" change=".onWarehouseChange" width="200px">
+            <core:Item key="{wh>id}" text="{wh>id} - {wh>name}" />
+          </Select>
+        </contentLeft>
+        <contentRight>
+          <SearchField width="16rem" search=".onSearch" placeholder="{i18n>locationsColBin}" />
+          <Button icon="sap-icon://add" type="Emphasized" text="{i18n>locationsBtnCreate}" press=".onCreate" />
+          <Button icon="sap-icon://refresh" type="Transparent" press=".onRefresh" />
+        </contentRight>
+      </Bar>
+    </subHeader>
+    <content>
+      <VBox class="sapUiResponsivePadding">
+        <Table id="locationsTable" items="{loc>/items}" growing="true" growingThreshold="50"
+          noDataText="{i18n>msgNoData}" sticky="ColumnHeaders,HeaderToolbar">
+          <headerToolbar>
+            <Toolbar>
+              <Title text="{i18n>locationsSubtitle}" level="H3" />
+              <Text text="{= '(' + ${loc>/total} + ')'}" class="sapUiSmallMarginBegin" />
+            </Toolbar>
+          </headerToolbar>
+          <columns>
+            <Column><Text text="{i18n>locationsColBin}" /></Column>
+            <Column><Text text="{i18n>locationsColType}" /></Column>
+            <Column><Text text="{i18n>locationsColSection}" /></Column>
+            <Column><Text text="{i18n>locationsColStatus}" /></Column>
+            <Column hAlign="Center"><Text text="{i18n>locationsColStock}" /></Column>
+            <Column hAlign="End"><Text text="{i18n>locationsColStockQty}" /></Column>
+            <Column hAlign="Center" width="4rem"><Text text="" /></Column>
+          </columns>
+          <items>
+            <ColumnListItem>
+              <cells>
+                <ObjectIdentifier title="{loc>bin_code}" />
+                <Text text="{loc>bin_type}" />
+                <Text text="{loc>storage_section_id}" />
+                <ObjectStatus text="{loc>status}" state="{= ${loc>status} === 'ACTIVE' ? 'Success' : 'Error'}" />
+                <ObjectStatus
+                  text="{= ${loc>hasStock} ? ${i18n>locationsColHasStock} : ${i18n>locationsColEmpty} }"
+                  state="{= ${loc>hasStock} ? 'Information' : 'None' }"
+                  icon="{= ${loc>hasStock} ? 'sap-icon://inventory' : 'sap-icon://border' }" />
+                <ObjectNumber number="{loc>stockPositions}" />
+                <Button icon="sap-icon://edit" type="Transparent" press=".onEdit" tooltip="{i18n>editTooltip}" />
+              </cells>
+            </ColumnListItem>
+          </items>
+        </Table>
+      </VBox>
+    </content>
+  </Page>
+</mvc:View>

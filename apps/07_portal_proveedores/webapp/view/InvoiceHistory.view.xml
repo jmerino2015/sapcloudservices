@@ -1,0 +1,149 @@
+<mvc:View
+    controllerName="com.antigravity.portalProveedores.controller.InvoiceHistory"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core">
+
+    <Page id="invoiceHistoryPage" title="{i18n>invHistTitle}" showNavButton="true" navButtonPress=".onNavBack">
+        <content>
+            <VBox class="sapUiSmallMargin">
+
+                <!-- Header Info Banner -->
+                <Panel class="sapUiSmallMarginBottom">
+                    <HBox wrap="Wrap" justifyContent="SpaceBetween" alignItems="Center">
+                        <VBox>
+                            <HBox>
+                                <Label text="Nombre:" class="sapUiTinyMarginEnd" bold="true" />
+                                <Text text="Juana Droid" />
+                            </HBox>
+                            <HBox>
+                                <Label text="Razón Social:" class="sapUiTinyMarginEnd" bold="true" />
+                                <Text text="{app>/user/name}" />
+                            </HBox>
+                        </VBox>
+                        <VBox>
+                            <HBox>
+                                <Label text="RUC:" class="sapUiTinyMarginEnd" bold="true" />
+                                <Text text="{app>/user/nif}" />
+                            </HBox>
+                            <HBox>
+                                <Label text="Sociedad:" class="sapUiTinyMarginEnd" bold="true" />
+                                <Text text="{app>/user/sociedad}" />
+                            </HBox>
+                        </VBox>
+                    </HBox>
+                </Panel>
+
+                <!-- Filter Bar -->
+                <Panel expandable="true" expanded="true" class="sapUiSmallMarginBottom">
+                    <HBox wrap="Wrap" alignItems="End">
+                        <VBox class="sapUiSmallMarginEnd">
+                            <Label text="{i18n>invHistFilterComp}" />
+                            <SearchField id="searchInvComp" placeholder="Ingresar Comprobante / OC" width="14rem" liveChange=".onFilterSearch" />
+                        </VBox>
+
+                        <VBox class="sapUiSmallMarginEnd">
+                            <Label text="{i18n>invHistFilterDateFrom}" />
+                            <DatePicker id="dpHistDateFrom" value="27/02/2020" displayFormat="dd/MM/yyyy" width="10rem" />
+                        </VBox>
+
+                        <VBox class="sapUiSmallMarginEnd">
+                            <Label text="{i18n>invHistFilterDateTo}" />
+                            <DatePicker id="dpHistDateTo" value="27/02/2024" displayFormat="dd/MM/yyyy" width="10rem" />
+                        </VBox>
+
+                        <HBox>
+                            <Button text="{i18n>preRegBtnGo}" type="Emphasized" press=".onFilterSearch" class="sapUiTinyMarginEnd" />
+                            <Button text="{i18n>preRegBtnReset}" type="Transparent" press=".onFilterReset" />
+                        </HBox>
+                    </HBox>
+                </Panel>
+
+                <!-- Dual Tabs: FACTURAS & OC -->
+                <IconTabBar id="iconTabBarHistory" select=".onTabSelect" class="sapUiResponsiveMargin">
+                    <items>
+                        <!-- Pestaña FACTURAS -->
+                        <IconTabFilter key="FACTURAS" text="{i18n>invHistTabInvoices}">
+                            <Table id="tableInvoicesHist" items="{app>/invoiceHistory}">
+                                <headerToolbar>
+                                    <OverflowToolbar>
+                                        <Title text="Facturas ({= ${app>/invoiceHistory}.length })" level="H3" />
+                                        <ToolbarSpacer />
+                                        <Button text="{i18n>preRegBtnExport}" icon="sap-icon://excel-attachment" press=".onExportExcel" />
+                                        <Button icon="sap-icon://action-settings" />
+                                    </OverflowToolbar>
+                                </headerToolbar>
+                                <columns>
+                                    <Column><Text text="{i18n>colComprobante}" /></Column>
+                                    <Column><Text text="{i18n>invHistColTipo}" /></Column>
+                                    <Column><Text text="{i18n>invHistColDocContable}" /></Column>
+                                    <Column><Text text="{i18n>invHistColFechaEmision}" /></Column>
+                                    <Column><Text text="{i18n>invHistColFechaVenc}" /></Column>
+                                    <Column><Text text="{i18n>invHistColDetraccion}" /></Column>
+                                    <Column><Text text="{i18n>invHistColRetencion}" /></Column>
+                                    <Column><Text text="{i18n>invHistColIGV}" /></Column>
+                                    <Column><Text text="{i18n>invHistColImporteTotal}" /></Column>
+                                </columns>
+                                <items>
+                                    <ColumnListItem>
+                                        <cells>
+                                            <Link text="{app>comprobante}" press=".onViewInvoiceDetail" />
+                                            <Text text="{app>tipo}" />
+                                            <Text text="{app>docContable}" />
+                                            <Text text="{app>fechaEmision}" />
+                                            <Text text="{app>fechaVencimiento}" />
+                                            <ObjectNumber number="{path: 'app>detraccion', formatter: '.formatter.currency'}" unit="{app>moneda}" />
+                                            <ObjectNumber number="{path: 'app>retencion', formatter: '.formatter.currency'}" unit="{app>moneda}" />
+                                            <ObjectNumber number="{path: 'app>igv', formatter: '.formatter.currency'}" unit="{app>moneda}" />
+                                            <ObjectNumber number="{path: 'app>importeTotal', formatter: '.formatter.currency'}" unit="{app>moneda}" />
+                                        </cells>
+                                    </ColumnListItem>
+                                </items>
+                            </Table>
+                        </IconTabFilter>
+
+                        <!-- Pestaña OC -->
+                        <IconTabFilter key="OC" text="{i18n>invHistTabOC}">
+                            <Table id="tableOCHist" items="{app>/ocHistory}">
+                                <headerToolbar>
+                                    <OverflowToolbar>
+                                        <Title text="Órdenes de Compra ({= ${app>/ocHistory}.length })" level="H3" />
+                                        <ToolbarSpacer />
+                                        <Button text="{i18n>preRegBtnExport}" icon="sap-icon://excel-attachment" press=".onExportExcel" />
+                                        <Button icon="sap-icon://action-settings" />
+                                    </OverflowToolbar>
+                                </headerToolbar>
+                                <columns>
+                                    <Column><Text text="O.C." /></Column>
+                                    <Column><Text text="Pos." /></Column>
+                                    <Column><Text text="Fecha entrega prog." /></Column>
+                                    <Column><Text text="Material" /></Column>
+                                    <Column><Text text="Cant. Sol." /></Column>
+                                    <Column><Text text="Cant. Entr." /></Column>
+                                    <Column><Text text="Cant. Fact." /></Column>
+                                    <Column><Text text="Valor de venta" /></Column>
+                                </columns>
+                                <items>
+                                    <ColumnListItem>
+                                        <cells>
+                                            <Link text="{app>oc}" press=".onViewOCDetail" />
+                                            <Text text="{app>pos}" />
+                                            <Text text="{app>fechaEntregaProg}" />
+                                            <Text text="{app>material}" />
+                                            <Text text="{app>cantSol}" />
+                                            <Text text="{app>cantEntr}" />
+                                            <Text text="{app>cantFact}" />
+                                            <ObjectNumber number="{path: 'app>valorVenta', formatter: '.formatter.currency'}" unit="{app>moneda}" />
+                                        </cells>
+                                    </ColumnListItem>
+                                </items>
+                            </Table>
+                        </IconTabFilter>
+                    </items>
+                </IconTabBar>
+
+            </VBox>
+        </content>
+    </Page>
+
+</mvc:View>

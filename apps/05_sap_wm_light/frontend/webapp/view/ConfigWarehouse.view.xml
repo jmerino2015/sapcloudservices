@@ -1,0 +1,57 @@
+<mvc:View
+  controllerName="wm.light.controller.ConfigWarehouse"
+  xmlns:mvc="sap.ui.core.mvc"
+  xmlns="sap.m"
+  xmlns:f="sap.f"
+  xmlns:form="sap.ui.layout.form"
+  xmlns:core="sap.ui.core">
+
+  <Page id="configWarehousePage" title="Configuración — Número de Almacén" showNavButton="false" backgroundDesign="List">
+    <content>
+      <VBox class="sapUiResponsivePadding">
+        
+        <Table id="warehouseTable"
+          items="{config>/warehouses}"
+          growing="true"
+          growingThreshold="25"
+          noDataText="Sin almacenes configurados"
+          sticky="ColumnHeaders,HeaderToolbar">
+
+          <headerToolbar>
+            <Toolbar>
+              <Title text="Números de Almacén" level="H3" />
+              <ToolbarSpacer />
+              <Button text="Nuevo Almacén" icon="sap-icon://add" type="Emphasized" press=".onCreateWarehouse" />
+              <Button icon="sap-icon://refresh" type="Transparent" tooltip="Actualizar" press=".onRefresh" />
+            </Toolbar>
+          </headerToolbar>
+
+          <columns>
+            <Column width="8rem"><Text text="Número (ID)" /></Column>
+            <Column><Text text="Descripción" /></Column>
+            <Column width="6rem"><Text text="Estado" /></Column>
+            <Column hAlign="End" width="8rem"><Text text="Acciones" /></Column>
+          </columns>
+
+          <items>
+            <ColumnListItem>
+              <cells>
+                <ObjectIdentifier title="{config>id}" />
+                <Text text="{config>name}" />
+                <ObjectStatus 
+                  text="{config>status}" 
+                  state="{= ${config>status} === 'ACTIVE' ? 'Success' : 'Error' }" />
+                <HBox justifyContent="End" gap="0.25rem">
+                  <Button icon="sap-icon://edit" type="Transparent" press=".onEditWarehouse" />
+                </HBox>
+              </cells>
+            </ColumnListItem>
+          </items>
+
+        </Table>
+
+      </VBox>
+    </content>
+  </Page>
+
+</mvc:View>

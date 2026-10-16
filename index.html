@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="SAP Fiori Launchpad — Soluciones Empresariales SAP S/4HANA & Clean Core" />
+  <title>SAP Fiori Launchpad</title>
+
+  <!-- Google Fonts & FontAwesome -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" />
+
+  <!-- Standardized SAP Fiori Styles & 72 Typography -->
+  <link rel="stylesheet" href="css/portal-styles.css" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect fill='%230854A0' rx='10' width='100' height='100'/><text x='50' y='68' font-size='50' text-anchor='middle' fill='white' font-family='Arial' font-weight='bold'>SAP</text></svg>" />
+</head>
+<body>
+
+  <!-- ============================================================
+       1. OFFICIAL SAP FIORI SHELL BAR (TOP HEADER)
+       ============================================================ -->
+  <header class="fiori-shell-bar">
+    <div class="shell-left">
+      <!-- SAP Official Logo -->
+      <a class="sap-brand-badge" href="javascript:void(0)" onclick="window.location.reload()" title="SAP Fiori Launchpad">
+        <img src="img/sap-logo.svg" alt="SAP" class="sap-logo-svg" />
+      </a>
+
+      <!-- Product / Navigation Dropdown ("Home ▾") -->
+      <button class="shell-product-title" id="shellProductBtn" onclick="PortalApp.toggleSpaceMenu()" title="Navegar Espacios de Trabajo">
+        <span id="shellProductLabel">Home</span>
+        <i class="fas fa-caret-down caret-icon"></i>
+      </button>
+    </div>
+
+    <div class="shell-right">
+      <!-- Cloud DB Status Pill Badge -->
+      <button class="shell-db-badge" id="shellDbBadge" onclick="PortalApp.showDbStatusModal()" title="Estado de Base de Datos Cloud (Public)">
+        <span class="db-dot" id="dbStatusDot"></span>
+        <span class="db-label" id="dbStatusLabel">DB Cloud</span>
+      </button>
+
+      <!-- Search Input in Shell Bar -->
+      <div class="shell-search-box">
+        <input type="text" 
+               class="shell-search-input" 
+               id="shellSearchInput" 
+               placeholder="Buscar en Launchpad..." 
+               oninput="PortalApp.handleSearch(this.value)" />
+        <button class="shell-search-icon-btn" title="Buscar">
+          <i class="fas fa-search"></i>
+        </button>
+      </div>
+
+      <!-- SAP Joule AI Companion Button -->
+      <button class="shell-btn" onclick="PortalApp.toggleJouleChat()" title="Asistente Virtual SAP Joule AI">
+        <i class="far fa-circle-dot" style="font-size: 16px;"></i>
+      </button>
+
+      <!-- Notifications Bell Button with Dot Badge -->
+      <button class="shell-btn" onclick="PortalApp.showNotificationToast()" title="Notificaciones del Sistema">
+        <i class="far fa-bell" style="font-size: 15px;"></i>
+        <span class="shell-btn-badge"></span>
+      </button>
+
+      <!-- User Profile Avatar with photo from reference image -->
+      <div class="shell-avatar-wrap" onclick="PortalApp.showUserMenu()" title="Perfil de Usuario (Donna Moore / SC Consultant)">
+        <img src="img/user-avatar.png" class="shell-avatar-img" alt="User Profile" />
+      </div>
+    </div>
+  </header>
+
+  <!-- ============================================================
+       2. OFFICIAL SAP FIORI ANCHOR BAR (HORIZONTAL TABS)
+       ============================================================ -->
+  <nav class="fiori-anchor-bar" id="fioriAnchorBar">
+    <div class="fiori-anchor-tabs">
+      <button class="anchor-tab-btn active" id="tab-salesorders" onclick="PortalApp.scrollToSection('section-salesorders')">
+        Pedidos de Venta
+      </button>
+      <button class="anchor-tab-btn" id="tab-solutions" onclick="PortalApp.scrollToSection('section-solutions')">
+        Soluciones SAP S/4HANA (Clean Core)
+      </button>
+    </div>
+  </nav>
+
+  <!-- ============================================================
+       3. FIORI CANVAS WORKSPACE (TILES GRID)
+       ============================================================ -->
+  <main class="fiori-canvas" id="fioriCanvas">
+    <!-- Populated dynamically by portal-app.js matching reference image -->
+  </main>
+
+  <!-- ============================================================
+       4. EMBEDDED MODAL APP VIEWER
+       ============================================================ -->
+  <div class="fiori-app-modal" id="fiori-app-modal">
+    <div class="modal-header-shell">
+      <div class="shell-left" style="gap: 12px; display: flex; align-items: center;">
+        <a class="sap-brand-badge" href="javascript:void(0)" onclick="PortalApp.closeModal()" title="SAP Fiori Launchpad">
+          <img src="img/sap-logo.svg" alt="SAP" class="sap-logo-svg" />
+        </a>
+        <button class="modal-back-btn" onclick="PortalApp.closeModal()" title="Volver al Launchpad">
+          <i class="fas fa-chevron-left"></i> Home
+        </button>
+        <span class="modal-title-text" id="modal-title" style="margin-left: 6px; font-weight: 600; font-size: 14px; letter-spacing: 0.2px;">Demand Planning SAP</span>
+      </div>
+
+      <div class="shell-right">
+        <!-- Search Input in Shell Bar -->
+        <div class="shell-search-box">
+          <input type="text" 
+                 class="shell-search-input" 
+                 id="modalSearchInput" 
+                 placeholder="Buscar en Launchpad..." 
+                 oninput="PortalApp.handleModalSearch(this.value)"
+                 onkeypress="if(event.key==='Enter') PortalApp.handleModalSearch(this.value)" />
+          <button class="shell-search-icon-btn" title="Buscar">
+            <i class="fas fa-search"></i>
+          </button>
+        </div>
+
+        <!-- SAP Joule AI Companion Button -->
+        <button class="shell-btn" onclick="PortalApp.toggleJouleChat()" title="Asistente Virtual SAP Joule AI">
+          <i class="far fa-circle-dot" style="font-size: 16px;"></i>
+        </button>
+
+        <!-- Notifications Bell Button with Dot Badge -->
+        <button class="shell-btn" onclick="PortalApp.showNotificationToast()" title="Notificaciones del Sistema">
+          <i class="far fa-bell" style="font-size: 15px;"></i>
+          <span class="shell-btn-badge"></span>
+        </button>
+
+        <!-- User Profile Avatar with photo from reference image -->
+        <div class="shell-avatar-wrap" onclick="PortalApp.showUserMenu()" title="Perfil de Usuario (Donna Moore / SC Consultant)">
+          <img src="img/user-avatar.png" class="shell-avatar-img" alt="User Profile" />
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-iframe-box">
+      <div class="modal-spinner" id="modal-spinner">
+        <div class="spinner-icon"></div>
+        <span>Cargando módulo SAP Fiori...</span>
+      </div>
+      <iframe id="modal-iframe" title="Visor SAP Fiori" sandbox="allow-same-origin allow-scripts allow-forms allow-popups allow-modals allow-downloads"></iframe>
+    </div>
+  </div>
+
+  <!-- ============================================================
+       5. SAP JOULE AI SIDEBAR PANEL COMPANION
+       ============================================================ -->
+  <div class="joule-sidebar-panel" id="jouleSidebarPanel">
+    <div class="joule-sidebar-header">
+      <div style="display:flex; align-items:center; gap:8px;">
+        <i class="far fa-circle-dot" style="font-size: 17px; color: #4db3ff;"></i>
+        <div>
+          <div style="font-weight: 700; font-size: 14px;">SAP Joule AI</div>
+          <div style="font-size: 11px; opacity: 0.85;">Asistente Digital Empresarial</div>
+        </div>
+      </div>
+      <div style="display:flex; gap:4px;">
+        <button class="shell-btn" onclick="PortalApp.clearJouleChat()" title="Reiniciar chat">
+          <i class="fas fa-sync-alt"></i>
+        </button>
+        <button class="shell-btn" onclick="PortalApp.toggleJouleChat()" title="Cerrar">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+    </div>
+
+    <div class="joule-sidebar-body">
+      <!-- Quick Suggestion Chips -->
+      <div class="joule-chips-row">
+        <button class="joule-chip-btn" onclick="PortalApp.sendQuickJoule('📦 Estado de Órdenes de Venta')">📦 Ventas</button>
+        <button class="joule-chip-btn" onclick="PortalApp.sendQuickJoule('🏭 Torre de Control WMS Multi-Sede')">🏭 WMS</button>
+        <button class="joule-chip-btn" onclick="PortalApp.sendQuickJoule('👤 Consumo de FUE Licencias')">👤 Licencias FUE</button>
+        <button class="joule-chip-btn" onclick="PortalApp.sendQuickJoule('📋 Requerimientos SolMan 7.2')">📋 SolMan</button>
+        <button class="joule-chip-btn" onclick="PortalApp.sendQuickJoule('🏢 Facturas OCR Proveedores')">🏢 Proveedores</button>
+        <button class="joule-chip-btn" onclick="PortalApp.sendQuickJoule('💱 Tipo de cambio SUNAT hoy')">💱 Tipo Cambio</button>
+      </div>
+
+      <!-- Messages Scroll Area -->
+      <div class="joule-messages-scroll" id="jouleMessagesScroll">
+        <div class="joule-msg-bubble joule-bot-msg">
+          <p>¡Hola! Soy <strong>SAP Joule AI</strong>. Puedo ayudarte con tus consultas sobre <strong>Sales Orders, Fulfillment, Torre de Control WMS, Licencias FUE, SolMan y Facturación OCR</strong>.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="joule-input-footer">
+      <input type="text" 
+             class="joule-input-field" 
+             id="jouleInputField" 
+             placeholder="Pregúntale algo a SAP Joule AI..." 
+             onkeypress="if(event.key==='Enter') PortalApp.sendJouleMessage()" />
+      <button class="joule-send-btn" onclick="PortalApp.sendJouleMessage()" title="Enviar">
+        <i class="fas fa-paper-plane"></i>
+      </button>
+    </div>
+  </div>
+
+  <!-- Modal Estado de Base de Datos Cloud -->
+  <div class="sap-db-modal-overlay" id="sapDbModalOverlay" style="display:none;" onclick="if(event.target===this) PortalApp.closeDbStatusModal()">
+    <div class="sap-db-dialog">
+      <div class="sap-db-dialog-header">
+        <div class="sap-db-header-title">
+          <i class="fas fa-database" style="color: #4db3ff;"></i>
+          <span>Base de Datos Pública (SAP Clean Core)</span>
+        </div>
+        <button class="sap-db-close-btn" onclick="PortalApp.closeDbStatusModal()">&times;</button>
+      </div>
+      <div class="sap-db-dialog-body" id="sapDbDialogBody">
+        <div style="text-align:center; padding: 20px;">
+          <i class="fas fa-spinner fa-spin"></i> Consultando estado del conector...
+        </div>
+      </div>
+      <div class="sap-db-dialog-footer">
+        <button class="sap-btn-secondary" onclick="PortalApp.checkDbStatus(true)">
+          <i class="fas fa-sync-alt"></i> Actualizar
+        </button>
+        <button class="sap-btn-primary" onclick="PortalApp.closeDbStatusModal()">
+          Entendido
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Floating Toast Notification -->
+  <div class="fiori-toast" id="fioriToast"></div>
+
+  <!-- Scripts -->
+  <script src="js/apps-config.js"></script>
+  <script src="js/portal-app.js"></script>
+</body>
+</html>

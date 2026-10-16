@@ -1,0 +1,267 @@
+<core:FragmentDefinition
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core"
+    xmlns:layout="sap.ui.layout"
+    xmlns:f="sap.f"
+    xmlns:card="sap.f.cards"
+    xmlns:micro="sap.suite.ui.microchart">
+
+    <VBox class="sapUiNoContentPadding sapUiSmallMarginBottom">
+
+        <!-- ===================================================================
+             1. BARRA DE ACCIONES ESTRATÉGICAS (EXPORTAR & PANTALLA COMPLETA)
+             =================================================================== -->
+        <Toolbar class="actionToolbarTop sapUiTinyMarginBottom">
+            <core:Icon src="sap-icon://dimension" />
+            <Title text="Consola Ejecutiva y Matriz Comparativa WMS Multi-Sede" level="H3" />
+            <ToolbarSpacer />
+            <Button
+                text="{i18n>exportBtn}"
+                icon="sap-icon://excel-attachment"
+                type="Transparent"
+                press=".onExportData" />
+            <Button
+                id="btnFullScreenOpcion4"
+                text="{i18n>fullscreenBtn}"
+                icon="sap-icon://full-screen"
+                type="Transparent"
+                press=".onToggleFullScreen" />
+        </Toolbar>
+
+        <!-- ===================================================================
+             2. MATRIZ COMPARATIVA MULTI-SEDE (3 SEDES CON SEMÁFOROS)
+             =================================================================== -->
+        <Panel
+            headerText="{i18n>secComparativeMatrix}"
+            expandable="false"
+            class="contentPanel customShadowPanel sapUiTinyMarginBottom">
+            <headerToolbar>
+                <Toolbar>
+                    <core:Icon src="sap-icon://table-view" />
+                    <Title text="{i18n>secComparativeMatrix}" level="H3" />
+                    <ToolbarSpacer />
+                    <Text text="Centros: 1010 (Eucaliptos) · 1020 (Callao) · 1030 (Praderas)" class="textMuted" />
+                </Toolbar>
+            </headerToolbar>
+
+            <Table
+                id="tableComparativaSedes"
+                items="{wms>/comparativaSedes}"
+                inset="false"
+                noDataText="No hay datos de sedes para comparar">
+                <columns>
+                    <Column width="180px"><Text text="{i18n>colSede}" class="fontBold" /></Column>
+                    <Column width="140px" hAlign="Center"><Text text="Ocupabilidad (%)" class="fontBold" /></Column>
+                    <Column minScreenWidth="Desktop" demandPopin="true" hAlign="Center"><Text text="Capacidad Bins" /></Column>
+                    <Column minScreenWidth="Tablet" demandPopin="true" hAlign="Center"><Text text="Flujo Paletas (MB51)" /></Column>
+                    <Column width="110px" hAlign="Center"><Text text="OTs Abiertas" class="fontBold" /></Column>
+                    <Column width="140px" hAlign="Center"><Text text="Ventana 7-10 AM" class="fontBold" /></Column>
+                    <Column width="120px" hAlign="Center"><Text text="ERI Calidad" class="fontBold" /></Column>
+                    <Column width="110px" hAlign="Center"><Text text="OTIF (%)" /></Column>
+                    <Column width="150px" hAlign="Center"><Text text="Días Sin Accidentes" class="fontBold" /></Column>
+                </columns>
+                <items>
+                    <ColumnListItem>
+                        <cells>
+                            <VBox>
+                                <Text text="{wms>sede}" class="fontBold fontSizeMedium" />
+                                <Text text="Centro SAP: {wms>centro} · {wms>responsable}" class="textMuted fontSizeSmall sapUiTinyMarginTop" />
+                            </VBox>
+
+                            <!-- Semáforo Ocupabilidad -->
+                            <VBox alignItems="Center">
+                                <ObjectStatus
+                                    text="{wms>ocupabilidad}%"
+                                    state="{wms>ocupabilidadSemaforo}"
+                                    class="kpiMatrixNumber fontBold"
+                                    inverted="true" />
+                                <micro:BulletMicroChart
+                                    size="S"
+                                    targetValue="85"
+                                    scale="%"
+                                    actualValueLabel="{wms>ocupabilidad}%"
+                                    targetValueLabel="85%"
+                                    class="sapUiTinyMarginTop">
+                                    <micro:actual>
+                                        <micro:BulletMicroChartData value="{wms>ocupabilidad}" />
+                                    </micro:actual>
+                                </micro:BulletMicroChart>
+                            </VBox>
+
+                            <Text text="{wms>posiciones}" />
+                            <Text text="{wms>paletasFlujo}" />
+
+                            <!-- Semáforo OTs -->
+                            <VBox alignItems="Center">
+                                <ObjectStatus
+                                    text="{wms>otAbiertas} OTs"
+                                    state="{wms>otSemaforo}"
+                                    inverted="true" />
+                            </VBox>
+
+                            <!-- Semáforo Ventana 7-10 -->
+                            <VBox alignItems="Center">
+                                <ObjectStatus
+                                    text="{wms>cumplimientoVentana}%"
+                                    state="{wms>ventanaSemaforo}"
+                                    icon="{= ${wms>ventanaSemaforo} === 'Success' ? 'sap-icon://accept' : 'sap-icon://alert' }"
+                                    inverted="true" />
+                            </VBox>
+
+                            <!-- Semáforo Calidad ERI -->
+                            <VBox alignItems="Center">
+                                <ObjectStatus
+                                    text="{wms>calidadEri}%"
+                                    state="{wms>calidadSemaforo}"
+                                    inverted="true" />
+                            </VBox>
+
+                            <Text text="{wms>otif}%" class="fontBold" />
+
+                            <!-- Semáforo Seguridad -->
+                            <VBox alignItems="Center">
+                                <ObjectStatus
+                                    text="{wms>diasSinAccidentes} días"
+                                    state="Success" />
+                                <Text text="5S: {wms>fiveS}% · {wms>raccsAbiertos} RACCS" class="textMuted fontSizeSmall sapUiTinyMarginTop" />
+                            </VBox>
+                        </cells>
+                    </ColumnListItem>
+                </items>
+            </Table>
+        </Panel>
+
+        <!-- ===================================================================
+             3. RESUMEN DE SEGURIDAD INDUSTRIAL & CULTURA 5S (TARJETAS)
+             =================================================================== -->
+        <Panel
+            headerText="{i18n>secSafetyKpi}"
+            expandable="false"
+            class="contentPanel customShadowPanel">
+            <headerToolbar>
+                <Toolbar>
+                    <core:Icon src="sap-icon://shield" />
+                    <Title text="{i18n>secSafetyKpi}" level="H3" />
+                    <ToolbarSpacer />
+                    <ObjectStatus text="Cero Accidentes Incapacitantes" state="Success" />
+                </Toolbar>
+            </headerToolbar>
+
+            <layout:Grid
+                defaultSpan="XL4 L4 M6 S12"
+                class="safetyGridContainer sapUiSmallMargin"
+                vSpacing="0.5"
+                hSpacing="0.5">
+
+                <!-- Sede 1: CD Eucaliptos -->
+                <f:Card class="safetyCard">
+                    <f:header>
+                        <card:Header
+                            title="CD Eucaliptos"
+                            subtitle="Centro 1010"
+                            iconSrc="sap-icon://building"
+                            statusText="412 Días" />
+                    </f:header>
+                    <f:content>
+                        <VBox class="sapUiSmallMargin">
+                            <HBox justifyContent="SpaceBetween" alignItems="Center">
+                                <VBox>
+                                    <Text text="412 Días" class="kpiLargeNumber textSuccess" />
+                                    <Text text="Sin Accidentes con Tiempo Perdido" class="textMuted" />
+                                </VBox>
+                                <core:Icon src="sap-icon://badge" size="2rem" />
+                            </HBox>
+                            <VBox class="sapUiSmallMarginTop">
+                                <HBox justifyContent="SpaceBetween">
+                                    <Text text="Auditoría 5S Score:" />
+                                    <Text text="96.0%" class="fontBold textSuccess" />
+                                </HBox>
+                                <HBox justifyContent="SpaceBetween" class="sapUiTinyMarginTop">
+                                    <Text text="RACCS Abiertos (Condiciones):" />
+                                    <Text text="2 alertas activas" class="textWarning fontBold" />
+                                </HBox>
+                                <HBox justifyContent="SpaceBetween" class="sapUiTinyMarginTop">
+                                    <Text text="RACCS Cerrados (Acciones):" />
+                                    <Text text="28 resueltos (93%)" class="textMuted" />
+                                </HBox>
+                            </VBox>
+                        </VBox>
+                    </f:content>
+                </f:Card>
+
+                <!-- Sede 2: CD Callao -->
+                <f:Card class="safetyCard">
+                    <f:header>
+                        <card:Header
+                            title="CD Callao"
+                            subtitle="Centro 1020"
+                            iconSrc="sap-icon://building"
+                            statusText="285 Días" />
+                    </f:header>
+                    <f:content>
+                        <VBox class="sapUiSmallMargin">
+                            <HBox justifyContent="SpaceBetween" alignItems="Center">
+                                <VBox>
+                                    <Text text="285 Días" class="kpiLargeNumber textSuccess" />
+                                    <Text text="Sin Accidentes con Tiempo Perdido" class="textMuted" />
+                                </VBox>
+                                <core:Icon src="sap-icon://badge" size="2rem" />
+                            </HBox>
+                            <VBox class="sapUiSmallMarginTop">
+                                <HBox justifyContent="SpaceBetween">
+                                    <Text text="Auditoría 5S Score:" />
+                                    <Text text="93.5%" class="fontBold textWarning" />
+                                </HBox>
+                                <HBox justifyContent="SpaceBetween" class="sapUiTinyMarginTop">
+                                    <Text text="RACCS Abiertos (Condiciones):" />
+                                    <Text text="4 alertas activas" class="textError fontBold" />
+                                </HBox>
+                                <HBox justifyContent="SpaceBetween" class="sapUiTinyMarginTop">
+                                    <Text text="RACCS Cerrados (Acciones):" />
+                                    <Text text="22 resueltos (85%)" class="textMuted" />
+                                </HBox>
+                            </VBox>
+                        </VBox>
+                    </f:content>
+                </f:Card>
+
+                <!-- Sede 3: CD Praderas -->
+                <f:Card class="safetyCard">
+                    <f:header>
+                        <card:Header
+                            title="CD Praderas"
+                            subtitle="Centro 1030"
+                            iconSrc="sap-icon://building"
+                            statusText="590 Días" />
+                    </f:header>
+                    <f:content>
+                        <VBox class="sapUiSmallMargin">
+                            <HBox justifyContent="SpaceBetween" alignItems="Center">
+                                <VBox>
+                                    <Text text="590 Días" class="kpiLargeNumber textSuccess" />
+                                    <Text text="Sin Accidentes con Tiempo Perdido" class="textMuted" />
+                                </VBox>
+                                <core:Icon src="sap-icon://award" size="2rem" />
+                            </HBox>
+                            <VBox class="sapUiSmallMarginTop">
+                                <HBox justifyContent="SpaceBetween">
+                                    <Text text="Auditoría 5S Score:" />
+                                    <Text text="98.0%" class="fontBold textSuccess" />
+                                </HBox>
+                                <HBox justifyContent="SpaceBetween" class="sapUiTinyMarginTop">
+                                    <Text text="RACCS Abiertos (Condiciones):" />
+                                    <Text text="1 alerta activa" class="textSuccess fontBold" />
+                                </HBox>
+                                <HBox justifyContent="SpaceBetween" class="sapUiTinyMarginTop">
+                                    <Text text="RACCS Cerrados (Acciones):" />
+                                    <Text text="35 resueltos (97%)" class="textMuted" />
+                                </HBox>
+                            </VBox>
+                        </VBox>
+                    </f:content>
+                </f:Card>
+            </layout:Grid>
+        </Panel>
+
+    </VBox>
+</core:FragmentDefinition>

@@ -1,0 +1,48 @@
+projection;
+strict ( 2 );
+use draft;
+
+/* ======================================================================
+   PROJECTION BEHAVIOR DEFINITION: C_KpiAlmacenSede
+   Consumo OData V4 - SAP Fiori Elements / Freestyle UI
+   Torre de Control WMS Multi-Sede (CD Eucaliptos, CD Callao, CD Praderas)
+   ====================================================================== */
+define behavior for C_KpiAlmacenSede alias KpiAlmacenSede
+use etag
+{
+  use create;
+  use update;
+  use delete;
+
+  // Acciones Draft estándar
+  use action Edit;
+  use action Activate;
+  use action Discard;
+  use action Resume;
+  use action Prepare;
+
+  // Acción de negocio para sincronización periódica
+  use action sincronizarKpis;
+
+  // Navegación composicional
+  use association _Familias { create; with draft; }
+  use association _Transportes { create; with draft; }
+}
+
+define behavior for C_KpiAlmacenFamilia alias KpiAlmacenFamilia
+use etag
+{
+  use update;
+  use delete;
+
+  use association _Sede { with draft; }
+}
+
+define behavior for C_KpiAlmacenUnidadTransporte alias KpiAlmacenTransporte
+use etag
+{
+  use update;
+  use delete;
+
+  use association _Sede { with draft; }
+}

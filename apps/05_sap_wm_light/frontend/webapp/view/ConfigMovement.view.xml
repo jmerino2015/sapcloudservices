@@ -1,0 +1,51 @@
+<mvc:View
+  controllerName="wm.light.controller.ConfigMovement"
+  xmlns:mvc="sap.ui.core.mvc"
+  xmlns="sap.m"
+  xmlns:f="sap.f"
+  xmlns:core="sap.ui.core">
+
+  <Page id="configMovementPage" title="Configuración — Clases de Movimiento" showNavButton="false" backgroundDesign="List">
+    <content>
+      <VBox class="sapUiResponsivePadding">
+        
+        <Table id="movementTable"
+          items="{configMove>/movements}"
+          noDataText="Sin clases de movimiento configuradas"
+          sticky="ColumnHeaders,HeaderToolbar">
+
+          <headerToolbar>
+            <Toolbar>
+              <Title text="Clases de Movimiento" level="H3" />
+              <ToolbarSpacer />
+              <Button text="Nueva Clase" icon="sap-icon://add" type="Emphasized" press=".onNewMovement" />
+            </Toolbar>
+          </headerToolbar>
+
+          <columns>
+            <Column width="8rem"><Text text="Clase (ID)" /></Column>
+            <Column><Text text="Descripción" /></Column>
+            <Column width="8rem" hAlign="Center"><Text text="Tipo" /></Column>
+            <Column hAlign="End" width="8rem"><Text text="Acciones" /></Column>
+          </columns>
+
+          <items>
+            <ColumnListItem>
+              <cells>
+                <ObjectIdentifier title="{configMove>id}" />
+                <Text text="{configMove>description}" />
+                <ObjectStatus text="{configMove>type}" state="{configMove>state}" />
+                <HBox justifyContent="End" gap="0.25rem">
+                  <Button icon="sap-icon://edit" type="Transparent" press=".onEditMovement" />
+                </HBox>
+              </cells>
+            </ColumnListItem>
+          </items>
+
+        </Table>
+
+      </VBox>
+    </content>
+  </Page>
+
+</mvc:View>

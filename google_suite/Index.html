@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SAP Fiori Launchpad — Google Suite Edition</title>
+
+  <!-- Google Fonts & FontAwesome -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" />
+
+  <style>
+    /* ==========================================================================
+       OFFICIAL SAP FIORI LAUNCHPAD — GOOGLE APPS SCRIPT EDITION (72 TYPOGRAPHY)
+       ========================================================================== */
+    @font-face {
+      font-family: '72';
+      src: url('https://ui5.sap.com/resources/sap/ui/core/themes/sap_fiori_3/fonts/72-Regular.woff2') format('woff2');
+      font-weight: 400;
+      font-style: normal;
+      font-display: swap;
+    }
+    @font-face {
+      font-family: '72';
+      src: url('https://ui5.sap.com/resources/sap/ui/core/themes/sap_fiori_3/fonts/72-Bold.woff2') format('woff2');
+      font-weight: 700;
+      font-style: normal;
+      font-display: swap;
+    }
+    @font-face {
+      font-family: '72';
+      src: url('https://ui5.sap.com/resources/sap/ui/core/themes/sap_fiori_3/fonts/72-Light.woff2') format('woff2');
+      font-weight: 300;
+      font-style: normal;
+      font-display: swap;
+    }
+
+    :root {
+      --sapShellColor: #354a5f;
+      --sapShell_TextColor: #ffffff;
+      --sapShell_Hover: rgba(255, 255, 255, 0.16);
+      --sapAnchor_Background: #ffffff;
+      --sapAnchor_Border: #d9d9d9;
+      --sapAnchor_Text: #556b82;
+      --sapAnchor_Active: #0854a0;
+      --sapBackgroundColor: #edeff0;
+      --sapTile_Background: #ffffff;
+      --sapTile_Shadow: 0 0 0 1px rgba(0, 0, 0, 0.08), 0 1px 3px rgba(0, 0, 0, 0.05);
+      --sapTile_HoverShadow: 0 0 0 1px #0854a0, 0 4px 14px rgba(8, 84, 160, 0.18);
+      --sapTitleColor: #32363a;
+      --sapTextColor: #32363a;
+      --sapLabelColor: #6a6d70;
+      --sapHighlight: #0854a0;
+      --sapNegative: #bb0000;
+      --sapPositive: #107e3e;
+      --sapCritical: #e9730c;
+      --sapFont: '72', 'Inter', Arial, sans-serif;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: var(--sapFont);
+      background-color: var(--sapBackgroundColor);
+      color: var(--sapTextColor);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow-x: hidden;
+    }
+
+    /* SHELL BAR */
+    .fiori-shell-bar {
+      background-color: var(--sapShellColor);
+      color: var(--sapShell_TextColor);
+      height: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 16px;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+    }
+    .shell-left { display: flex; align-items: center; gap: 14px; }
+    .sap-badge {
+      background: #0854a0;
+      color: #fff;
+      font-weight: 800;
+      font-size: 15px;
+      padding: 2px 7px;
+      border-radius: 3px;
+      letter-spacing: 1px;
+      border: 1px solid rgba(255,255,255,0.45);
+    }
+    .shell-title-btn {
+      background: transparent;
+      border: none;
+      color: #fff;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 8px;
+      border-radius: 4px;
+    }
+    .shell-title-btn:hover { background: var(--sapShell_Hover); }
+    .shell-right { display: flex; align-items: center; gap: 6px; }
+    .shell-btn {
+      background: transparent;
+      border: none;
+      color: #fff;
+      width: 36px;
+      height: 36px;
+      border-radius: 4px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 15px;
+    }
+    .shell-btn:hover { background: var(--sapShell_Hover); }
+    .shell-avatar {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: #0854a0;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: bold;
+      border: 1.5px solid #fff;
+    }
+
+    /* ANCHOR BAR */
+    .fiori-anchor-bar {
+      background: var(--sapAnchor_Background);
+      border-bottom: 1px solid var(--sapAnchor_Border);
+      height: 44px;
+      display: flex;
+      align-items: center;
+      padding: 0 32px;
+      position: sticky;
+      top: 44px;
+      z-index: 900;
+    }
+    .anchor-tabs { display: flex; gap: 28px; height: 100%; }
+    .tab-btn {
+      background: transparent;
+      border: none;
+      color: var(--sapAnchor_Text);
+      font-family: var(--sapFont);
+      font-size: 14px;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+      position: relative;
+      padding: 0 4px;
+    }
+    .tab-btn.active {
+      color: var(--sapAnchor_Active);
+      font-weight: 700;
+    }
+    .tab-btn.active::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: var(--sapAnchor_Active);
+    }
+
+    /* CANVAS */
+    .fiori-canvas {
+      flex: 1;
+      padding: 20px 32px 60px 32px;
+      max-width: 1440px;
+      margin: 0 auto;
+      width: 100%;
+    }
+    .group-section { margin-bottom: 28px; }
+    .section-title {
+      font-size: 18px;
+      font-weight: 400;
+      color: var(--sapTitleColor);
+      margin-bottom: 12px;
+    }
+    .tiles-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      align-items: flex-start;
+    }
+
+    /* TILES */
+    .fiori-tile {
+      width: 176px;
+      height: 176px;
+      background: var(--sapTile_Background);
+      border-radius: 4px;
+      box-shadow: var(--sapTile_Shadow);
+      padding: 13px 14px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      position: relative;
+    }
+    .fiori-tile:hover {
+      box-shadow: var(--sapTile_HoverShadow);
+      transform: translateY(-2px);
+    }
+    .fiori-tile-wide { width: 364px; }
+    .tile-title { font-size: 15px; font-weight: 600; color: var(--sapTitleColor); line-height: 1.2; }
+    .tile-subtitle { font-size: 12px; color: var(--sapLabelColor); margin-top: 3px; }
+    .kpi-val { font-size: 36px; font-weight: 300; line-height: 1.05; }
+    .kpi-val.alert { color: var(--sapNegative); }
+    .kpi-val.success { color: var(--sapPositive); }
+    .kpi-unit { font-size: 16px; color: var(--sapLabelColor); font-weight: 400; }
+    .kpi-lbl { font-size: 12px; color: var(--sapLabelColor); margin-top: 3px; }
+    .tile-icon { color: var(--sapHighlight); font-size: 20px; }
+
+    /* NEWS TILE */
+    .news-tile {
+      padding: 0;
+      background: #072340;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+    }
+    .news-bg {
+      height: 98px;
+      background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: rgba(255,255,255,0.7);
+      font-size: 24px;
+    }
+    .news-content {
+      background: linear-gradient(180deg, #0d3862 0%, #072340 100%);
+      padding: 10px 14px 12px 14px;
+      color: #fff;
+    }
+    .news-h { font-size: 13px; font-weight: 600; line-height: 1.25; }
+    .news-d { font-size: 11px; color: #9bbad8; margin-top: 4px; }
+
+    /* LINKS BAR */
+    .links-bar {
+      background: var(--sapTile_Background);
+      border-radius: 4px;
+      box-shadow: var(--sapTile_Shadow);
+      padding: 12px 20px;
+      margin-top: 12px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 24px;
+      align-items: center;
+    }
+    .link-item {
+      text-decoration: none;
+      font-size: 13px;
+      color: var(--sapHighlight);
+      cursor: pointer;
+    }
+    .link-item strong { font-weight: 600; }
+    .link-item span { color: var(--sapLabelColor); margin-left: 4px; }
+
+    /* TOAST */
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #32363a;
+      color: #fff;
+      padding: 10px 20px;
+      border-radius: 4px;
+      font-size: 13px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+      opacity: 0;
+      transition: opacity 0.2s ease;
+      pointer-events: none;
+      z-index: 9999;
+    }
+    .toast.show { opacity: 1; }
+
+    /* BANNER GOOGLE CLOUD SYNC */
+    .google-sync-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: #e8f0fe;
+      color: #1a73e8;
+      border: 1px solid #c2e7ff;
+      border-radius: 12px;
+      padding: 2px 10px;
+      font-size: 11px;
+      font-weight: 600;
+      margin-left: 12px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- SHELL BAR -->
+  <header class="fiori-shell-bar">
+    <div class="shell-left">
+      <div class="sap-badge">SAP</div>
+      <button class="shell-title-btn" onclick="showToast('Espacio: Home (Google Apps Script Sync)')">
+        <span>Home</span>
+        <i class="fas fa-caret-down" style="font-size: 10px;"></i>
+      </button>
+      <span class="google-sync-badge">
+        <i class="fab fa-google-drive"></i> Google Sheets DB Activa
+      </span>
+    </div>
+
+    <div class="shell-right">
+      <button class="shell-btn" title="Buscar en Google Sheets" onclick="buscarEnGoogleSheets()">
+        <i class="fas fa-search"></i>
+      </button>
+      <button class="shell-btn" title="SAP Joule AI" onclick="consultarJoule()">
+        <i class="far fa-circle-dot"></i>
+      </button>
+      <button class="shell-btn" title="Notificaciones" onclick="showToast('🔔 Base de datos Google Sheets conectada y sincronizada.')">
+        <i class="far fa-bell"></i>
+      </button>
+      <div class="shell-avatar" title="Donna Moore (Google Account)">DM</div>
+    </div>
+  </header>
+
+  <!-- ANCHOR BAR -->
+  <nav class="fiori-anchor-bar">
+    <div class="anchor-tabs">
+      <button class="tab-btn active" onclick="scrollSection('sec-home')">My Home</button>
+      <button class="tab-btn" onclick="scrollSection('sec-sales')">Sales Orders</button>
+      <button class="tab-btn" onclick="scrollSection('sec-comm')">Sales Commissions and Incentives</button>
+      <button class="tab-btn" onclick="crearNuevoPedidoModal()">+ Crear Pedido (Sheets DB)</button>
+    </div>
+  </nav>
+
+  <!-- CANVAS -->
+  <main class="fiori-canvas">
+    
+    <!-- SECCION 1: MY HOME -->
+    <section class="group-section" id="sec-home">
+      <div class="tiles-grid">
+        <div class="fiori-tile" onclick="showToast('My Sales Overview sincronizado con Google Sheets')">
+          <div class="tile-title">My Sales Overview</div>
+          <div></div>
+          <div><i class="far fa-file-alt tile-icon" style="font-size:22px;"></i></div>
+        </div>
+
+        <div class="fiori-tile" onclick="showToast('Cargando 13 Tareas desde Google Sheets')">
+          <div>
+            <div class="tile-title">My Tasks</div>
+            <div class="tile-subtitle">All Items</div>
+          </div>
+          <div>
+            <div class="kpi-val" id="kpiTasks">13</div>
+            <div class="kpi-lbl">Tasks</div>
+          </div>
+          <div><i class="far fa-check-square tile-icon"></i></div>
+        </div>
+
+        <div class="fiori-tile fiori-tile-wide news-tile" onclick="showToast('Intelligent Street Lights — SAP News')">
+          <div class="news-bg"><i class="fas fa-city"></i></div>
+          <div class="news-content">
+            <div class="news-h">Intelligent Street Lights Power the Future of Modern Cities</div>
+            <div class="news-d">Today, SAP News | August 21, 2019</div>
+          </div>
+        </div>
+
+        <div class="fiori-tile" onclick="showToast('Timesheet: 10 Days Missing')">
+          <div class="tile-title">My Timesheet</div>
+          <div>
+            <div class="kpi-val alert">10</div>
+            <div class="kpi-lbl">Days Missing</div>
+          </div>
+          <div></div>
+        </div>
+
+        <div class="fiori-tile" onclick="showToast('Lunch Menu: Campus Walldorf')">
+          <div>
+            <div class="tile-title">Lunch Menu</div>
+            <div class="tile-subtitle">Walldorf</div>
+          </div>
+          <div></div>
+          <div><i class="fas fa-utensils tile-icon"></i></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECCION 2: SALES ORDER -->
+    <section class="group-section" id="sec-sales">
+      <h2 class="section-title">Sales Order</h2>
+      <div class="tiles-grid">
+        <div class="fiori-tile" onclick="showToast('Pedidos en Google Sheets: 46.9 K EUR')">
+          <div class="tile-title">Manage Sales Orders</div>
+          <div>
+            <div class="kpi-val" id="kpiSalesTotal">46.9 <span class="kpi-unit">K</span></div>
+            <div class="kpi-lbl">EUR</div>
+          </div>
+          <div><i class="far fa-file-alt tile-icon"></i></div>
+        </div>
+
+        <div class="fiori-tile" onclick="showToast('Tracking Sales Orders...')">
+          <div class="tile-title">Track Sales Orders</div>
+          <div></div>
+          <div><i class="far fa-file-lines tile-icon" style="font-size:22px;"></i></div>
+        </div>
+
+        <div class="fiori-tile" onclick="showToast('Sales Order Fulfillment')">
+          <div>
+            <div class="tile-title">Sales Order Fulfillment</div>
+            <div class="tile-subtitle">Resolve Issues</div>
+          </div>
+          <div>
+            <div class="kpi-val">20.5 <span class="kpi-unit">K</span></div>
+            <div class="kpi-lbl">EUR</div>
+          </div>
+          <div></div>
+        </div>
+
+        <div class="fiori-tile" onclick="showToast('88.8% de Items Confirmados')">
+          <div class="tile-title">Confirmed Sales Order Items</div>
+          <div style="display:flex; justify-content:center; align-items:center;">
+            <svg viewBox="0 0 36 36" style="width:68px; height:68px;">
+              <path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="#f0f2f4" stroke-width="3" />
+              <path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="#0854a0" stroke-width="3" stroke-dasharray="88.8, 100" />
+              <text x="18" y="20.5" font-family="'72', Arial" font-size="7.5" font-weight="600" text-anchor="middle" fill="#0854a0">88.8%</text>
+            </svg>
+          </div>
+          <div></div>
+        </div>
+
+        <div class="fiori-tile" onclick="showToast('Delay Prediction: 70% On Time')">
+          <div class="tile-title">Predicted Delivery Delay</div>
+          <div style="font-size:11px; display:flex; flex-direction:column; gap:4px;">
+            <div style="display:flex; justify-content:space-between;"><span>Delayed</span><span style="color:#bb0000; font-weight:bold;">11%</span></div>
+            <div style="display:flex; justify-content:space-between;"><span>Early</span><span style="color:#e9730c; font-weight:bold;">19%</span></div>
+            <div style="display:flex; justify-content:space-between;"><span>On Time</span><span style="color:#107e3e; font-weight:bold;">70%</span></div>
+          </div>
+          <div style="font-size:11px; color:#0854a0;"><i class="fas fa-rotate-right"></i> 5 minutes ago</div>
+        </div>
+
+        <div class="fiori-tile" onclick="showToast('Quotation Conversion: 17.3%')">
+          <div class="tile-title">Quotation Conversion Rate</div>
+          <div>
+            <div class="kpi-val success">17.3 <span class="kpi-unit" style="color:#107e3e;">%</span> <span style="font-size:18px;">▲</span></div>
+            <div class="kpi-lbl">Current Quarter</div>
+          </div>
+          <div></div>
+        </div>
+      </div>
+
+      <div class="links-bar">
+        <a class="link-item" onclick="crearNuevoPedidoModal()"><strong>Create Sales Order</strong> <span>Fast Entry</span></a>
+        <a class="link-item" onclick="showToast('Resolve Credit Block en Google Sheets')"><strong>Sales Order Fulfillment</strong> <span>Resolve Credit Block</span></a>
+        <a class="link-item" onclick="showToast('Resolve Billing Block en Google Sheets')"><strong>Sales Order Fulfillment</strong> <span>Resolve Billing Block</span></a>
+        <a class="link-item" onclick="showToast('Resolve Delivery Block en Google Sheets')"><strong>Sales Order Fulfillment</strong> <span>Resolve Delivery Block</span></a>
+      </div>
+    </section>
+
+    <!-- SECCION 3: COMMISSIONS -->
+    <section class="group-section" id="sec-comm">
+      <h2 class="section-title">Sales Commissions and Incentives</h2>
+      <div class="tiles-grid">
+        <div class="fiori-tile" onclick="showToast('Donna Moore (Incentives Manager)')">
+          <div>
+            <div class="tile-title">Donna Moore</div>
+            <div class="tile-subtitle">Incentives Manager</div>
+          </div>
+          <div></div>
+          <div><div class="shell-avatar" style="width:36px; height:36px; font-size:14px;">DM</div></div>
+        </div>
+
+        <div class="fiori-tile" onclick="showToast('Business Volume: 1.8M EUR YTD')">
+          <div>
+            <div class="tile-title">Display Business Volume</div>
+            <div class="tile-subtitle">Condition Contracts</div>
+          </div>
+          <div>
+            <div class="kpi-val">1.8 <span class="kpi-unit">M</span></div>
+            <div class="kpi-lbl">EUR, Year to Date</div>
+          </div>
+          <div style="font-size:11px; color:#6a6d70;">Actual / Forecast</div>
+        </div>
+
+        <div class="fiori-tile" onclick="showToast('Settlement Calendars')">
+          <div>
+            <div class="tile-title">Display Settlement Calendars</div>
+            <div class="tile-subtitle">Condition Contracts</div>
+          </div>
+          <div></div>
+          <div style="color:#0854a0; font-size:20px;"><i class="far fa-calendar-alt"></i> €</div>
+        </div>
+
+        <div class="fiori-tile" onclick="showToast('Extend Condition Contracts')">
+          <div class="tile-title">Extend Condition Contracts</div>
+          <div></div>
+          <div><i class="far fa-clock tile-icon"></i></div>
+        </div>
+
+        <div class="fiori-tile" onclick="showToast('Sales Contract Fulfillment: 1.8M / 3M EUR')">
+          <div>
+            <div class="tile-title">Sales Contract Fulfillment</div>
+            <div class="tile-subtitle">EMEA</div>
+          </div>
+          <div style="display:flex; align-items:center; gap:10px;">
+            <span style="font-size:18px; font-weight:bold; color:#107e3e;">1.8M</span>
+            <span style="font-size:13px; color:#6a6d70;">/ 3M EUR</span>
+          </div>
+          <div style="font-size:11px; color:#6a6d70;">EUR, Year to Date</div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <div class="toast" id="toast"></div>
+
+  <script>
+    function showToast(msg) {
+      const t = document.getElementById('toast');
+      t.textContent = msg;
+      t.classList.add('show');
+      setTimeout(() => t.classList.remove('show'), 2500);
+    }
+
+    function scrollSection(id) {
+      const el = document.getElementById(id);
+      if (el) el.scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function consultarJoule() {
+      showToast('🤖 SAP Joule AI conectado al Backend de Google Apps Script & Sheets.');
+    }
+
+    function buscarEnGoogleSheets() {
+      const q = prompt('Buscar registros en Google Sheets (ej: Cliente, Pedido, Material WMS):');
+      if (q) {
+        showToast('Consultando Google Sheets para: ' + q + '...');
+        if (typeof google !== 'undefined' && google.script && google.script.run) {
+          google.script.run
+            .withSuccessHandler(function(data) {
+              showToast('Consulta completada con éxito.');
+            })
+            .getDashboardData();
+        }
+      }
+    }
+
+    function crearNuevoPedidoModal() {
+      const cliente = prompt('Ingresa el Nombre del Cliente (se guardará en Google Sheets):', 'Corporación Lima S.A.C.');
+      if (!cliente) return;
+      const monto = prompt('Ingresa el Monto en EUR:', '15000');
+      if (!monto) return;
+
+      showToast('Guardando pedido en Google Sheets...');
+
+      if (typeof google !== 'undefined' && google.script && google.script.run) {
+        google.script.run
+          .withSuccessHandler(function(res) {
+            showToast('✅ ' + res.message + ' (ID: ' + res.orderId + ')');
+          })
+          .withFailureHandler(function(err) {
+            showToast('❌ Error al guardar en Sheets: ' + err);
+          })
+          .createSalesOrder({ cliente: cliente, monto: monto, estado: 'Confirmado' });
+      } else {
+        // Modo simulación local
+        setTimeout(() => {
+          showToast('✅ Pedido creado exitosamente en Base de Datos Google Sheets (ID: SO-1004)');
+        }, 800);
+      }
+    }
+
+    // Auto sincronizar métricas desde Google Sheets al cargar
+    document.addEventListener('DOMContentLoaded', () => {
+      if (typeof google !== 'undefined' && google.script && google.script.run) {
+        google.script.run
+          .withSuccessHandler(function(data) {
+            if (data && data.kpis) {
+              if (document.getElementById('kpiTasks')) {
+                document.getElementById('kpiTasks').textContent = data.kpis.tasksCount;
+              }
+              if (document.getElementById('kpiSalesTotal')) {
+                document.getElementById('kpiSalesTotal').innerHTML = data.kpis.salesTotalKpi + ' <span class="kpi-unit">K</span>';
+              }
+            }
+          })
+          .getDashboardData();
+      }
+    });
+  </script>
+</body>
+</html>

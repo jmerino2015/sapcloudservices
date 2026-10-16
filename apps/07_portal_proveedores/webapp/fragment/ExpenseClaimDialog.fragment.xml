@@ -1,0 +1,58 @@
+<core:FragmentDefinition
+    xmlns="sap.m"
+    xmlns:f="sap.ui.layout.form"
+    xmlns:core="sap.ui.core"
+    xmlns:u="sap.ui.unified">
+
+    <Dialog
+        title="Nueva Rendición de Gastos y Viáticos"
+        contentWidth="550px">
+        <content>
+            <VBox class="sapUiSmallMargin">
+                <f:SimpleForm
+                    editable="true"
+                    layout="ResponsiveGridLayout"
+                    labelSpanXL="4" labelSpanL="4" labelSpanM="4" labelSpanS="12">
+                    <f:content>
+                        <Label text="Motivo / Viaje:" required="true" />
+                        <Input value="{newClaim>/motivo}" placeholder="Ej. Viáticos Viaje de Trabajo Arequipa" />
+
+                        <Label text="Centro de Costos:" />
+                        <Select selectedKey="{newClaim>/ceco}" width="100%">
+                            <core:Item key="CC-10020 - Consultoría" text="CC-10020 - Consultoría" />
+                            <core:Item key="CC-10010 - Ventas" text="CC-10010 - Ventas" />
+                            <core:Item key="CC-10030 - Sistemas" text="CC-10030 - Sistemas" />
+                        </Select>
+
+                        <Label text="Monto Total:" required="true" />
+                        <HBox alignItems="Center">
+                            <Input value="{newClaim>/monto}" placeholder="0.00" width="10rem" class="sapUiTinyMarginEnd" />
+                            <Select selectedKey="{newClaim>/moneda}">
+                                <core:Item key="PEN" text="PEN" />
+                                <core:Item key="USD" text="USD" />
+                            </Select>
+                        </HBox>
+
+                        <Label text="Adjuntar Comprobantes:" />
+                        <u:FileUploader
+                            buttonText="Examinar PDF/XML"
+                            fileType="pdf,xml,jpg,png"
+                            placeholder="Adjunte boleta o factura de gasto"
+                            width="100%" />
+                    </f:content>
+                </f:SimpleForm>
+            </VBox>
+        </content>
+        <beginButton>
+            <Button
+                text="Crear y Enviar a Aprobación"
+                icon="sap-icon://paper-plane"
+                type="Emphasized"
+                press=".onSaveExpenseClaim" />
+        </beginButton>
+        <endButton>
+            <Button text="Cancelar" type="Transparent" press=".onCloseClaimDialog" />
+        </endButton>
+    </Dialog>
+
+</core:FragmentDefinition>

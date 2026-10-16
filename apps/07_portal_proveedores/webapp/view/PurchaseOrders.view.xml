@@ -1,0 +1,153 @@
+<mvc:View
+    controllerName="com.antigravity.portalProveedores.controller.PurchaseOrders"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m"
+    xmlns:f="sap.f"
+    xmlns:core="sap.ui.core"
+    displayBlock="true"
+    height="100%">
+
+    <Page
+        id="purchaseOrdersPage"
+        title="{i18n>poTitle}"
+        showNavButton="true"
+        navButtonPress=".onNavBack"
+        backgroundDesign="List">
+
+        <subHeader>
+            <Toolbar id="poToolbar">
+                <SearchField
+                    id="poSearchField"
+                    placeholder="{i18n>poSearchPlaceholder}"
+                    width="20rem"
+                    search=".onSearch"
+                    liveChange=".onSearchLive" />
+                <ToolbarSpacer />
+                <Button
+                    id="btnRefreshPO"
+                    icon="sap-icon://refresh"
+                    type="Transparent"
+                    tooltip="{i18n>commonRefresh}"
+                    press=".onRefresh" />
+                <Button
+                    id="btnDownloadPO"
+                    icon="sap-icon://excel-attachment"
+                    type="Transparent"
+                    tooltip="{i18n>commonDownload}"
+                    press=".onDownload" />
+                <Button
+                    id="btnFilterPO"
+                    icon="sap-icon://filter"
+                    type="Transparent"
+                    tooltip="{i18n>commonFilter}"
+                    press=".onFilterPress" />
+            </Toolbar>
+        </subHeader>
+
+        <content>
+            <VBox class="sapUiResponsivePadding">
+
+                <!-- Filter Bar -->
+                <IconTabBar
+                    id="poStatusFilter"
+                    select=".onStatusFilterChange"
+                    class="sapUiSmallMarginBottom"
+                    stretchContentHeight="false"
+                    backgroundDesign="Transparent">
+                    <items>
+                        <IconTabFilter id="filterAll" key="All" text="{i18n>poFilterAll}" />
+                        <IconTabFilter id="filterOpen" key="Open" text="{i18n>poFilterOpen}" iconColor="Information" />
+                        <IconTabFilter id="filterPending" key="Pending" text="{i18n>poFilterPending}" iconColor="Critical" />
+                        <IconTabFilter id="filterClosed" key="Closed" text="{i18n>poFilterClosed}" iconColor="Positive" />
+                    </items>
+                </IconTabBar>
+
+                <!-- Results Count -->
+                <HBox alignItems="Center" class="sapUiTinyMarginBottom">
+                    <Text id="poCountText" text="{po>/filteredCount} órdenes encontradas" class="sapUiSmallMarginEnd" />
+                </HBox>
+
+                <!-- Purchase Orders Table -->
+                <Table
+                    id="poTable"
+                    items="{po>/orders}"
+                    noDataText="{i18n>poNoData}"
+                    mode="SingleSelectMaster"
+                    selectionChange=".onSelectionChange"
+                    growing="true"
+                    growingThreshold="10"
+                    alternateRowColors="true"
+                    sticky="ColumnHeaders,HeaderToolbar">
+
+                    <columns>
+                        <Column id="colPONumber" hAlign="Begin" minScreenWidth="Phone" popinDisplay="Inline" demandPopin="false">
+                            <Text text="{i18n>poColNumber}" />
+                        </Column>
+                        <Column id="colPODate" hAlign="Begin" minScreenWidth="Tablet" demandPopin="true">
+                            <Text text="{i18n>poColDate}" />
+                        </Column>
+                        <Column id="colPOMaterial" hAlign="Begin">
+                            <Text text="{i18n>poColMaterial}" />
+                        </Column>
+                        <Column id="colPOQuantity" hAlign="End" minScreenWidth="Desktop" demandPopin="true">
+                            <Text text="{i18n>poColQuantity}" />
+                        </Column>
+                        <Column id="colPOAmount" hAlign="End" minScreenWidth="Tablet" demandPopin="true">
+                            <Text text="{i18n>poColAmount}" />
+                        </Column>
+                        <Column id="colPOStatus" hAlign="Center">
+                            <Text text="{i18n>poColStatus}" />
+                        </Column>
+                        <Column id="colPOActions" hAlign="Center" minScreenWidth="Desktop" demandPopin="true">
+                            <Text text="{i18n>poColActions}" />
+                        </Column>
+                    </columns>
+
+                    <items>
+                        <ColumnListItem
+                            id="poTableItem"
+                            type="Navigation"
+                            highlight="{po>highlight}"
+                            press=".onOrderPress">
+                            <cells>
+                                <ObjectIdentifier
+                                    title="{po>poNumber}"
+                                    text="{po>supplierRef}" />
+                                <Text text="{po>date}" />
+                                <VBox>
+                                    <Text text="{po>material}" />
+                                    <Text text="{po>materialDesc}" class="sapUiTinyMarginTop" />
+                                </VBox>
+                                <ObjectNumber
+                                    number="{po>quantity}"
+                                    unit="{po>unit}" />
+                                <ObjectNumber
+                                    number="{po>amount}"
+                                    unit="MXN"
+                                    state="{po>amountState}" />
+                                <ObjectStatus
+                                    text="{po>statusText}"
+                                    state="{po>statusState}"
+                                    icon="{po>statusIcon}" />
+                                <HBox>
+                                    <Button
+                                        icon="sap-icon://detail-view"
+                                        type="Transparent"
+                                        tooltip="{i18n>poViewDetail}"
+                                        press=".onOrderDetailPress" />
+                                    <Button
+                                        icon="sap-icon://download"
+                                        type="Transparent"
+                                        tooltip="{i18n>poDownload}"
+                                        press=".onDownloadOrder" />
+                                </HBox>
+                            </cells>
+                        </ColumnListItem>
+                    </items>
+                </Table>
+            </VBox>
+        </content>
+
+    </Page>
+
+</mvc:View>

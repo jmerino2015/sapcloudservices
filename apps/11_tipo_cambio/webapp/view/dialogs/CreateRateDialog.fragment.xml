@@ -1,0 +1,69 @@
+<core:FragmentDefinition
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core"
+    xmlns:form="sap.ui.layout.form">
+    <Dialog
+        id="createRateDialog"
+        title="{i18n>dialogNewRateTitle}"
+        contentWidth="520px"
+        icon="sap-icon://add-process">
+        <content>
+            <form:SimpleForm
+                editable="true"
+                layout="ResponsiveGridLayout"
+                labelSpanXL="4" labelSpanL="4" labelSpanM="4" labelSpanS="12"
+                adjustLabelSpan="false"
+                emptySpanXL="0" emptySpanL="0" emptySpanM="0" emptySpanS="0"
+                columnsXL="1" columnsL="1" columnsM="1">
+                <form:content>
+                    <Label text="{i18n>filterQuotType}" required="true"/>
+                    <Select id="newKurst" selectedKey="ZSUN" forceSelection="true">
+                        <core:Item key="ZSUN" text="ZSUN - SUNAT Oficial (Perú)"/>
+                        <core:Item key="M" text="M - Cotización Media Estándar"/>
+                        <core:Item key="G" text="G - Cotización Bancaria Compra"/>
+                        <core:Item key="B" text="B - Cotización Bancaria Venta"/>
+                        <core:Item key="ZBAN" text="ZBAN - Banxico FIX (México)"/>
+                    </Select>
+
+                    <Label text="{i18n>filterFCurr}" required="true"/>
+                    <ComboBox id="newFCurr" value="USD">
+                        <core:Item key="USD" text="USD - Dólar Estadounidense"/>
+                        <core:Item key="EUR" text="EUR - Euro"/>
+                        <core:Item key="BRL" text="BRL - Real Brasileño"/>
+                        <core:Item key="CLP" text="CLP - Peso Chileno"/>
+                        <core:Item key="MXN" text="MXN - Peso Mexicano"/>
+                    </ComboBox>
+
+                    <Label text="{i18n>filterTCurr}" required="true"/>
+                    <ComboBox id="newTCurr" value="PEN">
+                        <core:Item key="PEN" text="PEN - Sol Peruano"/>
+                        <core:Item key="USD" text="USD - Dólar Estadounidense"/>
+                        <core:Item key="EUR" text="EUR - Euro"/>
+                        <core:Item key="MXN" text="MXN - Peso Mexicano"/>
+                    </ComboBox>
+
+                    <Label text="{i18n>colValidFrom}" required="true"/>
+                    <DatePicker id="newValidFrom" valueFormat="yyyy-MM-dd" displayFormat="dd.MM.yyyy" value="2026-09-08"/>
+
+                    <Label text="{i18n>colRateBuy}" required="true"/>
+                    <Input id="newRateBuy" value="3.7540" type="Number" liveChange="onCalculateMidRate"/>
+
+                    <Label text="{i18n>colRateSell}" required="true"/>
+                    <Input id="newRateSell" value="3.7580" type="Number" liveChange="onCalculateMidRate"/>
+
+                    <Label text="{i18n>colRateMid}"/>
+                    <Input id="newRateMid" value="3.7560" editable="false" type="Number"/>
+
+                    <Label text="{i18n>colSource}"/>
+                    <Input id="newSource" value="Ingreso Manual Finanzas"/>
+                </form:content>
+            </form:SimpleForm>
+        </content>
+        <beginButton>
+            <Button text="{i18n>btnSave}" type="Emphasized" icon="sap-icon://save" press="onSaveNewRate"/>
+        </beginButton>
+        <endButton>
+            <Button text="{i18n>btnCancel}" press="onCloseCreateRateDialog"/>
+        </endButton>
+    </Dialog>
+</core:FragmentDefinition>

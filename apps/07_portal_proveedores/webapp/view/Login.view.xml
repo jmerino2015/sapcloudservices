@@ -1,0 +1,63 @@
+<mvc:View
+    controllerName="com.antigravity.portalProveedores.controller.Login"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m"
+    xmlns:f="sap.ui.layout.form"
+    xmlns:core="sap.ui.core">
+
+    <Page id="loginPage" showHeader="false" backgroundDesign="Solid" class="portalLoginBackground">
+        <content>
+            <VBox height="100%" justifyContent="Center" alignItems="Center" class="sapUiResponsivePadding">
+                <Panel class="portalLoginCard sapUiResponsiveMargin" width="420px">
+                    <VBox alignItems="Center" class="sapUiSmallMargin">
+
+                        <core:Icon src="sap-icon://supplier" size="3.5rem" color="#0064d9" class="sapUiSmallMarginBottom" />
+
+                        <Title text="Portal Empresarial DROID" level="H2" class="sapUiTinyMarginBottom" />
+                        <Text text="Acceda con su Identificador Fiscal (NIF) o Correo Corporativo" class="sapUiSmallMarginBottom" />
+
+                        <VBox width="100%" class="sapUiSmallMarginTop">
+                            <Label text="Usuario / NIF / Correo:" required="true" bold="true" />
+                            <Input
+                                id="loginUser"
+                                value="20517426726"
+                                placeholder="Ej. 20517426726 o consultor@droid.com"
+                                width="100%"
+                                class="sapUiSmallMarginBottom" />
+
+                            <Label text="Contraseña:" required="true" bold="true" />
+                            <Input
+                                id="loginPassword"
+                                type="Password"
+                                value="12345678"
+                                placeholder="••••••••"
+                                width="100%"
+                                submit=".onLoginPress"
+                                class="sapUiSmallMarginBottom" />
+
+                            <HBox justifyContent="SpaceBetween" alignItems="Center" class="sapUiSmallMarginBottom">
+                                <CheckBox text="Recordar usuario" selected="true" />
+                                <Link text="¿Olvidó su contraseña?" press=".onForgotPassword" />
+                            </HBox>
+
+                            <Button
+                                text="Iniciar Sesión"
+                                type="Emphasized"
+                                icon="sap-icon://log"
+                                press=".onLoginPress"
+                                width="100%"
+                                class="sapUiSmallMarginTop" />
+                        </VBox>
+
+                        <HBox class="sapUiMediumMarginTop" alignItems="Center">
+                            <Text text="¿Nuevo proveedor? " />
+                            <Link text="Auto-Registro de Proveedor" press=".onGoToAutoRegister" class="sapUiTinyMarginBegin" />
+                        </HBox>
+
+                    </VBox>
+                </Panel>
+            </VBox>
+        </content>
+    </Page>
+
+</mvc:View>

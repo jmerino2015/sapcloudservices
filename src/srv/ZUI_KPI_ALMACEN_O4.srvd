@@ -1,0 +1,6 @@
+@EndUserText.label: 'Servicio OData V4 - Torre de Control WMS Multi-Sede'
+define service ZUI_KPI_ALMACEN_O4 {
+  expose C_KpiAlmacenSede             as KpiAlmacenSede;
+  expose C_KpiAlmacenFamilia          as KpiAlmacenFamilia;
+  expose C_KpiAlmacenUnidadTransporte as KpiAlmacenTransporte;
+}

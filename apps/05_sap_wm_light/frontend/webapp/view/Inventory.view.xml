@@ -1,0 +1,86 @@
+<mvc:View
+  controllerName="wm.light.controller.Inventory"
+  xmlns:mvc="sap.ui.core.mvc"
+  xmlns="sap.m"
+  xmlns:core="sap.ui.core"
+  xmlns:f="sap.f"
+  xmlns:layout="sap.ui.layout">
+
+  <Page id="page" title="Toma de Inventarios" showNavButton="false" class="sapUiResponsiveContentPadding">
+    <headerContent>
+      <Button text="Nuevo Inventario (LI01N)" icon="sap-icon://add" type="Emphasized" press=".onCreatePress" />
+    </headerContent>
+
+    <content>
+      <VBox class="sapUiSmallMargin">
+        
+        <!-- KPIs -->
+        <HBox class="sapUiSmallMarginBottom" wrap="Wrap" justifyContent="SpaceBetween">
+          <GenericTile header="Documentos Activos" frameType="OneByOne" press=".onRefresh">
+            <TileContent>
+              <NumericContent value="{kpi>/docs_active}" icon="sap-icon://inspection" />
+            </TileContent>
+          </GenericTile>
+          <GenericTile header="Exactitud de Inventario (IRA)" frameType="OneByOne">
+            <TileContent>
+              <NumericContent value="{kpi>/ira}" scale="%" valueColor="Good" />
+            </TileContent>
+          </GenericTile>
+          <GenericTile header="Desviación Absoluta" frameType="OneByOne">
+            <TileContent>
+              <NumericContent value="{kpi>/absolute_diff}" valueColor="Error" />
+            </TileContent>
+          </GenericTile>
+        </HBox>
+
+        <Table id="invTable" items="{inv>/items}" mode="SingleSelectMaster" selectionChange=".onSelectCount"
+          growing="true" growingThreshold="20" updateFinished=".onUpdateFinished">
+          <headerToolbar>
+            <OverflowToolbar>
+              <Title text="Documentos de Inventario" level="H2"/>
+              <ToolbarSpacer />
+              <SearchField width="20rem" liveChange=".onSearch" />
+              <Button icon="sap-icon://refresh" press=".onRefresh" />
+            </OverflowToolbar>
+          </headerToolbar>
+          <columns>
+            <Column><Text text="N° Documento" /></Column>
+            <Column><Text text="Almacén" /></Column>
+            <Column><Text text="Progreso" /></Column>
+            <Column><Text text="Estado" /></Column>
+            <Column><Text text="Fecha Plan" /></Column>
+            <Column hAlign="End"><Text text="Acciones" /></Column>
+          </columns>
+          <items>
+            <ColumnListItem type="Navigation" press=".onSelectCount">
+              <cells>
+                <ObjectIdentifier title="{inv>count_number}" text="{inv>count_type}" />
+                <Text text="{inv>warehouse_id}" />
+                <ProgressIndicator percentValue="{
+                  parts: [
+                    {path: 'inv>bins_counted'},
+                    {path: 'inv>bins_total'}
+                  ],
+                  formatter: '.formatProgress'
+                }" displayValue="{inv>bins_counted} / {inv>bins_total}" />
+                <ObjectStatus text="{inv>status}" state="{path: 'inv>status', formatter: '.formatStatusState'}" />
+                <Text text="{inv>planned_date}" />
+                <HBox justifyContent="End">
+                  <Button icon="sap-icon://play" type="Accept" tooltip="Activar (LI02N)" 
+                    visible="{= ${inv>status} === 'PLANNED'}" press=".onActivatePress" />
+                  <Button icon="sap-icon://edit" tooltip="Conteo (LI11N)" 
+                    visible="{= ${inv>status} === 'ACTIVE' || ${inv>status} === 'IN_PROGRESS'}" press=".onCountPress" />
+                  <Button icon="sap-icon://accept" type="Accept" tooltip="Liq. WM (LI20)" 
+                    visible="{= ${inv>status} === 'COUNTED'}" press=".onClearWMPress" />
+                  <Button icon="sap-icon://complete" type="Success" tooltip="Liq. IM (LI21)" 
+                    visible="{= ${inv>status} === 'CLEARED_WM'}" press=".onClearIMPress" />
+                </HBox>
+              </cells>
+            </ColumnListItem>
+          </items>
+        </Table>
+
+      </VBox>
+    </content>
+  </Page>
+</mvc:View>

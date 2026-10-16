@@ -1,0 +1,333 @@
+<core:FragmentDefinition
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core"
+    xmlns:layout="sap.ui.layout"
+    xmlns:f="sap.f"
+    xmlns:micro="sap.suite.ui.microchart">
+
+    <VBox class="sapUiNoContentPadding sapUiSmallMarginBottom">
+
+        <!-- ===================================================================
+             1. FRANJA DE 4 TARJETAS KPI (ESTÁNDAR CROMÁTICO FIORI HORIZON)
+             KPI 1: Naranja #e06a3b (Pendientes / OTs Abiertas)
+             KPI 2: Dark Slate #1e293b (Total Base / Bins Totales)
+             KPI 3: Verde #107e3e (Cumplimiento / Ocupabilidad %)
+             KPI 4: Naranja #e06a3b (Alertas / Despacho Pendiente)
+             =================================================================== -->
+        <layout:Grid
+            defaultSpan="XL3 L3 M6 S12"
+            class="kpiGridContainer sapUiTinyMarginBottom"
+            vSpacing="0.5"
+            hSpacing="0.5">
+
+            <!-- KPI 1 (Naranja #e06a3b): Tareas Pendientes / OTs Abiertas -->
+            <f:Card class="kpiCardTile kpi-card">
+                <f:header>
+                    <f:cards.Header
+                        title="{i18n>kpiOpenOt}"
+                        subtitle="LT23 / En Proceso"
+                        iconSrc="sap-icon://workflow-tasks"
+                        statusText="En Cola" />
+                </f:header>
+                <f:content>
+                    <VBox class="sapUiSmallMargin" justifyContent="SpaceBetween">
+                        <HBox alignItems="Baseline" justifyContent="SpaceBetween">
+                            <Text text="{wms>/currentKpi/TotalOpenOt} OTs" class="kpi-value-orange" />
+                            <ObjectStatus
+                                text="Pendiente"
+                                state="Warning"
+                                icon="sap-icon://alert" />
+                        </HBox>
+                        <HBox class="sapUiTinyMarginTop" justifyContent="SpaceBetween">
+                            <Text text="Picking: {wms>/currentKpi/OpenOtPicking}" class="textMuted" />
+                            <Text text="Ubicación: {wms>/currentKpi/OpenOtPutaway}" class="textMuted" />
+                        </HBox>
+                    </VBox>
+                </f:content>
+            </f:Card>
+
+            <!-- KPI 2 (Dark Slate #1e293b): Total Base / Volumen Bins Totales -->
+            <f:Card class="kpiCardTile kpi-card">
+                <f:header>
+                    <f:cards.Header
+                        title="{i18n>kpiTotalPositions}"
+                        subtitle="LX03 / Base Instalada"
+                        iconSrc="sap-icon://inventory"
+                        statusText="Capacidad" />
+                </f:header>
+                <f:content>
+                    <VBox class="sapUiSmallMargin" justifyContent="SpaceBetween">
+                        <HBox alignItems="Baseline" justifyContent="SpaceBetween">
+                            <Text text="{wms>/currentKpi/TotalPositions} Bins" class="kpi-value-slate" />
+                            <ObjectStatus
+                                text="Infraestructura"
+                                state="None" />
+                        </HBox>
+                        <HBox class="sapUiTinyMarginTop" justifyContent="SpaceBetween">
+                            <Text text="Ocupadas: {wms>/currentKpi/OccupiedPositions}" class="textMuted" />
+                            <Text text="Libres: {wms>/currentKpi/FreePositions}" class="textMuted" />
+                        </HBox>
+                    </VBox>
+                </f:content>
+            </f:Card>
+
+            <!-- KPI 3 (Verde #107e3e): Cumplimiento / Ocupabilidad Eficiente % -->
+            <f:Card class="kpiCardTile kpi-card">
+                <f:header>
+                    <f:cards.Header
+                        title="{i18n>kpiOccupancy}"
+                        subtitle="Nivel de Ocupación"
+                        iconSrc="sap-icon://gauge-chart"
+                        statusText="Meta &lt; 90%" />
+                </f:header>
+                <f:content>
+                    <VBox class="sapUiSmallMargin">
+                        <HBox alignItems="Center" justifyContent="SpaceBetween">
+                            <VBox>
+                                <Text text="{wms>/currentKpi/OccupancyRate}%" class="kpi-value-green" />
+                                <Text text="Ventana 7-10: {wms>/currentKpi/Units7to10AmComplianceRate}%" class="textMuted" />
+                            </VBox>
+                            <micro:RadialMicroChart
+                                size="S"
+                                percentage="{wms>/currentKpi/OccupancyRate}"
+                                valueColor="Good" />
+                        </HBox>
+                    </VBox>
+                </f:content>
+            </f:Card>
+
+            <!-- KPI 4 (Naranja #e06a3b): Alertas / Unidades Despacho Pendientes -->
+            <f:Card class="kpiCardTile kpi-card">
+                <f:header>
+                    <f:cards.Header
+                        title="{i18n>kpiDispatchUnits}"
+                        subtitle="VL06F &amp; Drivin"
+                        iconSrc="sap-icon://shipping-status"
+                        statusText="Total: {wms>/currentKpi/ScheduledUnitsCount}" />
+                </f:header>
+                <f:content>
+                    <VBox class="sapUiSmallMargin">
+                        <HBox alignItems="Baseline" justifyContent="SpaceBetween">
+                            <Text text="{wms>/currentKpi/PendingUnitsCount} Pendientes" class="kpi-value-orange" />
+                            <ObjectStatus
+                                text="En Riesgo"
+                                state="Warning"
+                                icon="sap-icon://fob-watch" />
+                        </HBox>
+                        <ProgressIndicator
+                            percentValue="{= Math.round((${wms>/currentKpi/LoadedUnitsCount} / ${wms>/currentKpi/ScheduledUnitsCount}) * 100) }"
+                            displayValue="{wms>/currentKpi/LoadedUnitsCount} cargadas ({= Math.round((${wms>/currentKpi/LoadedUnitsCount} / ${wms>/currentKpi/ScheduledUnitsCount}) * 100) }%)"
+                            state="Information"
+                            class="sapUiTinyMarginTop" />
+                        <HBox justifyContent="SpaceBetween" class="sapUiTinyMarginTop">
+                            <Text text="En proceso: {wms>/currentKpi/InProcessUnitsCount}" class="textMuted" />
+                            <Text text="Cargadas: {wms>/currentKpi/LoadedUnitsCount}" class="textMuted" />
+                        </HBox>
+                    </VBox>
+                </f:content>
+            </f:Card>
+        </layout:Grid>
+
+        <!-- ===================================================================
+             2. SECCIÓN MEDIA: PRODUCTIVIDAD OPERARIOS + OTs PENDIENTES
+             =================================================================== -->
+        <layout:Grid
+            defaultSpan="XL6 L6 M12 S12"
+            class="sapUiTinyMarginBottom"
+            vSpacing="0.5"
+            hSpacing="0.5">
+
+            <!-- Panel Izquierdo: Productividad de Operarios -->
+            <Panel
+                headerText="{i18n>secProductivity}"
+                expandable="false"
+                class="contentPanel customShadowPanel">
+                <headerToolbar>
+                    <Toolbar>
+                        <core:Icon src="sap-icon://user-settings" />
+                        <Title text="{i18n>secProductivity}" level="H3" />
+                        <ToolbarSpacer />
+                        <SearchField
+                            width="180px"
+                            placeholder="Buscar operario..."
+                            liveChange=".onSearchOperario" />
+                    </Toolbar>
+                </headerToolbar>
+                <Table
+                    id="tableOperarios"
+                    items="{wms>/operarios}"
+                    inset="false"
+                    noDataText="No hay registros de operarios activos"
+                    growing="true"
+                    growingThreshold="6"
+                    class="sapUiNoContentPadding">
+                    <columns>
+                        <Column><Text text="{i18n>colOperario}" fontBold="true" /></Column>
+                        <Column minScreenWidth="Tablet" demandPopin="true"><Text text="{i18n>colTurno}" /></Column>
+                        <Column hAlign="End"><Text text="{i18n>colLineasHora}" fontBold="true" /></Column>
+                        <Column hAlign="Center" width="110px"><Text text="{i18n>colCumplimiento}" /></Column>
+                        <Column hAlign="Center" width="80px"><Text text="Estado" /></Column>
+                    </columns>
+                    <items>
+                        <ColumnListItem>
+                            <cells>
+                                <VBox>
+                                    <Text text="{wms>operario}" fontBold="true" />
+                                    <Text text="{wms>sede} · {wms>proceso}" class="textMuted sapUiTinyMarginTop" />
+                                </VBox>
+                                <Text text="{wms>turno}" />
+                                <VBox alignItems="End">
+                                    <Text text="{wms>lineasHora} lín/h" fontBold="true" />
+                                    <Text text="Meta: {wms>meta} lín/h" class="textMuted" />
+                                </VBox>
+                                <ProgressIndicator
+                                    percentValue="{wms>cumplimiento}"
+                                    displayValue="{wms>cumplimiento}%"
+                                    state="{wms>status}" />
+                                <ObjectStatus
+                                    text="{= ${wms>cumplimiento} >= 100 ? 'Óptimo' : (${wms>cumplimiento} >= 80 ? 'Alerta' : 'Bajo') }"
+                                    state="{wms>status}"
+                                    inverted="true" />
+                            </cells>
+                        </ColumnListItem>
+                    </items>
+                </Table>
+            </Panel>
+
+            <!-- Panel Derecho: Trabajo Pendiente por Proceso (LT23) -->
+            <Panel
+                headerText="{i18n>secPendingOt}"
+                expandable="false"
+                class="contentPanel customShadowPanel">
+                <headerToolbar>
+                    <Toolbar>
+                        <core:Icon src="sap-icon://workflow-tasks" />
+                        <Title text="{i18n>secPendingOt}" level="H3" />
+                        <ToolbarSpacer />
+                        <Badge
+                            text="Total OTs: {wms>/currentKpi/TotalOpenOt}"
+                            state="Warning" />
+                    </Toolbar>
+                </headerToolbar>
+                <VBox class="sapUiSmallMargin">
+                    <List items="{wms>/procesosOT}" class="sapUiNoContentPadding">
+                        <CustomListItem class="processOtListItem">
+                            <VBox class="sapUiSmallMarginTopBottom sapUiSmallMarginBeginEnd">
+                                <HBox justifyContent="SpaceBetween" alignItems="Center">
+                                    <HBox alignItems="Center">
+                                        <core:Icon
+                                            src="{= ${wms>criticidad} === 'Error' ? 'sap-icon://alert' : (${wms>criticidad} === 'Warning' ? 'sap-icon://message-warning' : 'sap-icon://sys-enter-2') }"
+                                            class="sapUiTinyMarginEnd" />
+                                        <Text text="{wms>proceso}" fontBold="true" />
+                                    </HBox>
+                                    <HBox alignItems="Center">
+                                        <Text text="{wms>abiertas} OTs abiertas" fontBold="true" class="sapUiTinyMarginEnd" />
+                                        <ObjectStatus
+                                            text="{wms>estadoTexto}"
+                                            state="{wms>criticidad}"
+                                            inverted="true" />
+                                    </HBox>
+                                </HBox>
+                                <ProgressIndicator
+                                    percentValue="{wms>saturacion}"
+                                    displayValue="Saturación: {wms>saturacion}% ({wms>tiempoPromedio} prom.)"
+                                    state="{wms>criticidad}"
+                                    class="sapUiTinyMarginTop sapUiTinyMarginBottom" />
+                                <HBox justifyContent="SpaceBetween">
+                                    <Text text="Procesadas hoy: {wms>procesadas} OTs" class="textMuted" />
+                                    <Text text="Ciclo promedio: {wms>tiempoPromedio}" class="textMuted" />
+                                </HBox>
+                            </VBox>
+                        </CustomListItem>
+                    </List>
+                </VBox>
+            </Panel>
+        </layout:Grid>
+
+        <!-- ===================================================================
+             3. SECCIÓN INFERIOR: TABLA DE UNIDADES DE DESPACHO (VL06F / DRIVIN)
+             =================================================================== -->
+        <Panel
+            headerText="{i18n>secTransportUnits}"
+            expandable="false"
+            class="contentPanel customShadowPanel sapUiTinyMarginBottom">
+            <headerToolbar>
+                <Toolbar>
+                    <core:Icon src="sap-icon://cargo-train" />
+                    <Title text="{i18n>secTransportUnits}" level="H3" />
+                    <ToolbarSpacer />
+                    <SearchField
+                        width="240px"
+                        placeholder="Filtrar por placa o destino..."
+                        liveChange=".onSearchTransporte" />
+                    <Select
+                        id="selectStatusTransporte"
+                        change=".onFilterStatusTransporte"
+                        width="160px">
+                        <core:Item key="ALL" text="Todos los Estados" />
+                        <core:Item key="Cargada" text="Cargada" />
+                        <core:Item key="En Proceso" text="En Proceso" />
+                        <core:Item key="Pendiente" text="Pendiente" />
+                    </Select>
+                </Toolbar>
+            </headerToolbar>
+            <Table
+                id="tableTransportes"
+                items="{wms>/unidadesTransporte}"
+                inset="false"
+                noDataText="No se encontraron unidades de transporte"
+                growing="true"
+                growingThreshold="10">
+                <columns>
+                    <Column width="110px"><Text text="{i18n>colPlaca}" fontBold="true" /></Column>
+                    <Column minScreenWidth="Tablet" demandPopin="true"><Text text="{i18n>colTransportista}" /></Column>
+                    <Column><Text text="{i18n>colDestino}" fontBold="true" /></Column>
+                    <Column width="110px" hAlign="Center"><Text text="{i18n>colEstatus}" /></Column>
+                    <Column width="95px" hAlign="Center"><Text text="{i18n>colHoraPlan}" /></Column>
+                    <Column width="95px" hAlign="Center"><Text text="{i18n>colHoraReal}" /></Column>
+                    <Column width="90px" hAlign="Center"><Text text="{i18n>colDemora}" /></Column>
+                    <Column width="130px" hAlign="Center"><Text text="{i18n>colVentana710}" /></Column>
+                    <Column width="85px" hAlign="End"><Text text="{i18n>colBultos}" /></Column>
+                    <Column width="85px" hAlign="End"><Text text="{i18n>colPesoTN}" /></Column>
+                    <Column width="100px" hAlign="Center"><Text text="{i18n>colAcciones}" /></Column>
+                </columns>
+                <items>
+                    <ColumnListItem>
+                        <cells>
+                            <VBox>
+                                <Text text="{wms>PlacaVehiculo}" fontBold="true" />
+                                <Text text="{wms>TransportUnitId}" class="textMuted" />
+                            </VBox>
+                            <Text text="{wms>Transportista}" />
+                            <VBox>
+                                <Text text="{wms>Destino}" fontBold="true" />
+                                <Text text="{wms>Rampa} · Entrega #{wms>DocumentoEntrega}" class="textMuted" />
+                            </VBox>
+                            <ObjectStatus
+                                text="{wms>EstatusTransporte}"
+                                state="{wms>StatusCriticality}"
+                                inverted="true" />
+                            <Text text="{wms>HoraPlanificadaSalida}" />
+                            <Text text="{wms>HoraRealSalida}" />
+                            <ObjectStatus
+                                text="{= ${wms>DemoraMinutos} > 0 ? '+' + ${wms>DemoraMinutos} + ' min' : 'Puntual' }"
+                                state="{= ${wms>DemoraMinutos} === 0 ? 'Success' : (${wms>DemoraMinutos} &lt;= 30 ? 'Warning' : 'Error') }" />
+                            <ObjectStatus
+                                text="{= ${wms>CumpleVentana7a10} ? 'Cumple (7-10h)' : 'Fuera Ventana' }"
+                                state="{wms>VentanaCriticality}"
+                                icon="{= ${wms>CumpleVentana7a10} ? 'sap-icon://accept' : 'sap-icon://decline' }" />
+                            <Text text="{wms>BultosTotal}" />
+                            <Text text="{wms>PesoTotalTN} TN" fontBold="true" />
+                            <Button
+                                text="Detalle"
+                                icon="sap-icon://hint"
+                                type="Transparent"
+                                press=".onOpenUnitDetail" />
+                        </cells>
+                    </ColumnListItem>
+                </items>
+            </Table>
+        </Panel>
+
+    </VBox>
+</core:FragmentDefinition>

@@ -1,0 +1,224 @@
+<mvc:View
+  controllerName="wm.light.controller.App"
+  xmlns:mvc="sap.ui.core.mvc"
+  xmlns="sap.m"
+  xmlns:tnt="sap.tnt"
+  xmlns:core="sap.ui.core"
+  displayBlock="true">
+
+  <tnt:ToolPage id="toolPage" sideExpanded="{app>/sideNavExpanded}" visible="{= !!${app>/token} }">
+
+    <!-- ── Shell Header ──────────────────────────────── -->
+    <tnt:header>
+      <tnt:ToolHeader class="fioriBlueHeader">
+
+        <Button icon="sap-icon://menu2" type="Transparent"
+          tooltip="Menú" press=".onToggleNav" />
+
+        <Button icon="sap-icon://nav-back" text="Home" type="Transparent"
+          tooltip="Volver al Launchpad" press=".onGoHome" />
+
+        <Title text="SAP WMS - SRM FIORI" titleStyle="H5"
+          class="sapUiSmallMarginBegin sapUiSmallMarginEnd" />
+
+        <ToolbarSeparator />
+
+        <SearchField id="shellSearch" width="18rem"
+          placeholder="Buscar material, TO, ubicación…"
+          liveChange=".onSearch" />
+
+        <ToolbarSpacer />
+
+        <Button id="btnChatbot" icon="sap-icon://customer-and-contacts" type="Transparent"
+          tooltip="Asistente WM (SAP Joule WMS)" press=".onToggleChatbot" />
+        <Button icon="sap-icon://bell" type="Transparent"
+          tooltip="Notificaciones" press=".onNotifications" />
+        <Button icon="sap-icon://action-settings" type="Transparent"
+          tooltip="Administración" press=".onSettings" />
+
+        <ToolbarSeparator />
+
+        <Avatar id="userAvatar"
+          initials="{app>/user/initials}"
+          displayShape="Circle"
+          displaySize="S"
+          press=".onUserMenu"
+          tooltip="{app>/user/name}" />
+
+      </tnt:ToolHeader>
+    </tnt:header>
+
+    <!-- ── Side Navigation ───────────────────────────── -->
+    <tnt:sideContent>
+      <tnt:SideNavigation id="sideNav" itemSelect=".onNavSelect">
+
+        <tnt:item>
+          <tnt:NavigationList>
+
+            <!-- Home y Dashboard -->
+            <tnt:NavigationListItem text="Inicio"
+              icon="sap-icon://home" key="home" />
+            <tnt:NavigationListItem text="Dashboard"
+              icon="sap-icon://manager-insight" key="dashboard" />
+            <tnt:NavigationListItem text="KPIs (Indicadores)"
+              icon="sap-icon://kpi-managing-my-area" key="kpi" />
+
+            <!-- Operaciones (grupo con hijos) -->
+            <tnt:NavigationListItem text="Operaciones"
+              icon="sap-icon://action" expanded="true">
+              <tnt:NavigationListItem text="Entrada de Mercancía"
+                icon="sap-icon://factory" key="goodsReceipt" />
+              <tnt:NavigationListItem text="Salida de Mercancía"
+                icon="sap-icon://shipping-status" key="goodsIssue" />
+              <tnt:NavigationListItem text="Órdenes de Traslado"
+                icon="sap-icon://transfer" key="transferOrders" />
+              <tnt:NavigationListItem text="Toma de Inventario"
+                icon="sap-icon://inspection" key="inventory" />
+              <tnt:NavigationListItem text="Gestión de Patios"
+                icon="sap-icon://fob-watch" key="yard" />
+              <tnt:NavigationListItem text="Stock"
+                icon="sap-icon://inventory" key="stock" />
+              <tnt:NavigationListItem text="LMS Dashboard"
+                icon="sap-icon://performance" key="lmsDashboard" />
+              <tnt:NavigationListItem text="Slotting Inteligente"
+                icon="sap-icon://combine" key="slottingDashboard" />
+              <tnt:NavigationListItem text="Layout Virtual 2D"
+                icon="sap-icon://sys-monitor" key="layout2d" />
+            </tnt:NavigationListItem>
+
+            <!-- Radiofrecuencia -->
+            <tnt:NavigationListItem text="Radiofrecuencia (Zebra RF TC57)"
+              icon="sap-icon://rfid" key="rfMain" expanded="false">
+            </tnt:NavigationListItem>
+
+            <!-- Impresión de Rótulos (Grupo) -->
+            <tnt:NavigationListItem text="Impresión de Rótulos"
+              icon="sap-icon://print" expanded="true">
+              <tnt:NavigationListItem text="Etiqueta de Ingreso"
+                icon="sap-icon://header" key="labelPrint" />
+              <tnt:NavigationListItem text="Etiqueta SENASA"
+                icon="sap-icon://shipping-status" key="senasaPrint" />
+              <tnt:NavigationListItem text="Etiqueta de Despacho"
+                icon="sap-icon://car-rental" key="dispatchPrint" />
+            </tnt:NavigationListItem>
+
+            <!-- Maestros -->
+            <tnt:NavigationListItem text="Maestros"
+              icon="sap-icon://product" expanded="false">
+              <tnt:NavigationListItem text="Materiales"
+                icon="sap-icon://product" key="materials" />
+              <tnt:NavigationListItem text="{i18n>navLocations}"
+                icon="sap-icon://database" key="locations" />
+            </tnt:NavigationListItem>
+
+            <!-- Configuración -->
+            <tnt:NavigationListItem text="Configuración"
+              icon="sap-icon://action-settings" expanded="true">
+              <tnt:NavigationListItem text="Número de almacén"
+                icon="sap-icon://building" key="configWarehouse" />
+              <tnt:NavigationListItem text="Clases de movimiento"
+                icon="sap-icon://shipping-status" key="configMovement" />
+            </tnt:NavigationListItem>
+
+          </tnt:NavigationList>
+        </tnt:item>
+
+        <!-- Admin fijo en el fondo -->
+        <tnt:fixedItem>
+          <tnt:NavigationList>
+            <tnt:NavigationListItem text="Administración"
+              icon="sap-icon://action-settings" key="admin" />
+          </tnt:NavigationList>
+        </tnt:fixedItem>
+
+      </tnt:SideNavigation>
+    </tnt:sideContent>
+
+    <!-- ── Main Content ───────────────────────────────── -->
+    <tnt:mainContents>
+      <NavContainer id="appNav" class="mainAppNavContainer {= ${app>/chatbotExpanded} ? 'chatbot-expanded-nav' : '' }" />
+      
+      <!-- Chatbot Sidebar companion panel alineado a la derecha -->
+      <VBox id="chatbotSidebar" width="390px" visible="{= ${app>/chatbotExpanded} === true }" class="chatbotSidebarPanel">
+        <!-- Header Bar de la Cabecera -->
+        <Bar class="chatbotSidebarHeader">
+          <contentLeft>
+            <core:Icon src="sap-icon://customer-and-contacts" size="1.25rem" color="#0064d9" class="sapUiTinyMarginBegin sapUiTinyMarginEnd" />
+            <Title text="SAP Joule WMS" titleStyle="H5" class="portalJouleTitle" />
+          </contentLeft>
+          <contentRight>
+            <Button icon="sap-icon://refresh" type="Transparent" press=".onClearChat" tooltip="Reiniciar conversación" />
+            <Button icon="sap-icon://decline" type="Transparent" press=".onToggleChatbot" tooltip="Cerrar SAP Joule WMS" />
+          </contentRight>
+        </Bar>
+        
+        <!-- Panel de Contenido -->
+        <VBox height="100%" justifyContent="SpaceBetween" class="sapUiContentPadding">
+          
+          <!-- Chips de Sugerencias Rápidas -->
+          <HBox wrap="Wrap" class="sapUiTinyMarginBottom">
+            <Button text="📦 Stock Material" type="Transparent" size="Small" press=".onQuickQuestion" class="sapUiTinyMarginEnd sapUiTinyMarginBottom portalChipBtn" />
+            <Button text="📋 Órdenes OT" type="Transparent" size="Small" press=".onQuickQuestion" class="sapUiTinyMarginEnd sapUiTinyMarginBottom portalChipBtn" />
+            <Button text="📊 Ocupación Almacén" type="Transparent" size="Small" press=".onQuickQuestion" class="sapUiTinyMarginEnd sapUiTinyMarginBottom portalChipBtn" />
+            <Button text="🔄 Inventario WM" type="Transparent" size="Small" press=".onQuickQuestion" class="sapUiTinyMarginBottom portalChipBtn" />
+          </HBox>
+
+          <!-- Scroll de Mensajes -->
+          <ScrollContainer
+            id="chatScrollContainer"
+            vertical="true"
+            horizontal="false"
+            focusable="true"
+            class="chatScrollContainer">
+            <List id="chatList" items="{chatModel>/messages}" showSeparators="None">
+              <CustomListItem>
+                <HBox class="sapUiTinyMarginBottom"
+                  justifyContent="{= ${chatModel>sender} === 'bot' ? 'Start' : 'End' }">
+                  
+                  <!-- Bot Avatar -->
+                  <Avatar
+                    visible="{= ${chatModel>sender} === 'bot' }"
+                    src="sap-icon://customer-and-contacts"
+                    displayShape="Circle"
+                    displaySize="XS"
+                    class="sapUiTinyMarginEnd" />
+                    
+                  <!-- Message Bubble -->
+                  <VBox class="{= ${chatModel>sender} === 'bot' ? 'portalBotBubble' : 'portalUserBubble' }" style="max-width: 84%;">
+                    <FormattedText htmlText="{chatModel>text}" />
+                    <Text text="{chatModel>timestamp}" style="font-size: 10px; color: #888;" class="sapUiTinyMarginTop" />
+                  </VBox>
+                  
+                </HBox>
+              </CustomListItem>
+            </List>
+          </ScrollContainer>
+          
+          <!-- Input Footer Ampliado para escribir a la IA -->
+          <HBox alignItems="Center" width="100%" class="chatbotSidebarFooter portalIaInputContainer">
+            <Input
+              id="chatInput"
+              placeholder="Pregúntame algo... (ej: stock de Switch o OTs abiertas)"
+              value="{chatModel>/inputValue}"
+              submit=".onSendChatMessage"
+              width="100%"
+              class="portalIaInput">
+              <layoutData>
+                <FlexItemData growFactor="1" />
+              </layoutData>
+            </Input>
+            <Button
+              icon="sap-icon://paper-plane"
+              type="Emphasized"
+              press=".onSendChatMessage"
+              tooltip="Enviar a SAP Joule WMS"
+              class="portalIaSendBtn sapUiTinyMarginBegin" />
+          </HBox>
+        </VBox>
+      </VBox>
+
+    </tnt:mainContents>
+
+  </tnt:ToolPage>
+
+</mvc:View>

@@ -1,0 +1,57 @@
+<core:FragmentDefinition
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core"
+    xmlns:u="sap.ui.unified">
+    <Dialog
+        id="batchUploadDialog"
+        title="{i18n>dialogBatchTitle}"
+        contentWidth="600px"
+        icon="sap-icon://excel-attachment">
+        <content>
+            <VBox class="sapUiMediumMargin">
+                <Text text="Seleccione o arrastre un archivo Excel (.xlsx, .csv) con la estructura estándar de tipos de cambio TCURR (KURST, FCURR, TCURR, ValidFrom, RateBuy, RateSell)." class="sapUiSmallMarginBottom"/>
+                
+                <u:FileUploader
+                    id="fileUploader"
+                    name="fxUploader"
+                    uploadUrl="upload/"
+                    width="100%"
+                    tooltip="Seleccione archivo CSV o Excel"
+                    uploadComplete="onBatchUploadComplete"
+                    change="onFileSelected"
+                    typeMissmatch="onFileTypeMismatch"
+                    style="Emphasized"
+                    fileType="csv,xlsx,xls"
+                    placeholder="Elegir archivo .csv o .xlsx..."/>
+
+                <MessageStrip
+                    id="batchMessageStrip"
+                    text="Plantilla SAP recomendada: Formato de Fecha AAAA-MM-DD, separador por comas."
+                    type="Information"
+                    showIcon="true"
+                    class="sapUiSmallMarginTop"/>
+
+                <Table id="batchPreviewTable" headerText="Vista Previa de Registros a Inyectar (TCURR / OB08)" visible="false" class="sapUiSmallMarginTop">
+                    <columns>
+                        <Column><Text text="KURST"/></Column>
+                        <Column><Text text="FCURR"/></Column>
+                        <Column><Text text="TCURR"/></Column>
+                        <Column><Text text="Fecha"/></Column>
+                        <Column><Text text="Tasa Compra"/></Column>
+                        <Column><Text text="Tasa Venta"/></Column>
+                        <Column><Text text="Estado"/></Column>
+                    </columns>
+                    <items>
+                        <!-- Dynamic items -->
+                    </items>
+                </Table>
+            </VBox>
+        </content>
+        <beginButton>
+            <Button id="btnConfirmBatch" text="Procesar E Inyectar a TCURR" type="Emphasized" icon="sap-icon://upload-to-cloud" press="onExecuteBatchUpload" enabled="false"/>
+        </beginButton>
+        <endButton>
+            <Button text="{i18n>btnCancel}" press="onCloseBatchUploadDialog"/>
+        </endButton>
+    </Dialog>
+</core:FragmentDefinition>

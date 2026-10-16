@@ -1,0 +1,153 @@
+{
+  "_version": "1.32.0",
+  "sap.app": {
+    "id": "sap.crm.customerportal",
+    "type": "application",
+    "i18n": "i18n/i18n.properties",
+    "applicationVersion": {
+      "version": "1.1.0"
+    },
+    "title": "{{appTitle}}",
+    "description": "{{appDescription}}"
+  },
+  "sap.ui": {
+    "technology": "UI5",
+    "icons": {
+      "icon": "sap-icon://customer",
+      "favIcon": ""
+    },
+    "deviceTypes": {
+      "desktop": true,
+      "tablet": true,
+      "phone": true
+    }
+  },
+  "sap.ui5": {
+    "rootView": {
+      "viewName": "sap.crm.customerportal.view.App",
+      "type": "XML",
+      "async": true,
+      "id": "appRootView"
+    },
+    "dependencies": {
+      "minUI5Version": "1.90.0",
+      "libs": {
+        "sap.m": {},
+        "sap.f": {},
+        "sap.tnt": {},
+        "sap.ui.layout": {},
+        "sap.ui.unified": {},
+        "sap.ui.table": {},
+        "sap.ui.core": {}
+      }
+    },
+    "contentDensities": {
+      "compact": true,
+      "cozy": false
+    },
+    "models": {
+      "i18n": {
+        "type": "sap.ui.model.resource.ResourceModel",
+        "settings": {
+          "bundleName": "sap.crm.customerportal.i18n.i18n",
+          "supportedLocales": ["es", ""],
+          "fallbackLocale": "es"
+        }
+      }
+    },
+    "resources": {
+      "css": [
+        {
+          "uri": "css/style.css"
+        }
+      ]
+    },
+    "routing": {
+      "config": {
+        "routerClass": "sap.m.routing.Router",
+        "viewType": "XML",
+        "viewPath": "sap.crm.customerportal.view",
+        "controlId": "rootNavContainer",
+        "controlAggregation": "pages",
+        "transition": "slide",
+        "async": true
+      },
+      "routes": [
+        {
+          "name": "dashboard",
+          "pattern": "",
+          "target": "dashboardTarget"
+        },
+        {
+          "name": "sales",
+          "pattern": "sales",
+          "target": "salesTarget"
+        },
+        {
+          "name": "service",
+          "pattern": "service",
+          "target": "serviceTarget"
+        },
+        {
+          "name": "prm",
+          "pattern": "prm",
+          "target": "prmTarget"
+        },
+        {
+          "name": "community",
+          "pattern": "community",
+          "target": "communityTarget"
+        },
+        {
+          "name": "builder",
+          "pattern": "builder",
+          "target": "builderTarget"
+        },
+        {
+          "name": "profile",
+          "pattern": "profile",
+          "target": "profileTarget"
+        },
+        {
+          "name": "integration",
+          "pattern": "integration",
+          "target": "integrationTarget"
+        }
+      ],
+      "targets": {
+        "dashboardTarget": {
+          "viewName": "Dashboard",
+          "viewLevel": 1
+        },
+        "salesTarget": {
+          "viewName": "Sales",
+          "viewLevel": 2
+        },
+        "serviceTarget": {
+          "viewName": "Service",
+          "viewLevel": 2
+        },
+        "prmTarget": {
+          "viewName": "Prm",
+          "viewLevel": 2
+        },
+        "communityTarget": {
+          "viewName": "Community",
+          "viewLevel": 2
+        },
+        "builderTarget": {
+          "viewName": "Builder",
+          "viewLevel": 2
+        },
+        "profileTarget": {
+          "viewName": "Profile",
+          "viewLevel": 2
+        },
+        "integrationTarget": {
+          "viewName": "Integration",
+          "viewLevel": 2
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,30 @@
+<core:FragmentDefinition
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core"
+>
+    <SelectDialog
+        id="propietarioSelectDialog"
+        title="Buscar Vendedor"
+        class="sapUiPopupWithPadding"
+        items="{localVendedorModel>/items}"
+        search=".handlePropietarioSearch"
+        liveChange=".handlePropietarioSearch"
+        confirm=".handlePropietarioClose"
+        cancel=".handlePropietarioClose"
+        growing="true"
+        growingThreshold="20"
+    >
+        <CustomListItem>
+            <HBox
+                width="100%"
+                alignItems="Center"
+                class="sapUiSmallMarginBeginEnd sapUiTinyMarginTopBottom"
+            >
+                <ObjectIdentifier
+                    title="{localVendedorModel>Partner}"
+                    text="{localVendedorModel>Poblacion}"
+                />
+            </HBox>
+        </CustomListItem>
+    </SelectDialog>
+</core:FragmentDefinition>

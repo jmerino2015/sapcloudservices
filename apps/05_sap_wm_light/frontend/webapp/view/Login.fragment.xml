@@ -1,0 +1,81 @@
+<core:FragmentDefinition
+  xmlns:core="sap.ui.core"
+  xmlns="sap.m">
+
+  <Dialog
+    id="loginDialog"
+    title="SAP WMS / SRM"
+    titleAlignment="Center"
+    contentWidth="22rem"
+    draggable="false"
+    resizable="false"
+    escapeHandler=".onLoginEscapeHandler">
+
+    <content>
+      <VBox class="sapUiSmallMargin">
+
+        <!-- Logo area -->
+        <FlexBox justifyContent="Center" class="sapUiMediumMarginBottom">
+          <VBox alignItems="Center">
+            <Avatar
+              src="sap-icon://warehouse"
+              displayShape="Square"
+              size="L"
+              backgroundColor="Accent5" />
+            <Title text="Warehouse Management" titleStyle="H5" class="sapUiTinyMarginTop" />
+            <Label text="Sistema de Gestión de Almacenes" />
+          </VBox>
+        </FlexBox>
+
+        <!-- Form -->
+        <Label text="{i18n>loginUser}" labelFor="dlgUser" required="true" />
+        <Input
+          id="dlgUser"
+          value="admin"
+          placeholder="{i18n>loginUserPlaceholder}"
+          type="Email"
+          width="100%"
+          submit=".onLogin"
+          class="sapUiTinyMarginBottom" />
+
+        <Label text="{i18n>loginPassword}" labelFor="dlgPass" required="true" />
+        <Input
+          id="dlgPass"
+          value="admin"
+          type="Password"
+          width="100%"
+          submit=".onLogin"
+          class="sapUiTinyMarginBottom" />
+
+        <!-- Error strip -->
+        <MessageStrip
+          id="loginErrorStrip"
+          text="{i18n>loginError}"
+          type="Error"
+          showIcon="true"
+          visible="{app>/loginError}"
+          class="sapUiTinyMarginTop" />
+
+        <!-- Server status -->
+        <FlexBox justifyContent="Center" class="sapUiTinyMarginTop">
+          <ObjectStatus
+            text="{i18n>loginConnected}"
+            state="Success"
+            icon="sap-icon://connected" />
+        </FlexBox>
+
+      </VBox>
+    </content>
+
+    <beginButton>
+      <Button
+        id="loginBtn"
+        text="{i18n>loginBtn}"
+        type="Emphasized"
+        icon="sap-icon://log"
+        press=".onLogin" />
+    </beginButton>
+
+  </Dialog>
+
+</core:FragmentDefinition>

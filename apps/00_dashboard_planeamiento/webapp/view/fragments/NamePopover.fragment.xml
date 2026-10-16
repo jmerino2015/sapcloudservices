@@ -1,0 +1,43 @@
+<core:FragmentDefinition
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core"
+    xmlns:form="sap.ui.layout.form">
+    <Popover
+        placement="Auto"
+        title="Resumen del Lead"
+        class="sapUiContentPadding"
+        contentWidth="20rem">
+        
+        <customHeader>
+            <Bar>
+                <contentLeft>
+                    <core:Icon src="sap-icon://lead" class="sapUiTinyMarginEnd"/>
+                    <Title text="{popoverModel>/Nombre}" level="H4"/>
+                </contentLeft>
+            </Bar>
+        </customHeader>
+
+        <content>
+            <VBox class="sapUiSmallMargin">
+                <form:SimpleForm editable="false" layout="ResponsiveGridLayout" labelSpanXL="5" labelSpanL="5" labelSpanM="5" labelSpanS="12">
+                    <form:content>
+                        <Label text="ID" design="Bold"/>
+                        <Text text="{popoverModel>/LeadID}"/>
+
+                        <Label text="Empresa" design="Bold"/>
+                        <Text text="{popoverModel>/Empresa}"/>
+
+                        <Label text="Contacto" design="Bold"/>
+                        <Text text="{popoverModel>/NombreContacto} {popoverModel>/ApellidoContacto}"/>
+
+                        <Label text="Nivel" design="Bold"/>
+                        <ObjectStatus text="{popoverModel>/NivelCalificacion}" state="Information"/>
+
+                        <Label text="Nota" design="Bold"/>
+                        <Text text="{popoverModel>/Nota}" maxLines="3"/>
+                    </form:content>
+                </form:SimpleForm>
+            </VBox>
+        </content>
+    </Popover>
+</core:FragmentDefinition>

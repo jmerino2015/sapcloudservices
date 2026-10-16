@@ -1,0 +1,325 @@
+<mvc:View
+    controllerName="com.droidconsulting.scm.fxmanager.controller.Main"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core"
+    xmlns:l="sap.ui.layout">
+
+    <Page id="mainViewPage" showHeader="true" enableScrolling="true">
+        <customHeader>
+            <OverflowToolbar>
+                <core:Icon src="sap-icon://money-bills" size="1.8rem" color="#0050ef" class="sapUiSmallMarginBegin"/>
+                <Title text="{i18n>titleHeader}" level="H2"/>
+                <ToolbarSpacer/>
+                <Button icon="sap-icon://synchronize" press="onOpenSyncConfigDialog" text="{i18n>btnSync}" type="Emphasized"/>
+                <Button icon="sap-icon://add-process" press="onOpenCreateRateDialog" text="{i18n>btnNewRate}" type="Default"/>
+                <Button icon="sap-icon://excel-attachment" press="onOpenBatchUploadDialog" text="{i18n>btnBatchUpload}" type="Default"/>
+                <Button icon="sap-icon://simulate" press="onSwitchToSimulatorTab" text="{i18n>btnSimulate}" type="Ghost"/>
+                <Button icon="sap-icon://excel-tab-strip" press="onExportExcel" tooltip="{i18n>btnExport}"/>
+            </OverflowToolbar>
+        </customHeader>
+
+        <content>
+            <!-- KPI Header Cards Section -->
+            <HBox justifyContent="SpaceAround" wrap="Wrap" class="fxKpiHeaderBox sapUiSmallMarginBottom">
+                <VBox width="260px" class="sapUiTinyMargin sapUiMediumPadding fxKpiBox">
+                    <HBox alignItems="Center" class="sapUiTinyMarginBottom">
+                        <core:Icon src="sap-icon://accept" size="1.2rem" color="#107e3e" class="sapUiTinyMarginEnd"/>
+                        <VBox>
+                            <Text text="{i18n>titleKPI1}" class="sapUiTinyMarginBottom"/>
+                            <Text text="{i18n>subtitleKPI1}"/>
+                        </VBox>
+                    </HBox>
+                    <Title level="H2" state="{/KPIs/syncState}" text="{/KPIs/syncStatus}"/>
+                    <Text text="{/KPIs/syncSubtext}" class="sapUiTinyMarginTop"/>
+                </VBox>
+
+                <VBox width="260px" class="sapUiTinyMargin sapUiMediumPadding fxKpiBox">
+                    <HBox alignItems="Center" class="sapUiTinyMarginBottom">
+                        <core:Icon src="sap-icon://line-chart" size="1.2rem" color="#0050ef" class="sapUiTinyMarginEnd"/>
+                        <VBox>
+                            <Text text="{i18n>titleKPI2}" class="sapUiTinyMarginBottom"/>
+                            <Text text="{i18n>subtitleKPI2}"/>
+                        </VBox>
+                    </HBox>
+                    <Title level="H2" state="{/KPIs/deviationState}" text="{/KPIs/deviation}"/>
+                    <Text text="{/KPIs/deviationSubtext}" class="sapUiTinyMarginTop"/>
+                </VBox>
+
+                <VBox width="260px" class="sapUiTinyMargin sapUiMediumPadding fxKpiBox">
+                    <HBox alignItems="Center" class="sapUiTinyMarginBottom">
+                        <core:Icon src="sap-icon://alert" size="1.2rem" color="#107e3e" class="sapUiTinyMarginEnd"/>
+                        <VBox>
+                            <Text text="{i18n>titleKPI3}" class="sapUiTinyMarginBottom"/>
+                            <Text text="{i18n>subtitleKPI3}"/>
+                        </VBox>
+                    </HBox>
+                    <Title level="H2" state="{/KPIs/migoState}" text="{/KPIs/migoBlocks}"/>
+                    <Text text="{/KPIs/migoSubtext}" class="sapUiTinyMarginTop"/>
+                </VBox>
+
+                <VBox width="260px" class="sapUiTinyMargin sapUiMediumPadding fxKpiBox">
+                    <HBox alignItems="Center" class="sapUiTinyMarginBottom">
+                        <core:Icon src="sap-icon://world" size="1.2rem" color="#555555" class="sapUiTinyMarginEnd"/>
+                        <VBox>
+                            <Text text="{i18n>titleKPI4}" class="sapUiTinyMarginBottom"/>
+                            <Text text="{i18n>subtitleKPI4}"/>
+                        </VBox>
+                    </HBox>
+                    <Title level="H2" state="{/KPIs/currencyState}" text="{/KPIs/currencyPairs}"/>
+                    <Text text="{/KPIs/currencySubtext}" class="sapUiTinyMarginTop"/>
+                </VBox>
+            </HBox>
+
+            <!-- Main IconTabBar -->
+            <IconTabBar id="mainIconTabBar" expanded="true" class="sapUiNoContentPadding" select="onTabSelect">
+                <items>
+                    <!-- TAB 1: MONITOR & GESTION TCURR -->
+                    <IconTabFilter id="tabFilterTCURR" icon="sap-icon://table-view" text="{i18n>tabMonitor}" key="TCURR">
+                        <VBox class="sapUiSmallMargin">
+                            <!-- Filter Bar Panel -->
+                            <Panel expandable="true" expanded="true" headerText="Filtros Globales de Cotizaciones (Sociedad, Tipo, Monedas)" width="auto" class="sapUiTinyMarginBottom">
+                                <content>
+                                    <HBox wrap="Wrap" alignItems="End" justifyContent="SpaceBetween">
+                                        <VBox class="sapUiSmallMarginEnd sapUiTinyMarginBottom">
+                                            <Label text="{i18n>filterCompany}"/>
+                                            <Select id="filterCompanySelect" change="onFilterRates" width="200px">
+                                                <core:Item key="ALL" text="Todas las Sociedades"/>
+                                                <core:Item key="1000" text="1000 - Corporativo Perú"/>
+                                                <core:Item key="2000" text="2000 - Filial Brasil"/>
+                                                <core:Item key="3000" text="3000 - Filial Chile"/>
+                                                <core:Item key="4000" text="4000 - Filial México"/>
+                                            </Select>
+                                        </VBox>
+
+                                        <VBox class="sapUiSmallMarginEnd sapUiTinyMarginBottom">
+                                            <Label text="{i18n>filterQuotType}"/>
+                                            <Select id="filterQuotTypeSelect" change="onFilterRates" width="220px">
+                                                <core:Item key="ALL" text="Todos los Tipos (ZSUN, M, G, B)"/>
+                                                <core:Item key="ZSUN" text="ZSUN (SUNAT Oficial)"/>
+                                                <core:Item key="M" text="M (Cotización Media)"/>
+                                                <core:Item key="G" text="G (Banco Compra)"/>
+                                                <core:Item key="B" text="B (Banco Venta)"/>
+                                                <core:Item key="ZBAN" text="ZBAN (Banxico FIX)"/>
+                                            </Select>
+                                        </VBox>
+
+                                        <VBox class="sapUiSmallMarginEnd sapUiTinyMarginBottom">
+                                            <Label text="{i18n>filterFCurr}"/>
+                                            <ComboBox id="filterFCurrCombo" change="onFilterRates" value="" width="120px">
+                                                <core:Item key="USD" text="USD"/>
+                                                <core:Item key="EUR" text="EUR"/>
+                                                <core:Item key="BRL" text="BRL"/>
+                                                <core:Item key="CLP" text="CLP"/>
+                                                <core:Item key="MXN" text="MXN"/>
+                                            </ComboBox>
+                                        </VBox>
+
+                                        <VBox class="sapUiSmallMarginEnd sapUiTinyMarginBottom">
+                                            <Label text="{i18n>filterTCurr}"/>
+                                            <ComboBox id="filterTCurrCombo" change="onFilterRates" value="" width="120px">
+                                                <core:Item key="PEN" text="PEN"/>
+                                                <core:Item key="USD" text="USD"/>
+                                                <core:Item key="EUR" text="EUR"/>
+                                                <core:Item key="MXN" text="MXN"/>
+                                            </ComboBox>
+                                        </VBox>
+
+                                        <VBox class="sapUiSmallMarginEnd sapUiTinyMarginBottom">
+                                            <Label text="{i18n>filterStatus}"/>
+                                            <Select id="filterStatusSelect" change="onFilterRates" width="180px">
+                                                <core:Item key="ALL" text="Todos los Estados"/>
+                                                <core:Item key="Success" text="Válido"/>
+                                                <core:Item key="Warning" text="Desviación Detectada"/>
+                                            </Select>
+                                        </VBox>
+
+                                        <HBox class="sapUiTinyMarginBottom" alignItems="Center">
+                                            <Button text="{i18n>btnApplyFilter}" type="Emphasized" icon="sap-icon://filter" press="onFilterRates" class="sapUiTinyMarginEnd"/>
+                                            <Button text="{i18n>btnResetFilter}" icon="sap-icon://refresh" press="onResetFilters"/>
+                                        </HBox>
+                                    </HBox>
+                                </content>
+                            </Panel>
+
+                            <!-- Table TCURR -->
+                            <Table id="tableFX" items="{/ExchangeRates}" mode="MultiSelect" alternateRowColors="true">
+                                <headerToolbar>
+                                    <OverflowToolbar>
+                                        <Title text="Cotizaciones de Tipos de Cambio Activas (Tabla TCURR)" level="H3"/>
+                                        <ToolbarSpacer/>
+                                        <SearchField search="onSearchRates" liveChange="onSearchRates" width="240px" placeholder="Buscar por moneda..."/>
+                                        <Button icon="sap-icon://add" text="Agregar Fila" press="onOpenCreateRateDialog"/>
+                                        <Button icon="sap-icon://delete" text="Eliminar Seleccionados" type="Reject" press="onDeleteSelectedRates"/>
+                                    </OverflowToolbar>
+                                </headerToolbar>
+                                <columns>
+                                    <Column><Text text="{i18n>colFCurr}"/></Column>
+                                    <Column><Text text="{i18n>colTCurr}"/></Column>
+                                    <Column><Text text="{i18n>colQuotType}"/></Column>
+                                    <Column><Text text="{i18n>colValidFrom}"/></Column>
+                                    <Column width="110px"><Text text="{i18n>colRateBuy}"/></Column>
+                                    <Column width="110px"><Text text="{i18n>colRateSell}"/></Column>
+                                    <Column><Text text="{i18n>colRateMid}"/></Column>
+                                    <Column><Text text="{i18n>colSource}"/></Column>
+                                    <Column><Text text="{i18n>colStatus}"/></Column>
+                                    <Column hAlign="End"><Text text="{i18n>colActions}"/></Column>
+                                </columns>
+                                <items>
+                                    <ColumnListItem>
+                                        <cells>
+                                            <ObjectIdentifier title="{fcurr}"/>
+                                            <Text text="{tcurr}"/>
+                                            <ObjectStatus state="Information" text="{kurstText}"/>
+                                            <Text text="{validFrom}"/>
+                                            <Input value="{rateBuy}" type="Number" liveChange="onInlineRateChange" enabled="{editable}"/>
+                                            <Input value="{rateSell}" type="Number" liveChange="onInlineRateChange" enabled="{editable}"/>
+                                            <Text text="{rateMid}"/>
+                                            <Text text="{source}"/>
+                                            <ObjectStatus text="{statusText}" state="{status}"/>
+                                            <HBox justifyContent="End">
+                                                <Button icon="sap-icon://delete" type="Transparent" press="onDeleteSingleRate"/>
+                                            </HBox>
+                                        </cells>
+                                    </ColumnListItem>
+                                </items>
+                            </Table>
+                        </VBox>
+                    </IconTabFilter>
+
+                    <!-- TAB 2: SIMULADOR DE IMPACTO LOGISTICO MM/SD -->
+                    <IconTabFilter id="tabFilterSimulator" icon="sap-icon://simulate" text="{i18n>tabSimulator}" key="SIMULATOR">
+                        <VBox class="sapUiSmallMargin">
+                            <MessageStrip
+                                text="Evaluación en tiempo real del impacto cambiario en Órdenes de Compra (MM) con Esquema Nacional ZM0000 e Importaciones Directas ZM0002 (FOB, Flete, Aranceles, IGV y Landed Cost)."
+                                type="Information"
+                                showIcon="true"
+                                class="sapUiSmallMarginBottom"/>
+
+                            <Table id="tableSimulations" items="{/Simulations}" alternateRowColors="true">
+                                <headerToolbar>
+                                    <OverflowToolbar>
+                                        <Title text="Simulación de Esquemas de Cálculo de Compras y Costos de Reposición" level="H3"/>
+                                        <ToolbarSpacer/>
+                                        <Button icon="sap-icon://refresh" text="Recalcular Todas las OCs" press="onRecalculateSimulations"/>
+                                    </OverflowToolbar>
+                                </headerToolbar>
+                                <columns>
+                                    <Column><Text text="{i18n>colPO}"/></Column>
+                                    <Column><Text text="{i18n>colMaterial}"/></Column>
+                                    <Column><Text text="Esquema / Proveedor"/></Column>
+                                    <Column><Text text="{i18n>colBasePrice}"/></Column>
+                                    <Column width="110px"><Text text="{i18n>colOldRate}"/></Column>
+                                    <Column width="130px"><Text text="{i18n>colNewRate}"/></Column>
+                                    <Column><Text text="{i18n>colOldLandedPEN}"/></Column>
+                                    <Column><Text text="{i18n>colNewLandedPEN}"/></Column>
+                                    <Column><Text text="{i18n>colVariance}"/></Column>
+                                    <Column hAlign="End"><Text text="Detalle Condición"/></Column>
+                                </columns>
+                                <items>
+                                    <ColumnListItem>
+                                        <cells>
+                                            <ObjectIdentifier title="{poNumber}" subtitle="Pos: {item}"/>
+                                            <ObjectIdentifier title="{material}" subtitle="{materialDesc}"/>
+                                            <VBox>
+                                                <Text text="{schemeName}" class="sapUiTinyMarginBottom"/>
+                                                <Text text="{vendor}"/>
+                                            </VBox>
+                                            <Text text="{basePriceFOB} {fcurr}"/>
+                                            <Text text="S/ {currentRate}"/>
+                                            <Input value="{simulatedRate}" type="Number" liveChange="onSimulationRateChange"/>
+                                            <Text text="S/ {currentLandedPEN}"/>
+                                            <Text text="S/ {simulatedLandedPEN}"/>
+                                            <ObjectStatus text="S/ {varianceAmount} ({variancePercent}%)" state="{status}"/>
+                                            <HBox justifyContent="End">
+                                                <Button text="{i18n>btnSimulateDetail}" icon="sap-icon://detail-view" press="onOpenSimulationDetails"/>
+                                            </HBox>
+                                        </cells>
+                                    </ColumnListItem>
+                                </items>
+                            </Table>
+                        </VBox>
+                    </IconTabFilter>
+
+                    <!-- TAB 3: FACTORES DE CONVERSION OBBS / TCURF -->
+                    <IconTabFilter id="tabFilterOBBS" icon="sap-icon://chain-link" text="{i18n>tabOBBS}" key="OBBS">
+                        <VBox class="sapUiSmallMargin">
+                            <MessageStrip
+                                text="Mantenimiento de Relaciones de Paridad de Cambio (Transacción OBBS / Tabla TCURF) y Posiciones Decimales (OY04 / Tabla TCURX)."
+                                type="Warning"
+                                showIcon="true"
+                                class="sapUiSmallMarginBottom"/>
+
+                            <Table id="tableOBBS" items="{/ConversionFactors}" alternateRowColors="true">
+                                <headerToolbar>
+                                    <OverflowToolbar>
+                                        <Title text="Relaciones de Proporción de Monedas (Tabla TCURF)" level="H3"/>
+                                    </OverflowToolbar>
+                                </headerToolbar>
+                                <columns>
+                                    <Column><Text text="{i18n>colFCurr}"/></Column>
+                                    <Column><Text text="{i18n>colTCurr}"/></Column>
+                                    <Column><Text text="{i18n>colQuotType}"/></Column>
+                                    <Column><Text text="{i18n>colValidFrom}"/></Column>
+                                    <Column><Text text="{i18n>colRatioFCurr}"/></Column>
+                                    <Column><Text text="{i18n>colRatioTCurr}"/></Column>
+                                    <Column><Text text="{i18n>colDecimals}"/></Column>
+                                    <Column><Text text="{i18n>colStatus}"/></Column>
+                                </columns>
+                                <items>
+                                    <ColumnListItem>
+                                        <cells>
+                                            <ObjectIdentifier title="{fcurr}"/>
+                                            <Text text="{tcurr}"/>
+                                            <Text text="{kurst}"/>
+                                            <Text text="{validFrom}"/>
+                                            <Text text="{ratioFCurr}"/>
+                                            <Text text="{ratioTCurr}"/>
+                                            <Text text="{decimals}"/>
+                                            <ObjectStatus text="{status}" state="Success" icon="sap-icon://accept"/>
+                                        </cells>
+                                    </ColumnListItem>
+                                </items>
+                            </Table>
+                        </VBox>
+                    </IconTabFilter>
+
+                    <!-- TAB 4: AUDITORIA & SLG1 LOGS -->
+                    <IconTabFilter id="tabFilterLogs" icon="sap-icon://log" text="{i18n>tabLogs}" key="LOGS">
+                        <VBox class="sapUiSmallMargin">
+                            <Table id="tableLogs" items="{/AuditLogs}" alternateRowColors="true">
+                                <headerToolbar>
+                                    <OverflowToolbar>
+                                        <Title text="Log de Ingesta, BAPIs y Puntos de Control de Kernel (SLG1)" level="H3"/>
+                                        <ToolbarSpacer/>
+                                        <Button icon="sap-icon://download" text="Descargar Log (.txt)" press="onDownloadAuditLog"/>
+                                    </OverflowToolbar>
+                                </headerToolbar>
+                                <columns>
+                                    <Column width="180px"><Text text="Fecha y Hora"/></Column>
+                                    <Column width="140px"><Text text="Usuario / Origen"/></Column>
+                                    <Column width="180px"><Text text="BAPI / Objeto Log"/></Column>
+                                    <Column><Text text="Detalles del Evento de Ejecución"/></Column>
+                                    <Column width="120px"><Text text="Estado"/></Column>
+                                </columns>
+                                <items>
+                                    <ColumnListItem>
+                                        <cells>
+                                            <Text text="{timestamp}"/>
+                                            <Text text="{user}"/>
+                                            <ObjectIdentifier title="{bapi}" subtitle="Objeto: {object}"/>
+                                            <Text text="{details}"/>
+                                            <ObjectStatus text="{status}" state="{status}"/>
+                                        </cells>
+                                    </ColumnListItem>
+                                </items>
+                            </Table>
+                        </VBox>
+                    </IconTabFilter>
+                </items>
+            </IconTabBar>
+        </content>
+
+        <footer/>
+    </Page>
+</mvc:View>

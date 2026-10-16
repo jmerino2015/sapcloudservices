@@ -1,0 +1,25 @@
+@EndUserText.label: 'Tabla Draft Torre Control WMS - Familias'
+@AbapCatalog.enhancement.category: #NOT_EXTENSIBLE
+@AbapCatalog.tableCategory: #TRANSPARENT
+@AbapCatalog.deliveryClass: #A
+@AbapCatalog.dataMaintenance: #RESTRICTED
+define table ztb_wh_fam_d {
+  key mandt                    : abap.clnt not null;
+  key draftuuid                : sysuuid_x16 not null;
+  sede_id                      : abap.char(10);
+  familia_id                   : abap.char(20);
+  familia_nombre               : abap.char(60);
+  posiciones_totales           : abap.int4;
+  posiciones_ocupadas          : abap.int4;
+  posiciones_libres            : abap.int4;
+  porcentaje_ocupabilidad      : abap.dec(5,2);
+  unidad_porcentaje            : abap.unit(3);
+  criticidad_ocupabilidad      : abap.int1;
+  comentario_operativo         : abap.char(255);
+  created_by                   : abp_creation_user;
+  created_at                   : abp_creation_tstmpl;
+  last_changed_by              : abp_locinst_lastchange_user;
+  last_changed_at              : abp_lastchange_tstmpl;
+  local_last_changed_at        : abp_locinst_lastchange_tstmpl;
+  "%admin"                     : include sychar01;
+}

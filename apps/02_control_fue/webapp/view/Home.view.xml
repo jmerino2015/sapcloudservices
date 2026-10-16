@@ -1,0 +1,144 @@
+<mvc:View
+  controllerName="fue.control.controller.Home"
+  xmlns:mvc="sap.ui.core.mvc"
+  xmlns="sap.m"
+  xmlns:f="sap.f"
+  xmlns:core="sap.ui.core"
+  xmlns:layout="sap.ui.layout"
+  xmlns:cssgrid="sap.ui.layout.cssgrid">
+
+  <Page title="Resumen Ejecutivo y Gobierno de Licencias SAP" showHeader="true" class="sapUiContentPadding mainViewContainer">
+    <content>
+      <!-- Header banner with official Fiori Horizon gradient -->
+      <VBox class="fioriHeaderBanner sapUiMediumMarginBottom sapUiLargePadding">
+        <HBox justifyContent="SpaceBetween" alignItems="Center">
+          <VBox>
+            <Title text="Sistema de Control de FUE, Usuarios y Costos SAP (5 Sociedades)" titleStyle="H2" class="fioriHeaderBannerTitle sapUiTinyMarginBottom" />
+            <Text text="Gestión centralizada de licencias Full User Equivalent (FUE) para la instalación SAP S/4HANA (Mandante 100). Administra usuarios SU01, optimiza costos por sociedad y audita riesgos de segregación de funciones." class="fioriHeaderBannerText" />
+          </VBox>
+          <Button text="🤖 Reoptimizar Licencias IA" type="Accept" icon="sap-icon://lightbulb" press=".onExecuteAIOptimization" class="sapUiSmallMarginBegin" />
+        </HBox>
+      </VBox>
+
+      <!-- KPI Tiles -->
+      <HBox class="sapUiMediumMarginBottom" justifyContent="SpaceBetween" wrap="Wrap" width="100%">
+        
+        <!-- KPI Total FUE -->
+        <VBox class="kpiCard" width="23.5%">
+          <HBox justifyContent="SpaceBetween" alignItems="Center">
+            <Text text="FUE Total Consumido" class="kpiTitle" />
+            <core:Icon src="sap-icon://competitor" size="1.25rem" color="#ea580c" />
+          </HBox>
+          <Text text="{fueModel>/totalFUE} FUE" class="kpiNumber kpiNumberSelfService" />
+          <Text text="Capacidad Contratada: 175 FUE" class="kpiSubtitle" />
+        </VBox>
+
+        <!-- KPI Costo Total -->
+        <VBox class="kpiCard" width="23.5%">
+          <HBox justifyContent="SpaceBetween" alignItems="Center">
+            <Text text="Gasto Anual Licencias" class="kpiTitle" />
+            <core:Icon src="sap-icon://money-bills" size="1.25rem" color="#2563eb" />
+          </HBox>
+          <Text text="{= '$' + ${fueModel>/totalCostUSD} + ' USD' }" class="kpiNumber kpiNumberAdvanced" />
+          <Text text="Presupuesto Anual: $550,000 USD" class="kpiSubtitle" />
+        </VBox>
+
+        <!-- KPI Ahorro IA -->
+        <VBox class="kpiCard" width="23.5%">
+          <HBox justifyContent="SpaceBetween" alignItems="Center">
+            <Text text="Ahorro Potencial IA" class="kpiTitle" />
+            <core:Icon src="sap-icon://lightbulb" size="1.25rem" color="#16a34a" />
+          </HBox>
+          <Text text="{= '$' + ${fueModel>/potentialSavingsUSD} + ' USD' }" class="kpiNumber kpiNumberCore" />
+          <Text text="Vía Downgrade de Inactivos" class="kpiSubtitle" />
+        </VBox>
+
+        <!-- KPI Total Users -->
+        <VBox class="kpiCard" width="23.5%">
+          <HBox justifyContent="SpaceBetween" alignItems="Center">
+            <Text text="Usuarios SAP SU01" class="kpiTitle" />
+            <core:Icon src="sap-icon://group" size="1.25rem" color="#4f46e5" />
+          </HBox>
+          <Text text="{fueModel>/totalUsers} Usuarios" class="kpiNumber kpiNumberDeveloper" />
+          <Text text="Distribuido en 5 Sociedades" class="kpiSubtitle" />
+        </VBox>
+
+      </HBox>
+
+      <!-- Visual Summary Section: 5 Sociedades Capacity Indicators -->
+      <VBox class="kpiContainer sapUiContentPadding sapUiMediumMarginBottom">
+        <HBox justifyContent="SpaceBetween" alignItems="Center" class="sapUiSmallMarginBottom">
+          <VBox>
+            <Title text="Monitoreo de Capacidad FUE por Sociedad (5 Bukrs SAP)" titleStyle="H4" class="sapUiTinyMarginBottom" />
+            <Text text="Consumo FUE de cada sociedad respecto a la capacidad asignada en el contrato SAP S/4HANA." style="font-size: 13px; color: #556b82;" />
+          </VBox>
+          <ObjectStatus text="Instancia SAP HANA S4H Activa" state="Success" icon="sap-icon://sys-enter-2" />
+        </HBox>
+
+        <List items="{fueModel>/pivotRowsOnly}">
+          <CustomListItem class="sapUiSmallMarginBottom">
+            <VBox class="sapUiSmallPadding">
+              <HBox justifyContent="SpaceBetween" alignItems="Center" class="sapUiTinyMarginBottom">
+                <HBox alignItems="Center">
+                  <core:Icon src="sap-icon://building" size="1.1rem" color="#1d4ed8" class="sapUiTinyMarginEnd" />
+                  <Text text="{fueModel>Empresa}" style="font-weight: 700; font-size: 14px; color: #1e3a8a;" />
+                </HBox>
+                <HBox gap="1rem">
+                  <ObjectStatus text="{fueModel>users} Usuarios SU01" state="Information" />
+                  <ObjectStatus text="{= '$' + ${fueModel>costUSD} + ' USD/año' }" state="Success" design="Bold" />
+                </HBox>
+              </HBox>
+
+              <ProgressIndicator 
+                percentValue="{fueModel>fueUtilizationPct}" 
+                displayValue="{fueModel>TotalFue} FUE ({fueModel>fueUtilizationPct}% de Capacidad)" 
+                state="{= ${fueModel>fueUtilizationPct} > 90 ? 'Error' : (${fueModel>fueUtilizationPct} > 75 ? 'Warning' : 'Success') }"
+                height="1.5rem" class="sapUiTinyMarginTop" />
+            </VBox>
+          </CustomListItem>
+        </List>
+      </VBox>
+
+      <!-- Quick Action Cards -->
+      <Title text="Herramientas y Accesos Rápidos SAP Standard" titleStyle="H4" class="sapUiSmallMarginBottom" />
+      
+      <cssgrid:CSSGrid gridTemplateColumns="repeat(auto-fit, minmax(260px, 1fr))" gridGap="1rem">
+        
+        <!-- Tile 1 -->
+        <VBox class="kpiContainer clickableCard sapUiContentPadding">
+          <core:Icon src="sap-icon://manager-insight" size="2rem" color="#0a6ed1" class="sapUiSmallMarginBottom" />
+          <Title text="Dashboard & Control de Costos" titleStyle="H5" class="sapUiTinyMarginBottom" />
+          <Text text="Matriz de costo detallada por sociedad y tipo de licencia FUE con presupuestos e indicadores financieros." style="font-size: 12px; color: #556b82;" />
+          <Button text="Ir a Dashboard de Costos" type="Emphasized" icon="sap-icon://navigation-right-arrow" press=".onNavToDashboard" class="sapUiMediumMarginTop" />
+        </VBox>
+
+        <!-- Tile 2 -->
+        <VBox class="kpiContainer clickableCard sapUiContentPadding">
+          <core:Icon src="sap-icon://user-settings" size="2rem" color="#0a6ed1" class="sapUiSmallMarginBottom" />
+          <Title text="Gestión de Usuarios SU01" titleStyle="H5" class="sapUiTinyMarginBottom" />
+          <Text text="Mantenimiento de usuarios SAP, asignación de licencias, bloqueo/desbloqueo y filtros multicriterio." style="font-size: 12px; color: #556b82;" />
+          <Button text="Ir a Gestión de Usuarios" type="Emphasized" icon="sap-icon://navigation-right-arrow" press=".onNavToFUEList" class="sapUiMediumMarginTop" />
+        </VBox>
+
+        <!-- Tile 3 -->
+        <VBox class="kpiContainer clickableCard sapUiContentPadding">
+          <core:Icon src="sap-icon://security-officer" size="2rem" color="#6b21a8" class="sapUiSmallMarginBottom" />
+          <Title text="Auditoría USMM & Riesgos SoD" titleStyle="H5" class="sapUiTinyMarginBottom" />
+          <Text text="Simulador de medición de licencias LAW 2.0, revisión de superusuarios SAP_ALL y conflictos SoD." style="font-size: 12px; color: #556b82;" />
+          <Button text="Ir a Auditoría USMM" type="Emphasized" icon="sap-icon://navigation-right-arrow" press=".onNavToAuditTool" class="sapUiMediumMarginTop" />
+        </VBox>
+
+        <!-- Tile 4 -->
+        <VBox class="kpiContainer clickableCard sapUiContentPadding">
+          <core:Icon src="sap-icon://excel-attachment" size="2rem" color="#2b7d2b" class="sapUiSmallMarginBottom" />
+          <Title text="Exportar Reporte FUE" titleStyle="H5" class="sapUiTinyMarginBottom" />
+          <Text text="Genera el archivo Excel estructurado con la matriz de 5 sociedades y detalle de usuarios SAP." style="font-size: 12px; color: #556b82;" />
+          <Button text="Descargar Reporte Excel" type="Success" icon="sap-icon://download" press=".onDownloadExcel" class="sapUiMediumMarginTop" />
+        </VBox>
+
+      </cssgrid:CSSGrid>
+
+    </content>
+  </Page>
+
+</mvc:View>

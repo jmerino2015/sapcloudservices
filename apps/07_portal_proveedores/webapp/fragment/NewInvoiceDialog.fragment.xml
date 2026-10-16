@@ -1,0 +1,118 @@
+<core:FragmentDefinition
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core"
+    xmlns:unified="sap.ui.unified"
+    xmlns:layout="sap.ui.layout.form">
+
+    <Dialog
+        id="newInvoiceDialog"
+        title="{i18n>invDialogTitle}"
+        contentWidth="40rem"
+        draggable="true"
+        resizable="true">
+
+        <content>
+            <VBox class="sapUiSmallPadding sapUiResponsivePadding">
+
+                <MessageStrip
+                    id="invDialogMessageStrip"
+                    text="{invDialog>/message}"
+                    type="{invDialog>/messageType}"
+                    showIcon="true"
+                    visible="{invDialog>/messageVisible}"
+                    class="sapUiSmallMarginBottom" />
+
+                <layout:SimpleForm
+                    layout="ResponsiveGridLayout"
+                    labelSpanXL="4"
+                    labelSpanL="4"
+                    labelSpanM="4"
+                    labelSpanS="12"
+                    columnsXL="1"
+                    columnsL="1"
+                    columnsM="1"
+                    editable="true">
+                    <layout:content>
+
+                        <!-- Orden de Compra -->
+                        <Label text="{i18n>invDialogPO}" required="true" />
+                        <Select
+                            id="invDialogPOSelect"
+                            width="100%"
+                            selectedKey="{invDialog>/poNumber}"
+                            valueState="{invDialog>/poValueState}"
+                            valueStateText="{i18n>invFieldRequired}">
+                            <items>
+                                <core:Item key="" text="{i18n>invDialogPOPlaceholder}" />
+                                <core:Item key="4500012345" text="4500012345 - Acero Inox. 304" />
+                                <core:Item key="4500012343" text="4500012343 - Cable AWG 12" />
+                                <core:Item key="4500012342" text="4500012342 - Válvula compuerta" />
+                            </items>
+                        </Select>
+
+                        <!-- Número de Factura -->
+                        <Label text="{i18n>invDialogNumber}" required="true" />
+                        <Input
+                            id="invDialogNumber"
+                            value="{invDialog>/invNumber}"
+                            placeholder="{i18n>invDialogNumberPlaceholder}"
+                            valueState="{invDialog>/invNumberValueState}"
+                            valueStateText="{i18n>invFieldRequired}"
+                            maxLength="20" />
+
+                        <!-- Fecha de Factura -->
+                        <Label text="{i18n>invDialogDate}" required="true" />
+                        <DatePicker
+                            id="invDialogDatePicker"
+                            value="{invDialog>/invDate}"
+                            displayFormat="dd/MM/yyyy"
+                            valueFormat="yyyy-MM-dd"
+                            valueState="{invDialog>/dateValueState}"
+                            valueStateText="{i18n>invFieldRequired}" />
+
+                        <!-- Monto Total -->
+                        <Label text="{i18n>invDialogAmount}" required="true" />
+                        <Input
+                            id="invDialogAmountInput"
+                            value="{invDialog>/amount}"
+                            placeholder="{i18n>invDialogAmountPlaceholder}"
+                            valueState="{invDialog>/amountValueState}"
+                            valueStateText="{i18n>invFieldRequired}"
+                            type="Number" />
+
+                        <!-- Observaciones -->
+                        <Label text="{i18n>invDialogNotes}" />
+                        <TextArea
+                            id="invDialogNotesArea"
+                            value="{invDialog>/notes}"
+                            placeholder="{i18n>invDialogNotesPlaceholder}"
+                            rows="3"
+                            width="100%"
+                            growing="true"
+                            maxLength="500" />
+
+                    </layout:content>
+                </layout:SimpleForm>
+            </VBox>
+        </content>
+
+        <beginButton>
+            <Button
+                id="invDialogSubmitBtn"
+                text="{i18n>invDialogSubmit}"
+                type="Emphasized"
+                icon="sap-icon://accept"
+                press=".onSubmitInvoice" />
+        </beginButton>
+
+        <endButton>
+            <Button
+                id="invDialogCancelBtn"
+                text="{i18n>invDialogCancel}"
+                type="Transparent"
+                press=".onCloseInvoiceDialog" />
+        </endButton>
+
+    </Dialog>
+
+</core:FragmentDefinition>

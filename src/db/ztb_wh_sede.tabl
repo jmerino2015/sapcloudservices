@@ -1,0 +1,69 @@
+@EndUserText.label: 'Tabla Base Torre Control WMS - Sedes'
+@AbapCatalog.enhancement.category: #NOT_EXTENSIBLE
+@AbapCatalog.tableCategory: #TRANSPARENT
+@AbapCatalog.deliveryClass: #A
+@AbapCatalog.dataMaintenance: #RESTRICTED
+define table ztb_wh_sede {
+  key client                   : abap.clnt not null;
+  key sede_id                  : abap.char(10) not null;
+  sede_nombre                  : abap.char(60);
+  centro_sap                   : abap.char(4);
+  almacen_sap                  : abap.char(4);
+  
+  // 1. Ocupabilidad de Posiciones (LX03)
+  posiciones_totales           : abap.int4;
+  posiciones_ocupadas          : abap.int4;
+  posiciones_libres            : abap.int4;
+  @Semantics.quantity.unitOfMeasure: 'ztb_wh_sede.unidad_porcentaje'
+  porcentaje_ocupabilidad      : abap.dec(5,2);
+  
+  // 2. Flujo de Materiales (MB51)
+  paletas_ingreso_hoy          : abap.int4;
+  paletas_salida_hoy           : abap.int4;
+  @Semantics.quantity.unitOfMeasure: 'ztb_wh_sede.unidad_peso'
+  peso_ingreso_tn_hoy          : abap.dec(10,3);
+  @Semantics.quantity.unitOfMeasure: 'ztb_wh_sede.unidad_peso'
+  peso_salida_tn_hoy           : abap.dec(10,3);
+  unidad_peso                  : abap.unit(3);
+  unidad_porcentaje            : abap.unit(3);
+  
+  // 3. OTs Pendientes de Almacen (LT23)
+  ot_pendientes_picking        : abap.int4;
+  ot_pendientes_recepcion      : abap.int4;
+  ot_pendientes_ubicacion      : abap.int4;
+  ot_pendientes_despacho       : abap.int4;
+  ot_pendientes_total          : abap.int4;
+  
+  // 4. Resumen Unidades de Transporte (VL06F / Drivin)
+  unidades_programadas         : abap.int4;
+  unidades_cargadas            : abap.int4;
+  unidades_en_proceso          : abap.int4;
+  unidades_pendientes          : abap.int4;
+  @Semantics.quantity.unitOfMeasure: 'ztb_wh_sede.unidad_porcentaje'
+  cumplimiento_ventana_7_10    : abap.dec(5,2);
+  
+  // 5. Calidad & Operacion (OneDrive / Excel)
+  @Semantics.quantity.unitOfMeasure: 'ztb_wh_sede.unidad_porcentaje'
+  eri_porcentaje               : abap.dec(5,2);
+  @Semantics.quantity.unitOfMeasure: 'ztb_wh_sede.unidad_porcentaje'
+  eru_porcentaje               : abap.dec(5,2);
+  @Semantics.quantity.unitOfMeasure: 'ztb_wh_sede.unidad_porcentaje'
+  bpa_porcentaje               : abap.dec(5,2);
+  @Semantics.quantity.unitOfMeasure: 'ztb_wh_sede.unidad_porcentaje'
+  precision_picking            : abap.dec(5,2);
+  pedidos_atendidos            : abap.int4;
+  @Semantics.quantity.unitOfMeasure: 'ztb_wh_sede.unidad_porcentaje'
+  otif_porcentaje              : abap.dec(5,2);
+  raccs_abiertos               : abap.int4;
+  raccs_cerrados               : abap.int4;
+  @Semantics.quantity.unitOfMeasure: 'ztb_wh_sede.unidad_porcentaje'
+  cinco_s_score                : abap.dec(5,2);
+  dias_sin_accidentes          : abap.int4;
+  
+  // Auditoria y Control Concurrencia
+  created_by                   : abp_creation_user;
+  created_at                   : abp_creation_tstmpl;
+  last_changed_by              : abp_locinst_lastchange_user;
+  last_changed_at              : abp_lastchange_tstmpl;
+  local_last_changed_at        : abp_locinst_lastchange_tstmpl;
+}

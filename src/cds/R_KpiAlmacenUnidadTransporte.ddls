@@ -1,0 +1,47 @@
+@AccessControl.authorizationCheck: #NOT_REQUIRED
+@EndUserText.label: 'KPIs Torre de Control Unidades Transporte - View Entity'
+@Metadata.allowExtensions: true
+
+define view entity R_KpiAlmacenUnidadTransporte
+  as select from ztb_wh_transp as Transporte
+  association to parent R_KpiAlmacenSede as _Sede on $projection.SedeId = _Sede.SedeId
+{
+  key Transporte.sede_id                  as SedeId,
+  key Transporte.transport_unit_id        as TransportUnitId,
+      Transporte.placa_vehiculo           as PlacaVehiculo,
+      Transporte.transportista            as Transportista,
+      Transporte.destino                  as Destino,
+      
+      // Estatus Operativo (VL06F / Drivin: Cargado, En proceso, Pendiente)
+      Transporte.estatus_transporte       as EstatusTransporte,
+      Transporte.status_criticality       as StatusCriticality,
+      
+      // Control Horario & Ventana 7:00 - 10:00 AM
+      Transporte.hora_planificada_salida  as HoraPlanificadaSalida,
+      Transporte.hora_real_salida         as HoraRealSalida,
+      Transporte.demora_minutos           as DemoraMinutos,
+      Transporte.cumple_ventana_7_10      as CumpleVentana7a10,
+      Transporte.ventana_criticality      as VentanaCriticality,
+      
+      // Detalle de Carga y Despacho
+      Transporte.documento_entrega        as DocumentoEntrega,
+      Transporte.bultos_total             as BultosTotal,
+      @Semantics.quantity.unitOfMeasure: 'WeightUnit'
+      Transporte.peso_total_tn            as PesoTotalTN,
+      Transporte.unidad_peso              as WeightUnit,
+
+      // Auditoría y Concurrencia
+      @Semantics.user.createdBy: true
+      Transporte.created_by               as CreatedBy,
+      @Semantics.systemDateTime.createdAt: true
+      Transporte.created_at               as CreatedAt,
+      @Semantics.user.lastChangedBy: true
+      Transporte.last_changed_by          as LastChangedBy,
+      @Semantics.systemDateTime.lastChangedAt: true
+      Transporte.last_changed_at          as LastChangedAt,
+      @Semantics.systemDateTime.localInstanceLastChangedAt: true
+      Transporte.local_last_changed_at    as LocalLastChangedAt,
+
+      // Asociación al Padre
+      _Sede
+}

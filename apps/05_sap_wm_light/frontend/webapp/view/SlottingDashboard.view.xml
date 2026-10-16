@@ -1,0 +1,54 @@
+<mvc:View
+    controllerName="wm.light.controller.SlottingDashboard"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m"
+    xmlns:l="sap.ui.layout"
+    xmlns:f="sap.f"
+    xmlns:core="sap.ui.core"
+    xmlns:mc="sap.suite.ui.microchart">
+    
+    <Page title="Slotting Inteligente" showNavButton="true" navButtonPress=".onNavBack">
+        <headerContent>
+            <Button text="Ejecutar Slotting Engine" type="Emphasized" icon="sap-icon://action" press=".onRunEngine" tooltip="Ejecuta Análisis ABC, Afinidad y Re-Slotting"/>
+            <Button icon="sap-icon://refresh" press=".onRefresh" tooltip="Refrescar datos"/>
+        </headerContent>
+        
+        <content>
+            <!-- Health KPI -->
+            <VBox class="sapUiSmallMargin">
+                <HBox alignItems="Center" class="sapUiTinyMarginBottom">
+                    <core:Icon src="sap-icon://performance" size="2rem" color="Positive" class="sapUiTinyMarginEnd" />
+                    <Title text="Recomendaciones de Re-Slotting" level="H2" />
+                </HBox>
+                
+                <Panel>
+                    <Table items="{path: 'slotting>/recommendations'}" noDataText="No hay recomendaciones pendientes. El slotting es óptimo.">
+                        <columns>
+                            <Column><Text text="Material" /></Column>
+                            <Column><Text text="Mover de (Bin Actual)" /></Column>
+                            <Column><Text text="Mover a (Bin Sugerido)" /></Column>
+                            <Column><Text text="Cantidad" /></Column>
+                            <Column><Text text="Motivo (Regla)" /></Column>
+                            <Column hAlign="End"><Text text="Acción" /></Column>
+                        </columns>
+                        <items>
+                            <ColumnListItem>
+                                <cells>
+                                    <ObjectIdentifier title="{slotting>material/sap_code}" text="{slotting>material/description} (ABC: {slotting>material/abc_indicator})" />
+                                    <ObjectStatus text="{slotting>fromBin/bin_code}" state="Warning" icon="sap-icon://open-folder" />
+                                    <ObjectStatus text="{slotting>toBin/bin_code} (Clase {slotting>toBin/velocity_class})" state="Success" icon="sap-icon://target-group" />
+                                    <Text text="{slotting>quantity}" />
+                                    <Text text="{slotting>reason}" />
+                                    <HBox justifyContent="End" gap="0.25rem">
+                                        <Button icon="sap-icon://accept" type="Accept" tooltip="Aprobar (Crear TO)" press=".onApproveRec" />
+                                        <Button icon="sap-icon://decline" type="Reject" tooltip="Rechazar" press=".onRejectRec" />
+                                    </HBox>
+                                </cells>
+                            </ColumnListItem>
+                        </items>
+                    </Table>
+                </Panel>
+            </VBox>
+        </content>
+    </Page>
+</mvc:View>

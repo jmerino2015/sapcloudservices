@@ -1,0 +1,45 @@
+<mvc:View
+    controllerName="c4c.leadmanagement.controller.Login"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m"
+    xmlns:html="http://www.w3.org/1999/xhtml"
+    displayBlock="true">
+
+    <Page showHeader="false" class="customLoginBackground">
+        <VBox alignContent="Center" alignItems="Center" justifyContent="Center" height="100%" width="100%">
+            
+            <VBox class="sapIdCard">
+                <VBox class="sapIdCardContent">
+                    <HBox class="sapIdHeader">
+                        <Image src="https://upload.wikimedia.org/wikipedia/commons/5/59/SAP_2011_logo.svg" height="14px" />
+                        <Title text="® ID" level="H4" class="sapUiTinyMarginBegin"/>
+                    </HBox>
+                    
+                    <Title text="Iniciar sesión" class="sapIdTitle"/>
+                    <Text text="SAP Help Portal" class="sapIdSubtitle"/>
+                    
+                    <Label text="Correo electrónico o nombre de usuario" class="sapIdInputLabel" />
+                    <Input id="userInput" placeholder="Correo electrónico o nombre de usuario" class="sapIdInput" value="admin" />
+                    
+                    <Label text="Contraseña" class="sapIdInputLabel sapUiSmallMarginTop" />
+                    <Input id="passInput" placeholder="Contraseña" type="Password" class="sapIdInput" value="admin" />
+                </VBox>
+
+                <HBox class="sapIdCardFooter">
+                    <VBox>
+                        <Text text="¿No tiene cuenta?" class="sapIdRegisterText" />
+                        <Button text="Registrarse" type="Transparent" class="sapIdSecondaryBtn" />
+                    </VBox>
+                    <Button text="Continuar" type="Emphasized" press=".onLoginPress" class="sapIdPrimaryBtn" />
+                </HBox>
+            </VBox>
+
+            <HBox class="sapIdFooterLinks" justifyContent="Center">
+                <Link text="Privacy Policy" />
+                <Link text="Legal Disclosure" />
+                <Link text="Cookie Statement" />
+            </HBox>
+
+        </VBox>
+    </Page>
+</mvc:View>

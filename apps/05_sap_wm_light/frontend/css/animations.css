@@ -1,0 +1,64 @@
+/* ============================================================
+   WM Light — Icons & Animations supplement
+   ============================================================ */
+
+/* Inline SVG icon system using CSS masks */
+.icon-wh::before      { content: '🏭'; }
+.icon-stock::before   { content: '📦'; }
+.icon-gr::before      { content: '📥'; }
+.icon-gi::before      { content: '📤'; }
+.icon-to::before      { content: '🔄'; }
+.icon-count::before   { content: '🔢'; }
+.icon-dash::before    { content: '📊'; }
+.icon-admin::before   { content: '⚙️'; }
+.icon-mat::before     { content: '🧱'; }
+.icon-bin::before     { content: '📍'; }
+.icon-batch::before   { content: '🏷️'; }
+.icon-report::before  { content: '📋'; }
+.icon-user::before    { content: '👤'; }
+.icon-notif::before   { content: '🔔'; }
+.icon-search::before  { content: '🔍'; }
+.icon-home::before    { content: '⊞'; }
+
+/* Page transition */
+.view-enter {
+  animation: viewIn 0.22s ease;
+}
+@keyframes viewIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Pulse animation for live indicators */
+.pulse-dot {
+  display: inline-block;
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: var(--sap-success);
+  position: relative;
+}
+.pulse-dot::after {
+  content: '';
+  position: absolute;
+  inset: -4px;
+  border-radius: 50%;
+  border: 2px solid var(--sap-success);
+  animation: pulse 1.5s ease-out infinite;
+  opacity: 0;
+}
+@keyframes pulse {
+  0%   { transform: scale(0.8); opacity: 0.8; }
+  100% { transform: scale(2);   opacity: 0; }
+}
+
+/* Skeleton loading */
+.skeleton {
+  background: linear-gradient(90deg, var(--sap-bg) 25%, #E8E8E8 50%, var(--sap-bg) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.4s infinite;
+  border-radius: var(--radius-sm);
+}
+@keyframes shimmer {
+  from { background-position: 200% 0; }
+  to   { background-position: -200% 0; }
+}

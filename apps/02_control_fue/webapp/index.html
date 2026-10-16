@@ -1,0 +1,1006 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="morning">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SAP Fiori Horizon - Control de Usuarios, Medición FUE & Reportes Estándar SAP</title>
+  
+  <!-- FontAwesome 6 for Standard Fiori Outline Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" />
+
+  <!-- Custom SAP Fiori Horizon CSS Design System -->
+  <link rel="stylesheet" href="css/fiori-horizon.css">
+
+  <!-- Chart.js Local para funcionamiento 100% Offline -->
+  <script src="js/chart.js"></script>
+</head>
+<body>
+
+  <!-- ==========================================================================
+       SAP FIORI SHELL BAR (HEADER SUPERIOR)
+       ========================================================================== -->
+  <header class="sap-shell-bar">
+    <div class="sap-shell-left">
+      <a class="sap-logo-badge" href="javascript:void(0)" onclick="goHome()" title="SAP Fiori Launchpad">
+        <img src="../../img/sap-logo.svg" alt="SAP" class="sap-logo-svg" onerror="this.outerHTML='<span class=\'sap-logo-fallback\'>SAP</span>'" />
+      </a>
+      <button class="modal-back-btn" onclick="goHome()" title="Volver al Launchpad">
+        <i class="fas fa-chevron-left"></i> Home
+      </button>
+      <div class="sap-shell-title-block">
+        <span class="sap-shell-title">SAP BASIS - CONTROL DE ROLES &amp; MEDICIÓN FUE</span>
+      </div>
+    </div>
+
+    <div class="sap-shell-center">
+      <div class="sap-shell-search">
+        <i class="fas fa-search sap-shell-search-icon"></i>
+        <input type="text" id="shellGlobalSearch" placeholder="Buscar por T-Code (SUIM, SLIM_DCH, S_BCE_68001393), usuario o rol...">
+      </div>
+    </div>
+
+    <div class="sap-shell-right">
+      <!-- Selector de Sistema SAP -->
+      <select class="sap-system-select" id="shellSystemSelect">
+        <option value="PRD-100">PRD-100 (S/4HANA Prod)</option>
+        <option value="QAS-200">QAS-200 (S/4HANA Calidad)</option>
+        <option value="DEV-010">DEV-010 (Desarrollo)</option>
+      </select>
+
+      <!-- Botón Asistente SAP Joule AI -->
+      <button class="sap-shell-icon-btn" title="Asistente SAP Joule AI">
+        <i class="far fa-circle-dot" style="font-size: 15px; color: #4db3ff;"></i>
+      </button>
+
+      <!-- Alertas de Notificación -->
+      <button class="sap-shell-icon-btn" title="Notificaciones de Licencia">
+        <i class="far fa-bell" style="font-size: 14px;"></i>
+        <span class="sap-badge">4</span>
+      </button>
+
+      <!-- Botón Configuración -->
+      <button class="sap-shell-icon-btn" title="Configuración">
+        <i class="fas fa-gear" style="font-size: 14px;"></i>
+      </button>
+
+      <!-- Perfil de Usuario Administrador -->
+      <div class="sap-user-avatar" title="Administrador SAP License Manager">
+        DM
+      </div>
+    </div>
+  </header>
+
+  <!-- ==========================================================================
+       LAYOUT PRINCIPAL CON SIDEBAR Y CONTENIDO DE VISTAS
+       ========================================================================== -->
+  <div class="sap-app-container">
+    
+    <!-- SIDEBAR DE NAVEGACION FORMATO SAP TNT SIDENAVIGATION -->
+    <aside class="sap-sidebar" id="sapSidebar">
+      <div class="sidebar-nav-scroll">
+        <ul class="sap-nav-list">
+          <li>
+            <a href="#" class="sap-nav-item active" data-view="dashboardView">
+              <i class="fas fa-home sap-nav-icon"></i>
+              <span class="sap-nav-text">Inicio</span>
+            </a>
+          </li>
+          <li>
+            <a href="#" class="sap-nav-item" data-view="dashboardView">
+              <i class="fas fa-chart-line sap-nav-icon"></i>
+              <span class="sap-nav-text">Dashboard General</span>
+            </a>
+          </li>
+          <li>
+            <a href="#" class="sap-nav-item" data-view="fueMeasurementView">
+              <i class="fas fa-gauge-high sap-nav-icon"></i>
+              <span class="sap-nav-text">Medición FUE &amp; Simulación</span>
+            </a>
+          </li>
+
+          <!-- Grupo: Gestión & Auditoría -->
+          <li class="nav-group-header" onclick="toggleNavGroup('grp-gestion', this)">
+            <div class="group-left">
+              <i class="fas fa-bolt sap-nav-icon"></i>
+              <span class="sap-nav-text">Gestión &amp; Auditoría</span>
+            </div>
+            <div class="group-right">
+              <span class="group-pipe">|</span>
+              <i class="fas fa-chevron-right group-chevron rotated"></i>
+            </div>
+          </li>
+          <ul class="nav-sub-list open" id="grp-gestion">
+            <li>
+              <a href="#" class="sap-nav-item sub-item" data-view="userManagementView">
+                <i class="fas fa-users sap-nav-icon"></i>
+                <span class="sap-nav-text">Control de Usuarios</span>
+              </a>
+            </li>
+            <li>
+              <a href="#" class="sap-nav-item sub-item" data-view="reportsView">
+                <i class="fas fa-file-shield sap-nav-icon"></i>
+                <span class="sap-nav-text">Auditoría &amp; Ahorros</span>
+              </a>
+            </li>
+          </ul>
+
+          <!-- Grupo: Reportes Estándar SAP -->
+          <li class="nav-group-header" onclick="toggleNavGroup('grp-transacciones', this)">
+            <div class="group-left">
+              <i class="fas fa-table-list sap-nav-icon"></i>
+              <span class="sap-nav-text">Reportes Estándar SAP</span>
+            </div>
+            <div class="group-right">
+              <span class="group-pipe">|</span>
+              <i class="fas fa-chevron-right group-chevron rotated"></i>
+            </div>
+          </li>
+          <ul class="nav-sub-list open" id="grp-transacciones">
+            <li>
+              <a href="#" class="sap-nav-item sub-item" data-view="slimDchView">
+                <i class="fas fa-chart-area sap-nav-icon"></i>
+                <span class="sap-nav-text">SLIM_DCH (Historial LAW)</span>
+              </a>
+            </li>
+            <li>
+              <a href="#" class="sap-nav-item sub-item" data-view="sbceView">
+                <i class="fas fa-magnifying-glass sap-nav-icon"></i>
+                <span class="sap-nav-text">S_BCE_68001393 (Auditoría)</span>
+              </a>
+            </li>
+            <li>
+              <a href="#" class="sap-nav-item sub-item" data-view="slimUchView">
+                <i class="fas fa-clipboard-check sap-nav-icon"></i>
+                <span class="sap-nav-text">SLIM_UCH (Cambio Licencias)</span>
+              </a>
+            </li>
+            <li>
+              <a href="#" class="sap-nav-item sub-item" data-view="suimView">
+                <i class="fas fa-shield-halved sap-nav-icon"></i>
+                <span class="sap-nav-text">SUIM (Info Usuarios SAP)</span>
+              </a>
+            </li>
+          </ul>
+
+          <!-- Grupo: Configuración -->
+          <li class="nav-group-header" onclick="toggleNavGroup('grp-config', this)">
+            <div class="group-left">
+              <i class="fas fa-sliders sap-nav-icon"></i>
+              <span class="sap-nav-text">Configuración</span>
+            </div>
+            <div class="group-right">
+              <span class="group-pipe">|</span>
+              <i class="fas fa-chevron-right group-chevron rotated"></i>
+            </div>
+          </li>
+          <ul class="nav-sub-list open" id="grp-config">
+            <li>
+              <a href="#" class="sap-nav-item sub-item" data-view="settingsView">
+                <i class="fas fa-file-contract sap-nav-icon"></i>
+                <span class="sap-nav-text">Ratios &amp; Contrato SAP</span>
+              </a>
+            </li>
+          </ul>
+        </ul>
+      </div>
+
+      <!-- Item fijo de Administración en el fondo -->
+      <div class="sidebar-fixed-bottom">
+        <a href="#" class="sap-nav-item" data-view="settingsView">
+          <i class="fas fa-gear sap-nav-icon"></i>
+          <span class="sap-nav-text">Administración</span>
+        </a>
+      </div>
+    </aside>
+
+    <!-- CONTENIDO PRINCIPAL DINAMICO -->
+    <main class="sap-main-content">
+
+      <!-- ==========================================================================
+           VISTA 1: DASHBOARD GENERAL (LAUNCHPAD OVERVIEW)
+           ========================================================================== -->
+      <section id="dashboardView" class="sap-view-section">
+        <!-- Encabezado de Página -->
+        <div class="sap-page-header">
+          <div class="sap-page-title-group">
+            <h1>Panel de Control de Licencias & Consumo FUE</h1>
+            <div class="sap-page-subtitle">Monitoreo en tiempo real de SAP S/4HANA RISE Cloud Contract Compliance</div>
+          </div>
+          <div class="sap-page-actions">
+            <button class="sap-btn sap-btn-secondary" id="btnExportCSV">
+              📥 Exportar Auditoría CSV
+            </button>
+            <button class="sap-btn sap-btn-primary" id="btnOpenNewUserModal">
+              ➕ Nuevo Usuario SAP
+            </button>
+          </div>
+        </div>
+
+        <!-- TARJETAS KPI ANALITICAS (GRID FIORI HORIZON) -->
+        <div class="sap-kpi-grid" style="margin-top: 16px;">
+          
+          <!-- KPI 1: FUE Consumido (Orange/Warning) -->
+          <div class="sap-kpi-card">
+            <div class="sap-kpi-header">
+              <span class="sap-kpi-title">Consumo Total FUE</span>
+              <div class="sap-kpi-icon-wrapper primary"><i class="fas fa-ruler-combined"></i></div>
+            </div>
+            <div class="sap-kpi-body">
+              <span class="sap-kpi-value sap-kpi-val-orange" id="kpiFueConsumedVal">0.00</span>
+              <span class="sap-kpi-unit">FUE</span>
+            </div>
+            <div class="sap-kpi-footer">
+              <span id="kpiFueContractMax">de 150.0 FUE contratados</span>
+              <span class="sap-kpi-trend neutral">Normal</span>
+            </div>
+          </div>
+
+          <!-- KPI 2: Licencias Activas (Slate/Dark Base) -->
+          <div class="sap-kpi-card">
+            <div class="sap-kpi-header">
+              <span class="sap-kpi-title">Usuarios Activos SAP</span>
+              <div class="sap-kpi-icon-wrapper primary"><i class="fas fa-users"></i></div>
+            </div>
+            <div class="sap-kpi-body">
+              <span class="sap-kpi-value sap-kpi-val-slate" id="kpiActiveUsersVal">0</span>
+              <span class="sap-kpi-unit">usuarios</span>
+            </div>
+            <div class="sap-kpi-footer">
+              <span>Sistemas PRD, QAS y DEV</span>
+            </div>
+          </div>
+
+          <!-- KPI 3: Porcentaje de Uso de Contrato (Green/Compliance) -->
+          <div class="sap-kpi-card">
+            <div class="sap-kpi-header">
+              <span class="sap-kpi-title">Cumplimiento Contrato</span>
+              <div class="sap-kpi-icon-wrapper positive"><i class="fas fa-shield-halved"></i></div>
+            </div>
+            <div class="sap-kpi-body">
+              <span class="sap-kpi-value sap-kpi-val-green" id="kpiFuePercentageVal">0%</span>
+            </div>
+            <div class="sap-kpi-footer">
+              <span id="kpiFueStatusTag" class="sap-status-tag positive">Dentro del Límite</span>
+            </div>
+          </div>
+
+          <!-- KPI 4: Costo Mensual Estimado (Orange/Audit) -->
+          <div class="sap-kpi-card">
+            <div class="sap-kpi-header">
+              <span class="sap-kpi-title">Costo Mensual Licencias</span>
+              <div class="sap-kpi-icon-wrapper critical"><i class="fas fa-dollar-sign"></i></div>
+            </div>
+            <div class="sap-kpi-body">
+              <span class="sap-kpi-value sap-kpi-val-orange" id="kpiMonthlyCostVal">$0</span>
+              <span class="sap-kpi-unit">USD/mes</span>
+            </div>
+            <div class="sap-kpi-footer">
+              <span>Basado en $120/FUE</span>
+            </div>
+          </div>
+
+          <!-- KPI 5: Oportunidad de Ahorro (Green/Savings) -->
+          <div class="sap-kpi-card">
+            <div class="sap-kpi-header">
+              <span class="sap-kpi-title">Ahorro Potencial</span>
+              <div class="sap-kpi-icon-wrapper positive"><i class="fas fa-lightbulb"></i></div>
+            </div>
+            <div class="sap-kpi-body">
+              <span class="sap-kpi-value sap-kpi-val-green" id="kpiPotentialSavingsVal">$0 /mes</span>
+            </div>
+            <div class="sap-kpi-footer">
+              <span>Por optimización de licencias</span>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- TARJETAS CON GRAFICOS ANALITICOS -->
+        <div class="sap-dashboard-grid" style="margin-top: 20px;">
+          
+          <div class="sap-card col-4">
+            <div class="sap-card-header">
+              <div>
+                <div class="sap-card-title">Distribución por Categoría de Licencia</div>
+                <div class="sap-card-subtitle">Developer, Advanced, Core y Self-Service</div>
+              </div>
+            </div>
+            <div class="sap-card-body" style="height: 280px;">
+              <canvas id="chartFueDistribution"></canvas>
+            </div>
+          </div>
+
+          <div class="sap-card col-4">
+            <div class="sap-card-header">
+              <div>
+                <div class="sap-card-title">Consumo FUE por Centro / Departamento</div>
+                <div class="sap-card-subtitle">Distribución del costo de licencias por área</div>
+              </div>
+            </div>
+            <div class="sap-card-body" style="height: 280px;">
+              <canvas id="chartFueDepartment"></canvas>
+            </div>
+          </div>
+
+          <div class="sap-card col-4">
+            <div class="sap-card-header">
+              <div>
+                <div class="sap-card-title">Tendencia de Consumo FUE (2026)</div>
+                <div class="sap-card-subtitle">Evolución mensual vs límite contratado</div>
+              </div>
+            </div>
+            <div class="sap-card-body" style="height: 280px;">
+              <canvas id="chartFueTrend"></canvas>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- ==========================================================================
+           VISTA 2: MEDICION DE FUE & SIMULADOR WHAT-IF
+           ========================================================================== -->
+      <section id="fueMeasurementView" class="sap-view-section" style="display: none;">
+        <div class="sap-page-header">
+          <div class="sap-page-title-group">
+            <h1>Medición de FUE (Full User Equivalent) & Simulador</h1>
+            <div class="sap-page-subtitle">Cálculo de métricas S/4HANA según ponderación oficial SAP y simulación de escenarios "What-If"</div>
+          </div>
+        </div>
+
+        <div class="sap-dashboard-grid" style="margin-top: 20px;">
+          
+          <div class="sap-card col-6">
+            <div class="sap-card-header">
+              <div class="sap-card-title">Indicador de Capacidad de Contrato FUE</div>
+            </div>
+            <div class="sap-card-body">
+              <div class="sap-fue-meter-container">
+                <div class="sap-fue-gauge-wrapper">
+                  <div style="font-size: 14px; font-weight: 700; margin-bottom: 8px;" id="fueProgressPercentText">0% Ocupado</div>
+                  <div class="sap-progress-bar-bg">
+                    <div class="sap-progress-bar-fill normal" id="fueProgressBarFill" style="width: 0%;"></div>
+                  </div>
+                </div>
+
+                <div class="sap-fue-stats-row">
+                  <div class="sap-fue-stat-item">
+                    <div class="sap-fue-stat-lbl">FUE Consumido Actual</div>
+                    <div class="sap-fue-stat-val" id="fueMeterCurrent">0.00 FUE</div>
+                  </div>
+                  <div class="sap-fue-stat-item">
+                    <div class="sap-fue-stat-lbl">FUE Disponible</div>
+                    <div class="sap-fue-stat-val" id="fueMeterRemaining" style="color: var(--sapPositiveColor);">0.00 FUE</div>
+                  </div>
+                  <div class="sap-fue-stat-item">
+                    <div class="sap-fue-stat-lbl">Contrato Total</div>
+                    <div class="sap-fue-stat-val">150.00 FUE</div>
+                  </div>
+                </div>
+
+                <div style="margin-top: 20px;">
+                  <h4 style="margin-bottom: 10px; font-size: 14px; color: var(--sapContent_LabelColor);">Ponderación de Licencias S/4HANA (FUE Ratios):</h4>
+                  <table class="sap-table">
+                    <thead>
+                      <tr>
+                        <th>Categoría Licencia SAP</th>
+                        <th>Ratio FUE</th>
+                        <th>Costo Unitario USD</th>
+                        <th>Equivalencia</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td><strong>Developer Use</strong></td>
+                        <td><span class="sap-status-tag negative">1.00 FUE</span></td>
+                        <td>$120.00 /mes</td>
+                        <td>1 usuario = 1.0 FUE</td>
+                      </tr>
+                      <tr>
+                        <td><strong>Advanced Use (Professional)</strong></td>
+                        <td><span class="sap-status-tag critical">1.00 FUE</span></td>
+                        <td>$120.00 /mes</td>
+                        <td>1 usuario = 1.0 FUE</td>
+                      </tr>
+                      <tr>
+                        <td><strong>Core Use (Functional)</strong></td>
+                        <td><span class="sap-status-tag information">0.25 FUE</span></td>
+                        <td>$30.00 /mes</td>
+                        <td>4 usuarios = 1.0 FUE</td>
+                      </tr>
+                      <tr>
+                        <td><strong>Self-Service Use</strong></td>
+                        <td><span class="sap-status-tag positive">0.05 FUE</span></td>
+                        <td>$6.00 /mes</td>
+                        <td>20 usuarios = 1.0 FUE</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+
+              </div>
+            </div>
+          </div>
+
+          <!-- SIMULADOR WHAT-IF -->
+          <div class="sap-card col-6">
+            <div class="sap-card-header">
+              <div>
+                <div class="sap-card-title">Simulador de Licencias What-If</div>
+                <div class="sap-card-subtitle">Evalúa el impacto de agregar o quitar usuarios antes de contratarlos</div>
+              </div>
+              <button class="sap-btn sap-btn-ghost sap-btn-sm" id="btnResetSim">
+                🔄 Reiniciar Simulación
+              </button>
+            </div>
+            <div class="sap-card-body" style="display: flex; flex-direction: column; gap: 16px;">
+              
+              <div class="sap-sim-row">
+                <div>
+                  <div style="font-weight: 600;">Developer Use (+/- Usuarios)</div>
+                  <div style="font-size: 11px; color: var(--sapSubTextColor);">Cada usuario = 1.0 FUE ($120 USD)</div>
+                </div>
+                <input type="number" class="sap-form-control sap-sim-val" id="simQtyDeveloper" value="0" min="-10" max="50">
+              </div>
+
+              <div class="sap-sim-row">
+                <div>
+                  <div style="font-weight: 600;">Advanced Use (+/- Usuarios)</div>
+                  <div style="font-size: 11px; color: var(--sapSubTextColor);">Cada usuario = 1.0 FUE ($120 USD)</div>
+                </div>
+                <input type="number" class="sap-form-control sap-sim-val" id="simQtyAdvanced" value="0" min="-20" max="100">
+              </div>
+
+              <div class="sap-sim-row">
+                <div>
+                  <div style="font-weight: 600;">Core Use (+/- Usuarios)</div>
+                  <div style="font-size: 11px; color: var(--sapSubTextColor);">Cada usuario = 0.25 FUE ($30 USD)</div>
+                </div>
+                <input type="number" class="sap-form-control sap-sim-val" id="simQtyCore" value="0" min="-50" max="200">
+              </div>
+
+              <div class="sap-sim-row">
+                <div>
+                  <div style="font-weight: 600;">Self-Service Use (+/- Usuarios)</div>
+                  <div style="font-size: 11px; color: var(--sapSubTextColor);">Cada usuario = 0.05 FUE ($6 USD)</div>
+                </div>
+                <input type="number" class="sap-form-control sap-sim-val" id="simQtySelfService" value="0" min="-100" max="500">
+              </div>
+
+              <div style="background: var(--sapInformationBackground); border: 1px solid var(--sapInformationBorder); padding: 16px; border-radius: var(--sapCornerRadius); margin-top: 10px;">
+                <h4 style="font-size: 13px; color: var(--sapBrandColor); font-weight: 700; margin-bottom: 10px; text-transform: uppercase;">Resultado Proyectado:</h4>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                  <div>
+                    <div style="font-size: 11px; color: var(--sapContent_LabelColor);">FUE Proyectado:</div>
+                    <div style="font-size: 18px; font-weight: 800;" id="simResultFUE">137.45 FUE</div>
+                  </div>
+                  <div>
+                    <div style="font-size: 11px; color: var(--sapContent_LabelColor);">Cumplimiento Contrato:</div>
+                    <div style="font-size: 18px; font-weight: 800;" id="simResultPct">91.6%</div>
+                  </div>
+                  <div>
+                    <div style="font-size: 11px; color: var(--sapContent_LabelColor);">Diferencia de Costo:</div>
+                    <div style="font-size: 16px; font-weight: 700;" id="simResultCostDiff">+$0 USD/mes</div>
+                  </div>
+                  <div>
+                    <div style="font-size: 11px; color: var(--sapContent_LabelColor);">Estado del Límite:</div>
+                    <div id="simResultStatus"><span class="sap-status-tag positive">Dentro de Capacidad</span></div>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- ==========================================================================
+           VISTA 3: GESTION DE USUARIOS Y LICENCIAS
+           ========================================================================== -->
+      <section id="userManagementView" class="sap-view-section" style="display: none;">
+        <div class="sap-page-header">
+          <div class="sap-page-title-group">
+            <h1>Gestión & Control de Usuarios SAP</h1>
+            <div class="sap-page-subtitle">Asignación de categorías de licencias, auditoría de actividad y reclasificación de perfiles</div>
+          </div>
+          <div class="sap-page-actions">
+            <button class="sap-btn sap-btn-primary" onclick="openCreateUserModal()">
+              ➕ Crear Usuario
+            </button>
+          </div>
+        </div>
+
+        <div class="sap-card" style="margin-top: 20px;">
+          <div class="sap-table-toolbar">
+            <div class="sap-table-filters">
+              <input type="text" class="sap-form-control" id="tableSearchInput" placeholder="🔍 Buscar por nombre, email, usuario o rol..." style="min-width: 280px;">
+              
+              <select class="sap-form-control" id="filterStatusSelect">
+                <option value="ALL">Todos los Estados</option>
+                <option value="Active">Solo Activos</option>
+                <option value="Inactive">Solo Inactivos</option>
+              </select>
+
+              <select class="sap-form-control" id="filterLicenseSelect">
+                <option value="ALL">Todas las Licencias</option>
+                <option value="Developer">Developer (1.0 FUE)</option>
+                <option value="Advanced">Advanced (1.0 FUE)</option>
+                <option value="Core">Core (0.25 FUE)</option>
+                <option value="SelfService">Self-Service (0.05 FUE)</option>
+              </select>
+
+              <select class="sap-form-control" id="filterOptimizationSelect">
+                <option value="ALL">Todos los Usuarios</option>
+                <option value="NEED_ACTION">⚠️ Con Sugerencia de Optimización</option>
+              </select>
+            </div>
+
+            <div style="font-weight: 600; font-size: 13px;" id="userCountBadge">
+              0 usuarios
+            </div>
+          </div>
+
+          <div class="sap-table-wrapper">
+            <table class="sap-table">
+              <thead>
+                <tr>
+                  <th>ID Usuario</th>
+                  <th>Nombre & Usuario SAP</th>
+                  <th>Departamento</th>
+                  <th>Categoría Licencia</th>
+                  <th>FUE Asignado</th>
+                  <th>Costo Mensual</th>
+                  <th>Estado</th>
+                  <th>Auditoría / Sugerencia</th>
+                  <th style="text-align: right;">Acción</th>
+                </tr>
+              </thead>
+              <tbody id="userTableBody">
+                <!-- Generado dinámicamente -->
+              </tbody>
+            </table>
+          </div>
+
+          <div style="padding: 12px 20px; display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--sapBorderColor);">
+            <div style="font-size: 12px; color: var(--sapSubTextColor);" id="paginationInfo">
+              Mostrando 1-10 de 60
+            </div>
+            <div style="display: flex; gap: 8px;">
+              <button class="sap-btn sap-btn-ghost sap-btn-sm" id="btnPrevPage" disabled>Anterior</button>
+              <button class="sap-btn sap-btn-ghost sap-btn-sm" id="btnNextPage">Siguiente</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==========================================================================
+           VISTA 4: REPORTES Y AUDITORIA DE OPTIMIZACION DE COSTOS
+           ========================================================================== -->
+      <section id="reportsView" class="sap-view-section" style="display: none;">
+        <div class="sap-page-header">
+          <div class="sap-page-title-group">
+            <h1>Reportes de Auditoría & Optimización de Licencias</h1>
+            <div class="sap-page-subtitle">Identificación automática de licencias ociosas, sobredimensionadas y oportunidades de ahorro económico</div>
+          </div>
+          <div class="sap-page-actions">
+            <button class="sap-btn sap-btn-positive" id="btnBulkReclaimInactive">
+              ⚡ Liberar Licencias Inactivas Automáticamente
+            </button>
+          </div>
+        </div>
+
+        <div class="sap-dashboard-grid" style="margin-top: 20px;">
+          
+          <div class="sap-card col-6">
+            <div class="sap-card-header">
+              <div>
+                <div class="sap-card-title">1. Usuarios Inactivos reteniendo Licencias de Pago</div>
+                <div class="sap-card-subtitle">Usuarios sin acceso por más de 60/90 días</div>
+              </div>
+            </div>
+            <div class="sap-card-body">
+              <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; padding: 12px; background: var(--sapNegativeBackground); border-radius: var(--sapCornerRadiusSmall);">
+                <div>
+                  <div style="font-size: 12px; color: var(--sapNegativeColor); font-weight: 700;">LICENCIAS INACTIVAS RECUPERABLES</div>
+                  <div style="font-size: 20px; font-weight: 800; color: var(--sapNegativeColor);" id="auditInactiveCount">0 usuarios</div>
+                </div>
+                <div style="text-align: right;">
+                  <div style="font-size: 11px; color: var(--sapContent_LabelColor);">Impacto Económico</div>
+                  <div style="font-size: 18px; font-weight: 800; color: var(--sapNegativeColor);" id="auditInactiveUSD">$0/mes</div>
+                </div>
+              </div>
+              <p style="font-size: 12.5px; color: var(--sapSubTextColor); line-height: 1.5;">
+                Estos usuarios no han iniciado sesión en SAP S/4HANA durante los últimos meses pero continúan consumiendo cuota FUE contratada.
+              </p>
+            </div>
+          </div>
+
+          <div class="sap-card col-6">
+            <div class="sap-card-header">
+              <div>
+                <div class="sap-card-title">2. Licencias Sobredimensionadas (Advanced ➔ Core)</div>
+                <div class="sap-card-subtitle">Usuarios con tipo Advanced que solo ejecutan transacciones funcionales</div>
+              </div>
+            </div>
+            <div class="sap-card-body">
+              <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; padding: 12px; background: var(--sapCriticalBackground); border-radius: var(--sapCornerRadiusSmall);">
+                <div>
+                  <div style="font-size: 12px; color: var(--sapCriticalColor); font-weight: 700;">RECLASIFICACIONES SUGERIDAS</div>
+                  <div style="font-size: 20px; font-weight: 800; color: var(--sapCriticalColor);" id="auditReclassCount">0 usuarios</div>
+                </div>
+                <div style="text-align: right;">
+                  <div style="font-size: 11px; color: var(--sapContent_LabelColor);">Ahorro Mensual Estimado</div>
+                  <div style="font-size: 18px; font-weight: 800; color: var(--sapCriticalColor);" id="auditReclassUSD">$0/mes</div>
+                </div>
+              </div>
+              <p style="font-size: 12.5px; color: var(--sapSubTextColor); line-height: 1.5;">
+                Reclasificar a estos usuarios de <strong>Advanced Use (1.0 FUE)</strong> a <strong>Core Use (0.25 FUE)</strong> genera una reducción directa del 75% en su consumo de FUE.
+              </p>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- ==========================================================================
+           VISTA 5: REPORTE ESTÁNDAR SAP SLIM_DCH
+           ========================================================================== -->
+      <section id="slimDchView" class="sap-view-section" style="display: none;">
+        <div class="sap-page-header">
+          <div class="sap-page-title-group">
+            <h1>SLIM_DCH - Directory History & SAP LAW Measurement Log</h1>
+            <div class="sap-page-subtitle">Histórico de ejecuciones de medición de licencias SAP (LAW / USMM) y auditorías certificadas</div>
+          </div>
+          <div class="sap-page-actions">
+            <button class="sap-btn sap-btn-primary" onclick="showToast('Ejecución de medición LAW simulada con éxito.', 'success')">
+              ▶️ Ejecutar Nueva Medición LAW
+            </button>
+          </div>
+        </div>
+
+        <div class="sap-card" style="margin-top: 20px;">
+          <div class="sap-card-header">
+            <div class="sap-card-title">Registro Histórico de Auditorías de Licencias (LAW / USMM)</div>
+          </div>
+          <div class="sap-table-wrapper">
+            <table class="sap-table">
+              <thead>
+                <tr>
+                  <th>ID Medición</th>
+                  <th>Fecha & Hora</th>
+                  <th>Sistema SAP</th>
+                  <th>Versión S/4HANA</th>
+                  <th>Usuarios Medidos</th>
+                  <th>FUE Total Consumido</th>
+                  <th>Estado Cumplimiento</th>
+                  <th>Certificado Por</th>
+                </tr>
+              </thead>
+              <tbody id="slimDchTableBody">
+                <!-- Generado dinámicamente -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==========================================================================
+           VISTA 6: REPORTE ESTÁNDAR SAP S_BCE_68001393
+           ========================================================================== -->
+      <section id="sbceView" class="sap-view-section" style="display: none;">
+        <div class="sap-page-header">
+          <div class="sap-page-title-group">
+            <h1>S_BCE_68001393 - Selección de Usuarios por Criterios Complejos</h1>
+            <div class="sap-page-subtitle">Auditoría de seguridad Basis por objetos de autorización sensibles, perfiles y ejecución de T-Codes críticos</div>
+          </div>
+        </div>
+
+        <div class="sap-card" style="margin-top: 20px;">
+          <div class="sap-card-header">
+            <div class="sap-card-title">Análisis de Accesos Críticos y Objetos de Autorización</div>
+          </div>
+          <div class="sap-table-wrapper">
+            <table class="sap-table">
+              <thead>
+                <tr>
+                  <th>Usuario SAP</th>
+                  <th>Departamento</th>
+                  <th>Objeto Autorización</th>
+                  <th>T-Code Ejecutado</th>
+                  <th>Nivel de Riesgo</th>
+                  <th>Descripción del Riesgo de Auditoría</th>
+                  <th>Última Ejecución</th>
+                </tr>
+              </thead>
+              <tbody id="sbceTableBody">
+                <!-- Generado dinámicamente -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==========================================================================
+           VISTA 7: REPORTE ESTÁNDAR SAP SLIM_UCH
+           ========================================================================== -->
+      <section id="slimUchView" class="sap-view-section" style="display: none;">
+        <div class="sap-page-header">
+          <div class="sap-page-title-group">
+            <h1>SLIM_UCH - User Classification History & Audit Trail</h1>
+            <div class="sap-page-subtitle">Registro de auditoría de todos los cambios de categoría de licencias y su impacto económico</div>
+          </div>
+        </div>
+
+        <div class="sap-card" style="margin-top: 20px;">
+          <div class="sap-card-header">
+            <div class="sap-card-title">Historial de Reclasificaciones y Modificaciones de Licencia</div>
+          </div>
+          <div class="sap-table-wrapper">
+            <table class="sap-table">
+              <thead>
+                <tr>
+                  <th>ID Cambio</th>
+                  <th>Fecha / Hora</th>
+                  <th>Usuario SAP</th>
+                  <th>Licencia Anterior</th>
+                  <th>Nueva Licencia</th>
+                  <th>Impacto FUE</th>
+                  <th>Ahorro Mensual</th>
+                  <th>Motivo / Ticket de Cambio</th>
+                </tr>
+              </thead>
+              <tbody id="slimUchTableBody">
+                <!-- Generado dinámicamente -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==========================================================================
+           VISTA 8: REPORTE ESTÁNDAR SAP SUIM (USER INFORMATION SYSTEM)
+           ========================================================================== -->
+      <section id="suimView" class="sap-view-section" style="display: none;">
+        <div class="sap-page-header">
+          <div class="sap-page-title-group">
+            <h1>SUIM - Sistema de Información de Usuarios SAP</h1>
+            <div class="sap-page-subtitle">Árbol de auditoría de usuarios por roles, perfiles, transacciones y matrices de conflicto SoD</div>
+          </div>
+        </div>
+
+        <div class="sap-dashboard-grid" style="margin-top: 20px;">
+          
+          <!-- Roles & Profiles -->
+          <div class="sap-card col-6">
+            <div class="sap-card-header">
+              <div class="sap-card-title">SUIM ➔ Usuarios por Roles de Negocio</div>
+            </div>
+            <div class="sap-table-wrapper">
+              <table class="sap-table">
+                <thead>
+                  <tr>
+                    <th>Nombre Rol SAP</th>
+                    <th>Descripción</th>
+                    <th>Usuarios</th>
+                    <th>Nivel Riesgo</th>
+                  </tr>
+                </thead>
+                <tbody id="suimRolesTableBody">
+                  <!-- Generado dinámicamente -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- SoD Conflicts Matrix -->
+          <div class="sap-card col-6">
+            <div class="sap-card-header">
+              <div class="sap-card-title">SUIM ➔ Auditoría de Segregación de Funciones (SoD)</div>
+            </div>
+            <div class="sap-table-wrapper">
+              <table class="sap-table">
+                <thead>
+                  <tr>
+                    <th>ID Conflicto</th>
+                    <th>Proceso de Negocio</th>
+                    <th>T-Codes en Conflicto</th>
+                    <th>Usuarios Afectados</th>
+                    <th>Severidad</th>
+                  </tr>
+                </thead>
+                <tbody id="suimSodTableBody">
+                  <!-- Generado dinámicamente -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- ==========================================================================
+           VISTA 9: CONFIGURACION DE RATIOS Y CONTRATO SAP
+           ========================================================================== -->
+      <section id="settingsView" class="sap-view-section" style="display: none;">
+        <div class="sap-page-header">
+          <div class="sap-page-title-group">
+            <h1>Configuración de Contrato SAP & Parámetros FUE</h1>
+            <div class="sap-page-subtitle">Personalización de límites de licencias, costo unitario por FUE y umbrales de advertencia</div>
+          </div>
+        </div>
+
+        <div class="sap-card" style="margin-top: 20px; max-width: 680px;">
+          <div class="sap-card-header">
+            <div class="sap-card-title">Parámetros del Contrato RISE with SAP</div>
+          </div>
+          <div class="sap-card-body" style="display: flex; flex-direction: column; gap: 16px;">
+            
+            <div class="sap-form-group">
+              <label class="sap-form-label">Nombre del Contrato SAP</label>
+              <input type="text" class="sap-form-control" value="SAP RISE S/4HANA Cloud Enterprise Enterprise Agreement">
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+              <div class="sap-form-group">
+                <label class="sap-form-label">Límite Total Contratado (FUE)</label>
+                <input type="number" class="sap-form-control" value="150.0" step="0.5">
+              </div>
+              <div class="sap-form-group">
+                <label class="sap-form-label">Costo Mensual por FUE (USD)</label>
+                <input type="number" class="sap-form-control" value="120.0" step="1.0">
+              </div>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+              <div class="sap-form-group">
+                <label class="sap-form-label">Umbral de Alerta Amarilla (%)</label>
+                <input type="number" class="sap-form-control" value="85">
+              </div>
+              <div class="sap-form-group">
+                <label class="sap-form-label">Umbral de Alerta Roja (%)</label>
+                <input type="number" class="sap-form-control" value="95">
+              </div>
+            </div>
+
+            <div style="margin-top: 12px; display: flex; justify-content: flex-end;">
+              <button class="sap-btn sap-btn-primary" onclick="showToast('Configuración del contrato guardada correctamente.', 'success')">
+                💾 Guardar Cambios
+              </button>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- ==========================================================================
+       MODAL DIALOG: CREAR / EDITAR USUARIO SAP
+       ========================================================================== -->
+  <div class="sap-modal-overlay" id="userModalOverlay">
+    <div class="sap-modal">
+      <div class="sap-modal-header">
+        <div class="sap-modal-title" id="modalTitle">Crear / Editar Usuario SAP</div>
+        <button class="sap-modal-close" id="btnCloseUserModal">&times;</button>
+      </div>
+      
+      <form id="formUserModal">
+        <div class="sap-modal-body">
+          
+          <div class="sap-form-group">
+            <label class="sap-form-label">Nombre Completo *</label>
+            <input type="text" class="sap-form-control" id="modalFullName" required placeholder="Ej. Maria Lopez">
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+            <div class="sap-form-group">
+              <label class="sap-form-label">Nombre Usuario SAP *</label>
+              <input type="text" class="sap-form-control" id="modalUsername" required placeholder="Ej. MARIA_L">
+            </div>
+            <div class="sap-form-group">
+              <label class="sap-form-label">Correo Electrónico *</label>
+              <input type="email" class="sap-form-control" id="modalEmail" required placeholder="maria@empresa.com">
+            </div>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+            <div class="sap-form-group">
+              <label class="sap-form-label">Departamento</label>
+              <select class="sap-form-control" id="modalDepartment">
+                <option value="Finanzas y Contabilidad">Finanzas y Contabilidad</option>
+                <option value="Logística y Suministros">Logística y Suministros</option>
+                <option value="Comercial y Ventas">Comercial y Ventas</option>
+                <option value="Operaciones y Planta">Operaciones y Planta</option>
+                <option value="Recursos Humanos">Recursos Humanos</option>
+                <option value="Tecnología e Informática">Tecnología e Informática</option>
+              </select>
+            </div>
+            <div class="sap-form-group">
+              <label class="sap-form-label">Sistema SAP</label>
+              <select class="sap-form-control" id="modalSystem">
+                <option value="PRD-100">PRD-100 (Producción)</option>
+                <option value="QAS-200">QAS-200 (Calidad)</option>
+                <option value="DEV-010">DEV-010 (Desarrollo)</option>
+              </select>
+            </div>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+            <div class="sap-form-group">
+              <label class="sap-form-label">Categoría de Licencia SAP *</label>
+              <select class="sap-form-control" id="modalLicenseType" required>
+                <option value="Developer">Developer (1.0 FUE)</option>
+                <option value="Advanced">Advanced / Professional (1.0 FUE)</option>
+                <option value="Core">Core / Functional (0.25 FUE)</option>
+                <option value="SelfService">Self-Service (0.05 FUE)</option>
+              </select>
+            </div>
+            <div class="sap-form-group">
+              <label class="sap-form-label">Estado de Usuario *</label>
+              <select class="sap-form-control" id="modalStatus" required>
+                <option value="Active">Activo</option>
+                <option value="Inactive">Inactivo</option>
+              </select>
+            </div>
+          </div>
+
+        </div>
+
+        <div class="sap-modal-footer">
+          <button type="button" class="sap-btn sap-btn-ghost" id="btnCancelUserModal">Cancelar</button>
+          <button type="submit" class="sap-btn sap-btn-primary">💾 Guardar Usuario</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="sap-toast-container" id="toastContainer"></div>
+
+  <!-- SCRIPTS DE LA APLICACION -->
+  <script src="js/data.js"></script>
+  <script src="js/fue-calculator.js"></script>
+  <script src="js/user-management.js"></script>
+  <script src="js/reports.js"></script>
+  <script src="js/app.js"></script>
+  <script>
+    function goHome() {
+      if (window.parent && window.parent.PortalApp && typeof window.parent.PortalApp.closeModal === 'function') {
+        window.parent.PortalApp.closeModal();
+      } else {
+        window.location.href = '../../index.html';
+      }
+    }
+
+    function toggleNavGroup(groupId, headerEl) {
+      const subList = document.getElementById(groupId);
+      if (!subList) return;
+      const isOpen = subList.classList.contains('open');
+      const chevron = headerEl.querySelector('.group-chevron');
+      if (isOpen) {
+        subList.classList.remove('open');
+        if (chevron) chevron.classList.remove('rotated');
+      } else {
+        subList.classList.add('open');
+        if (chevron) chevron.classList.add('rotated');
+      }
+    }
+
+    if (window.self !== window.top) {
+      document.body.classList.add('in-iframe');
+    }
+    window.addEventListener('message', function(e) {
+      if (e.data && e.data.type === 'SET_THEME') {
+        var isDark = e.data.theme === 'dark';
+        document.documentElement.setAttribute('data-theme', isDark ? 'evening' : 'morning');
+        var themeToggleLabel = document.getElementById('themeToggleLabel');
+        if (themeToggleLabel) {
+          themeToggleLabel.textContent = isDark ? 'Evening Horizon' : 'Morning Horizon';
+        }
+      }
+    });
+  </script>
+
+</body>
+</html>

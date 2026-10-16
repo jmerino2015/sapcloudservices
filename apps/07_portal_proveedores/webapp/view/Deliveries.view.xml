@@ -1,0 +1,121 @@
+<mvc:View
+    controllerName="com.antigravity.portalProveedores.controller.Deliveries"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m"
+    displayBlock="true"
+    height="100%">
+
+    <Page
+        id="deliveriesPage"
+        title="{i18n>delTitle}"
+        showNavButton="true"
+        navButtonPress=".onNavBack"
+        backgroundDesign="List">
+
+        <headerContent>
+            <Button
+                id="btnNewDelivery"
+                text="{i18n>delNewDelivery}"
+                type="Emphasized"
+                icon="sap-icon://add"
+                press=".onNewDelivery" />
+        </headerContent>
+
+        <subHeader>
+            <Toolbar>
+                <SearchField
+                    id="delSearchField"
+                    placeholder="{i18n>delSearchPlaceholder}"
+                    width="20rem"
+                    liveChange=".onSearchLive" />
+                <ToolbarSpacer />
+                <Button
+                    id="btnRefreshDel"
+                    icon="sap-icon://refresh"
+                    type="Transparent"
+                    tooltip="{i18n>commonRefresh}"
+                    press=".onRefresh" />
+            </Toolbar>
+        </subHeader>
+
+        <content>
+            <VBox class="sapUiResponsivePadding">
+
+                <IconTabBar
+                    id="delStatusFilter"
+                    select=".onStatusFilterChange"
+                    class="sapUiSmallMarginBottom"
+                    backgroundDesign="Transparent">
+                    <items>
+                        <IconTabFilter id="delFilterAll" key="All" text="{i18n>delFilterAll}" />
+                        <IconTabFilter id="delFilterPending" key="Pending" text="{i18n>delFilterPending}" icon="sap-icon://pending" iconColor="Critical" />
+                        <IconTabFilter id="delFilterTransit" key="InTransit" text="{i18n>delFilterInTransit}" icon="sap-icon://truck-driver" iconColor="Information" />
+                        <IconTabFilter id="delFilterDelivered" key="Delivered" text="{i18n>delFilterDelivered}" icon="sap-icon://accept" iconColor="Positive" />
+                    </items>
+                </IconTabBar>
+
+                <Table
+                    id="delTable"
+                    items="{del>/deliveries}"
+                    noDataText="{i18n>delNoData}"
+                    growing="true"
+                    growingThreshold="10"
+                    alternateRowColors="true"
+                    sticky="ColumnHeaders">
+
+                    <columns>
+                        <Column hAlign="Begin">
+                            <Text text="{i18n>delColNumber}" />
+                        </Column>
+                        <Column hAlign="Begin" minScreenWidth="Tablet" demandPopin="true">
+                            <Text text="{i18n>delColPO}" />
+                        </Column>
+                        <Column hAlign="Begin" minScreenWidth="Desktop" demandPopin="true">
+                            <Text text="{i18n>delColDate}" />
+                        </Column>
+                        <Column hAlign="Begin">
+                            <Text text="{i18n>delColMaterial}" />
+                        </Column>
+                        <Column hAlign="End" minScreenWidth="Tablet" demandPopin="true">
+                            <Text text="{i18n>delColQuantity}" />
+                        </Column>
+                        <Column hAlign="Center">
+                            <Text text="{i18n>delColStatus}" />
+                        </Column>
+                        <Column hAlign="Center" minScreenWidth="Desktop" demandPopin="true">
+                            <Text text="{i18n>delColActions}" />
+                        </Column>
+                    </columns>
+
+                    <items>
+                        <ColumnListItem
+                            id="delTableItem"
+                            type="Active"
+                            highlight="{del>highlight}">
+                            <cells>
+                                <ObjectIdentifier title="{del>delNumber}" text="{del>carrier}" />
+                                <Text text="{del>poNumber}" />
+                                <Text text="{del>date}" />
+                                <VBox>
+                                    <Text text="{del>material}" />
+                                    <Text text="{del>materialDesc}" class="sapUiTinyMarginTop" />
+                                </VBox>
+                                <ObjectNumber number="{del>quantity}" unit="{del>unit}" />
+                                <ObjectStatus
+                                    text="{del>statusText}"
+                                    state="{del>statusState}"
+                                    icon="{del>statusIcon}" />
+                                <Button
+                                    icon="sap-icon://detail-view"
+                                    type="Transparent"
+                                    tooltip="{i18n>commonView}"
+                                    press=".onViewDelivery" />
+                            </cells>
+                        </ColumnListItem>
+                    </items>
+                </Table>
+            </VBox>
+        </content>
+    </Page>
+
+</mvc:View>

@@ -1,0 +1,60 @@
+<mvc:View controllerName="wm.light.controller.GoodsReceipt"
+  xmlns:mvc="sap.ui.core.mvc" xmlns="sap.m" xmlns:f="sap.f" xmlns:form="sap.ui.layout.form">
+  <Page id="grPage" title="{i18n>grTitle}" showNavButton="false" backgroundDesign="List">
+    <subHeader>
+      <Bar>
+        <contentRight>
+          <SearchField width="14rem" search=".onSearch" />
+          <Button icon="sap-icon://add" type="Emphasized" text="{i18n>grCreate}" press=".onCreateGR" />
+          <Button icon="sap-icon://refresh" type="Transparent" press=".onRefresh" />
+        </contentRight>
+      </Bar>
+    </subHeader>
+    <content>
+      <VBox class="sapUiResponsivePadding">
+        <Table id="grTable" items="{gr>/items}" growing="true" growingThreshold="25"
+          noDataText="{i18n>msgNoData}" sticky="ColumnHeaders,HeaderToolbar">
+          <headerToolbar>
+            <Toolbar>
+              <Title text="{i18n>grTitle}" level="H3"/>
+              <Text text="{= '(' + ${gr>/total} + ')'}" class="sapUiSmallMarginBegin"/>
+            </Toolbar>
+          </headerToolbar>
+          <columns>
+            <Column><Text text="Número GR / Guía"/></Column>
+            <Column><Text text="Tipo de Entrada"/></Column>
+            <Column><Text text="Referencia"/></Column>
+            <Column><Text text="Proveedor / Origen"/></Column>
+            <Column><Text text="Estado"/></Column>
+            <Column><Text text="Fecha"/></Column>
+            <Column hAlign="End"><Text text="Acciones"/></Column>
+          </columns>
+          <items>
+            <ColumnListItem highlight="{= ${gr>status} === 'OPEN' ? 'Information' : ${gr>status} === 'CONFIRMED' ? 'Success' : 'None'}">
+              <cells>
+                <ObjectIdentifier title="{gr>gr_number}" text="{gr>delivery_note}"/>
+                <ObjectStatus
+                  text="{= ${gr>receipt_type} === 'PO' ? 'Pedido Compra' : ${gr>receipt_type} === 'TRANSFER' ? 'Traslado' : ${gr>receipt_type} === 'PRODUCTION' ? 'Orden Producción' : 'Pedido Compra'}"
+                  state="{= ${gr>receipt_type} === 'PO' ? 'None' : ${gr>receipt_type} === 'TRANSFER' ? 'Warning' : 'Success'}"
+                  icon="{= ${gr>receipt_type} === 'PO' ? 'sap-icon://sales-order' : ${gr>receipt_type} === 'TRANSFER' ? 'sap-icon://shipping-status' : 'sap-icon://factory'}"/>
+                <Text text="{= ${gr>sap_po_number} || '—'}"/>
+                <Text text="{= ${gr>vendor_name} || '—'}"/>
+                <ObjectStatus
+                  text="{gr>status}"
+                  state="{= ${gr>status} === 'OPEN' ? 'Information' : ${gr>status} === 'CONFIRMED' ? 'Success' : 'Error'}"
+                  icon="{= ${gr>status} === 'OPEN' ? 'sap-icon://pending' : ${gr>status} === 'CONFIRMED' ? 'sap-icon://accept' : 'sap-icon://decline'}"/>
+                <Text text="{parts:[{path:'gr>created_at'}],formatter:'.formatDate'}"/>
+                <HBox justifyContent="End">
+                  <Button icon="sap-icon://accept" type="Accept" tooltip="Confirmar Ingreso (Genera TO)"
+                    visible="{= ${gr>status} === 'OPEN'}" press=".onConfirmGR" class="sapUiTinyMarginEnd"/>
+                  <Button icon="sap-icon://decline" type="Reject" tooltip="Cancelar Entrada"
+                    visible="{= ${gr>status} === 'OPEN'}" press=".onCancelGR"/>
+                </HBox>
+              </cells>
+            </ColumnListItem>
+          </items>
+        </Table>
+      </VBox>
+    </content>
+  </Page>
+</mvc:View>

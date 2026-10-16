@@ -1,0 +1,43 @@
+<core:FragmentDefinition
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core"
+    xmlns:form="sap.ui.layout.form">
+    <Popover
+        placement="Auto"
+        title="Detalles del Empleado"
+        class="sapUiContentPadding"
+        contentWidth="18rem">
+        
+        <customHeader>
+            <Bar>
+                <contentLeft>
+                    <core:Icon src="sap-icon://employee" class="sapUiTinyMarginEnd"/>
+                    <Title text="Vendedor" level="H4"/>
+                </contentLeft>
+            </Bar>
+        </customHeader>
+
+        <content>
+            <VBox class="sapUiSmallMargin" alignItems="Center">
+                <Avatar 
+                    initials="{popoverModel>/PropietarioIniciales}" 
+                    displaySize="L" 
+                    class="sapUiSmallMarginBottom"
+                    backgroundColor="Accent6"
+                />
+                <Title text="{popoverModel>/Propietario}" level="H3" class="sapUiTinyMarginBottom"/>
+                <Text text="{popoverModel>/CargoPropietario}" class="sapUiSmallMarginBottom"/>
+
+                <form:SimpleForm editable="false" layout="ResponsiveGridLayout" labelSpanXL="4" labelSpanL="4" labelSpanM="4" labelSpanS="12" width="100%">
+                    <form:content>
+                        <Label text="Email" design="Bold"/>
+                        <Link text="{popoverModel>/EmailPropietario}" href="mailto:{popoverModel>/EmailPropietario}"/>
+
+                        <Label text="Teléfono" design="Bold"/>
+                        <Text text="+51 999 888 777"/>
+                    </form:content>
+                </form:SimpleForm>
+            </VBox>
+        </content>
+    </Popover>
+</core:FragmentDefinition>

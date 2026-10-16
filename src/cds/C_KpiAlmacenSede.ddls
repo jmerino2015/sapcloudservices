@@ -1,0 +1,82 @@
+@AccessControl.authorizationCheck: #NOT_REQUIRED
+@EndUserText.label: 'Torre de Control WMS Multi-Sede - Consumo'
+@Metadata.allowExtensions: true
+@Search.searchable: true
+
+define root view entity C_KpiAlmacenSede
+  provider contract transactional_query
+  as projection on R_KpiAlmacenSede
+{
+      @Search.defaultSearchElement: true
+      @Search.fuzzinessThreshold: 0.8
+  key SedeId,
+      
+      @Search.defaultSearchElement: true
+      @Search.fuzzinessThreshold: 0.8
+      SedeNombre,
+      
+      @Search.defaultSearchElement: true
+      CentroSap,
+      AlmacenSap,
+      
+      // Ocupabilidad de Posiciones (LX03/Trx Z)
+      TotalPositions,
+      OccupiedPositions,
+      FreePositions,
+      @Semantics.quantity.unitOfMeasure: 'PercentageUnit'
+      OccupancyRate,
+      
+      // Flujo de Materiales / MB51
+      PalletsInToday,
+      PalletsOutToday,
+      @Semantics.quantity.unitOfMeasure: 'WeightUnit'
+      WeightInTodayTN,
+      @Semantics.quantity.unitOfMeasure: 'WeightUnit'
+      WeightOutTodayTN,
+      WeightUnit,
+      PercentageUnit,
+      
+      // OTs Pendientes / LT23
+      OpenOtPicking,
+      OpenOtReceiving,
+      OpenOtPutaway,
+      OpenOtDispatch,
+      TotalOpenOt,
+      
+      // Unidades de Transporte / VL06F & Drivin
+      ScheduledUnitsCount,
+      LoadedUnitsCount,
+      InProcessUnitsCount,
+      PendingUnitsCount,
+      @Semantics.quantity.unitOfMeasure: 'PercentageUnit'
+      Units7to10AmComplianceRate,
+      
+      // Calidad y Operación / OneDrive & Master
+      @Semantics.quantity.unitOfMeasure: 'PercentageUnit'
+      EriPercentage,
+      @Semantics.quantity.unitOfMeasure: 'PercentageUnit'
+      EruPercentage,
+      @Semantics.quantity.unitOfMeasure: 'PercentageUnit'
+      BpaPercentage,
+      @Semantics.quantity.unitOfMeasure: 'PercentageUnit'
+      PickingAccuracy,
+      OrdersFulfilledCount,
+      @Semantics.quantity.unitOfMeasure: 'PercentageUnit'
+      OtifPercentage,
+      RaccsOpenCount,
+      RaccsClosedCount,
+      @Semantics.quantity.unitOfMeasure: 'PercentageUnit'
+      FiveSScore,
+      DaysWithoutAccidents,
+      
+      // Auditoría y ETag
+      CreatedBy,
+      CreatedAt,
+      LastChangedBy,
+      LastChangedAt,
+      LocalLastChangedAt,
+      
+      // Composiciones Redireccionadas
+      _Familias    : redirected to composition child C_KpiAlmacenFamilia,
+      _Transportes : redirected to composition child C_KpiAlmacenUnidadTransporte
+}

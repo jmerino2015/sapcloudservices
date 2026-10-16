@@ -1,0 +1,1440 @@
+/* ==========================================================================
+   OFFICIAL SAP FIORI LAUNCHPAD — QUARTZ LIGHT & STANDARDIZED FIORI DESIGN
+   Clean Core Architecture — Typography: "72" | Palette: SAP Standard
+   ========================================================================== */
+
+/* 1. Official SAP "72" Font Definitions & SAP Icons */
+@font-face {
+  font-family: '72';
+  src: url('https://ui5.sap.com/resources/sap/ui/core/themes/sap_fiori_3/fonts/72-Regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: '72';
+  src: url('https://ui5.sap.com/resources/sap/ui/core/themes/sap_fiori_3/fonts/72-Bold.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: '72';
+  src: url('https://ui5.sap.com/resources/sap/ui/core/themes/sap_fiori_3/fonts/72-Light.woff2') format('woff2');
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'SAP-icons';
+  src: url('https://ui5.sap.com/resources/sap/ui/core/themes/base/fonts/SAP-icons.woff2') format('woff2');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  /* SAP Fiori Standardized Palette (Quartz Light / Reference FLP) */
+  --sapShellColor: #354a5f;
+  --sapShell_TextColor: #ffffff;
+  --sapShell_Hover_Background: rgba(255, 255, 255, 0.16);
+  --sapShell_Active_Background: rgba(255, 255, 255, 0.26);
+
+  --sapAnchor_Background: #ffffff;
+  --sapAnchor_BorderColor: #d9d9d9;
+  --sapAnchor_TextColor: #556b82;
+  --sapAnchor_ActiveColor: #0854a0;
+  --sapAnchor_HoverColor: #0854a0;
+
+  --sapBackgroundColor: #edeff0;
+  --sapTile_Background: #ffffff;
+  --sapTile_BorderColor: rgba(0, 0, 0, 0.09);
+  --sapTile_BorderCornerRadius: 4px;
+  --sapTile_Shadow: 0 0 0 1px rgba(0, 0, 0, 0.08), 0 1px 3px rgba(0, 0, 0, 0.05);
+  --sapTile_HoverShadow: 0 0 0 1px #0854a0, 0 4px 14px rgba(8, 84, 160, 0.18);
+
+  --sapTitleColor: #32363a;
+  --sapTextColor: #32363a;
+  --sapContent_LabelColor: #6a6d70;
+  --sapSelectedColor: #0854a0;
+  --sapHighlightColor: #0854a0;
+  --sapLinkColor: #0854a0;
+  --sapLinkHoverColor: #003666;
+
+  --sapNegativeColor: #bb0000;
+  --sapNegativeBg: #fce8e8;
+  --sapCriticalColor: #e9730c;
+  --sapCriticalBg: #fef3eb;
+  --sapPositiveColor: #107e3e;
+  --sapPositiveBg: #edf8f2;
+  --sapInformativeColor: #0a6ed1;
+
+  --sapFontFamily: '72', '72full', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  --sapTile_Width: 176px;
+  --sapTile_Height: 176px;
+  --sapTile_WideWidth: 364px;
+}
+
+[data-theme="dark"] {
+  --sapShellColor: #1d232a;
+  --sapShell_TextColor: #f5f6f7;
+  --sapShell_Hover_Background: rgba(255, 255, 255, 0.1);
+  --sapShell_Active_Background: rgba(255, 255, 255, 0.2);
+
+  --sapAnchor_Background: #181e26;
+  --sapAnchor_BorderColor: #2c3645;
+  --sapAnchor_TextColor: #a9b4c2;
+  --sapAnchor_ActiveColor: #4db3ff;
+  --sapAnchor_HoverColor: #4db3ff;
+
+  --sapBackgroundColor: #12171d;
+  --sapTile_Background: #1d232a;
+  --sapTile_BorderColor: #2c3645;
+  --sapTile_Shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+  --sapTile_HoverShadow: 0 0 0 1px #4db3ff, 0 4px 16px rgba(77, 179, 255, 0.25);
+
+  --sapTitleColor: #f5f6f7;
+  --sapTextColor: #f5f6f7;
+  --sapContent_LabelColor: #8e9baa;
+  --sapSelectedColor: #4db3ff;
+  --sapHighlightColor: #4db3ff;
+  --sapLinkColor: #4db3ff;
+  --sapLinkHoverColor: #70c3ff;
+
+  --sapNegativeColor: #ff5630;
+  --sapCriticalColor: #ff991f;
+  --sapPositiveColor: #36b37e;
+  --sapInformativeColor: #4db3ff;
+}
+
+/* ==========================================================================
+   2. BASE RESETS & LAYOUT
+   ========================================================================== */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--sapFontFamily);
+  background-color: var(--sapBackgroundColor);
+  color: var(--sapTextColor);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ==========================================================================
+   3. OFFICIAL SAP FIORI SHELL BAR (TOP HEADER)
+   ========================================================================== */
+.fiori-shell-bar {
+  background-color: var(--sapShellColor);
+  color: var(--sapShell_TextColor);
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 16px;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+.shell-left {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+/* SAP Official Logo */
+.sap-brand-badge {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.sap-logo-svg {
+  height: 24px;
+  width: auto;
+  display: block;
+  object-fit: contain;
+}
+
+/* Shell Product / Navigation Title */
+.shell-product-title {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: transparent;
+  border: none;
+  color: #ffffff;
+  font-family: var(--sapFontFamily);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 4px;
+  transition: background-color 0.15s ease;
+}
+
+.shell-product-title:hover {
+  background-color: var(--sapShell_Hover_Background);
+}
+
+.shell-product-title .caret-icon {
+  font-size: 10px;
+  opacity: 0.9;
+  margin-top: 1px;
+}
+
+/* Shell Right Actions */
+.shell-right {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* Search input in shell bar */
+.shell-search-box {
+  display: flex;
+  align-items: center;
+  position: relative;
+  margin-right: 4px;
+}
+
+.shell-search-input {
+  background: rgba(255, 255, 255, 0.14);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  color: #ffffff;
+  border-radius: 4px;
+  padding: 4px 28px 4px 10px;
+  font-size: 13px;
+  font-family: var(--sapFontFamily);
+  width: 180px;
+  outline: none;
+  transition: width 0.25s ease, background-color 0.2s ease, border-color 0.2s ease;
+}
+
+.shell-search-input::placeholder {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.shell-search-input:focus {
+  background: #ffffff;
+  color: #32363a;
+  border-color: #ffffff;
+  width: 260px;
+}
+
+.shell-search-input:focus::placeholder {
+  color: #888888;
+}
+
+.shell-search-icon-btn {
+  position: absolute;
+  right: 6px;
+  background: transparent;
+  border: none;
+  color: rgba(255, 255, 255, 0.85);
+  cursor: pointer;
+  font-size: 12px;
+  pointer-events: none;
+}
+
+.shell-search-input:focus + .shell-search-icon-btn {
+  color: #0854a0;
+}
+
+.shell-btn {
+  background: transparent;
+  border: none;
+  color: #ffffff;
+  width: 36px;
+  height: 36px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 15px;
+  transition: background-color 0.15s ease;
+  position: relative;
+}
+
+.shell-btn:hover {
+  background-color: var(--sapShell_Hover_Background);
+}
+
+.shell-btn:active {
+  background-color: var(--sapShell_Active_Background);
+}
+
+/* Notification badge indicator */
+.shell-btn-badge {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  width: 8px;
+  height: 8px;
+  background-color: #ff3b30;
+  border-radius: 50%;
+  border: 1.5px solid var(--sapShellColor);
+}
+
+/* User Avatar */
+.shell-avatar-wrap {
+  margin-left: 6px;
+  cursor: pointer;
+}
+
+.shell-avatar-img {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 1.5px solid rgba(255, 255, 255, 0.85);
+  display: block;
+}
+
+/* ==========================================================================
+   4. SAP FIORI ANCHOR BAR (HORIZONTAL NAVIGATION TABS)
+   ========================================================================== */
+.fiori-anchor-bar {
+  background-color: var(--sapAnchor_Background);
+  border-bottom: 1px solid var(--sapAnchor_BorderColor);
+  height: 44px;
+  display: flex;
+  align-items: center;
+  padding: 0 32px;
+  position: sticky;
+  top: 44px;
+  z-index: 900;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+  overflow-x: auto;
+  white-space: nowrap;
+}
+
+.fiori-anchor-tabs {
+  display: flex;
+  gap: 28px;
+  height: 100%;
+}
+
+.anchor-tab-btn {
+  background: transparent;
+  border: none;
+  color: var(--sapAnchor_TextColor);
+  font-family: var(--sapFontFamily);
+  font-size: 14px;
+  font-weight: 400;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  position: relative;
+  padding: 0 4px;
+  transition: color 0.15s ease;
+  outline: none;
+}
+
+.anchor-tab-btn:hover {
+  color: var(--sapAnchor_HoverColor);
+}
+
+.anchor-tab-btn.active {
+  color: var(--sapAnchor_ActiveColor);
+  font-weight: 700;
+}
+
+.anchor-tab-btn.active::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background-color: var(--sapAnchor_ActiveColor);
+  border-radius: 2px 2px 0 0;
+}
+
+/* ==========================================================================
+   5. WORKSPACE CANVAS & SECTION GRID
+   ========================================================================== */
+.fiori-canvas {
+  flex: 1;
+  padding: 20px 32px 60px 32px;
+  max-width: 1440px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.fiori-group-section {
+  margin-bottom: 28px;
+}
+
+.fiori-group-section:first-child {
+  margin-top: 4px;
+}
+
+.fiori-section-title {
+  font-family: var(--sapFontFamily);
+  font-size: 18px;
+  font-weight: 400;
+  color: var(--sapTitleColor);
+  margin-bottom: 12px;
+  letter-spacing: -0.01em;
+}
+
+.fiori-tiles-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: flex-start;
+}
+
+/* ==========================================================================
+   6. STANDARDIZED SAP FIORI TILES (176px x 176px & 364px x 176px)
+   ========================================================================== */
+.fiori-tile {
+  width: var(--sapTile_Width);
+  height: var(--sapTile_Height);
+  min-width: var(--sapTile_Width);
+  min-height: var(--sapTile_Height);
+  background-color: var(--sapTile_Background);
+  border-radius: var(--sapTile_BorderCornerRadius);
+  box-shadow: var(--sapTile_Shadow);
+  padding: 13px 14px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  cursor: pointer;
+  position: relative;
+  transition: box-shadow 0.15s ease, transform 0.15s ease;
+  user-select: none;
+  text-decoration: none;
+  overflow: hidden;
+}
+
+.fiori-tile:hover {
+  box-shadow: var(--sapTile_HoverShadow);
+  transform: translateY(-2px);
+}
+
+.fiori-tile:active {
+  transform: translateY(0);
+}
+
+.fiori-tile-wide {
+  width: var(--sapTile_WideWidth);
+  min-width: var(--sapTile_WideWidth);
+}
+
+/* Tile Header */
+.tile-header {
+  display: flex;
+  flex-direction: column;
+}
+
+.tile-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--sapTitleColor);
+  line-height: 1.22;
+  word-wrap: break-word;
+}
+
+.tile-subtitle {
+  font-size: 12px;
+  color: var(--sapContent_LabelColor);
+  margin-top: 3px;
+  line-height: 1.25;
+}
+
+/* Tile Body / Metrics */
+.tile-content-middle {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin: 6px 0;
+}
+
+.kpi-number-wrap {
+  display: flex;
+  align-items: baseline;
+  gap: 3px;
+}
+
+.kpi-number {
+  font-size: 36px;
+  font-weight: 300;
+  line-height: 1.05;
+  color: var(--sapTitleColor);
+}
+
+.kpi-number.alert {
+  color: var(--sapNegativeColor);
+}
+
+.kpi-number.success {
+  color: var(--sapPositiveColor);
+}
+
+.kpi-trend-arrow {
+  font-size: 18px;
+  margin-left: 2px;
+  color: var(--sapPositiveColor);
+  font-weight: bold;
+}
+
+.kpi-unit {
+  font-size: 16px;
+  color: var(--sapContent_LabelColor);
+  font-weight: 400;
+}
+
+.kpi-sublabel {
+  font-size: 12px;
+  color: var(--sapContent_LabelColor);
+  margin-top: 3px;
+}
+
+/* Tile Footer */
+.tile-footer {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+}
+
+.tile-icon-svg {
+  color: var(--sapHighlightColor);
+  font-size: 20px;
+}
+
+.tile-footer-text {
+  font-size: 12px;
+  color: var(--sapContent_LabelColor);
+}
+
+/* Avatar inside Donna Moore tile */
+.tile-avatar-round {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  display: block;
+}
+
+/* ==========================================================================
+   7. SPECIALIZED TILES (NEWS BANNER & MICRO-CHARTS)
+   ========================================================================== */
+
+/* Wide News Tile */
+.fiori-news-tile {
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  background-color: #072340;
+}
+
+.news-tile-banner-img {
+  width: 100%;
+  height: 98px;
+  object-fit: cover;
+  display: block;
+}
+
+.news-tile-text-box {
+  background: linear-gradient(180deg, #0d3862 0%, #072340 100%);
+  padding: 10px 14px 12px 14px;
+  color: #ffffff;
+}
+
+.news-tile-headline {
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.25;
+  color: #ffffff;
+}
+
+.news-tile-date {
+  font-size: 11px;
+  color: #9bbad8;
+  margin-top: 4px;
+}
+
+/* Micro Donut Chart (Confirmed Sales Order Items: 88.8%) */
+.micro-donut-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 70px;
+}
+
+.micro-donut-svg {
+  width: 68px;
+  height: 68px;
+}
+
+/* Micro Comparison Bars (Predicted Delivery Delay) */
+.delay-bars-list {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  margin-top: 4px;
+}
+
+.delay-bar-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 11px;
+}
+
+.delay-bar-label {
+  width: 48px;
+  color: var(--sapContent_LabelColor);
+}
+
+.delay-bar-track {
+  flex: 1;
+  height: 6px;
+  background-color: #eceff1;
+  border-radius: 3px;
+  margin: 0 8px;
+  overflow: hidden;
+}
+
+.delay-bar-fill {
+  height: 100%;
+  border-radius: 3px;
+}
+
+.delay-bar-fill.delayed {
+  width: 11%;
+  background-color: var(--sapNegativeColor);
+}
+
+.delay-bar-fill.early {
+  width: 19%;
+  background-color: var(--sapCriticalColor);
+}
+
+.delay-bar-fill.ontime {
+  width: 70%;
+  background-color: var(--sapPositiveColor);
+}
+
+.delay-bar-val {
+  width: 26px;
+  text-align: right;
+  font-weight: 600;
+  color: var(--sapTitleColor);
+}
+
+.delay-refresh-footer {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11px;
+  color: var(--sapHighlightColor);
+  margin-top: 6px;
+}
+
+/* Micro Column Chart (Display Business Volume) */
+.business-vol-layout {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+}
+
+.micro-column-chart {
+  display: flex;
+  align-items: flex-end;
+  gap: 4px;
+  height: 52px;
+}
+
+.micro-col-bar {
+  width: 14px;
+  background-color: #5c86a6;
+  border-radius: 2px 2px 0 0;
+}
+
+.micro-col-bar:nth-child(1) { height: 35%; background-color: #7a9cb8; }
+.micro-col-bar:nth-child(2) { height: 65%; background-color: #4a789c; }
+.micro-col-bar:nth-child(3) { height: 50%; background-color: #5c86a6; }
+.micro-col-bar:nth-child(4) { height: 95%; background-color: #758291; }
+
+.col-chart-labels {
+  display: flex;
+  gap: 4px;
+  font-size: 9px;
+  color: var(--sapContent_LabelColor);
+  margin-top: 2px;
+}
+
+.col-chart-labels span {
+  width: 14px;
+  text-align: center;
+}
+
+/* Radial Gauge (Sales Contract Fulfillment) */
+.contract-gauge-wrap {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 4px;
+}
+
+.contract-gauge-svg {
+  width: 54px;
+  height: 54px;
+}
+
+.contract-gauge-numbers {
+  display: flex;
+  flex-direction: column;
+}
+
+.gauge-main-val {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--sapPositiveColor);
+}
+
+.gauge-total-val {
+  font-size: 13px;
+  color: var(--sapContent_LabelColor);
+}
+
+/* ==========================================================================
+   8. LINKS BAR (Sales Order Links)
+   ========================================================================== */
+.fiori-links-bar {
+  background-color: var(--sapTile_Background);
+  border-radius: var(--sapTile_BorderCornerRadius);
+  box-shadow: var(--sapTile_Shadow);
+  padding: 12px 20px;
+  margin-top: 12px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px;
+  align-items: center;
+}
+
+.fiori-link-item {
+  text-decoration: none;
+  font-size: 13px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: opacity 0.15s ease;
+}
+
+.fiori-link-item:hover .link-title {
+  text-decoration: underline;
+}
+
+.link-title {
+  color: var(--sapLinkColor);
+  font-weight: 600;
+}
+
+.link-subtext {
+  color: var(--sapContent_LabelColor);
+  font-weight: 400;
+}
+
+/* ==========================================================================
+   9. ENTERPRISE APPLICATION TILES (Clean Core & S/4HANA)
+   ========================================================================== */
+.fiori-app-tile {
+  border-top: 3px solid var(--sapHighlightColor);
+  padding: 11px 13px;
+}
+
+.fiori-app-tile .app-tile-top-title {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 2px;
+}
+
+.fiori-app-tile .app-tile-top-title .tile-title {
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.2;
+  margin-top: 0;
+  flex: 1;
+  padding-right: 6px;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.fiori-app-tile .app-tile-top-title .app-tile-icon {
+  flex-shrink: 0;
+  font-size: 17px;
+  color: var(--sapHighlightColor);
+  margin-top: 1px;
+}
+
+.fiori-app-tile .tile-subtitle {
+  margin-top: 2px;
+  font-size: 11.5px;
+  line-height: 1.22;
+  color: var(--sapContent_LabelColor);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.fiori-app-tile .tile-content-middle {
+  margin: 3px 0;
+}
+
+.fiori-app-tile .kpi-number {
+  font-size: 26px;
+  line-height: 1.05;
+}
+
+.fiori-app-tile .kpi-sublabel {
+  font-size: 11.5px;
+  color: var(--sapContent_LabelColor);
+  margin-top: 2px;
+}
+
+.fiori-app-tile .app-tile-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  margin-top: 2px;
+}
+
+.fiori-app-tile .app-popout-btn {
+  background: transparent;
+  border: none;
+  color: var(--sapContent_LabelColor);
+  font-size: 13px;
+  cursor: pointer;
+  padding: 3px 5px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.15s ease, background-color 0.15s ease;
+}
+
+.fiori-app-tile .app-popout-btn:hover {
+  color: var(--sapHighlightColor);
+  background-color: rgba(8, 84, 160, 0.08);
+}
+
+/* WMS Media / Image Tile */
+.fiori-wms-media-tile {
+  width: var(--sapTile_WideWidth);
+  min-width: var(--sapTile_WideWidth);
+  height: var(--sapTile_Height);
+  min-height: var(--sapTile_Height);
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  border-radius: var(--sapTile_BorderCornerRadius);
+  box-shadow: var(--sapTile_Shadow);
+  border-top: 3px solid #0d9488;
+  overflow: hidden;
+  position: relative;
+  background-color: #072340;
+  cursor: pointer;
+  transition: box-shadow 0.15s ease, transform 0.15s ease;
+}
+
+.fiori-wms-media-tile:hover {
+  box-shadow: var(--sapTile_HoverShadow);
+  transform: translateY(-2px);
+}
+
+.wms-media-banner-wrap {
+  position: relative;
+  width: 100%;
+  height: 104px;
+  overflow: hidden;
+}
+
+.wms-media-banner-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.3s ease;
+}
+
+.fiori-wms-media-tile:hover .wms-media-banner-img {
+  transform: scale(1.03);
+}
+
+.wms-media-badge {
+  position: absolute;
+  top: 8px;
+  left: 10px;
+  background: rgba(7, 35, 64, 0.82);
+  backdrop-filter: blur(4px);
+  color: #ffffff;
+  font-size: 10px;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  letter-spacing: 0.4px;
+  text-transform: uppercase;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.wms-media-text-box {
+  background: linear-gradient(180deg, #0d3862 0%, #072340 100%);
+  padding: 8px 12px;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 69px;
+  box-sizing: border-box;
+}
+
+.wms-media-info {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  flex: 1;
+  min-width: 0;
+  padding-right: 8px;
+}
+
+.wms-media-title {
+  font-size: 13.5px;
+  font-weight: 700;
+  color: #ffffff;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1.2;
+}
+
+.wms-media-subtitle {
+  font-size: 11px;
+  color: #9bbad8;
+  margin-top: 2px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.wms-media-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.wms-media-kpi {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  border-right: 1px solid rgba(255, 255, 255, 0.18);
+  padding-right: 8px;
+}
+
+.wms-media-kpi-val {
+  font-size: 19px;
+  font-weight: 300;
+  color: #58d5ba;
+  line-height: 1;
+}
+
+.wms-media-kpi-lbl {
+  font-size: 10px;
+  color: #9bbad8;
+  margin-top: 2px;
+  text-align: right;
+  white-space: nowrap;
+}
+
+.wms-media-popout {
+  color: rgba(255, 255, 255, 0.75) !important;
+  font-size: 13px !important;
+  background: transparent !important;
+  border: none !important;
+  cursor: pointer;
+  padding: 4px !important;
+  border-radius: 4px;
+}
+
+.wms-media-popout:hover {
+  color: #ffffff !important;
+  background-color: rgba(255, 255, 255, 0.15) !important;
+}
+
+/* ==========================================================================
+   10. MODAL APPLICATION VIEWER (EMBEDDED IFRAME)
+   ========================================================================== */
+.fiori-app-modal {
+  position: fixed;
+  inset: 0;
+  background-color: var(--sapBackgroundColor);
+  z-index: 2000;
+  display: none;
+  flex-direction: column;
+}
+
+.fiori-app-modal.open {
+  display: flex;
+}
+
+.modal-header-shell {
+  background-color: var(--sapShellColor);
+  color: #ffffff;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 16px;
+}
+
+.modal-back-btn {
+  background: transparent;
+  border: none;
+  color: #ffffff;
+  font-family: var(--sapFontFamily);
+  font-size: 14px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 4px;
+  transition: background-color 0.15s ease;
+}
+
+.modal-back-btn:hover {
+  background-color: var(--sapShell_Hover_Background);
+}
+
+.modal-title-text {
+  font-size: 14px;
+  font-weight: 600;
+  color: #ffffff;
+}
+
+.modal-iframe-box {
+  flex: 1;
+  position: relative;
+  width: 100%;
+  height: calc(100vh - 44px);
+}
+
+#modal-iframe {
+  width: 100%;
+  height: 100%;
+  border: none;
+  background-color: #ffffff;
+}
+
+.modal-spinner {
+  position: absolute;
+  inset: 0;
+  background: var(--sapBackgroundColor);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  font-size: 14px;
+  color: var(--sapContent_LabelColor);
+}
+
+.spinner-icon {
+  width: 32px;
+  height: 32px;
+  border: 3px solid rgba(8, 84, 160, 0.2);
+  border-top-color: var(--sapHighlightColor);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ==========================================================================
+   11. SAP JOULE AI SIDEBAR PANEL & FLOATING BADGE
+   ========================================================================== */
+.joule-sidebar-panel {
+  position: fixed;
+  top: 44px;
+  right: -420px;
+  width: 400px;
+  height: calc(100vh - 44px);
+  background-color: var(--sapTile_Background);
+  border-left: 1px solid var(--sapAnchor_BorderColor);
+  box-shadow: -4px 0 16px rgba(0, 0, 0, 0.12);
+  z-index: 1500;
+  display: flex;
+  flex-direction: column;
+  transition: right 0.3s cubic-bezier(0.2, 0.9, 0.3, 1);
+}
+
+.joule-sidebar-panel.open {
+  right: 0;
+}
+
+.joule-sidebar-header {
+  padding: 12px 16px;
+  background-color: var(--sapShellColor);
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.joule-sidebar-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  padding: 12px;
+  background-color: var(--sapBackgroundColor);
+}
+
+.joule-chips-row {
+  display: flex;
+  gap: 6px;
+  overflow-x: auto;
+  padding-bottom: 8px;
+  margin-bottom: 8px;
+}
+
+.joule-chip-btn {
+  background-color: var(--sapTile_Background);
+  border: 1px solid var(--sapTile_BorderColor);
+  border-radius: 14px;
+  padding: 4px 10px;
+  font-size: 11px;
+  white-space: nowrap;
+  cursor: pointer;
+  color: var(--sapTextColor);
+  font-family: var(--sapFontFamily);
+  transition: all 0.15s ease;
+}
+
+.joule-chip-btn:hover {
+  background-color: #ebf4fd;
+  color: #0854a0;
+  border-color: #0854a0;
+}
+
+.joule-messages-scroll {
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding-right: 4px;
+}
+
+.joule-msg-bubble {
+  max-width: 85%;
+  padding: 10px 12px;
+  border-radius: 8px;
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+.joule-bot-msg {
+  align-self: flex-start;
+  background-color: var(--sapTile_Background);
+  color: var(--sapTextColor);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+}
+
+.joule-user-msg {
+  align-self: flex-end;
+  background-color: #0854a0;
+  color: #ffffff;
+}
+
+.joule-input-footer {
+  padding: 10px 12px;
+  background-color: var(--sapTile_Background);
+  border-top: 1px solid var(--sapAnchor_BorderColor);
+  display: flex;
+  gap: 8px;
+}
+
+.joule-input-field {
+  flex: 1;
+  border: 1px solid var(--sapAnchor_BorderColor);
+  border-radius: 4px;
+  padding: 8px 12px;
+  font-size: 13px;
+  font-family: var(--sapFontFamily);
+  outline: none;
+}
+
+.joule-input-field:focus {
+  border-color: #0854a0;
+}
+
+.joule-send-btn {
+  background-color: #0854a0;
+  border: none;
+  color: #ffffff;
+  width: 36px;
+  height: 36px;
+  border-radius: 4px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ==========================================================================
+   12. TOAST NOTIFICATIONS & RESPONSIVENESS
+   ========================================================================== */
+.fiori-toast {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #32363a;
+  color: #ffffff;
+  padding: 10px 20px;
+  border-radius: 4px;
+  font-size: 13px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+  z-index: 9999;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  pointer-events: none;
+}
+
+.fiori-toast.show {
+  opacity: 1;
+}
+
+@media (max-width: 768px) {
+  .fiori-shell-bar {
+    padding: 0 10px;
+  }
+  .fiori-anchor-bar {
+    padding: 0 16px;
+  }
+  .fiori-canvas {
+    padding: 16px 12px 40px 12px;
+  }
+  .shell-search-input {
+    width: 110px;
+  }
+  .shell-search-input:focus {
+    width: 160px;
+  }
+  .joule-sidebar-panel {
+    width: 100%;
+    right: -100%;
+  }
+}
+
+/* ==========================================================================
+   CLOUD DATABASE BADGE & STATUS DIALOG (SAP CLEAN CORE)
+   ========================================================================== */
+.shell-db-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  color: #ffffff;
+  padding: 4px 10px;
+  border-radius: 14px;
+  font-size: 11.5px;
+  font-family: var(--sapFontFamily);
+  font-weight: 500;
+  cursor: pointer;
+  margin-right: 8px;
+  transition: all 0.2s ease;
+  user-select: none;
+}
+.shell-db-badge:hover {
+  background: rgba(255, 255, 255, 0.22);
+  border-color: rgba(255, 255, 255, 0.45);
+}
+.shell-db-badge .db-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #e9730c;
+  display: inline-block;
+}
+.shell-db-badge.connected .db-dot {
+  background: #107e3e;
+  box-shadow: 0 0 6px rgba(16, 126, 62, 0.85);
+}
+
+.sap-db-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(2px);
+  z-index: 10000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: fadeInModal 0.2s ease-out;
+}
+.sap-db-dialog {
+  background: #ffffff;
+  width: 90%;
+  max-width: 580px;
+  border-radius: 8px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+  overflow: hidden;
+  font-family: var(--sapFontFamily);
+  display: flex;
+  flex-direction: column;
+}
+.sap-db-dialog-header {
+  background: #1d2d3e;
+  color: #ffffff;
+  padding: 14px 18px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.sap-db-header-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 15px;
+  font-weight: 600;
+}
+.sap-db-close-btn {
+  background: none;
+  border: none;
+  color: #ffffff;
+  font-size: 20px;
+  cursor: pointer;
+  opacity: 0.8;
+}
+.sap-db-close-btn:hover {
+  opacity: 1;
+}
+.sap-db-dialog-body {
+  padding: 20px 22px;
+  max-height: 75vh;
+  overflow-y: auto;
+  color: #32363a;
+  font-size: 13.5px;
+  line-height: 1.5;
+}
+.sap-db-status-banner {
+  padding: 12px 16px;
+  border-radius: 6px;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-weight: 600;
+}
+.sap-db-status-banner.connected {
+  background: #edf8f2;
+  color: #107e3e;
+  border: 1px solid #c2e8d3;
+}
+.sap-db-status-banner.fallback {
+  background: #fef3eb;
+  color: #e9730c;
+  border: 1px solid #fedbc1;
+}
+.sap-db-meta-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+.sap-db-meta-card {
+  background: #f7f9fa;
+  border: 1px solid #e5e8ea;
+  padding: 10px 12px;
+  border-radius: 6px;
+}
+.sap-db-meta-label {
+  font-size: 11px;
+  color: #6a6d70;
+  text-transform: uppercase;
+  margin-bottom: 3px;
+}
+.sap-db-meta-val {
+  font-size: 13px;
+  font-weight: 600;
+  color: #32363a;
+}
+.sap-db-guide-box {
+  background: #f3f6fa;
+  border-left: 4px solid #0a6ed1;
+  padding: 12px 14px;
+  border-radius: 0 6px 6px 0;
+  font-size: 12.5px;
+  margin-top: 14px;
+}
+.sap-db-dialog-footer {
+  background: #fafbfc;
+  border-top: 1px solid #eaedf1;
+  padding: 12px 18px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+.sap-btn-primary {
+  background: #0a6ed1;
+  color: #ffffff;
+  border: none;
+  padding: 7px 16px;
+  border-radius: 4px;
+  font-weight: 600;
+  font-size: 13px;
+  cursor: pointer;
+}
+.sap-btn-secondary {
+  background: #ffffff;
+  color: #32363a;
+  border: 1px solid #c4cacf;
+  padding: 7px 14px;
+  border-radius: 4px;
+  font-size: 13px;
+  cursor: pointer;
+}
+@keyframes fadeInModal {
+  from { opacity: 0; transform: scale(0.98); }
+  to { opacity: 1; transform: scale(1); }
+}

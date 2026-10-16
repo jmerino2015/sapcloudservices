@@ -1,0 +1,140 @@
+<core:FragmentDefinition
+    xmlns="sap.m"
+    xmlns:f="sap.ui.layout.form"
+    xmlns:core="sap.ui.core"
+    xmlns:u="sap.ui.unified">
+
+    <Dialog
+        title="Nueva Rendición de Cuentas — Con Lectura OCR &amp; SAP MIGO"
+        contentWidth="920px"
+        resizable="true"
+        draggable="true">
+        <content>
+            <VBox class="sapUiSmallMargin">
+
+                <!-- OCR Scanner Toolbar & Pre-Loaded PDF Selection (Demo Requerimiento) -->
+                <Panel class="sapUiTinyMarginBottom" headerText="Escáner OCR Inteligente — Selección de Documento PDF Pre-cargado">
+                    <VBox class="sapUiTinyMargin">
+                        <Label text="Seleccione un Documento PDF Pre-cargado para la Simulación Demo:" bold="true" class="sapUiTinyMarginBottom" />
+                        <HBox alignItems="Center" class="sapUiSmallMarginBottom">
+                            <Select selectedKey="{claimForm>/selectedSamplePdf}" width="26rem" change=".onSamplePdfChange" class="sapUiTinyMarginEnd">
+                                <core:Item key="PDF_1" text="📄 Factura_Electronica_F001-0042910.pdf (342 KB)" />
+                                <core:Item key="PDF_2" text="📄 Factura_Proveedor_F002-0081290_Servicios.pdf (410 KB)" />
+                                <core:Item key="PDF_3" text="📄 Boleta_Movilidad_B001-004120.pdf (185 KB)" />
+                            </Select>
+                            <Button
+                                text="🔍 Escanear PDF y Leer Información"
+                                icon="sap-icon://scan"
+                                type="Emphasized"
+                                press=".onSimulateOCRScan" />
+                        </HBox>
+
+                        <!-- Visual Card for Pre-loaded PDF Document -->
+                        <HBox alignItems="Center" class="sapUiTinyMarginPadding portalHeroBanner" style="background:#f1f5f9; border:1px solid #cbd5e1; border-radius:8px; padding:12px;">
+                            <core:Icon src="sap-icon://pdf-attachment" size="2.5rem" color="#d93b3b" class="sapUiSmallMarginEnd" />
+                            <VBox class="sapUiSmallMarginEnd">
+                                <Label text="{claimForm>/samplePdfName}" bold="true" />
+                                <Text text="Documento PDF pre-cargado listo para extracción OCR automática de RUC, IGV, Importe, Fecha y Sociedad." class="small-muted-text" />
+                            </VBox>
+                            <ToolbarSpacer />
+                            <ObjectStatus text="{= ${claimForm>/ocrExecuted} ? '✅ OCR AI Completado' : '📄 Documento Listo' }" state="{= ${claimForm>/ocrExecuted} ? 'Success' : 'Information' }" />
+                        </HBox>
+
+                        <MessageStrip
+                            id="msgOcrResult"
+                            text="{claimForm>/ocrStatusText}"
+                            type="{claimForm>/ocrStatusType}"
+                            visible="{= !!${claimForm>/ocrStatusText} }"
+                            showIcon="true"
+                            class="sapUiTinyMarginTop" />
+                    </VBox>
+                </Panel>
+
+                <f:SimpleForm
+                    editable="true"
+                    layout="ResponsiveGridLayout"
+                    labelSpanXL="4" labelSpanL="4" labelSpanM="4" labelSpanS="12"
+                    adjustLabelSpan="false"
+                    columnsXL="2" columnsL="2" columnsM="2">
+                    <f:content>
+                        <core:Title text="1. Datos de Orden de Pago OP &amp; Sociedad" />
+
+                        <Label text="Solicitante (Empleado)" required="true" />
+                        <Input value="{claimForm>/solicitante}" editable="false" />
+
+                        <Label text="Sociedad / Línea Negocio (Inversión)" required="true" />
+                        <Select selectedKey="{claimForm>/sociedad}" width="100%">
+                            <core:Item key="1000" text="1000 - Corporación Principal S.A.C." />
+                            <core:Item key="2000" text="2000 - Minería &amp; Servicios S.A." />
+                            <core:Item key="3000" text="3000 - Logistics Perú S.A." />
+                        </Select>
+
+                        <Label text="Centro de Costos (CECO)" required="true" />
+                        <Select selectedKey="{claimForm>/ceco}" width="100%">
+                            <core:Item key="CC-1002" text="CC-1002 - Operaciones &amp; Servicios" />
+                            <core:Item key="CC-1005" text="CC-1005 - Comercial &amp; Ventas" />
+                            <core:Item key="CC-2001" text="CC-2001 - Consultoría SAP" />
+                            <core:Item key="CC-3004" text="CC-3004 - Auditoría &amp; Finanzas" />
+                        </Select>
+
+                        <Label text="Motivo / Proyecto" required="true" />
+                        <Input value="{claimForm>/motivo}" placeholder="Ej. Viaje Técnico Planta Arequipa" />
+
+                        <!-- Req N° 5: Nota de Ingreso solo mercaderia -->
+                        <Label text="Nota de Ingreso (Mercadería SAP MIGO)" />
+                        <Input value="{claimForm>/notaIngreso}" placeholder="Ej. NI-2026-00941 / Guía SUNAT 001-084" tooltip="Registra la Nota de Ingreso de Mercadería SAP MIGO que quedará visible en el asiento contable" />
+
+                        <core:Title text="2. Comprobante Auditado (Lectura OCR)" />
+
+                        <Label text="Tipo Comprobante" required="true" />
+                        <Select selectedKey="{claimForm>/tipoDoc}" width="100%">
+                            <core:Item key="01" text="01 - Factura Electrónica XML/PDF" />
+                            <core:Item key="03" text="03 - Boleta de Venta" />
+                            <core:Item key="RECIBO" text="Recibo por Honorarios / Movilidad" />
+                        </Select>
+
+                        <Label text="RUC Proveedor / Emisor" required="true" />
+                        <Input value="{claimForm>/rucProveedor}" placeholder="Ej. 20517426726" />
+
+                        <Label text="Razón Social Proveedor" />
+                        <Input value="{claimForm>/razonSocialProveedor}" placeholder="Ej. SERVICIOS EMPRESARIALES S.A.C." />
+
+                        <Label text="Serie y Correlativo" required="true" />
+                        <HBox>
+                            <Input value="{claimForm>/serie}" width="6rem" class="sapUiTinyMarginEnd" placeholder="F001" />
+                            <Input value="{claimForm>/correlativo}" width="10rem" placeholder="0042910" />
+                        </HBox>
+
+                        <Label text="Importe Total &amp; IGV (OCR)" required="true" />
+                        <HBox alignItems="Center">
+                            <Input value="{claimForm>/monto}" width="8rem" class="sapUiTinyMarginEnd" placeholder="Total" />
+                            <Input value="{claimForm>/igv}" width="6rem" class="sapUiTinyMarginEnd" placeholder="IGV (18%)" />
+                            <Select selectedKey="{claimForm>/moneda}" width="5rem">
+                                <core:Item key="PEN" text="PEN" />
+                                <core:Item key="USD" text="USD" />
+                            </Select>
+                        </HBox>
+
+                        <Label text="Adjuntar XML / PDF" />
+                        <u:FileUploader
+                            buttonText="Examinar Comprobante"
+                            placeholder="Seleccione archivo XML o PDF"
+                            width="100%" />
+                    </f:content>
+                </f:SimpleForm>
+
+            </VBox>
+        </content>
+        <beginButton>
+            <Button
+                text="Registrar y Enviar a Aprobación (Paso 6)"
+                icon="sap-icon://paper-plane"
+                type="Emphasized"
+                press=".onSaveNewClaim" />
+        </beginButton>
+        <endButton>
+            <Button text="Cancelar" type="Transparent" press=".onCloseNewClaimDialog" />
+        </endButton>
+    </Dialog>
+
+</core:FragmentDefinition>

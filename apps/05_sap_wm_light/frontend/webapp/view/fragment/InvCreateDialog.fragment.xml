@@ -1,0 +1,37 @@
+<core:FragmentDefinition
+  xmlns="sap.m"
+  xmlns:core="sap.ui.core"
+  xmlns:layout="sap.ui.layout">
+  <Dialog title="Crear Documento de Inventario (LI01N)" contentWidth="450px">
+    <content>
+      <layout:VerticalLayout width="100%" class="sapUiContentPadding">
+        
+        <Label text="Almacén" />
+        <Input value="{create>/warehouse_id}" editable="false" />
+
+        <Label text="Tipo de Conteo" class="sapUiTinyMarginTop" />
+        <Select selectedKey="{create>/count_type}" width="100%">
+          <core:Item key="CYCLIC" text="Cíclico" />
+          <core:Item key="FULL" text="Completo" />
+          <core:Item key="SPOT" text="Al Azar" />
+        </Select>
+
+        <Label text="Ubicaciones a Contar" class="sapUiTinyMarginTop" required="true" />
+        <MultiComboBox 
+          items="{bins>/items}" 
+          selectedKeys="{create>/bin_ids}" 
+          width="100%"
+          placeholder="Seleccione las ubicaciones...">
+          <core:Item key="{bins>id}" text="{bins>bin_code} ({bins>status})" />
+        </MultiComboBox>
+
+      </layout:VerticalLayout>
+    </content>
+    <beginButton>
+      <Button text="Crear Documento" type="Emphasized" press=".onSaveCreate" />
+    </beginButton>
+    <endButton>
+      <Button text="Cancelar" press=".onCloseCreate" />
+    </endButton>
+  </Dialog>
+</core:FragmentDefinition>

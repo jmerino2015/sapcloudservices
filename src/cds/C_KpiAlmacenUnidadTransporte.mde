@@ -1,0 +1,96 @@
+@Metadata.layer: #CUSTOMER
+@UI: {
+  headerInfo: {
+    typeName: 'Unidad de Transporte',
+    typeNamePlural: 'Torre de Control de Despachos',
+    title: { type: #STANDARD, value: 'PlacaVehiculo' },
+    description: { type: #STANDARD, value: 'Transportista' }
+  }
+}
+
+annotate view C_KpiAlmacenUnidadTransporte with {
+
+  @UI.facet: [
+    {
+      id: 'TransporteGeneral',
+      purpose: #STANDARD,
+      type: #IDENTIFICATION_REFERENCE,
+      label: 'Detalle de Unidad & Despacho Drivin',
+      position: 10
+    }
+  ]
+
+  @UI.lineItem: [{ position: 10, importance: #HIGH, label: 'ID Unidad' }]
+  @UI.identification: [{ position: 10, label: 'ID Unidad Transporte' }]
+  TransportUnitId;
+
+  @UI.lineItem: [{ position: 20, importance: #HIGH, label: 'Placa Vehicular' }]
+  @UI.identification: [{ position: 20, label: 'Placa Vehicular' }]
+  PlacaVehiculo;
+
+  @UI.lineItem: [{ position: 30, importance: #HIGH, label: 'Transportista' }]
+  @UI.identification: [{ position: 30, label: 'Empresa de Transporte' }]
+  Transportista;
+
+  @UI.lineItem: [{ position: 40, importance: #HIGH, label: 'Destino / Ruta' }]
+  @UI.identification: [{ position: 40, label: 'Destino Final / Ruta' }]
+  Destino;
+
+  @UI.lineItem: [
+    {
+      position: 50,
+      importance: #HIGH,
+      label: 'Estatus Despacho',
+      criticality: 'StatusCriticality'
+    }
+  ]
+  @UI.identification: [
+    {
+      position: 50,
+      label: 'Estatus Despacho (Cargado/En Proceso/Pendiente)',
+      criticality: 'StatusCriticality'
+    }
+  ]
+  EstatusTransporte;
+
+  @UI.lineItem: [{ position: 60, importance: #MEDIUM, label: 'Hora Planificada' }]
+  @UI.identification: [{ position: 60, label: 'Hora Planificada de Salida' }]
+  HoraPlanificadaSalida;
+
+  @UI.lineItem: [{ position: 70, importance: #MEDIUM, label: 'Hora Real Salida' }]
+  @UI.identification: [{ position: 70, label: 'Hora Real de Salida' }]
+  HoraRealSalida;
+
+  @UI.lineItem: [{ position: 80, importance: #HIGH, label: 'Demora (Min)' }]
+  @UI.identification: [{ position: 80, label: 'Demora Acumulada (Minutos)' }]
+  DemoraMinutos;
+
+  @UI.lineItem: [
+    {
+      position: 90,
+      importance: #HIGH,
+      label: 'Ventana 7:00-10:00 AM',
+      criticality: 'VentanaCriticality'
+    }
+  ]
+  @UI.identification: [
+    {
+      position: 90,
+      label: 'Cumplimiento Ventana Horaria 7:00-10:00 AM',
+      criticality: 'VentanaCriticality'
+    }
+  ]
+  CumpleVentana7a10;
+
+  @UI.lineItem: [{ position: 100, importance: #MEDIUM, label: 'Entrega Saliente' }]
+  @UI.identification: [{ position: 100, label: 'Documento Entrega SAP' }]
+  DocumentoEntrega;
+
+  @UI.lineItem: [{ position: 110, label: 'Total Bultos' }]
+  @UI.identification: [{ position: 110, label: 'Total Bultos Despachados' }]
+  BultosTotal;
+
+  @UI.lineItem: [{ position: 120, label: 'Peso Total (TN)' }]
+  @UI.identification: [{ position: 120, label: 'Peso Total Carga (TN)' }]
+  PesoTotalTN;
+}

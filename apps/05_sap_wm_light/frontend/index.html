@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="SAP WMS - SRM FIORI — Sistema de Gestión de Almacenes SAP WM" />
+  <title>SAP WMS - SRM FIORI — Warehouse Management</title>
+  <link rel="manifest" href="manifest.json" />
+  <meta name="theme-color" content="#1D2D3E" />
+  <style>
+    html, body { height: 100%; margin: 0; padding: 0; overflow: hidden; }
+  </style>
+  <script
+    id="sap-ui-bootstrap"
+    src="https://ui5.sap.com/resources/sap-ui-core.js"
+    data-sap-ui-theme="sap_horizon"
+    data-sap-ui-libs="sap.m,sap.f,sap.ui.layout,sap.tnt"
+    data-sap-ui-compatVersion="edge"
+    data-sap-ui-async="true"
+    data-sap-ui-frameOptions="trusted"
+    data-sap-ui-resourceroots='{"wm.light": "./webapp"}'>
+  </script>
+  <!-- JsBarcode and qrcodejs for Label Printing -->
+  <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.5/dist/JsBarcode.all.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  <script>
+    sap.ui.getCore().attachInit(function () {
+      new sap.ui.core.ComponentContainer({
+        name    : "wm.light",
+        settings: { id: "wm-light" },
+        async   : true,
+        height  : "100%"
+      }).placeAt("content");
+    });
+
+    if (window.self !== window.top) {
+      document.body.classList.add('in-iframe');
+    }
+
+    window.addEventListener('message', function(e) {
+      if (e.data && e.data.type === 'SET_THEME') {
+        var isDark = e.data.theme === 'dark';
+        if (window.sap && sap.ui && sap.ui.getCore) {
+          try {
+            sap.ui.getCore().applyTheme(isDark ? 'sap_horizon_dark' : 'sap_horizon');
+          } catch(err) {}
+        }
+      }
+    });
+  </script>
+</head>
+<body class="sapUiBody sapUiSizeCozy" id="content"></body>
+</html>

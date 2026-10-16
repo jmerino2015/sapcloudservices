@@ -1,0 +1,142 @@
+<mvc:View
+    controllerName="com.antigravity.portalProveedores.controller.Invoices"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m"
+    xmlns:f="sap.f"
+    displayBlock="true"
+    height="100%">
+
+    <Page
+        id="invoicesPage"
+        title="{i18n>invTitle}"
+        showNavButton="true"
+        navButtonPress=".onNavBack"
+        backgroundDesign="List">
+
+        <headerContent>
+            <Button
+                id="btnNewInvoice"
+                text="{i18n>invNewInvoice}"
+                type="Emphasized"
+                icon="sap-icon://add"
+                press=".onNewInvoice" />
+        </headerContent>
+
+        <subHeader>
+            <Toolbar>
+                <SearchField
+                    id="invSearchField"
+                    placeholder="{i18n>invSearchPlaceholder}"
+                    width="20rem"
+                    liveChange=".onSearchLive" />
+                <ToolbarSpacer />
+                <Button
+                    id="btnRefreshInv"
+                    icon="sap-icon://refresh"
+                    type="Transparent"
+                    tooltip="{i18n>commonRefresh}"
+                    press=".onRefresh" />
+                <Button
+                    id="btnDownloadInv"
+                    icon="sap-icon://excel-attachment"
+                    type="Transparent"
+                    tooltip="{i18n>commonDownload}"
+                    press=".onDownload" />
+            </Toolbar>
+        </subHeader>
+
+        <content>
+            <VBox class="sapUiResponsivePadding">
+
+                <IconTabBar
+                    id="invStatusFilter"
+                    select=".onStatusFilterChange"
+                    class="sapUiSmallMarginBottom"
+                    backgroundDesign="Transparent">
+                    <items>
+                        <IconTabFilter id="invFilterAll" key="All" text="{i18n>invFilterAll}" />
+                        <IconTabFilter id="invFilterDraft" key="Draft" text="{i18n>invFilterDraft}" icon="sap-icon://edit" />
+                        <IconTabFilter id="invFilterPending" key="Pending" text="{i18n>invFilterPending}" icon="sap-icon://pending" iconColor="Critical" />
+                        <IconTabFilter id="invFilterApproved" key="Approved" text="{i18n>invFilterApproved}" icon="sap-icon://accept" iconColor="Positive" />
+                        <IconTabFilter id="invFilterRejected" key="Rejected" text="{i18n>invFilterRejected}" icon="sap-icon://decline" iconColor="Negative" />
+                        <IconTabFilter id="invFilterPaid" key="Paid" text="{i18n>invFilterPaid}" icon="sap-icon://money-bills" iconColor="Positive" />
+                    </items>
+                </IconTabBar>
+
+                <Table
+                    id="invTable"
+                    items="{inv>/invoices}"
+                    noDataText="{i18n>invNoData}"
+                    growing="true"
+                    growingThreshold="10"
+                    alternateRowColors="true"
+                    sticky="ColumnHeaders">
+
+                    <columns>
+                        <Column hAlign="Begin">
+                            <Text text="{i18n>invColNumber}" />
+                        </Column>
+                        <Column hAlign="Begin" minScreenWidth="Tablet" demandPopin="true">
+                            <Text text="{i18n>invColPO}" />
+                        </Column>
+                        <Column hAlign="Begin" minScreenWidth="Desktop" demandPopin="true">
+                            <Text text="{i18n>invColDate}" />
+                        </Column>
+                        <Column hAlign="Begin" minScreenWidth="Desktop" demandPopin="true">
+                            <Text text="{i18n>invColDueDate}" />
+                        </Column>
+                        <Column hAlign="End">
+                            <Text text="{i18n>invColAmount}" />
+                        </Column>
+                        <Column hAlign="Center">
+                            <Text text="{i18n>invColStatus}" />
+                        </Column>
+                        <Column hAlign="Center" minScreenWidth="Desktop" demandPopin="true">
+                            <Text text="{i18n>invColActions}" />
+                        </Column>
+                    </columns>
+
+                    <items>
+                        <ColumnListItem
+                            id="invTableItem"
+                            type="Active"
+                            highlight="{inv>highlight}">
+                            <cells>
+                                <ObjectIdentifier
+                                    title="{inv>invNumber}"
+                                    text="{inv>description}" />
+                                <Text text="{inv>poNumber}" />
+                                <Text text="{inv>invDate}" />
+                                <Text text="{inv>dueDate}" />
+                                <ObjectNumber
+                                    number="{inv>amount}"
+                                    unit="MXN"
+                                    state="{inv>amountState}"
+                                    emphasized="true" />
+                                <ObjectStatus
+                                    text="{inv>statusText}"
+                                    state="{inv>statusState}"
+                                    icon="{inv>statusIcon}" />
+                                <HBox>
+                                    <Button
+                                        icon="sap-icon://detail-view"
+                                        type="Transparent"
+                                        tooltip="{i18n>commonView}"
+                                        press=".onViewInvoice" />
+                                    <Button
+                                        icon="sap-icon://download"
+                                        type="Transparent"
+                                        tooltip="{i18n>commonDownload}"
+                                        press=".onDownloadInvoice" />
+                                </HBox>
+                            </cells>
+                        </ColumnListItem>
+                    </items>
+                </Table>
+            </VBox>
+        </content>
+
+    </Page>
+
+
+</mvc:View>

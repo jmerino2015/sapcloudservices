@@ -1,0 +1,39 @@
+@AccessControl.authorizationCheck: #NOT_REQUIRED
+@EndUserText.label: 'KPIs Ocupabilidad por Familia - View Entity'
+@Metadata.allowExtensions: true
+
+define view entity R_KpiAlmacenFamilia
+  as select from ztb_wh_familia as Familia
+  association to parent R_KpiAlmacenSede as _Sede on $projection.SedeId = _Sede.SedeId
+{
+  key Familia.sede_id                 as SedeId,
+  key Familia.familia_id              as FamiliaId,
+      Familia.familia_nombre          as FamiliaNombre,
+      
+      // Métricas de Ocupabilidad (LX03 / Trx Z)
+      Familia.posiciones_totales      as TotalPositions,
+      Familia.posiciones_ocupadas     as OccupiedPositions,
+      Familia.posiciones_libres       as FreePositions,
+      @Semantics.quantity.unitOfMeasure: 'PercentageUnit'
+      Familia.porcentaje_ocupabilidad as OccupancyRate,
+      Familia.unidad_porcentaje       as PercentageUnit,
+      
+      // Semáforo de Criticidad (1: Crítico/Sobrecupo >90%, 2: Alerta 80-90%, 3: Óptimo <80%)
+      Familia.criticidad_ocupabilidad as CriticalityCode,
+      Familia.comentario_operativo    as OperativeNotes,
+
+      // Auditoría y Concurrencia
+      @Semantics.user.createdBy: true
+      Familia.created_by              as CreatedBy,
+      @Semantics.systemDateTime.createdAt: true
+      Familia.created_at              as CreatedAt,
+      @Semantics.user.lastChangedBy: true
+      Familia.last_changed_by         as LastChangedBy,
+      @Semantics.systemDateTime.lastChangedAt: true
+      Familia.last_changed_at         as LastChangedAt,
+      @Semantics.systemDateTime.localInstanceLastChangedAt: true
+      Familia.local_last_changed_at   as LocalLastChangedAt,
+
+      // Asociación al Padre
+      _Sede
+}

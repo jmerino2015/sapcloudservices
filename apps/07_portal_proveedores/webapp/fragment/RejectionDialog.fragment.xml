@@ -1,0 +1,31 @@
+<core:FragmentDefinition
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core">
+
+    <Dialog
+        title="{i18n>accInvRejectTitle} ({reject>/comprobante})"
+        contentWidth="500px">
+        <content>
+            <VBox class="sapUiMediumMargin">
+                <Label text="Comentario / Motivo de Rechazo:*" bold="true" />
+                <TextArea
+                    value="{reject>/comment}"
+                    placeholder="{i18n>accInvRejectCommentPlaceholder}"
+                    rows="4"
+                    width="100%"
+                    class="sapUiSmallMarginTopBottom" />
+            </VBox>
+        </content>
+        <beginButton>
+            <Button
+                text="Rechazar Factura"
+                icon="sap-icon://decline"
+                type="Reject"
+                press=".onConfirmRejectInvoice" />
+        </beginButton>
+        <endButton>
+            <Button text="{i18n>commonCancel}" type="Transparent" press=".onCloseRejectDialog" />
+        </endButton>
+    </Dialog>
+
+</core:FragmentDefinition>

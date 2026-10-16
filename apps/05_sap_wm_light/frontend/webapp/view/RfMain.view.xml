@@ -1,0 +1,218 @@
+<mvc:View
+  controllerName="wm.light.controller.RfMain"
+  xmlns:mvc="sap.ui.core.mvc"
+  xmlns="sap.m"
+  xmlns:core="sap.ui.core"
+  xmlns:l="sap.ui.layout">
+
+  <Page title="Radiofrecuencia (LM01)" showNavButton="false" class="sapUiContentPadding">
+    
+    <VBox alignItems="Center" justifyContent="Center" width="100%" height="100%">
+      
+      <!-- Dispositivo RF Simulado (Zebra Touch) -->
+      <VBox class="rf-device zebra-device">
+        <!-- Top Bezel (Camera and Logo) -->
+        <HBox class="zebra-top-bezel" alignItems="Center" justifyContent="Center">
+          <HBox class="zebra-camera"></HBox>
+          <Text class="zebra-brand" text="ZEBRA" />
+        </HBox>
+        
+        <!-- Pantalla del Dispositivo -->
+        <VBox class="rf-screen-bezel">
+          <VBox class="sap-gui-screen">
+            
+            <!-- Android Status Bar -->
+            <HBox class="android-status-bar" justifyContent="SpaceBetween">
+              <Text text="{rfModel>/time}" />
+              <HBox>
+                <core:Icon src="sap-icon://wifi" size="0.75rem" class="sapUiTinyMarginEnd"/>
+                <core:Icon src="sap-icon://battery" size="0.75rem" />
+              </HBox>
+            </HBox>
+
+            <!-- HEADER -->
+            <HBox class="sap-gui-header" alignItems="Center">
+              <Text text="WM Count" class="sap-gui-logo" />
+            </HBox>
+
+            <!-- CONTENIDO DE LA PANTALLA -->
+            <VBox class="rf-content">
+              
+              <!-- ESTADO: LM01 (Main Menu) -->
+              <VBox visible="{= ${rfModel>/state} === 'LM01' }" class="sap-gui-menu-list">
+                <Button class="sap-gui-menu-item" text="01 Guiado por Sistema" press=".onMenuItemPress" />
+                <Button class="sap-gui-menu-item" text="02 Selección Manual" press=".onMenuItemPress" />
+                <Button class="sap-gui-menu-item" text="03 Procesos de Entrada" press=".onMenuItemPress" />
+                <Button class="sap-gui-menu-item" text="04 Procesos de Salida" press=".onMenuItemPress" />
+                <Button class="sap-gui-menu-item" text="05 Procesos Internos" press=".onMenuItemPress" />
+                <Button class="sap-gui-menu-item" text="06 Inventarios" press=".onMenuItemPress" />
+                
+                <HBox alignItems="Center" class="sap-gui-input-row" style="margin-top: 15px;">
+                  <Text text="Menu" class="sap-gui-label" />
+                  <Input value="{rfModel>/menuInput}" width="45px" class="sap-gui-input" submit=".onMenuSubmit" liveChange=".onMenuLiveChange" />
+                </HBox>
+                <HBox class="sap-gui-f1-row" style="margin-top: 5px;">
+                  <Button text="F1 Salir" press=".onF1Press" class="sap-gui-f1-btn" />
+                </HBox>
+              </VBox>
+
+              <!-- ESTADO: SCAN_OT -->
+              <VBox visible="{= ${rfModel>/state} === 'SCAN_OT' }" class="sap-gui-menu-list">
+                <Text text="{rfModel>/subTitle}" class="rf-title" style="color:#000;" />
+                <Text text="Escanear o digite OT:" class="sap-gui-label" />
+                <Input value="{rfModel>/otInput}" width="100%" class="sap-gui-input" submit=".onOtSubmit" placeholder="Ej: 1000234" />
+                <HBox class="sap-gui-f1-row" style="margin-top: 15px;" justifyContent="End">
+                  <Button text="F3 Atrás" press=".onF1Press" class="sap-gui-f1-btn" />
+                </HBox>
+                <Text text="{rfModel>/message}" class="rf-message" visible="{= ${rfModel>/message} !== '' }" />
+              </VBox>
+
+              <!-- ESTADO: SCAN_DELIVERY -->
+              <VBox visible="{= ${rfModel>/state} === 'SCAN_DELIVERY' }" class="sap-gui-menu-list">
+                <Text text="Picking (Salida)" class="rf-title" style="color:#000;" />
+                <Text text="Escanear Entrega / Delivery:" class="sap-gui-label" />
+                <Input value="{rfModel>/deliveryInput}" width="100%" class="sap-gui-input" submit=".onDeliverySubmit" placeholder="Ej: 8000123" />
+                <HBox class="sap-gui-f1-row" style="margin-top: 15px;" justifyContent="End">
+                  <Button text="F3 Atrás" press=".onF1Press" class="sap-gui-f1-btn" />
+                </HBox>
+                <Text text="{rfModel>/message}" class="rf-message" visible="{= ${rfModel>/message} !== '' }" />
+              </VBox>
+
+              <!-- ESTADO: INTERNAL_TRANSFER -->
+              <VBox visible="{= ${rfModel>/state} === 'INTERNAL_TRANSFER' }" class="sap-gui-menu-list">
+                <Text text="Traslado Interno (Ad-Hoc)" class="rf-title" style="color:#000;" />
+                <Text text="Ubic. Origen:" class="sap-gui-label" />
+                <Input value="{rfModel>/internalSrc}" width="100%" class="sap-gui-input" placeholder="Ej: A-01-01" />
+                
+                <Text text="Material:" class="sap-gui-label" style="margin-top: 10px;" />
+                <Input value="{rfModel>/internalMat}" width="100%" class="sap-gui-input" placeholder="Ej: MAT-001" />
+
+                <Text text="Ubic. Destino:" class="sap-gui-label" style="margin-top: 10px;" />
+                <Input value="{rfModel>/internalDest}" width="100%" class="sap-gui-input" submit=".onInternalSubmit" placeholder="Ej: B-02-02" />
+                
+                <HBox class="sap-gui-f1-row" style="margin-top: 15px;" justifyContent="SpaceBetween">
+                  <Button text="F2 Clr" press=".onClearPress" class="sap-gui-f1-btn" />
+                  <Button text="F4 Save" press=".onInternalSubmit" class="sap-gui-f1-btn" />
+                  <Button text="F3 Back" press=".onF1Press" class="sap-gui-f1-btn" />
+                </HBox>
+                
+                <Text text="{rfModel>/message}" class="rf-message" visible="{= ${rfModel>/message} !== '' }" />
+              </VBox>
+
+              <!-- ESTADO: CONFIRM_OT -->
+              <VBox visible="{= ${rfModel>/state} === 'CONFIRM_OT' }" class="sap-gui-menu-list">
+                <Text text="Storage Type &amp; Bin" class="sap-gui-label" />
+                <HBox alignItems="Center" class="sap-gui-input-row" style="margin-top: 0;">
+                  <Text text="{rfModel>/currentOt/srcBin}" class="sap-gui-value-box" />
+                </HBox>
+
+                <HBox alignItems="Center" class="sap-gui-input-row" style="margin-top: 10px;">
+                  <Text text="Mat" class="sap-gui-label" />
+                  <Text text="{rfModel>/currentOt/material}" class="sap-gui-value-box-yellow" />
+                </HBox>
+
+                <Text text="Destination Bin" class="sap-gui-label" style="margin-top: 10px;" />
+                <Input value="{rfModel>/destInput}" width="100%" class="sap-gui-input" placeholder="" submit=".onDestSubmit" />
+                
+                <HBox alignItems="Center" class="sap-gui-input-row" style="margin-top: 10px;">
+                  <Text text="Qty" class="sap-gui-label" />
+                  <Input value="{rfModel>/currentOt/qty}" width="60px" class="sap-gui-input" />
+                </HBox>
+
+                <HBox class="sap-gui-f1-row" style="margin-top: 15px;" justifyContent="SpaceBetween">
+                  <Button text="F2 Clr" press=".onClearPress" class="sap-gui-f1-btn" />
+                  <Button text="F4 EBin" press=".onDestSubmit" class="sap-gui-f1-btn" />
+                  <Button text="F3 Back" press=".onF1Press" class="sap-gui-f1-btn" />
+                </HBox>
+                
+                <Text text="{rfModel>/message}" class="rf-message" visible="{= ${rfModel>/message} !== '' }" />
+              </VBox>
+              
+              <!-- ESTADO: INVENTARIO_LIST -->
+              <VBox visible="{= ${rfModel>/state} === 'INVENTARIO_LIST' }" class="sap-gui-menu-list">
+                <Text text="Documentos de Inventario" class="rf-title" style="color:#000;" />
+                
+                <List items="{rfModel>/inventories}" noDataText="No hay documentos de inventario">
+                  <CustomListItem type="Active" press=".onSelectInventory">
+                    <HBox justifyContent="SpaceBetween" class="sapUiTinyMargin" alignItems="Center">
+                      <VBox>
+                        <Text text="{rfModel>count_number}" style="font-weight: bold; color: #000;" />
+                        <Text text="Progreso: {rfModel>bins_counted} / {rfModel>bins_total}" style="font-size: 11px; color: #555;" />
+                      </VBox>
+                      <ObjectStatus text="{rfModel>status}" state="{= ${rfModel>status} === 'ACTIVE' ? 'Warning' : 'Information' }" />
+                    </HBox>
+                  </CustomListItem>
+                </List>
+
+                <HBox class="sap-gui-f1-row" style="margin-top: 15px;" justifyContent="SpaceBetween">
+                  <Button text="F3 Atrás" press=".onF1Press" class="sap-gui-f1-btn" />
+                  <Button icon="sap-icon://refresh" press=".onRefreshInventories" class="sap-gui-f1-btn" />
+                </HBox>
+              </VBox>
+
+              <!-- ESTADO: INVENTARIO_COUNT -->
+              <VBox visible="{= ${rfModel>/state} === 'INVENTARIO_COUNT' }" class="sap-gui-menu-list">
+                <HBox justifyContent="SpaceBetween" alignItems="Center" class="rf-header">
+                  <Text text="{rfModel>/activeDoc/count_number}" class="rf-header-text" />
+                  <Text text="{rfModel>/activeBinIndex} / {rfModel>/activeDoc/bins/length}" style="color: #000; font-size: 12px;" />
+                </HBox>
+
+                <!-- Ubicación actual -->
+                <VBox class="sap-gui-input-row" style="margin-top: 5px;">
+                  <Text text="Ubicación a Contar:" class="sap-gui-label" style="font-weight: bold;" />
+                  <Text text="{rfModel>/currentBin/bin/bin_code}" class="sap-gui-value-box-yellow" style="font-size: 16px; text-align: center; width: 100%;" />
+                </VBox>
+
+                <!-- Lista de artículos en esta ubicación -->
+                <VBox items="{rfModel>/currentBin/items}" visible="{= ${rfModel>/currentBin/items}.length > 0 }" style="margin-top: 10px;">
+                  <VBox class="rf-box-section" style="background-color: #f7f9fa; border: 1px solid #ccc; padding: 5px; margin-bottom: 5px;">
+                    <HBox justifyContent="SpaceBetween">
+                      <Text text="{rfModel>material/sap_code}" style="font-weight: bold; color: #000;" />
+                      <Text text="{rfModel>unit}" style="color: #555;" />
+                    </HBox>
+                    <Text text="{rfModel>material/description}" style="font-size: 11px; color: #333;" maxLines="1" />
+                    <Text text="Lote: {rfModel>batch/batch_number}" visible="{= ${rfModel>batch} !== null }" style="font-size: 11px; color: #333;" />
+                    
+                    <HBox alignItems="Center" class="sap-gui-input-row" style="margin-top: 5px;">
+                      <Text text="Cant. Contada:" class="sap-gui-label" />
+                      <Input value="{rfModel>counted_qty}" type="Number" width="80px" class="sap-gui-input" placeholder="0" submit=".onConfirmBinCount" />
+                    </HBox>
+                  </VBox>
+                </VBox>
+
+                <!-- Si la ubicación está vacía en el sistema -->
+                <VBox visible="{= ${rfModel>/currentBin/items}.length === 0 }" style="margin-top: 10px;" alignItems="Center">
+                  <Text text="Ubicación vacía en sistema" style="color: #555; font-style: italic; margin-bottom: 10px;" />
+                  <Button text="Confirmar Vacío (Cant: 0)" type="Accept" press=".onConfirmEmptyBin" />
+                </VBox>
+
+                <HBox class="sap-gui-f1-row" style="margin-top: 15px;" justifyContent="SpaceBetween">
+                  <Button text="F3 Atrás" press=".onBackToInvList" class="sap-gui-f1-btn" />
+                  <Button text="F4 Confirmar" press=".onConfirmBinCount" class="sap-gui-f1-btn" type="Emphasized" visible="{= ${rfModel>/currentBin/items}.length > 0 }" />
+                </HBox>
+                
+                <Text text="{rfModel>/message}" class="rf-message" visible="{= ${rfModel>/message} !== '' }" />
+              </VBox>
+
+              <!-- ESTADO: SUCCESS -->
+              <VBox visible="{= ${rfModel>/state} === 'SUCCESS' }" alignContent="Center" justifyContent="Center" height="100%">
+                <core:Icon src="sap-icon://accept" color="#00ff00" size="3rem" />
+                <Text text="OT Confirmada" class="rf-success-text" />
+              </VBox>
+
+            </VBox>
+          </VBox>
+        </VBox>
+
+        <!-- Android Navigation Bar -->
+        <HBox class="android-nav-bar" justifyContent="SpaceAround" alignItems="Center">
+          <core:Icon src="sap-icon://nav-back" class="android-nav-icon" press=".onF1Press" />
+          <core:Icon src="sap-icon://circle-task-2" class="android-nav-icon" />
+          <core:Icon src="sap-icon://stop" class="android-nav-icon" />
+        </HBox>
+        
+      </VBox>
+
+    </VBox>
+  </Page>
+</mvc:View>

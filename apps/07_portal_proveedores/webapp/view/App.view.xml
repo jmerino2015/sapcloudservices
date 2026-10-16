@@ -1,0 +1,204 @@
+<mvc:View
+    controllerName="com.antigravity.portalProveedores.controller.App"
+    displayBlock="true"
+    height="100%"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m"
+    xmlns:tnt="sap.tnt"
+    xmlns:core="sap.ui.core">
+
+    <tnt:ToolPage id="toolPage">
+        <tnt:header>
+            <tnt:ToolHeader id="appToolHeader" class="portalHeader">
+                <Button
+                    id="sideNavigationToggleButton"
+                    icon="sap-icon://menu2"
+                    type="Transparent"
+                    press=".onSideNavigationToggleButtonPress"
+                    tooltip="{i18n>commonMenu}">
+                    <layoutData>
+                        <OverflowToolbarLayoutData priority="NeverOverflow" />
+                    </layoutData>
+                </Button>
+
+                <Button
+                    id="btnLaunchpad"
+                    icon="sap-icon://grid"
+                    type="Transparent"
+                    press=".onNavToLaunchpad"
+                    tooltip="Regresar a Fiori Launchpad"
+                    class="sapUiTinyMarginEnd" />
+
+                <core:Icon
+                    src="sap-icon://supplier"
+                    size="1.5rem"
+                    class="sapUiSmallMarginEnd portalHeaderIcon"
+                    press=".onNavToHome" />
+
+                <Title
+                    text="{i18n>shellBarTitle}"
+                    level="H4"
+                    class="portalHeaderTitle" />
+
+                <ToolbarSpacer />
+
+                <SearchField
+                    id="searchField"
+                    placeholder="{i18n>shellBarSearchPlaceholder}"
+                    width="14rem"
+                    class="portalHeaderSearch" />
+
+                <ToolbarSpacer />
+
+                <!-- Selector de Rol (Proveedor vs Contabilidad) -->
+                <SegmentedButton id="roleSelector" selectedKey="{app>/user/role}" selectionChange=".onRoleChange" class="sapUiSmallMarginEnd">
+                    <items>
+                        <SegmentedButtonItem key="PROVEEDOR" text="Proveedor" icon="sap-icon://supplier" />
+                        <SegmentedButtonItem key="CONTADOR" text="Contabilidad" icon="sap-icon://employee" />
+                    </items>
+                </SegmentedButton>
+
+                <Button
+                    id="btnHeaderJoule"
+                    icon="sap-icon://customer-and-contacts"
+                    type="Transparent"
+                    tooltip="Abrir SAP Joule Droid"
+                    press=".onToggleDroidIa" />
+
+                <Button
+                    id="notificationsButton"
+                    icon="sap-icon://bell"
+                    type="Transparent"
+                    tooltip="{i18n>shellBarNotificationsTooltip}"
+                    press=".onNotificationsPress" />
+
+                <Avatar
+                    id="userAvatar"
+                    initials="VP"
+                    displayShape="Circle"
+                    displaySize="S"
+                    class="sapUiTinyMarginBegin"
+                    tooltip="{i18n>shellBarProfileTooltip}"
+                    press=".onProfileAvatarPress" />
+            </tnt:ToolHeader>
+        </tnt:header>
+
+        <tnt:sideContent>
+            <tnt:SideNavigation id="sideNavigation" selectedKey="home" itemSelect=".onSideItemSelect">
+                <tnt:NavigationList id="navigationList">
+                    <tnt:NavigationListItem text="{i18n>navHome}" icon="sap-icon://home" key="home" />
+
+                    <!-- Módulos Rol Proveedor -->
+                    <tnt:NavigationListItem
+                        text="{i18n>navPreRegister}"
+                        icon="sap-icon://form"
+                        key="preRegister"
+                        visible="{= ${app>/user/role} === 'PROVEEDOR' }" />
+                    <tnt:NavigationListItem
+                        text="{i18n>navInvoiceHistory}"
+                        icon="sap-icon://history"
+                        key="invoiceHistory"
+                        visible="{= ${app>/user/role} === 'PROVEEDOR' }" />
+                    <tnt:NavigationListItem
+                        text="{i18n>navPaymentHistory}"
+                        icon="sap-icon://money-bills"
+                        key="paymentHistory"
+                        visible="{= ${app>/user/role} === 'PROVEEDOR' }" />
+                    <tnt:NavigationListItem
+                        text="{i18n>navAutoRegister}"
+                        icon="sap-icon://add-employee"
+                        key="autoRegister"
+                        visible="{= ${app>/user/role} === 'PROVEEDOR' }" />
+
+                    <!-- Módulos Rol Contador -->
+                    <tnt:NavigationListItem
+                        text="{i18n>navAccountingInvoices}"
+                        icon="sap-icon://account"
+                        key="accountingInvoices"
+                        visible="{= ${app>/user/role} === 'CONTADOR' }" />
+
+                    <!-- Módulos estándar -->
+                    <tnt:NavigationListItem text="{i18n>navPurchaseOrders}" icon="sap-icon://cart" key="purchaseOrders" />
+                    <tnt:NavigationListItem text="{i18n>navInvoices}" icon="sap-icon://bbyd-active-sales" key="invoices" />
+                    <tnt:NavigationListItem text="{i18n>navDeliveries}" icon="sap-icon://truck" key="deliveries" />
+                    <tnt:NavigationListItem text="{i18n>navDocuments}" icon="sap-icon://document" key="documents" />
+                    <tnt:NavigationListItem text="{i18n>navProfile}" icon="sap-icon://employee" key="profile" />
+                </tnt:NavigationList>
+            </tnt:SideNavigation>
+        </tnt:sideContent>
+
+        <tnt:mainContents>
+            <NavContainer id="appNav" class="mainAppNavContainer {= ${app>/chatbotExpanded} ? 'chatbot-expanded-nav' : '' }" />
+            
+            <!-- Side Panel de SAP Joule Droid Alineado a la Derecha (estilo SAP WMS) -->
+            <VBox id="chatbotSidebar" width="390px" visible="{= ${app>/chatbotExpanded} === true }" class="chatbotSidebarPanel">
+                <!-- Header de Cabecera -->
+                <Bar class="chatbotSidebarHeader">
+                    <contentLeft>
+                        <core:Icon src="sap-icon://customer-and-contacts" size="1.25rem" color="#0064d9" class="sapUiTinyMarginBegin sapUiTinyMarginEnd" />
+                        <Title text="SAP Joule Droid" titleStyle="H5" class="portalJouleTitle" />
+                    </contentLeft>
+                    <contentRight>
+                        <Button icon="sap-icon://refresh" type="Transparent" press=".onClearDroidIaChat" tooltip="Reiniciar conversación" />
+                        <Button icon="sap-icon://decline" type="Transparent" press=".onToggleDroidIa" tooltip="Cerrar SAP Joule Droid" />
+                    </contentRight>
+                </Bar>
+
+                <!-- Panel de Contenido -->
+                <VBox height="100%" justifyContent="SpaceBetween" class="sapUiContentPadding">
+
+                    <!-- Sugerencias rápidas (Chips) -->
+                    <HBox wrap="Wrap" class="sapUiTinyMarginBottom">
+                        <Button text="📊 Facturas" type="Transparent" size="Small" press=".onQuickQuestion" class="sapUiTinyMarginEnd sapUiTinyMarginBottom portalChipBtn" />
+                        <Button text="🛒 Órdenes OC" type="Transparent" size="Small" press=".onQuickQuestion" class="sapUiTinyMarginEnd sapUiTinyMarginBottom portalChipBtn" />
+                        <Button text="💰 Resumen Pagos" type="Transparent" size="Small" press=".onQuickQuestion" class="sapUiTinyMarginEnd sapUiTinyMarginBottom portalChipBtn" />
+                        <Button text="📄 Notas de Crédito" type="Transparent" size="Small" press=".onQuickQuestion" class="sapUiTinyMarginBottom portalChipBtn" />
+                    </HBox>
+
+                    <!-- Scroll de Mensajes -->
+                    <ScrollContainer id="droidIaChatScroll" class="chatScrollContainer" vertical="true" horizontal="false" focusable="true">
+                        <List id="droidIaChatList" items="{droidIaModel>/messages}" showSeparators="None">
+                            <CustomListItem>
+                                <HBox class="sapUiTinyMarginBottom" justifyContent="{= ${droidIaModel>sender} === 'bot' ? 'Start' : 'End' }">
+                                    <Avatar
+                                        visible="{= ${droidIaModel>sender} === 'bot' }"
+                                        src="sap-icon://customer-and-contacts"
+                                        displayShape="Circle"
+                                        displaySize="XS"
+                                        class="sapUiTinyMarginEnd" />
+                                    <VBox class="{= ${droidIaModel>sender} === 'bot' ? 'portalBotBubble' : 'portalUserBubble' }" style="max-width: 84%;">
+                                        <FormattedText htmlText="{droidIaModel>text}" />
+                                        <Text text="{droidIaModel>timestamp}" style="font-size: 10px; color: #888;" class="sapUiTinyMarginTop" />
+                                    </VBox>
+                                </HBox>
+                            </CustomListItem>
+                        </List>
+                    </ScrollContainer>
+
+                    <!-- Input Footer Ampliado para escribir a la IA -->
+                    <HBox alignItems="Center" width="100%" class="chatbotSidebarFooter portalIaInputContainer">
+                        <Input
+                            id="droidIaInput"
+                            placeholder="Pregúntame algo... (ej: estado de factura F001-452)"
+                            value="{droidIaModel>/inputMessage}"
+                            submit=".onSendDroidIaMessage"
+                            width="100%"
+                            class="portalIaInput">
+                            <layoutData>
+                                <FlexItemData growFactor="1" />
+                            </layoutData>
+                        </Input>
+                        <Button
+                            icon="sap-icon://paper-plane"
+                            type="Emphasized"
+                            press=".onSendDroidIaMessage"
+                            tooltip="Enviar a SAP Joule Droid"
+                            class="portalIaSendBtn sapUiTinyMarginBegin" />
+                    </HBox>
+                </VBox>
+            </VBox>
+
+        </tnt:mainContents>
+    </tnt:ToolPage>
+
+</mvc:View>

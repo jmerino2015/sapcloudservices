@@ -1,0 +1,293 @@
+@Metadata.layer: #CUSTOMER
+@UI: {
+  headerInfo: {
+    typeName: 'Sede WMS',
+    typeNamePlural: 'Torre de Control WMS - Sedes',
+    title: { type: #STANDARD, value: 'SedeNombre' },
+    description: { type: #STANDARD, value: 'CentroSap' }
+  }
+}
+
+annotate view C_KpiAlmacenSede with {
+
+  /* =========================================================================
+     FACETS (Estructura de Pantalla Fiori Object Page)
+     Franja Analítica de 4 Tarjetas KPI Fiori Horizon:
+     1. Pendientes (Naranja #e06a3b) -> OTs Abiertas LT23
+     2. Volumen (Slate #1e293b)      -> Capacidad Posiciones
+     3. Eficiencia (Verde #107e3e)   -> % Ocupabilidad Efectiva
+     4. Alertas (Naranja #e06a3b)    -> Salida 7-10 AM Drivin
+     ========================================================================= */
+  @UI.facet: [
+    // --- Header KPIs: Franja Analítica Horizon (4 Tarjetas) ---
+    {
+      id: 'HeaderDpOpenOt',
+      purpose: #HEADER,
+      type: #DATAPOINT_REFERENCE,
+      targetQualifier: 'DpOpenOt',
+      position: 10
+    },
+    {
+      id: 'HeaderDpTotalPositions',
+      purpose: #HEADER,
+      type: #DATAPOINT_REFERENCE,
+      targetQualifier: 'DpTotalPositions',
+      position: 20
+    },
+    {
+      id: 'HeaderDpOccupancy',
+      purpose: #HEADER,
+      type: #DATAPOINT_REFERENCE,
+      targetQualifier: 'DpOccupancy',
+      position: 30
+    },
+    {
+      id: 'HeaderDpVentana',
+      purpose: #HEADER,
+      type: #DATAPOINT_REFERENCE,
+      targetQualifier: 'DpVentana',
+      position: 40
+    },
+
+    // --- Secciones Principales ---
+    {
+      id: 'SectionGeneral',
+      purpose: #STANDARD,
+      type: #COLLECTION,
+      label: 'Resumen Operativo & Auditoría',
+      position: 10
+    },
+    {
+      id: 'GroupIdentification',
+      parentId: 'SectionGeneral',
+      type: #IDENTIFICATION_REFERENCE,
+      label: 'Datos Maestros del Almacén',
+      position: 10
+    },
+    {
+      id: 'GroupMatFlow',
+      parentId: 'SectionGeneral',
+      type: #FIELDGROUP_REFERENCE,
+      targetQualifier: 'FgMatFlow',
+      label: 'Flujo de Materiales (MB51 - Hoy)',
+      position: 20
+    },
+    {
+      id: 'GroupOtBreakdown',
+      parentId: 'SectionGeneral',
+      type: #FIELDGROUP_REFERENCE,
+      targetQualifier: 'FgOtBreakdown',
+      label: 'Distribución de OTs Pendientes (LT23)',
+      position: 30
+    },
+    {
+      id: 'GroupQuality',
+      parentId: 'SectionGeneral',
+      type: #FIELDGROUP_REFERENCE,
+      targetQualifier: 'FgQuality',
+      label: 'Calidad & Seguridad Operativa (OneDrive/Excel)',
+      position: 40
+    },
+    {
+      id: 'GroupAudit',
+      parentId: 'SectionGeneral',
+      type: #FIELDGROUP_REFERENCE,
+      targetQualifier: 'FgAudit',
+      label: 'Auditoría Clean Core',
+      position: 50
+    },
+    {
+      id: 'SectionFamilias',
+      purpose: #STANDARD,
+      type: #LINEITEM_REFERENCE,
+      label: 'Ocupabilidad de Posiciones por Familia (LX03)',
+      targetElement: '_Familias',
+      position: 20
+    },
+    {
+      id: 'SectionTransportes',
+      purpose: #STANDARD,
+      type: #LINEITEM_REFERENCE,
+      label: 'Torre de Control de Despachos & Drivin (VL06F)',
+      targetElement: '_Transportes',
+      position: 30
+    }
+  ]
+
+  /* =========================================================================
+     DATAPOINTS SEMÁNTICOS (Franja de 4 Tarjetas KPI Fiori Horizon)
+     ========================================================================= */
+  // 1. Métrica de Pendientes / En Riesgo (Criticality #3 / Naranja #e06a3b)
+  @UI.dataPoint: {
+    qualifier: 'DpOpenOt',
+    title: 'OTs Pendientes (LT23)',
+    visualization: #NUMBER,
+    criticalityCalculation: {
+      improvementDirection: #MINIMIZE,
+      toleranceRangeHighValue: 10,
+      deviationRangeHighValue: 25
+    }
+  }
+  TotalOpenOt;
+
+  // 2. Métrica de Base Instalada / Volumen (Criticality #0 / Dark Slate #1e293b)
+  @UI.dataPoint: {
+    qualifier: 'DpTotalPositions',
+    title: 'Capacidad de Posiciones',
+    visualization: #NUMBER
+  }
+  TotalPositions;
+
+  // 3. Métrica de Eficiencia / Cumplimiento (Criticality #1 / Verde #107e3e)
+  @UI.dataPoint: {
+    qualifier: 'DpOccupancy',
+    title: '% Ocupabilidad Efectiva',
+    visualization: #NUMBER,
+    targetValue: 85,
+    criticalityCalculation: {
+      improvementDirection: #TARGET,
+      toleranceRangeLowValue: 75,
+      toleranceRangeHighValue: 90,
+      deviationRangeLowValue: 60,
+      deviationRangeHighValue: 95
+    }
+  }
+  OccupancyRate;
+
+  // 4. Métrica de Alertas Críticas / Despacho (Criticality #2 / Naranja #e06a3b)
+  @UI.dataPoint: {
+    qualifier: 'DpVentana',
+    title: 'Salida 7-10 AM (Drivin)',
+    visualization: #NUMBER,
+    targetValue: 95,
+    criticalityCalculation: {
+      improvementDirection: #MAXIMIZE,
+      toleranceRangeLowValue: 90,
+      deviationRangeLowValue: 80
+    }
+  }
+  Units7to10AmComplianceRate;
+
+  /* =========================================================================
+     CAMPOS INDIVIDUALES & GRUPOS
+     ========================================================================= */
+  @UI.lineItem: [{ position: 10, importance: #HIGH, label: 'ID Sede' }]
+  @UI.selectionField: [{ position: 10 }]
+  @UI.identification: [{ position: 10, label: 'Identificador Sede' }]
+  SedeId;
+
+  @UI.lineItem: [{ position: 20, importance: #HIGH, label: 'Sede' }]
+  @UI.selectionField: [{ position: 20 }]
+  @UI.identification: [{ position: 20, label: 'Nombre Centro Distribución' }]
+  SedeNombre;
+
+  @UI.lineItem: [{ position: 30, importance: #HIGH, label: 'Centro SAP' }]
+  @UI.selectionField: [{ position: 30 }]
+  @UI.identification: [{ position: 30, label: 'Centro SAP' }]
+  CentroSap;
+
+  @UI.identification: [{ position: 40, label: 'Almacén SAP' }]
+  AlmacenSap;
+
+  // 1. Ocupabilidad de Posiciones (LX03)
+  @UI.lineItem: [{ position: 40, importance: #HIGH, label: '% Ocupabilidad' }]
+  @UI.fieldGroup: [{ qualifier: 'FgOccupancy', position: 10, label: '% Ocupabilidad' }]
+  OccupancyRate;
+
+  @UI.fieldGroup: [{ qualifier: 'FgOccupancy', position: 20, label: 'Posiciones Totales' }]
+  TotalPositions;
+
+  @UI.fieldGroup: [{ qualifier: 'FgOccupancy', position: 30, label: 'Posiciones Ocupadas' }]
+  OccupiedPositions;
+
+  @UI.fieldGroup: [{ qualifier: 'FgOccupancy', position: 40, label: 'Posiciones Libres' }]
+  FreePositions;
+
+  // 2. Flujo de Materiales / MB51
+  @UI.lineItem: [{ position: 50, importance: #MEDIUM, label: 'Paletas Ingreso Hoy' }]
+  @UI.fieldGroup: [{ qualifier: 'FgMatFlow', position: 10, label: 'Paletas Ingreso Hoy' }]
+  PalletsInToday;
+
+  @UI.lineItem: [{ position: 60, importance: #MEDIUM, label: 'Paletas Salida Hoy' }]
+  @UI.fieldGroup: [{ qualifier: 'FgMatFlow', position: 20, label: 'Paletas Salida Hoy' }]
+  PalletsOutToday;
+
+  @UI.lineItem: [{ position: 70, importance: #MEDIUM, label: 'Peso Ingreso (TN)' }]
+  @UI.fieldGroup: [{ qualifier: 'FgMatFlow', position: 30, label: 'Peso Ingreso Total (TN)' }]
+  WeightInTodayTN;
+
+  @UI.lineItem: [{ position: 80, importance: #MEDIUM, label: 'Peso Salida (TN)' }]
+  @UI.fieldGroup: [{ qualifier: 'FgMatFlow', position: 40, label: 'Peso Salida Total (TN)' }]
+  WeightOutTodayTN;
+
+  // 3. OTs Pendientes de Almacén (LT23)
+  @UI.lineItem: [{ position: 90, importance: #HIGH, label: 'Total OTs Abiertas' }]
+  @UI.fieldGroup: [{ qualifier: 'FgOtBreakdown', position: 10, label: 'Total OTs Abiertas' }]
+  TotalOpenOt;
+
+  @UI.fieldGroup: [{ qualifier: 'FgOtBreakdown', position: 20, label: 'OTs Picking Pendientes' }]
+  OpenOtPicking;
+
+  @UI.fieldGroup: [{ qualifier: 'FgOtBreakdown', position: 30, label: 'OTs Recepción Pendientes' }]
+  OpenOtReceiving;
+
+  @UI.fieldGroup: [{ qualifier: 'FgOtBreakdown', position: 40, label: 'OTs Ubicación (Putaway)' }]
+  OpenOtPutaway;
+
+  @UI.fieldGroup: [{ qualifier: 'FgOtBreakdown', position: 50, label: 'OTs Despacho Pendientes' }]
+  OpenOtDispatch;
+
+  // 4. Estatus Unidades de Transporte (VL06F / Drivin)
+  @UI.lineItem: [{ position: 100, importance: #HIGH, label: 'Unidades Prog.' }]
+  ScheduledUnitsCount;
+
+  @UI.lineItem: [{ position: 110, importance: #MEDIUM, label: 'Cargadas' }]
+  LoadedUnitsCount;
+
+  @UI.lineItem: [{ position: 120, importance: #MEDIUM, label: 'En Proceso' }]
+  InProcessUnitsCount;
+
+  @UI.lineItem: [{ position: 130, importance: #MEDIUM, label: 'Pendientes' }]
+  PendingUnitsCount;
+
+  // 5. Calidad y Operación (OneDrive / Excel)
+  @UI.fieldGroup: [{ qualifier: 'FgQuality', position: 10, label: 'ERI (% Exactitud Registro Inventario)' }]
+  EriPercentage;
+
+  @UI.fieldGroup: [{ qualifier: 'FgQuality', position: 20, label: 'ERU (% Exactitud Registro Ubicación)' }]
+  EruPercentage;
+
+  @UI.fieldGroup: [{ qualifier: 'FgQuality', position: 30, label: 'BPA (% Buenas Prácticas Almacenamiento)' }]
+  BpaPercentage;
+
+  @UI.fieldGroup: [{ qualifier: 'FgQuality', position: 40, label: 'Precisión Picking (%)' }]
+  PickingAccuracy;
+
+  @UI.fieldGroup: [{ qualifier: 'FgQuality', position: 50, label: 'Pedidos Atendidos' }]
+  OrdersFulfilledCount;
+
+  @UI.fieldGroup: [{ qualifier: 'FgQuality', position: 60, label: 'RACCS Abiertos (Actos/Condiciones Inseguras)' }]
+  RaccsOpenCount;
+
+  @UI.fieldGroup: [{ qualifier: 'FgQuality', position: 70, label: 'RACCS Cerrados' }]
+  RaccsClosedCount;
+
+  @UI.fieldGroup: [{ qualifier: 'FgQuality', position: 80, label: 'Calificación 5S (%)' }]
+  FiveSScore;
+
+  // Auditoría
+  @UI.fieldGroup: [{ qualifier: 'FgAudit', position: 10, label: 'Creado por' }]
+  CreatedBy;
+
+  @UI.fieldGroup: [{ qualifier: 'FgAudit', position: 20, label: 'Fecha Creación' }]
+  CreatedAt;
+
+  @UI.fieldGroup: [{ qualifier: 'FgAudit', position: 30, label: 'Última Modificación por' }]
+  LastChangedBy;
+
+  @UI.fieldGroup: [{ qualifier: 'FgAudit', position: 40, label: 'Fecha/Hora Última Modificación' }]
+  LastChangedAt;
+
+  @UI.fieldGroup: [{ qualifier: 'FgAudit', position: 50, label: 'ETag Instancia Local' }]
+  LocalLastChangedAt;
+}

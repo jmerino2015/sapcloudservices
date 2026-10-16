@@ -1,0 +1,249 @@
+<mvc:View
+    controllerName="com.antigravity.portalProveedores.controller.Home"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m"
+    xmlns:f="sap.f"
+    xmlns:card="sap.f.cards"
+    xmlns:cssgrid="sap.ui.layout.cssgrid"
+    xmlns:mc="sap.suite.ui.microchart"
+    xmlns:core="sap.ui.core">
+
+    <Page id="homePage" title="{i18n>homeTitle}">
+        <content>
+            <!-- Hero Banner -->
+            <VBox class="portalHeroBanner sapUiResponsivePadding">
+                <HBox alignItems="Center" justifyContent="SpaceBetween" wrap="Wrap">
+                    <VBox class="sapUiSmallMarginEnd">
+                        <Title text="Buenos días, Estimado Proveedor" level="H1" class="sapUiTinyMarginBottom" />
+                        <Text text="{i18n>homeSubtitle}" class="sapUiMediumMarginBottom" />
+                        <HBox>
+                            <Button
+                                text="{i18n>navPreRegister}"
+                                type="Emphasized"
+                                icon="sap-icon://form"
+                                press=".onNavToPreRegister"
+                                class="sapUiSmallMarginEnd" />
+                            <Button
+                                text="{i18n>navInvoiceHistory}"
+                                type="Default"
+                                icon="sap-icon://history"
+                                press=".onNavToInvoiceHistory"
+                                class="sapUiSmallMarginEnd" />
+                            <Button
+                                text="{i18n>navPaymentHistory}"
+                                type="Default"
+                                icon="sap-icon://money-bills"
+                                press=".onNavToPaymentHistory" />
+                        </HBox>
+                    </VBox>
+                </HBox>
+            </VBox>
+
+            <VBox class="sapUiMediumMargin">
+
+                <!-- ============================================================
+                     1. INDICADORES DE GESTIÓN (MANAGEMENT KPIs & ANALYTICS)
+                     ============================================================ -->
+                <Title text="Indicadores de Gestión y Analítica de Proveedores" level="H3" class="sapUiSmallMarginBottom" />
+                
+                <cssgrid:CSSGrid
+                    gridTemplateColumns="repeat(auto-fill, minmax(18rem, 1fr))"
+                    gridGap="1rem"
+                    class="sapUiMediumMarginBottom">
+
+                    <!-- KPI 1: OTIF Cumplimiento de Entregas -->
+                    <f:Card class="portalKpiCard">
+                        <f:header>
+                            <card:Header title="Cumplimiento OTIF" subtitle="Entregas a Tiempo y Completas" iconSrc="sap-icon://supplier" />
+                        </f:header>
+                        <f:content>
+                            <VBox class="sapUiSmallPadding" alignItems="Center">
+                                <mc:RadialMicroChart percentage="96.4" valueColor="Good" class="sapUiSmallMarginBottom" />
+                                <Label text="Meta Mensual: 95.0% | Estado: Óptimo" />
+                            </VBox>
+                        </f:content>
+                    </f:Card>
+
+                    <!-- KPI 2: Tiempo Promedio de Procesamiento (SLA) -->
+                    <f:Card class="portalKpiCard">
+                        <f:header>
+                            <card:Header title="SLA de Contabilización" subtitle="Tiempo promedio de registro" iconSrc="sap-icon://future" />
+                        </f:header>
+                        <f:content>
+                            <VBox class="sapUiSmallPadding">
+                                <NumericContent value="2.4" scale="días" valueColor="Good" indicator="Down" />
+                                <Text text="Reducción de 1.2 días respecto al mes anterior" class="sapUiTinyMarginTop" />
+                            </VBox>
+                        </f:content>
+                    </f:Card>
+
+                    <!-- KPI 3: Efectividad Pre-Registro XML DROID IA -->
+                    <f:Card class="portalKpiCard">
+                        <f:header>
+                            <card:Header title="Pre-Registro XML DROID IA" subtitle="Validación Automática SUNAT" iconSrc="sap-icon://accept" />
+                        </f:header>
+                        <f:content>
+                            <VBox class="sapUiSmallPadding">
+                                <NumericContent value="98.2%" scale="Éxito" valueColor="Good" />
+                                <Text text="35 de 36 comprobantes sin discrepancias" class="sapUiTinyMarginTop" />
+                            </VBox>
+                        </f:content>
+                    </f:Card>
+
+                    <!-- KPI 4: Acumulado de Facturación y Detracciones -->
+                    <f:Card class="portalKpiCard">
+                        <f:header>
+                            <card:Header title="Facturación y Detracciones" subtitle="Resumen Fiscal acumulado" iconSrc="sap-icon://money-bills" />
+                        </f:header>
+                        <f:content>
+                            <VBox class="sapUiSmallPadding">
+                                <mc:ComparisonMicroChart shrinkable="true">
+                                    <mc:data>
+                                        <mc:ComparisonMicroChartData title="Facturas Pen." value="120" color="Critical" displayValue="120K USD" />
+                                        <mc:ComparisonMicroChartData title="Pagado Mes" value="332" color="Good" displayValue="332K USD" />
+                                        <mc:ComparisonMicroChartData title="Detracción" value="45" color="Neutral" displayValue="45K PEN" />
+                                    </mc:data>
+                                </mc:ComparisonMicroChart>
+                            </VBox>
+                        </f:content>
+                    </f:Card>
+
+                </cssgrid:CSSGrid>
+
+
+                <!-- ============================================================
+                     2. MÓDULOS DEL PORTAL
+                     ============================================================ -->
+                <Title text="Módulos del Portal de Proveedores" level="H3" class="sapUiSmallMarginBottom" />
+                <cssgrid:CSSGrid
+                    gridTemplateColumns="repeat(auto-fill, minmax(18rem, 1fr))"
+                    gridGap="1rem"
+                    class="sapUiSmallMarginBottom">
+
+                    <!-- Tile Pre-Registro -->
+                    <GenericTile
+                        header="Pre-Registro de Facturas"
+                        subheader="Vista Proveedor (MIGO/HES)"
+                        press=".onNavToPreRegister"
+                        class="sapUiTinyMargin">
+                        <TileContent>
+                            <NumericContent value="35" icon="sap-icon://form" valueColor="Neutral" />
+                        </TileContent>
+                    </GenericTile>
+
+                    <!-- Tile Historial de Facturas -->
+                    <GenericTile
+                        header="Historial de Facturas"
+                        subheader="Consulta detallada y OC"
+                        press=".onNavToInvoiceHistory"
+                        class="sapUiTinyMargin">
+                        <TileContent>
+                            <NumericContent value="7" icon="sap-icon://history" valueColor="Good" />
+                        </TileContent>
+                    </GenericTile>
+
+                    <!-- Tile Historial de Pagos -->
+                    <GenericTile
+                        header="Historial de Pagos"
+                        subheader="Pagos, retenciones y bancos"
+                        press=".onNavToPaymentHistory"
+                        class="sapUiTinyMargin">
+                        <TileContent>
+                            <NumericContent value="5" icon="sap-icon://money-bills" valueColor="Good" />
+                        </TileContent>
+                    </GenericTile>
+
+                    <!-- Tile Registro Contador -->
+                    <GenericTile
+                        header="Registro de Facturas"
+                        subheader="Rol Contador / Contabilizar SAP"
+                        press=".onNavToAccountingInvoices"
+                        class="sapUiTinyMargin">
+                        <TileContent>
+                            <NumericContent value="3" icon="sap-icon://account" valueColor="Critical" />
+                        </TileContent>
+                    </GenericTile>
+
+                    <!-- Tile Auto-Registro -->
+                    <GenericTile
+                        header="Auto-Registro Proveedores"
+                        subheader="Formulario de alta"
+                        press=".onNavToAutoRegister"
+                        class="sapUiTinyMargin">
+                        <TileContent>
+                            <NumericContent value="NIF" icon="sap-icon://add-employee" valueColor="Neutral" />
+                        </TileContent>
+                    </GenericTile>
+
+                    <!-- Tile Notas de Crédito (NC Req N° 1 BPD) -->
+                    <GenericTile
+                        header="Notas de Crédito (NC)"
+                        subheader="Devolución de stock e importe (Req N° 1)"
+                        press=".onNavToCreditNotes"
+                        class="sapUiTinyMargin">
+                        <TileContent>
+                            <NumericContent value="NC" icon="sap-icon://sales-quote" valueColor="Good" />
+                        </TileContent>
+                    </GenericTile>
+
+                </cssgrid:CSSGrid>
+
+                <!-- ============================================================
+                     3. RESUMEN EJECUTIVO DE ÓRDENES Y ENTREGAS
+                     ============================================================ -->
+                <Title text="{i18n>homeKPITitle}" level="H3" class="sapUiSmallMarginBottom" />
+                <cssgrid:CSSGrid
+                    gridTemplateColumns="repeat(auto-fill, minmax(16rem, 1fr))"
+                    gridGap="1rem">
+
+                    <f:Card class="portalKpiCard">
+                        <f:header>
+                            <card:Header title="{i18n>kpiOpenOrders}" subtitle="Pendientes de facturar" iconSrc="sap-icon://cart" />
+                        </f:header>
+                        <f:content>
+                            <VBox class="sapUiSmallPadding">
+                                <NumericContent value="12" scale="{i18n>kpiUnit_orders}" valueColor="Good" />
+                            </VBox>
+                        </f:content>
+                    </f:Card>
+
+                    <f:Card class="portalKpiCard">
+                        <f:header>
+                            <card:Header title="{i18n>kpiPendingInvoices}" subtitle="En revisión por Contabilidad" iconSrc="sap-icon://bbyd-active-sales" />
+                        </f:header>
+                        <f:content>
+                            <VBox class="sapUiSmallPadding">
+                                <NumericContent value="5" scale="{i18n>kpiUnit_invoices}" valueColor="Critical" />
+                            </VBox>
+                        </f:content>
+                    </f:Card>
+
+                    <f:Card class="portalKpiCard">
+                        <f:header>
+                            <card:Header title="{i18n>kpiDeliveriesToday}" subtitle="Programadas para hoy" iconSrc="sap-icon://truck" />
+                        </f:header>
+                        <f:content>
+                            <VBox class="sapUiSmallPadding">
+                                <NumericContent value="3" scale="{i18n>kpiUnit_deliveries}" valueColor="Neutral" />
+                            </VBox>
+                        </f:content>
+                    </f:Card>
+
+                    <f:Card class="portalKpiCard">
+                        <f:header>
+                            <card:Header title="{i18n>kpiTotalAmount}" subtitle="Facturación mes actual" iconSrc="sap-icon://lead" />
+                        </f:header>
+                        <f:content>
+                            <VBox class="sapUiSmallPadding">
+                                <NumericContent value="452.8K" scale="USD" valueColor="Good" />
+                            </VBox>
+                        </f:content>
+                    </f:Card>
+
+                </cssgrid:CSSGrid>
+
+            </VBox>
+        </content>
+    </Page>
+
+</mvc:View>

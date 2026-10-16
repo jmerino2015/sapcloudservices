@@ -1,0 +1,60 @@
+<mvc:View controllerName="wm.light.controller.GoodsIssue"
+  xmlns:mvc="sap.ui.core.mvc" xmlns="sap.m">
+  <Page id="giPage" title="{i18n>giTitle}" showNavButton="false" backgroundDesign="List">
+    <subHeader>
+      <Bar>
+        <contentRight>
+          <SearchField width="14rem" search=".onSearch"/>
+          <Button icon="sap-icon://add" type="Emphasized" text="{i18n>giCreate}" press=".onCreateGI"/>
+          <Button icon="sap-icon://refresh" type="Transparent" press=".onRefresh"/>
+        </contentRight>
+      </Bar>
+    </subHeader>
+    <content>
+      <VBox class="sapUiResponsivePadding">
+        <Table id="giTable" items="{gi>/items}" growing="true" growingThreshold="25"
+          noDataText="{i18n>msgNoData}" sticky="ColumnHeaders,HeaderToolbar">
+          <headerToolbar>
+            <Toolbar>
+              <Title text="{i18n>giTitle}" level="H3"/>
+              <Text text="{= '(' + ${gi>/total} + ')'}" class="sapUiSmallMarginBegin"/>
+            </Toolbar>
+          </headerToolbar>
+          <columns>
+            <Column><Text text="Número GI / Entrega"/></Column>
+            <Column><Text text="Tipo de Salida"/></Column>
+            <Column><Text text="Referencia"/></Column>
+            <Column><Text text="Cliente / Destino"/></Column>
+            <Column><Text text="Estrategia Picking"/></Column>
+            <Column><Text text="Estado"/></Column>
+            <Column><Text text="Fecha"/></Column>
+            <Column hAlign="End"><Text text="Acciones"/></Column>
+          </columns>
+          <items>
+            <ColumnListItem highlight="{= ${gi>status} === 'OPEN' ? 'Information' : ${gi>status} === 'CONFIRMED' ? 'Success' : 'None'}">
+              <cells>
+                <ObjectIdentifier title="{gi>gi_number}" text="{gi>delivery_number}"/>
+                <ObjectStatus
+                  text="{= ${gi>issue_type} === 'SO' ? 'Pedido Venta' : ${gi>issue_type} === 'TRANSFER' ? 'Traslado' : ${gi>issue_type} === 'SUBCONTRACTING' ? 'Maquila' : 'Pedido Venta'}"
+                  state="{= ${gi>issue_type} === 'SO' ? 'None' : ${gi>issue_type} === 'TRANSFER' ? 'Warning' : 'Success'}"
+                  icon="{= ${gi>issue_type} === 'SO' ? 'sap-icon://sales-order-item' : ${gi>issue_type} === 'TRANSFER' ? 'sap-icon://shipping-status' : 'sap-icon://factory'}"/>
+                <Text text="{= ${gi>sap_so_number} || '—'}"/>
+                <Text text="{= ${gi>customer_name} || '—'}"/>
+                <ObjectStatus text="{gi>picking_strategy}" state="None" icon="sap-icon://sort"/>
+                <ObjectStatus
+                  text="{gi>status}"
+                  state="{= ${gi>status} === 'OPEN' ? 'Information' : ${gi>status} === 'CONFIRMED' ? 'Success' : 'Error'}"
+                  icon="{= ${gi>status} === 'OPEN' ? 'sap-icon://pending' : ${gi>status} === 'CONFIRMED' ? 'sap-icon://accept' : 'sap-icon://decline'}"/>
+                <Text text="{parts:[{path:'gi>created_at'}],formatter:'.formatDate'}"/>
+                <HBox justifyContent="End">
+                  <Button icon="sap-icon://accept" type="Accept" tooltip="Confirmar Salida (Genera TO Picking)"
+                    visible="{= ${gi>status} === 'OPEN'}" press=".onConfirmGI"/>
+                </HBox>
+              </cells>
+            </ColumnListItem>
+          </items>
+        </Table>
+      </VBox>
+    </content>
+  </Page>
+</mvc:View>

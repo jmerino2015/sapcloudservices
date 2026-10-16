@@ -1,0 +1,29 @@
+<core:FragmentDefinition
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core">
+    <TableSelectDialog
+        title="Seleccionar Propietario"
+        noDataText="No se encontraron empleados"
+        search="onOwnerSearch"
+        confirm="onOwnerConfirm"
+        items="{selectionModel>/owners}">
+        <ColumnListItem>
+            <cells>
+                <ObjectIdentifier title="{selectionModel>name}" text="{selectionModel>id}"/>
+                <Text text="{selectionModel>department}" />
+            </cells>
+        </ColumnListItem>
+        <columns>
+            <Column>
+                <header>
+                    <Text text="Nombre" />
+                </header>
+            </Column>
+            <Column minScreenWidth="Tablet" demandPopin="true">
+                <header>
+                    <Text text="Departamento" />
+                </header>
+            </Column>
+        </columns>
+    </TableSelectDialog>
+</core:FragmentDefinition>

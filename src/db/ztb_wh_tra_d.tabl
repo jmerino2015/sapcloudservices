@@ -1,0 +1,31 @@
+@EndUserText.label: 'Tabla Draft Torre Control WMS - Transporte Drivin'
+@AbapCatalog.enhancement.category: #NOT_EXTENSIBLE
+@AbapCatalog.tableCategory: #TRANSPARENT
+@AbapCatalog.deliveryClass: #A
+@AbapCatalog.dataMaintenance: #RESTRICTED
+define table ztb_wh_tra_d {
+  key mandt                    : abap.clnt not null;
+  key draftuuid                : sysuuid_x16 not null;
+  sede_id                      : abap.char(10);
+  transport_unit_id            : abap.char(20);
+  placa_vehiculo               : abap.char(15);
+  transportista                : abap.char(80);
+  destino                      : abap.char(100);
+  estatus_transporte           : abap.char(20);
+  status_criticality           : abap.int1;
+  hora_planificada_salida      : abap.tims;
+  hora_real_salida             : abap.tims;
+  demora_minutos               : abap.int4;
+  cumple_ventana_7_10          : abap.char(1);
+  ventana_criticality          : abap.int1;
+  documento_entrega            : abap.char(10);
+  bultos_total                 : abap.int4;
+  peso_total_tn                : abap.dec(10,3);
+  unidad_peso                  : abap.unit(3);
+  created_by                   : abp_creation_user;
+  created_at                   : abp_creation_tstmpl;
+  last_changed_by              : abp_locinst_lastchange_user;
+  last_changed_at              : abp_lastchange_tstmpl;
+  local_last_changed_at        : abp_locinst_lastchange_tstmpl;
+  "%admin"                     : include sychar01;
+}

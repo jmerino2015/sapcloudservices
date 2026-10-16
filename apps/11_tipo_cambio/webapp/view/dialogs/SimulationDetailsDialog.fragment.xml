@@ -1,0 +1,79 @@
+<core:FragmentDefinition
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core"
+    xmlns:form="sap.ui.layout.form"
+    xmlns:grid="sap.ui.layout.cssgrid">
+    <Dialog
+        id="simDetailDialog"
+        title="{i18n>dialogSimDetailTitle}"
+        contentWidth="750px"
+        icon="sap-icon://simulate">
+        <content>
+            <VBox class="sapUiMediumMargin">
+                <ObjectHeader
+                    title="{simulationDetail>/materialDesc} ({simulationDetail>/material})"
+                    number="{simulationDetail>/poNumber}"
+                    numberUnit="Orden de Compra MM"
+                    intro="{simulationDetail>/vendor}">
+                    <attributes>
+                        <ObjectAttribute title="Esquema de Cálculo" text="{simulationDetail>/schemeName}"/>
+                        <ObjectAttribute title="Cantidad Solicitada" text="{simulationDetail>/quantity} {simulationDetail>/unit}"/>
+                        <ObjectAttribute title="Divisa de Compra" text="{simulationDetail>/fcurr}"/>
+                    </attributes>
+                    <statuses>
+                        <ObjectStatus text="TC Actual: S/ {simulationDetail>/currentRate}" state="Information"/>
+                        <ObjectStatus text="TC Simulado: S/ {simulationDetail>/simulatedRate}" state="Warning"/>
+                    </statuses>
+                </ObjectHeader>
+
+                <Title text="Desglose Condición por Condición (Pricing Scheme MM)" level="H4" class="sapUiMediumMarginTopBottom"/>
+
+                <Table id="pricingSchemeTable" items="{simulationDetail>/pricingConditions}">
+                    <columns>
+                        <Column><Text text="Clase Condición"/></Column>
+                        <Column><Text text="Descripción Condición"/></Column>
+                        <Column><Text text="Importe Divisa"/></Column>
+                        <Column><Text text="Base Actual (PEN)"/></Column>
+                        <Column><Text text="Base Simulada (PEN)"/></Column>
+                        <Column><Text text="Variación (PEN)"/></Column>
+                    </columns>
+                    <items>
+                        <ColumnListItem>
+                            <cells>
+                                <ObjectIdentifier title="{simulationDetail>condCode}"/>
+                                <Text text="{simulationDetail>condName}"/>
+                                <Text text="{simulationDetail>amountFCurr} {simulationDetail>/fcurr}"/>
+                                <Text text="S/ {simulationDetail>amountOldPEN}"/>
+                                <Text text="S/ {simulationDetail>amountNewPEN}"/>
+                                <ObjectStatus
+                                    text="S/ {simulationDetail>diffPEN}"
+                                    state="{= ${simulationDetail>diffPEN} > 0 ? 'Error' : (${simulationDetail>diffPEN} &lt; 0 ? 'Success' : 'None') }"/>
+                            </cells>
+                        </ColumnListItem>
+                    </items>
+                </Table>
+
+                <HBox justifyContent="SpaceBetween" alignItems="Center" class="sapUiMediumMarginTop fxSimulationCard sapUiSmallMargin">
+                    <VBox class="sapUiMediumMargin">
+                        <Title text="Costo Total Landed / Inventario (PEN)" level="H4"/>
+                        <Text text="Impacto Neto en Valoración de Stock (MIGO)"/>
+                    </VBox>
+                    <VBox class="sapUiMediumMargin" alignItems="End">
+                        <HBox alignItems="Center">
+                            <Title text="Actual: S/ {simulationDetail>/currentLandedPEN}" level="H3" class="sapUiSmallMarginEnd"/>
+                            <Icon src="sap-icon://navigation-right-arrow"/>
+                            <Title text=" Simulado: S/ {simulationDetail>/simulatedLandedPEN}" level="H2" state="{simulationDetail>/status}"/>
+                        </HBox>
+                        <ObjectStatus
+                            text="Diferencia Netas: S/ {simulationDetail>/varianceAmount} ({simulationDetail>/variancePercent}%)"
+                            state="{simulationDetail>/status}"
+                            icon="sap-icon://alert"/>
+                    </VBox>
+                </HBox>
+            </VBox>
+        </content>
+        <endButton>
+            <Button text="{i18n>btnClose}" press="onCloseSimDetailDialog"/>
+        </endButton>
+    </Dialog>
+</core:FragmentDefinition>

@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Gestión Inteligente de Tipos de Cambio | SAP Fiori</title>
+
+    <script id="sap-ui-bootstrap"
+        src="https://ui5.sap.com/resources/sap-ui-core.js"
+        data-sap-ui-theme="sap_horizon"
+        data-sap-ui-resourceroots='{
+            "com.droidconsulting.scm.fxmanager": "./"
+        }'
+        data-sap-ui-compatVersion="edge"
+        data-sap-ui-async="true"
+        data-sap-ui-oninit="module:sap/ui/core/ComponentSupport"
+        data-sap-ui-libs="sap.m,sap.f,sap.ui.layout,sap.ui.table">
+    </script>
+
+    <style>
+        html, body, #content {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+    </style>
+</head>
+<body class="sapUiBody" id="content">
+    <div data-sap-ui-component
+        data-name="com.droidconsulting.scm.fxmanager"
+        data-id="container"
+        data-settings='{"id" : "com.droidconsulting.scm.fxmanager"}'
+        style="height: 100%;">
+    </div>
+    <script>
+        window.addEventListener('message', function(e) {
+            if (e.data && e.data.type === 'SET_THEME') {
+                var isDark = e.data.theme === 'dark';
+                if (window.sap && sap.ui && sap.ui.getCore) {
+                    try {
+                        sap.ui.getCore().applyTheme(isDark ? 'sap_horizon_dark' : 'sap_horizon');
+                    } catch(err) {}
+                }
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,21 @@
+@EndUserText.label: 'Parámetros para Sincronización de KPIs WMS Multi-Sede'
+define abstract entity ZA_ParamSincronizar
+{
+  @EndUserText.label: 'Frecuencia de Refresco (minutos)'
+  frecuencia_min    : abap.int2;       // 15 o 30 minutos
+
+  @EndUserText.label: 'Incluir Movimientos de Mercancías MB51'
+  incluir_mb51      : abap_boolean;
+
+  @EndUserText.label: 'Incluir Órdenes de Transporte LT23'
+  incluir_lt23      : abap_boolean;
+
+  @EndUserText.label: 'Incluir Mapa de Ocupabilidad LX03'
+  incluir_lx03      : abap_boolean;
+
+  @EndUserText.label: 'Incluir Métricas de Calidad & EHS OneDrive'
+  incluir_onedrive  : abap_boolean;
+
+  @EndUserText.label: 'Comentario u Observación Operativa'
+  comentario        : abap.char(100);
+}

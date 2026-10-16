@@ -1,0 +1,81 @@
+<core:FragmentDefinition
+  xmlns="sap.m"
+  xmlns:core="sap.ui.core"
+  xmlns:layout="sap.ui.layout"
+  xmlns:form="sap.ui.layout.form">
+  <Dialog id="grCreateDialog" title="Registrar Entrada de Mercancías" contentWidth="600px">
+    <content>
+      <layout:VerticalLayout width="100%" class="sapUiContentPadding">
+        
+        <Label text="Tipo de Entrada" required="true" class="sapUiTinyMarginBottom" />
+        <SegmentedButton selectedKey="{grCreate>/receipt_type}" width="100%" class="sapUiSmallMarginBottom" select=".onReceiptTypeChange">
+          <items>
+            <SegmentedButtonItem key="PO" text="Pedido de Compra" icon="sap-icon://sales-order" />
+            <SegmentedButtonItem key="TRANSFER" text="Pedido de Traslado" icon="sap-icon://shipping-status" />
+            <SegmentedButtonItem key="PRODUCTION" text="Orden de Producción" icon="sap-icon://factory" />
+          </items>
+        </SegmentedButton>
+
+        <form:SimpleForm editable="true" layout="ResponsiveGridLayout" labelSpanL="3" labelSpanM="3" emptySpanL="0" emptySpanM="0" columnsL="1" columnsM="1">
+          <form:content>
+            <Label text="Referencia Doc." required="true" id="lblRefDoc" />
+            <Input value="{grCreate>/sap_po_number}" placeholder="Ej: 4500000101, TR-2026-001..." />
+
+            <Label text="Proveedor / Origen" required="true" id="lblVendorOrigin" />
+            <Input value="{grCreate>/vendor_name}" placeholder="Ej: Proveedor S.A., Almacén Central..." />
+
+            <Label text="Nota de Entrega / Guía" required="true" />
+            <Input value="{grCreate>/delivery_note}" placeholder="Ej: DN-9901, GR-12345..." />
+
+            <Label text="Estrategia Ubicación" />
+            <Select selectedKey="{grCreate>/putaway_strategy}">
+              <core:Item key="FEFO" text="FEFO — Expiración Primero" />
+              <core:Item key="FIFO" text="FIFO — Primero en Entrar" />
+              <core:Item key="LIFO" text="LIFO — Último en Entrar" />
+              <core:Item key="MANUAL" text="MANUAL — Definir Ubicación" />
+            </Select>
+
+            <Label text="Notas / Observaciones" />
+            <TextArea value="{grCreate>/notes}" rows="2" placeholder="Observaciones adicionales..." />
+          </form:content>
+        </form:SimpleForm>
+
+        <VBox class="sapUiSmallMarginTop">
+          <Title text="Materiales a Recibir" level="H4" class="sapUiTinyMarginBottom" />
+          
+          <HBox width="100%" alignItems="Center" class="sapUiTinyMarginBottom">
+            <ComboBox id="cbMaterial" placeholder="Seleccione material..." items="{materials>/items}" width="65%" class="sapUiTinyMarginEnd">
+              <core:Item key="{materials>id}" text="{materials>sap_code} - {materials>description} ({materials>base_unit})" />
+            </ComboBox>
+            <Input id="inputQty" placeholder="Cant." type="Number" width="20%" class="sapUiTinyMarginEnd" submit=".onAddItem" />
+            <Button icon="sap-icon://add" type="Emphasized" press=".onAddItem" width="15%" tooltip="Agregar Material" />
+          </HBox>
+
+          <Table id="tblGrItems" items="{grCreate>/items}" noDataText="No hay materiales agregados" class="sapUiTinyMarginTop">
+            <columns>
+              <Column width="55%"><Text text="Material" /></Column>
+              <Column width="25%"><Text text="Cantidad" /></Column>
+              <Column width="20%" hAlign="End"><Text text="Acción" /></Column>
+            </columns>
+            <items>
+              <ColumnListItem>
+                <cells>
+                  <Text text="{grCreate>material_desc}" />
+                  <Text text="{grCreate>planned_qty} {grCreate>unit}" />
+                  <Button icon="sap-icon://delete" type="Reject" press=".onRemoveItem" tooltip="Eliminar ítem" />
+                </cells>
+              </ColumnListItem>
+            </items>
+          </Table>
+        </VBox>
+
+      </layout:VerticalLayout>
+    </content>
+    <beginButton>
+      <Button text="Registrar Entrada" type="Emphasized" press=".onSaveGR" />
+    </beginButton>
+    <endButton>
+      <Button text="Cerrar" press=".onCloseGR" />
+    </endButton>
+  </Dialog>
+</core:FragmentDefinition>

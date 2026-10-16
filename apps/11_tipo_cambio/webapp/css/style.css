@@ -1,0 +1,41 @@
+/* SAP Fiori Custom Styling Enhancements */
+
+.fxCardTitle {
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+.fxKpiHeaderBox {
+    background-color: #f7f9fa;
+    border-bottom: 1px solid #d9d9d9;
+    padding: 0.5rem 0;
+}
+
+.fxPositiveImpact {
+    color: #107e3e !important;
+    font-weight: bold;
+}
+
+.fxNegativeImpact {
+    color: #bb0000 !important;
+    font-weight: bold;
+}
+
+.fxHighlightRow {
+    background-color: #f0f7ff;
+}
+
+.fxSimulationCard {
+    border: 1px solid #0050ef;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.fxLogHeader {
+    font-family: monospace;
+    font-weight: bold;
+    background-color: #2b2b2b;
+    color: #00ff66;
+    padding: 8px;
+    border-radius: 4px;
+}

@@ -1,0 +1,1043 @@
+.fioriBlueHeader {
+  background-color: #354a5f !important;
+  color: #ffffff !important;
+}
+
+.fioriBlueHeader .sapMBtnIcon, 
+.fioriBlueHeader .sapMTitle {
+  color: #ffffff !important;
+}
+
+/* ============================================================
+   EMBEDDED IN FIORI PORTAL MODAL VIEWER
+   ============================================================ */
+body.in-iframe .fioriBlueHeader,
+body.in-iframe .sapTntToolPageHeader,
+.sapTntToolPageHeader.fioriBlueHeader {
+  display: none !important;
+}
+
+body.in-iframe .sapTntToolPageContainer {
+  top: 0 !important;
+  height: 100% !important;
+}
+
+/* Label Printing Styles */
+.labelPreviewArea {
+  background-color: #f0f0f0;
+  padding: 20px;
+  overflow: auto;
+}
+
+.label-container {
+  width: 800px;
+  height: 400px;
+  background-color: white;
+  border: 5px solid black;
+  border-radius: 12px;
+  padding: 10px;
+  box-sizing: border-box;
+  font-family: Arial, sans-serif;
+  color: black;
+  display: flex;
+  flex-direction: column;
+}
+
+.label-container * {
+  box-sizing: border-box;
+}
+
+.label-row-1 {
+  display: flex;
+  height: 20%;
+  border-bottom: 3px solid black;
+}
+
+.label-logo {
+  width: 50%;
+  font-size: 48px;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-right: 3px solid black;
+}
+
+.label-product {
+  width: 50%;
+  font-size: 36px;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.label-row-2 {
+  display: flex;
+  height: 40%;
+  border-bottom: 3px solid black;
+}
+
+.label-from, .label-to {
+  width: 35%;
+  padding: 10px;
+  font-size: 16px;
+  line-height: 1.3;
+}
+
+.label-from {
+  border-right: 3px solid black;
+}
+
+.label-to {
+  border-right: 3px solid black;
+}
+
+.addr-pad {
+  padding-left: 35px;
+  display: inline-block;
+}
+
+.label-qr {
+  width: 30%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px;
+}
+
+.label-row-3 {
+  display: flex;
+  height: 40%;
+}
+
+.label-barcode {
+  width: 50%;
+  border-right: 3px solid black;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.label-bottom-right {
+  width: 50%;
+  display: flex;
+  flex-direction: column;
+}
+
+.label-icons {
+  display: flex;
+  height: 50%;
+  border-bottom: 3px solid black;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  padding: 5px;
+}
+
+.icon-box {
+  border: 2px solid black;
+  padding: 2px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.label-footer {
+  display: flex;
+  height: 50%;
+}
+
+.label-item {
+  width: 40%;
+  border-right: 3px solid black;
+  padding: 10px;
+  font-size: 18px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.label-instructions {
+  width: 60%;
+  padding: 10px;
+  font-size: 16px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+/* Print Rules */
+@media print {
+  body * {
+    visibility: hidden;
+  }
+  
+  #labelContainer, #labelContainer *,
+  #senasaContainer, #senasaContainer *,
+  #dispatchContainer, #dispatchContainer * {
+    visibility: visible;
+  }
+  
+/* Senasa Label Styles */
+.senasa-container {
+  width: 500px;
+  height: 250px;
+  background-color: white;
+  border-radius: 10px;
+  padding: 20px;
+  box-sizing: border-box;
+  font-family: Arial, sans-serif;
+  color: #333;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0px 0px 5px rgba(0,0,0,0.1);
+}
+
+.senasa-header {
+  display: flex;
+  align-items: flex-end;
+  margin-bottom: 10px;
+}
+
+.senasa-title {
+  font-size: 30px;
+  font-weight: bold;
+  margin-right: 15px;
+}
+
+.senasa-product-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.senasa-producto {
+  font-size: 26px;
+  font-weight: bold;
+  line-height: 1;
+}
+
+.senasa-variedad {
+  font-size: 18px;
+}
+
+.senasa-body {
+  display: flex;
+  flex-direction: row;
+}
+
+.senasa-qr {
+  margin-right: 20px;
+}
+
+.senasa-details {
+  display: flex;
+  flex-direction: column;
+  font-size: 18px;
+  justify-content: center;
+  line-height: 1.4;
+}
+
+/* Dispatch Label Styles */
+.dispatch-container {
+  width: 600px;
+  height: 600px;
+  background-color: white;
+  border: 4px solid black;
+  box-sizing: border-box;
+  font-family: Arial, sans-serif;
+  color: black;
+  display: flex;
+  flex-direction: column;
+}
+
+.dispatch-row {
+  border-bottom: 2px solid black;
+  display: flex;
+  width: 100%;
+}
+
+.dispatch-row:last-child {
+  border-bottom: none;
+}
+
+/* Row 1 */
+.dispatch-row-1 {
+  height: 25%;
+}
+.dispatch-p {
+  width: 25%;
+  border-right: 2px solid black;
+  font-size: 100px;
+  font-weight: 900;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.dispatch-to {
+  width: 75%;
+  display: flex;
+  padding: 10px;
+}
+.dispatch-to-label {
+  font-weight: bold;
+  font-size: 20px;
+  margin-right: 15px;
+}
+.dispatch-to-details {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.dispatch-company {
+  font-size: 32px;
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+.dispatch-address {
+  font-size: 22px;
+}
+
+/* Row 2 */
+.dispatch-row-2 {
+  height: 10%;
+  font-size: 40px;
+  font-weight: 900;
+  letter-spacing: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Row 3 */
+.dispatch-row-3 {
+  height: 10%;
+  padding: 0 15px;
+  font-size: 18px;
+  align-items: center;
+}
+.dispatch-row-3 b {
+  font-size: 20px;
+  margin-right: 10px;
+}
+
+/* Row 4 & 5 */
+.dispatch-row-4, .dispatch-row-5 {
+  height: 10%;
+}
+.dispatch-col-left, .dispatch-col-right {
+  width: 50%;
+  display: flex;
+  align-items: center;
+  padding: 0 15px;
+  font-size: 18px;
+}
+.dispatch-col-left {
+  border-right: 2px solid black;
+}
+.disp-value {
+  margin-left: 10px;
+}
+
+/* Row 6 */
+.dispatch-row-6 {
+  height: 35%;
+}
+.dispatch-col-left-bottom {
+  width: 45%;
+  border-right: 2px solid black;
+  display: flex;
+  flex-direction: column;
+}
+.dispatch-col-right-bottom {
+  width: 55%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 10px;
+}
+
+.dispatch-icons-area {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-around;
+  height: 60%;
+  border-bottom: 2px solid black;
+  padding: 10px;
+}
+.dispatch-icons-group {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-size: 10px;
+  font-weight: bold;
+}
+.dispatch-icons-group img {
+  height: 40px;
+  margin-bottom: 2px;
+}
+.icon-simple {
+  height: 50px;
+}
+.dispatch-handle-text {
+  font-size: 12px;
+  font-weight: bold;
+  text-align: center;
+  line-height: 1.1;
+}
+
+.dispatch-instruction {
+  height: 40%;
+  padding: 10px;
+  font-size: 14px;
+}
+
+  #labelContainer, #senasaContainer, #dispatchContainer {
+    position: absolute;
+    left: 0;
+    top: 0;
+    margin: 0;
+    border: none;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+  
+  #labelContainer {
+    width: 800px;
+    height: 400px;
+  }
+
+  #senasaContainer {
+    width: 500px;
+    height: 250px;
+    box-shadow: none;
+  }
+
+  #dispatchContainer {
+    width: 600px;
+    height: 600px;
+  }
+
+  @page {
+    margin: 0;
+  }
+}
+
+/* RF Simulator Styles */
+.zebra-device {
+  width: 400px;
+  height: 700px;
+  background-color: #1a1a1a;
+  border-radius: 30px;
+  padding: 15px 10px;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.6), inset 0 0 10px rgba(255,255,255,0.1);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border: 4px solid #333;
+}
+
+.zebra-top-bezel {
+  width: 100%;
+  height: 40px;
+  position: relative;
+  margin-bottom: 5px;
+}
+
+.zebra-camera {
+  width: 12px;
+  height: 12px;
+  background-color: #050505;
+  border: 2px solid #222;
+  border-radius: 50%;
+  position: absolute;
+  left: 20px;
+}
+
+.zebra-brand {
+  color: #ffffff;
+  font-size: 16px;
+  font-weight: 900;
+  letter-spacing: 2px;
+}
+
+.rf-screen-bezel {
+  background-color: #000;
+  border-radius: 10px;
+  width: 100%;
+  flex-grow: 1;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  padding: 2px;
+  overflow: hidden;
+}
+
+.android-status-bar {
+  background-color: #000;
+  color: #fff;
+  font-size: 10px;
+  padding: 2px 8px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.android-nav-bar {
+  background-color: #000;
+  width: 100%;
+  height: 50px;
+  margin-top: 5px;
+  border-bottom-left-radius: 20px;
+  border-bottom-right-radius: 20px;
+}
+
+.android-nav-icon {
+  color: #777 !important;
+  font-size: 20px !important;
+  cursor: pointer;
+}
+
+.rf-screen {
+  background-color: #000080; /* Classic ITS Mobile Blue */
+  color: #00ff00; /* Green phosphor text */
+  font-family: 'Courier New', Courier, monospace;
+  height: 280px;
+  width: 100%;
+  padding: 8px;
+  box-sizing: border-box;
+  overflow: hidden;
+  position: relative;
+  border: 1px solid #444;
+}
+
+.sap-gui-screen {
+  background-color: #dbe5ee;
+  font-family: Arial, sans-serif;
+  flex-grow: 1;
+  width: 100%;
+  box-sizing: border-box;
+  overflow: hidden;
+  position: relative;
+  border: 1px solid #aaa;
+}
+
+.sap-gui-header {
+  background: linear-gradient(to bottom, #d5e1ee, #b6cce1);
+  padding: 8px 10px;
+  border-bottom: 1px solid #fff;
+  font-weight: bold;
+  font-size: 16px;
+  color: #000;
+  height: 35px;
+  box-sizing: border-box;
+  justify-content: center;
+  background-color: #fceea1;
+  background-image: none;
+}
+
+.sap-gui-menu-list {
+  padding: 10px;
+}
+
+.sap-gui-menu-item {
+  background-color: #fceea1;
+  border: 1px solid #a6a6a6;
+  color: #000;
+  text-align: center;
+  padding: 6px;
+  margin-bottom: 8px;
+  font-size: 14px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+button.sap-gui-menu-item {
+  width: 100% !important;
+  margin-bottom: 8px !important;
+  padding: 0 !important;
+  border: none !important;
+  background-color: transparent !important;
+}
+
+button.sap-gui-menu-item .sapMBtnInner {
+  background-color: #fceea1 !important;
+  border: 1px solid #a6a6a6 !important;
+  color: #000 !important;
+  height: 35px !important;
+  line-height: 33px !important;
+  font-size: 14px !important;
+  font-weight: bold !important;
+  border-radius: 0 !important;
+  text-align: center !important;
+}
+
+button.sap-gui-menu-item:active .sapMBtnInner {
+  background-color: #ebd77f !important;
+}
+
+.sap-gui-input-row {
+  margin-top: 15px;
+}
+
+.sap-gui-label {
+  font-size: 14px;
+  color: #000;
+  margin-right: 10px;
+}
+
+.sap-gui-input .sapMInputBaseInner {
+  background-color: #fff !important;
+  border: 1px solid #999 !important;
+  color: #000 !important;
+  height: 26px !important;
+  padding: 0 4px !important;
+  font-size: 14px !important;
+  border-radius: 0 !important;
+}
+
+.sap-gui-value-box {
+  background-color: #fff;
+  border: 1px solid #999;
+  padding: 4px 6px;
+  font-size: 14px;
+  min-width: 100px;
+  display: inline-block;
+}
+
+.sap-gui-value-box-yellow {
+  background-color: #fceea1;
+  border: 1px solid #999;
+  padding: 4px 6px;
+  font-size: 14px;
+  min-width: 100px;
+  display: inline-block;
+  font-weight: bold;
+}
+
+.sap-gui-f1-btn .sapMBtnInner {
+  background-color: #fceea1 !important;
+  border: 1px solid #a6a6a6 !important;
+  color: #000 !important;
+  height: 26px !important;
+  font-size: 12px !important;
+  font-weight: bold !important;
+  text-shadow: none !important;
+  padding: 0 10px !important;
+  border-radius: 0 !important;
+}
+
+.rf-header {
+  border-bottom: 1px solid #000;
+  margin-bottom: 10px;
+  padding-bottom: 2px;
+}
+
+.rf-header-text {
+  color: #000;
+  font-weight: bold;
+  font-size: 14px;
+}
+
+.rf-content {
+  font-size: 14px;
+}
+
+.rf-title {
+  color: #000;
+  font-weight: bold;
+  margin-bottom: 15px;
+  text-align: center;
+  width: 100%;
+}
+
+.rf-label {
+  color: #000;
+  margin-right: 5px;
+}
+
+.rf-value {
+  color: #000;
+  font-weight: bold;
+}
+
+.rf-message {
+  color: #fff;
+  background-color: #d00;
+  padding: 2px 5px;
+  margin-top: 10px;
+  font-weight: bold;
+  width: 100%;
+  text-align: center;
+}
+
+.rf-box-section {
+  border: 1px solid #000;
+  padding: 5px;
+  margin-top: 10px;
+}
+
+.rf-success-text {
+  color: #000;
+  font-weight: bold;
+  font-size: 16px;
+  margin-top: 10px;
+  text-align: center;
+}
+
+/* Custom UI5 Input for RF Screen */
+.rf-input .sapMInputBaseInner {
+  background-color: #fff !important;
+  color: #000 !important;
+  border: 1px solid #000 !important;
+  font-family: Arial, sans-serif !important;
+  height: 24px !important;
+  padding: 0 5px !important;
+  border-radius: 0 !important;
+}
+
+/* Keypad Styles */
+.rf-keypad {
+  width: 100%;
+  margin-top: 20px;
+}
+
+.rf-fkey-row {
+  margin-bottom: 10px;
+}
+
+.rf-fkey {
+  width: 22%;
+}
+
+.rf-fkey .sapMBtnInner {
+  background-color: #444 !important;
+  color: white !important;
+  border: 1px solid #222 !important;
+  border-radius: 4px !important;
+  text-shadow: none !important;
+  height: 35px !important;
+  font-size: 12px !important;
+}
+
+.rf-fkey:active .sapMBtnInner {
+  background-color: #222 !important;
+}
+
+.rf-action-row {
+  margin-top: 15px;
+  gap: 15px;
+}
+
+.rf-enter-btn .sapMBtnInner {
+  background-color: #28a745 !important;
+  color: white !important;
+  border: 1px solid #1e7e34 !important;
+  font-weight: bold !important;
+  width: 150px !important;
+  height: 45px !important;
+}
+
+.rf-clear-btn .sapMBtnInner {
+  background-color: #dc3545 !important;
+  color: white !important;
+  border: 1px solid #bd2130 !important;
+  font-weight: bold !important;
+  width: 80px !important;
+  height: 45px !important;
+}
+
+/* Layout 2D Styles */
+.warehouse-map-container { width: 100%; min-width: 1200px; padding: 20px; box-sizing: border-box; font-family: '72', Arial, Helvetica, sans-serif; position: relative; }
+.warehouse-border { border: 4px solid #7f8c8d; border-radius: 8px; padding: 15px; position: relative; background: #fdfdfd; box-shadow: 0 10px 30px rgba(0,0,0,0.1); overflow: hidden; }
+.transit-space { text-align: center; font-weight: bold; color: #7f8c8d; letter-spacing: 4px; padding: 10px; font-size: 14px; text-transform: uppercase; margin-bottom: 20px; }
+.zones-middle { display: flex; gap: 30px; position: relative; }
+.racks-area { flex: 2; display: flex; flex-direction: column; gap: 40px; position: relative; overflow-x: auto; }
+.center-areas { flex: 1; display: flex; flex-direction: column; gap: 20px; }
+.picking-area { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; background: #fff3e0; border-radius: 12px; padding: 20px; text-align: center; border: 2px dashed #f39c12; }
+.packing-area { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; background: #eaf2f8; border-radius: 12px; padding: 20px; text-align: center; border: 2px dashed #3498db; }
+.docks-area { flex: 1; display: flex; flex-direction: column; gap: 20px; justify-content: center; }
+.packing-icon { font-size: 60px; color: #2980b9; margin-bottom: 15px; }
+.packing-text { font-size: 22px; color: #2c3e50; font-weight: 800; letter-spacing: 1px; }
+.layout-grid { display: grid; gap: 8px; justify-content: start; position: relative; }
+.rack-column { width: 60px; height: 60px; border-radius: 4px; cursor: pointer; transition: transform 0.2s, box-shadow 0.2s; display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 11px; font-weight: bold; color: #fff; text-shadow: 0px 1px 2px rgba(0,0,0,0.5); box-shadow: 0 2px 4px rgba(0,0,0,0.2); position: relative; z-index: 10; }
+.rack-column:hover { transform: scale(1.15); box-shadow: 0 6px 12px rgba(0,0,0,0.3); z-index: 20; border: 2px solid white; }
+.rack-EMPTY { background: linear-gradient(135deg, #2ecc71, #27ae60); }
+.rack-PARTIAL { background: linear-gradient(135deg, #f1c40f, #f39c12); }
+.rack-FULL { background: linear-gradient(135deg, #e74c3c, #c0392b); }
+.rack-BLOCKED { background: linear-gradient(135deg, #95a5a6, #7f8c8d); }
+.rack-class-a { border-bottom: 4px solid #2ecc71; }
+.rack-class-b { border-bottom: 4px solid #3498db; }
+.rack-class-c { border-bottom: 4px solid #e74c3c; }
+.col-id-text { margin-bottom: 2px; font-size: 11px; }
+.col-pct-text { font-size: 12px; }
+.live-worker { position: absolute; font-size: 24px; color: #e67e22; animation: moveHorizontal 15s linear infinite alternate; z-index: 5; text-shadow: 0 2px 4px rgba(0,0,0,0.2); }
+.live-forklift { position: absolute; font-size: 28px; color: #34495e; animation: moveVertical 20s linear infinite alternate; z-index: 5; text-shadow: 0 2px 4px rgba(0,0,0,0.2); transform: scaleX(-1); }
+@keyframes moveHorizontal { 0% { transform: translateX(0px) scaleX(1); } 49% { transform: translateX(600px) scaleX(1); } 50% { transform: translateX(600px) scaleX(-1); } 100% { transform: translateX(0px) scaleX(-1); } }
+@keyframes moveVertical { 0% { transform: translateY(0px) scaleX(-1); } 100% { transform: translateY(300px) scaleX(-1); } }
+
+.kpi-card { background: #ffffff !important; border: 1px solid #e2e8f0 !important; border-radius: 12px !important; padding: 20px !important; flex-grow: 1 !important; min-width: 180px !important; text-align: center !important; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06) !important; align-items: center !important; justify-content: center !important; }
+.kpi-card-empty { border-bottom: 5px solid #2ecc71 !important; }
+.kpi-card-partial { border-bottom: 5px solid #f1c40f !important; }
+.kpi-card-full { border-bottom: 5px solid #e74c3c !important; }
+.kpi-card-blocked { border-bottom: 5px solid #95a5a6 !important; }
+.kpi-label { font-size: 14px !important; color: #64748b !important; text-transform: uppercase; font-weight: 600; letter-spacing: 1px; }
+.kpi-value { font-size: 32px !important; font-weight: 800 !important; color: #1e293b !important; margin-top: 8px !important; }
+
+/* Legend Styles */
+.layout-legend-container { background: #ffffff; padding: 10px 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); border: 1px solid #e2e8f0; }
+.legend-box { width: 18px; height: 18px; border-radius: 4px; display: inline-block; margin-right: 8px; }
+.legend-empty { background-color: #2ecc71; box-shadow: 0 0 0 2px rgba(46,204,113,0.3); }
+.legend-partial { background-color: #f1c40f; box-shadow: 0 0 0 2px rgba(241,196,15,0.3); }
+.legend-full { background-color: #e74c3c; box-shadow: 0 0 0 2px rgba(231,76,60,0.3); }
+.legend-blocked { background-color: #95a5a6; box-shadow: 0 0 0 2px rgba(149,165,166,0.3); }
+
+/* Chatbot Popover & Bubble Styles */
+.chat-bubble-bot {
+  background-color: #f3f5f6;
+  border: 1px solid #dcdcdc;
+  border-radius: 12px 12px 12px 0px;
+  padding: 8px 12px;
+  color: #333;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+}
+
+.chat-bubble-bot p {
+  margin: 0 0 8px 0;
+}
+.chat-bubble-bot p:last-child {
+  margin-bottom: 0;
+}
+.chat-bubble-bot ul, .chat-bubble-bot ol {
+  margin: 5px 0;
+  padding-left: 20px;
+}
+.chat-bubble-bot li {
+  margin-bottom: 4px;
+}
+
+.chat-bubble-user {
+  background-color: #e1f5fe;
+  border: 1px solid #b3e5fc;
+  border-radius: 12px 12px 0px 12px;
+  padding: 8px 12px;
+  color: #0b435c;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+}
+
+.chat-bubble-user p {
+  margin: 0;
+}
+
+/* Background image for login state */
+body.login-bg {
+  background-image: url('../../Almacen.png') !important;
+  background-size: cover !important;
+  background-position: center !important;
+  background-repeat: no-repeat !important;
+}
+
+body.login-bg .sapMDialogBlockLayer {
+  background-color: rgba(26, 37, 48, 0.65) !important;
+}
+
+body.login-bg,
+body.login-bg#content,
+body.login-bg .sapUiComponentContainer,
+body.login-bg .sapUiView,
+body.login-bg .sapTntToolPage,
+body.login-bg .sapMNav,
+body.login-bg .sapMApp {
+  background-color: transparent !important;
+}
+
+/* Chatbot Sidebar Panel Styles — SAP Joule WMS */
+.chatbotSidebarPanel {
+  position: absolute !important;
+  right: 0 !important;
+  top: 0 !important;
+  bottom: 0 !important;
+  z-index: 100 !important;
+  width: 390px !important;
+  background-color: #ffffff !important;
+  border-left: 1px solid #e2e8f0 !important;
+  box-shadow: -4px 0 20px rgba(0, 0, 0, 0.12) !important;
+  height: 100% !important;
+  display: flex !important;
+  flex-direction: column !important;
+  padding: 0 !important;
+  box-sizing: border-box !important;
+}
+
+.chatbotSidebarHeader {
+  border-bottom: 1px solid #e2e8f0 !important;
+  background-color: #1b2a3d !important;
+  padding: 0 12px !important;
+  height: 48px !important;
+  min-height: 48px !important;
+  box-sizing: border-box !important;
+}
+
+.chatbotSidebarHeader .sapMTitle,
+.chatbotSidebarHeader .sapMBtnIcon,
+.chatbotSidebarHeader .sapUiIcon {
+  color: #ffffff !important;
+}
+
+.portalJouleTitle {
+  font-weight: 700 !important;
+  color: #ffffff !important;
+  font-size: 1.05rem !important;
+}
+
+.chatScrollContainer {
+  flex-grow: 1 !important;
+  height: calc(100% - 130px) !important;
+  padding: 12px 14px !important;
+  overflow-y: auto !important;
+  background-color: #ffffff !important;
+  box-sizing: border-box !important;
+}
+
+.chatbotSidebarFooter {
+  padding: 10px 14px !important;
+  border-top: 1px solid #e2e8f0 !important;
+  background-color: #f8fafc !important;
+  height: 64px !important;
+  min-height: 64px !important;
+  box-sizing: border-box !important;
+}
+
+/* NavContainer transition when chatbot side-sheet expands */
+.mainAppNavContainer {
+  width: 100% !important;
+  height: 100% !important;
+  transition: margin-right 0.3s ease !important;
+  margin-right: 0 !important;
+}
+
+.chatbot-expanded-nav {
+  margin-right: 390px !important;
+}
+
+/* Container de Input SAP Joule WMS Ampliado */
+.portalIaInputContainer {
+  width: 100% !important;
+  display: flex !important;
+  align-items: center !important;
+  background-color: #ffffff !important;
+  border: 1.5px solid #0064d9 !important;
+  border-radius: 24px !important;
+  padding: 2px 6px 2px 14px !important;
+  box-shadow: 0 2px 8px rgba(0, 100, 217, 0.12) !important;
+  box-sizing: border-box !important;
+  min-height: 42px !important;
+}
+
+.portalIaInputContainer .portalIaInput {
+  flex-grow: 1 !important;
+  width: 100% !important;
+}
+
+.portalIaInputContainer .portalIaInput .sapMInputBaseInner {
+  border: none !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  font-size: 0.95rem !important;
+  color: #1e293b !important;
+  padding: 0 !important;
+}
+
+.portalIaSendBtn {
+  border-radius: 50% !important;
+  width: 2.4rem !important;
+  height: 2.4rem !important;
+  min-width: 2.4rem !important;
+  padding: 0 !important;
+  background-color: #0064d9 !important;
+  border-color: #0050b3 !important;
+  box-shadow: 0 2px 6px rgba(0, 100, 217, 0.3) !important;
+}
+
+.portalIaSendBtn .sapMBtnIcon {
+  color: #ffffff !important;
+  font-size: 1.05rem !important;
+}
+
+/* Burbujas de Chat SAP Joule WMS */
+.portalUserBubble {
+  background-color: #e6f4ff !important;
+  border: 1px solid #91caef !important;
+  border-radius: 14px 14px 2px 14px !important;
+  padding: 10px 14px !important;
+  box-shadow: 0 2px 6px rgba(0, 100, 217, 0.08) !important;
+  color: #1e293b !important;
+}
+
+.portalBotBubble {
+  background-color: #f8fafc !important;
+  border: 1px solid #e2e8f0 !important;
+  border-radius: 14px 14px 14px 2px !important;
+  padding: 10px 14px !important;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04) !important;
+  color: #1e293b !important;
+  line-height: 1.45 !important;
+}
+
+.portalChipBtn {
+  border-radius: 16px !important;
+  border: 1px solid #0064d9 !important;
+  color: #0064d9 !important;
+  background-color: #eff6ff !important;
+  font-weight: 500 !important;
+  padding: 2px 10px !important;
+}
+
+.portalChipBtn:hover {
+  background-color: #0064d9 !important;
+  color: #ffffff !important;
+}
+
+.portalDroidIaFloatingBtn {
+  position: fixed !important;
+  bottom: 2rem !important;
+  right: 2rem !important;
+  z-index: 1000 !important;
+  box-shadow: 0 6px 16px rgba(0, 100, 217, 0.35) !important;
+  border-radius: 2rem !important;
+  font-weight: bold !important;
+  background-color: #0064d9 !important;
+  border-color: #0050b3 !important;
+}
+
+.portalDroidIaFloatingBtn .sapMBtnIcon,
+.portalDroidIaFloatingBtn .sapMBtnText {
+  color: #ffffff !important;
+  font-size: 1rem !important;
+}
+
+/* Layout Virtual 2D — Mini KPI Cards */
+.layout-kpi-container .kpi-card {
+  padding: 8px 16px !important;
+  min-width: 130px !important;
+  border-radius: 8px !important;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05) !important;
+}
+
+.layout-kpi-container .kpi-label {
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.5px !important;
+  margin-bottom: 0 !important;
+}
+
+.layout-kpi-container .kpi-value {
+  font-size: 20px !important;
+  margin-top: 4px !important;
+  font-weight: 700 !important;
+}
+
+
+
+

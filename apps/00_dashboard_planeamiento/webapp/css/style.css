@@ -1,0 +1,158 @@
+/* Custom Fiori ShellBar Colors Theme */
+
+.sapFShellBar {
+    background-color: #354a5f !important; /* SAP Fiori Blue */
+    color: #ffffff !important;
+}
+
+.sapFShellBar .sapMBtnIcon {
+    color: #ffffff !important;
+}
+
+.sapFShellBarTitle,
+.sapFShellBar .sapMTitle,
+.sapFShellBar .sapMTitle > span,
+.sapFShellBar .sapMText {
+    color: #ffffff !important;
+    font-weight: 600;
+}
+
+.sapFShellBarSubtitle {
+    color: #d1dde8 !important;
+}
+
+.sapFShellBar .sapFShellBarHomeIcon,
+.sapFShellBar img {
+    height: 24px !important;
+    width: auto !important;
+    object-fit: contain !important;
+    cursor: pointer;
+}
+
+/* Custom SAP ID Login Background */
+.customLoginBackground {
+    background-color: #f1f3f5 !important;
+    background-image: none !important;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+}
+
+.sapIdCard {
+    background-color: #ffffff;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    border-radius: 8px;
+    width: 440px;
+    max-width: 90%;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden; /* for the footer */
+}
+
+.sapIdCardContent {
+    padding: 3rem 2.5rem;
+}
+
+.sapIdHeader {
+    font-weight: bold;
+    font-size: 1rem;
+    margin-bottom: 2rem;
+    display: flex;
+    align-items: center;
+}
+
+.sapIdHeader img {
+    height: 14px;
+    margin-right: 5px;
+}
+
+.sapIdTitle {
+    font-size: 1.8rem !important;
+    font-weight: 700 !important;
+    color: #1d2d3e !important;
+    margin-bottom: 0.25rem !important;
+}
+
+.sapIdSubtitle {
+    font-size: 1rem !important;
+    color: #32363a !important;
+    margin-bottom: 3rem !important;
+}
+
+.sapIdInputLabel {
+    color: #515456;
+    margin-bottom: 0.5rem;
+}
+
+/* Faking the input field style */
+.sapIdInput .sapMInputBaseInner {
+    background-color: #f4f5f6;
+    border: none !important;
+    border-bottom: 2px solid #1d2d3e !important;
+    border-radius: 4px 4px 0 0;
+    padding: 0.75rem 0.5rem;
+    height: 38px;
+}
+
+.sapIdCardFooter {
+    background-color: #f4f5f6;
+    padding: 1.5rem 2.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+}
+
+.sapIdRegisterText {
+    margin-bottom: 0.5rem;
+    font-size: 0.875rem;
+    color: #32363a;
+}
+
+.sapIdSecondaryBtn {
+    background-color: #ffffff;
+    border: 1px solid #c0c2c4;
+    color: #0070f2;
+}
+
+.sapIdPrimaryBtn {
+    background-color: #0070f2 !important;
+    border-color: #0070f2 !important;
+}
+
+.sapIdFooterLinks {
+    background-color: #ffffff;
+    border-radius: 20px;
+    padding: 0.75rem 2rem;
+    margin-top: 1.5rem;
+    display: flex;
+    gap: 1.5rem;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+.sapIdFooterLinks a {
+    color: #0070f2;
+    text-decoration: none;
+    font-size: 0.875rem;
+}
+
+/* Grouping Launchpad Tiles Section */
+.launchpadGroupTitle {
+    font-size: 1.125rem;
+    font-weight: normal;
+    color: #515456;
+    margin-top: 1.5rem;
+    margin-bottom: 0.5rem;
+    margin-left: 0.5rem;
+}
+
+/* Global SAP Belize Background Theme Override */
+html.sap-desktop .sapMShellAppWidthLimited .sapMShellCentralBox {
+    background-color: #f2f4f4 !important;
+}
+
+.sapUiBody, 
+.sapMPageBgStandard {
+    background-color: #f2f4f4 !important;
+}

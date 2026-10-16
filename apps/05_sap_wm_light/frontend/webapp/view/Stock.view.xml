@@ -1,0 +1,84 @@
+<mvc:View
+  controllerName="wm.light.controller.Stock"
+  xmlns:mvc="sap.ui.core.mvc"
+  xmlns="sap.m"
+  xmlns:f="sap.f">
+
+  <Page id="stockPage" title="{i18n>stockTitle}" showNavButton="false" backgroundDesign="List">
+
+    <subHeader>
+      <Bar>
+        <contentLeft>
+          <Select id="whSelect" change=".onWarehouseChange" width="12rem">
+            <items>
+              <core:Item xmlns:core="sap.ui.core" text="Todos los almacenes" key="" />
+            </items>
+          </Select>
+        </contentLeft>
+        <contentRight>
+          <SearchField width="16rem" search=".onSearch" placeholder="{i18n>stockFilterMaterial}" />
+          <Button icon="sap-icon://refresh" type="Transparent" press=".onRefresh" tooltip="{i18n>btnRefresh}" />
+          <Button icon="sap-icon://excel-attachment" type="Transparent" press=".onExport" tooltip="{i18n>btnExport}" />
+        </contentRight>
+      </Bar>
+    </subHeader>
+
+    <content>
+      <VBox class="sapUiResponsivePadding">
+        <Table id="stockTable"
+          items="{stock>/items}"
+          growing="true"
+          growingThreshold="50"
+          noDataText="{i18n>stockEmpty}"
+          sticky="ColumnHeaders,HeaderToolbar">
+
+          <headerToolbar>
+            <Toolbar>
+              <Title text="{i18n>stockTitle}" level="H3" />
+              <Text text="{= '(' + ${stock>/total} + ' posiciones)'}" class="sapUiSmallMarginBegin" />
+              <ToolbarSpacer />
+              <SegmentedButton id="stockView" selectionChange=".onViewChange">
+                <items>
+                  <SegmentedButtonItem icon="sap-icon://table-view"  key="table" />
+                  <SegmentedButtonItem icon="sap-icon://bar-chart"   key="chart" />
+                </items>
+              </SegmentedButton>
+            </Toolbar>
+          </headerToolbar>
+
+          <columns>
+            <Column><Text text="{i18n>stockColBin}" /></Column>
+            <Column><Text text="{i18n>stockColMaterial}" /></Column>
+            <Column><Text text="{i18n>stockColDescription}" /></Column>
+            <Column><Text text="{i18n>stockColBatch}" /></Column>
+            <Column hAlign="End"><Text text="{i18n>stockColQty}" /></Column>
+            <Column><Text text="{i18n>stockColUnit}" /></Column>
+            <Column><Text text="{i18n>stockColExpiry}" /></Column>
+            <Column><Text text="{i18n>stockColStatus}" /></Column>
+          </columns>
+
+          <items>
+            <ColumnListItem highlight="{= ${stock>stockStatus} === 'CRITICAL' ? 'Error' : ${stock>stockStatus} === 'LOW' ? 'Warning' : 'None' }">
+              <cells>
+                <ObjectIdentifier title="{stock>bin/bin_code}" />
+                <Text text="{stock>material/sap_code}" />
+                <Text text="{stock>material/description}" />
+                <Text text="{= ${stock>batch} ? ${stock>batch/batch_number} : '—'}" />
+                <ObjectNumber
+                  number="{stock>quantity}"
+                  unit="{stock>unit}"
+                  state="{= ${stock>stockStatus} === 'CRITICAL' ? 'Error' : ${stock>stockStatus} === 'LOW' ? 'Warning' : 'None'}" />
+                <Text text="{stock>unit}" />
+                <Text text="{parts: [{path:'stock>batch/expiry_date'}], formatter: '.formatDateShort'}" />
+                <ObjectStatus
+                  text="{stock>stockStatus}"
+                  state="{= ${stock>stockStatus} === 'CRITICAL' ? 'Error' : ${stock>stockStatus} === 'LOW' ? 'Warning' : 'Success' }"
+                  icon="{= ${stock>stockStatus} === 'CRITICAL' ? 'sap-icon://message-error' : ${stock>stockStatus} === 'LOW' ? 'sap-icon://warning' : 'sap-icon://accept' }" />
+              </cells>
+            </ColumnListItem>
+          </items>
+        </Table>
+      </VBox>
+    </content>
+  </Page>
+</mvc:View>

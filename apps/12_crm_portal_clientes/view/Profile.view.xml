@@ -1,0 +1,186 @@
+<mvc:View
+    controllerName="sap.crm.customerportal.controller.Profile"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m"
+    xmlns:f="sap.f"
+    xmlns:form="sap.ui.layout.form"
+    xmlns:core="sap.ui.core"
+    xmlns:layout="sap.ui.layout">
+
+    <Page id="profilePage" title="{i18n>profileTitle}" showNavButton="false">
+        <headerContent>
+            <Button
+                text="Sincronizar con SAP ERP"
+                icon="sap-icon://synchronize"
+                type="Emphasized"
+                press=".onSyncProfile"
+                tooltip="Refrescar datos del Business Partner" />
+        </headerContent>
+
+        <content>
+            <IconTabBar
+                id="profileIconTabBar"
+                select=".onTabSelect"
+                expanded="true"
+                class="sapUiResponsiveContentPadding">
+                <items>
+
+                    <!-- ======================================================== -->
+                    <!-- TAB 1: FICHA DE BUSINESS PARTNER Y FINANZAS              -->
+                    <!-- ======================================================== -->
+                    <IconTabFilter
+                        key="bp"
+                        icon="sap-icon://customer-and-supplier"
+                        text="Ficha de Empresa &amp; Crédito">
+
+                        <VBox class="sapUiMediumMargin">
+                            <form:SimpleForm
+                                id="bpForm"
+                                editable="false"
+                                layout="ResponsiveGridLayout"
+                                labelSpanXL="3"
+                                labelSpanL="3"
+                                labelSpanM="4"
+                                labelSpanS="12"
+                                adjustLabelSpan="false"
+                                emptySpanXL="2"
+                                emptySpanL="2"
+                                columnsXL="1"
+                                columnsL="1"
+                                columnsM="1">
+                                <form:content>
+                                    <core:Title text="Datos Principales de la Cuenta (Business Partner)" />
+
+                                    <Label text="Razón Social" />
+                                    <Input value="{customer>/name}" editable="false" />
+
+                                    <Label text="Nº Business Partner (SAP)" />
+                                    <Input value="{customer>/bpNumber}" editable="false" />
+
+                                    <Label text="RUT / Identificador Fiscal" />
+                                    <Input value="{customer>/taxId}" editable="false" />
+
+                                    <Label text="Segmento Comercial" />
+                                    <Input value="{customer>/segment}" editable="false" />
+
+                                    <Label text="Industria" />
+                                    <Input value="{customer>/industry}" editable="false" />
+
+                                    <Label text="Ejecutivo de Cuenta Asignado" />
+                                    <Input value="{customer>/c4cAccountOwner} ({customer>/c4cOwnerEmail})" editable="false" />
+
+                                    <core:Title text="Condiciones Comerciales y Línea de Crédito" />
+
+                                    <Label text="Línea de Crédito Autorizada" />
+                                    <Input value="{parts: [{path: 'customer/creditLimit'}, {path: 'customer/currency'}], formatter: '.formatCurrency'}" editable="false" />
+
+                                    <Label text="Crédito Utilizado" />
+                                    <Input value="{parts: [{path: 'customer/creditUsed'}, {path: 'customer/currency'}], formatter: '.formatCurrency'}" editable="false" />
+
+                                    <Label text="Crédito Disponible Actual" />
+                                    <Input value="{parts: [{path: 'customer/creditAvailable'}, {path: 'customer/currency'}], formatter: '.formatCurrency'}" editable="false" />
+
+                                    <Label text="Última Sincronización SAP" />
+                                    <Input value="{customer>/lastSyncTimestamp}" editable="false" />
+                                </form:content>
+                            </form:SimpleForm>
+                        </VBox>
+                    </IconTabFilter>
+
+                    <!-- ======================================================== -->
+                    <!-- TAB 2: JERARQUÍA Y USUARIOS B2B                          -->
+                    <!-- ======================================================== -->
+                    <IconTabFilter
+                        key="team"
+                        icon="sap-icon://family-care"
+                        text="Gestión de Usuarios y Roles B2B">
+
+                        <Table
+                            id="teamUsersTable"
+                            items="{/teamUsers}"
+                            noDataText="No hay usuarios registrados en el equipo">
+                            <headerToolbar>
+                                <OverflowToolbar>
+                                    <Title text="Usuarios y Permisos Jerárquicos de la Empresa" level="H3" />
+                                    <ToolbarSpacer />
+                                    <Button
+                                        text="Invitar Nuevo Usuario"
+                                        icon="sap-icon://add-employee"
+                                        type="Emphasized"
+                                        press=".onOpenAddUserDialog"
+                                        enabled="{session>/permissions/canManageUsers}" />
+                                </OverflowToolbar>
+                            </headerToolbar>
+                            <columns>
+                                <Column><Text text="Nombre Completo" design="Bold" /></Column>
+                                <Column minScreenWidth="Tablet" demandPopin="true"><Text text="Email / Usuario" /></Column>
+                                <Column minScreenWidth="Desktop" demandPopin="true"><Text text="Cargo / Posición" /></Column>
+                                <Column><Text text="Rol B2B Asignado" /></Column>
+                                <Column minScreenWidth="Tablet" demandPopin="true"><Text text="Estado" /></Column>
+                                <Column minScreenWidth="Desktop" demandPopin="true"><Text text="Último Acceso" /></Column>
+                                <Column hAlign="Center"><Text text="Acción" /></Column>
+                            </columns>
+                            <items>
+                                <ColumnListItem>
+                                    <cells>
+                                        <HBox alignItems="Center">
+                                            <core:Icon
+                                                src="{= ${role} === 'ADMIN' ? 'sap-icon://shield' : (${role} === 'BUYER' ? 'sap-icon://cart' : 'sap-icon://show') }"
+                                                class="sapUiTinyMarginEnd"
+                                                color="#0854a0" />
+                                            <Text text="{name}" class="sapUiBoldText" />
+                                        </HBox>
+                                        <Text text="{email}" />
+                                        <Text text="{position}" />
+                                        <ObjectStatus
+                                            text="{roleName}"
+                                            state="{parts: [{path: 'role'}], formatter: '.formatRoleBadgeState'}" />
+                                        <ObjectStatus
+                                            text="{status}"
+                                            state="{= ${status} === 'Activo' ? 'Success' : 'Warning'}" />
+                                        <Text text="{lastLogin}" />
+                                        <Button
+                                            icon="sap-icon://edit"
+                                            text="Editar Rol"
+                                            type="Ghost"
+                                            press=".onEditUserRole"
+                                            enabled="{session>/permissions/canManageUsers}" />
+                                    </cells>
+                                </ColumnListItem>
+                            </items>
+                        </Table>
+                    </IconTabFilter>
+
+                    <!-- ======================================================== -->
+                    <!-- TAB 3: DIRECCIONES Y PLANTAS DE ENTREGA                  -->
+                    <!-- ======================================================== -->
+                    <IconTabFilter
+                        key="addresses"
+                        icon="sap-icon://addresses"
+                        text="Direcciones de Despacho">
+
+                        <List items="{customer>/addresses}" class="sapUiMediumMargin">
+                            <CustomListItem>
+                                <HBox justifyContent="SpaceBetween" alignItems="Center" class="sapUiMediumMargin">
+                                    <VBox>
+                                        <HBox alignItems="Center">
+                                            <core:Icon src="sap-icon://map-location" color="#0854a0" class="sapUiTinyMarginEnd" />
+                                            <Text text="{customer>type}" class="sapUiBoldText sapUiSmallMarginEnd" />
+                                            <ObjectStatus
+                                                text="{= ${customer>isDefaultDelivery} ? 'Entrega Predeterminada' : 'Planta Secundaria'}"
+                                                state="{= ${customer>isDefaultDelivery} ? 'Success' : 'None'}" />
+                                        </HBox>
+                                        <Text text="{customer>street}, {customer>city}, {customer>region} - {customer>country}" class="sapUiSmallMarginTopBottom" />
+                                        <Text text="Código Postal: {customer>postalCode}" class="sapUiTinyText sapUiLightText" />
+                                    </VBox>
+                                    <Button text="Modificar" icon="sap-icon://edit" type="Ghost" press=".onModifyAddress" />
+                                </HBox>
+                            </CustomListItem>
+                        </List>
+                    </IconTabFilter>
+
+                </items>
+            </IconTabBar>
+        </content>
+    </Page>
+</mvc:View>

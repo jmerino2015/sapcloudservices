@@ -1,0 +1,16 @@
+{
+  "name": "SAP WMS - SRM FIORI — Warehouse Management",
+  "short_name": "SAP WMS - SRM FIORI",
+  "description": "Sistema de Gestión de Almacenes estilo SAP Fiori",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#354A5E",
+  "theme_color": "#354A5E",
+  "orientation": "any",
+  "icons": [
+    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png" }
+  ],
+  "categories": ["business", "productivity"],
+  "lang": "es"
+}

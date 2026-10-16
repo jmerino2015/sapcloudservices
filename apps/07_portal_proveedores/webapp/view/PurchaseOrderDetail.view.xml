@@ -1,0 +1,175 @@
+<mvc:View
+    controllerName="com.antigravity.portalProveedores.controller.PurchaseOrderDetail"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m"
+    xmlns:f="sap.f"
+    xmlns:layout="sap.ui.layout.form"
+    xmlns:core="sap.ui.core"
+    xmlns:uxap="sap.uxap"
+    displayBlock="true"
+    height="100%">
+
+    <uxap:ObjectPageLayout
+        id="poDetailPage"
+        showTitleInHeaderContent="true"
+        alwaysShowContentHeader="false"
+        preserveHeaderStateOnScroll="false">
+
+        <uxap:headerTitle>
+            <uxap:ObjectPageDynamicHeaderTitle>
+                <uxap:heading>
+                    <VBox>
+                        <Title
+                            id="poDetailTitle"
+                            text="{poDetail>/poNumber}"
+                            titleStyle="H2"
+                            wrapping="true" />
+                        <HBox class="sapUiTinyMarginTop">
+                            <ObjectStatus
+                                id="poDetailStatus"
+                                text="{poDetail>/statusText}"
+                                state="{poDetail>/statusState}"
+                                icon="{poDetail>/statusIcon}" />
+                        </HBox>
+                    </VBox>
+                </uxap:heading>
+
+                <uxap:actions>
+                    <Button
+                        id="btnDetailBack"
+                        text="{i18n>commonBack}"
+                        icon="sap-icon://nav-back"
+                        type="Transparent"
+                        press=".onNavBack" />
+                    <Button
+                        id="btnDetailCreateInvoice"
+                        text="{i18n>poDetailCreateInvoice}"
+                        icon="sap-icon://bbyd-active-sales"
+                        type="Emphasized"
+                        press=".onCreateInvoice" />
+                    <Button
+                        id="btnDetailCreateDelivery"
+                        text="{i18n>poDetailCreateDelivery}"
+                        icon="sap-icon://truck-driver"
+                        type="Default"
+                        press=".onCreateDelivery" />
+                    <Button
+                        id="btnDetailDownload"
+                        icon="sap-icon://download"
+                        type="Transparent"
+                        tooltip="{i18n>commonDownload}"
+                        press=".onDownload" />
+                </uxap:actions>
+            </uxap:ObjectPageDynamicHeaderTitle>
+        </uxap:headerTitle>
+
+        <uxap:headerContent>
+            <HBox wrap="Wrap">
+                <VBox class="sapUiMediumMarginEnd">
+                    <Label text="{i18n>poDetailSupplier}" />
+                    <Text text="{poDetail>/supplier}" />
+                </VBox>
+                <VBox class="sapUiMediumMarginEnd">
+                    <Label text="{i18n>poDetailDate}" />
+                    <Text text="{poDetail>/date}" />
+                </VBox>
+                <VBox class="sapUiMediumMarginEnd">
+                    <Label text="{i18n>poDetailDeliveryDate}" />
+                    <Text text="{poDetail>/deliveryDate}" />
+                </VBox>
+                <VBox>
+                    <Label text="{i18n>commonTotal}" />
+                    <ObjectNumber
+                        number="{poDetail>/totalAmount}"
+                        unit="MXN"
+                        emphasized="true"
+                        state="{poDetail>/amountState}" />
+                </VBox>
+            </HBox>
+        </uxap:headerContent>
+
+        <uxap:sections>
+
+            <!-- Posiciones de la Orden -->
+            <uxap:ObjectPageSection
+                id="poItemsSection"
+                title="{i18n>poDetailItems}"
+                titleUppercase="false">
+                <uxap:subSections>
+                    <uxap:ObjectPageSubSection title="">
+                        <uxap:blocks>
+                            <Table
+                                id="poDetailItemsTable"
+                                items="{poDetail>/items}"
+                                noDataText="{i18n>commonNoData}"
+                                alternateRowColors="true">
+
+                                <columns>
+                                    <Column hAlign="Begin" width="5%">
+                                        <Text text="{i18n>poDetailItemNumber}" />
+                                    </Column>
+                                    <Column hAlign="Begin">
+                                        <Text text="{i18n>poDetailMaterial}" />
+                                    </Column>
+                                    <Column hAlign="End" minScreenWidth="Tablet" demandPopin="true">
+                                        <Text text="{i18n>poDetailQuantity}" />
+                                    </Column>
+                                    <Column hAlign="End" minScreenWidth="Tablet" demandPopin="true">
+                                        <Text text="{i18n>poDetailDelivered}" />
+                                    </Column>
+                                    <Column hAlign="Center" minScreenWidth="Desktop" demandPopin="true">
+                                        <Text text="{i18n>poDetailUoM}" />
+                                    </Column>
+                                    <Column hAlign="End" minScreenWidth="Tablet" demandPopin="true">
+                                        <Text text="{i18n>poDetailUnitPrice}" />
+                                    </Column>
+                                    <Column hAlign="End">
+                                        <Text text="{i18n>poDetailTotalPrice}" />
+                                    </Column>
+                                </columns>
+
+                                <items>
+                                    <ColumnListItem
+                                        id="poDetailItemRow"
+                                        highlight="{poDetail>deliveryHighlight}">
+                                        <cells>
+                                            <Text text="{poDetail>itemNumber}" />
+                                            <VBox>
+                                                <Text text="{poDetail>materialCode}" />
+                                                <Text text="{poDetail>materialDesc}" class="sapUiTinyMarginTop" />
+                                            </VBox>
+                                            <ObjectNumber number="{poDetail>quantity}" unit="{poDetail>unit}" />
+                                            <ObjectNumber number="{poDetail>delivered}" unit="{poDetail>unit}" state="{poDetail>deliveredState}" />
+                                            <Text text="{poDetail>unit}" />
+                                            <ObjectNumber number="{poDetail>unitPrice}" unit="MXN" />
+                                            <ObjectNumber number="{poDetail>totalPrice}" unit="MXN" emphasized="true" />
+                                        </cells>
+                                    </ColumnListItem>
+                                </items>
+
+                            </Table>
+                        </uxap:blocks>
+                    </uxap:ObjectPageSubSection>
+                </uxap:subSections>
+            </uxap:ObjectPageSection>
+
+            <!-- Notas -->
+            <uxap:ObjectPageSection
+                id="poNotesSection"
+                title="{i18n>poDetailNotes}"
+                titleUppercase="false">
+                <uxap:subSections>
+                    <uxap:ObjectPageSubSection title="">
+                        <uxap:blocks>
+                            <VBox class="sapUiSmallPadding">
+                                <Text text="{poDetail>/notes}" wrapping="true" />
+                            </VBox>
+                        </uxap:blocks>
+                    </uxap:ObjectPageSubSection>
+                </uxap:subSections>
+            </uxap:ObjectPageSection>
+
+        </uxap:sections>
+    </uxap:ObjectPageLayout>
+
+</mvc:View>

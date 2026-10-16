@@ -1,0 +1,910 @@
+{
+  "customer": {
+    "bpNumber": "BP-10004928",
+    "name": "Industrial Global Corp S.A.",
+    "taxId": "CL-76.892.410-K",
+    "segment": "Enterprise B2B - Tier 1",
+    "industry": "Manufactura y Minería",
+    "partnerTier": "Gold Partner",
+    "partnerDiscountPercent": 25,
+    "c4cAccountOwner": "Valentina Morales (Senior Account Exec)",
+    "c4cOwnerEmail": "v.morales@sap-c4c-partner.com",
+    "c4cSyncStatus": "Synchronized (Real-time OData)",
+    "s4SyncStatus": "Synchronized (SOAP BP Master)",
+    "mulesoftStatus": "Active (Anypoint Mule 4.4 Gateway)",
+    "lastSyncTimestamp": "2026-09-01 19:15:20",
+    "creditLimit": 250000.00,
+    "creditUsed": 78450.00,
+    "creditAvailable": 171550.00,
+    "currency": "USD",
+    "addresses": [
+      {
+        "id": "ADDR-01",
+        "type": "Planta Principal / Casa Matriz",
+        "street": "Av. Los Parques Industriales 4500",
+        "city": "Santiago",
+        "region": "Región Metropolitana",
+        "country": "Chile",
+        "postalCode": "8320000",
+        "isDefaultDelivery": true
+      },
+      {
+        "id": "ADDR-02",
+        "type": "Centro de Distribución Norte",
+        "street": "Ruta 5 Norte Km 14, Galpón B",
+        "city": "Antofagasta",
+        "region": "Antofagasta",
+        "country": "Chile",
+        "postalCode": "1240000",
+        "isDefaultDelivery": false
+      }
+    ]
+  },
+  "teamUsers": [
+    {
+      "id": "USR-001",
+      "name": "Ing. Carlos Mendoza",
+      "email": "carlos.mendoza@industrialcorp.com",
+      "phone": "+56 9 8765 4321",
+      "position": "Director de Operaciones y Mantenimiento",
+      "role": "ADMIN",
+      "roleName": "Administrador de Cuenta",
+      "licenseType": "Partner Community Plus",
+      "status": "Activo",
+      "lastLogin": "2026-09-01 18:45",
+      "points": 1450,
+      "reputationRank": "Master B2B",
+      "canAuthorizeQuotes": true,
+      "canManageTeam": true,
+      "canRegisterDeals": true
+    },
+    {
+      "id": "USR-002",
+      "name": "Lucía Arismendi",
+      "email": "lucia.arismendi@industrialcorp.com",
+      "phone": "+56 9 7654 3210",
+      "position": "Jefa de Adquisiciones y Compras",
+      "role": "BUYER",
+      "roleName": "Comprador",
+      "licenseType": "Customer Community Plus",
+      "status": "Activo",
+      "lastLogin": "2026-09-01 16:20",
+      "points": 820,
+      "reputationRank": "Especialista",
+      "canAuthorizeQuotes": true,
+      "canManageTeam": false,
+      "canRegisterDeals": false
+    },
+    {
+      "id": "USR-003",
+      "name": "Matías Valenzuela",
+      "email": "matias.valenzuela@industrialcorp.com",
+      "phone": "+56 9 6543 2109",
+      "position": "Analista de Finanzas y Auditoría",
+      "role": "VIEWER",
+      "roleName": "Visualizador",
+      "licenseType": "Customer Community",
+      "status": "Activo",
+      "lastLogin": "2026-08-31 11:10",
+      "points": 310,
+      "reputationRank": "Novato",
+      "canAuthorizeQuotes": false,
+      "canManageTeam": false,
+      "canRegisterDeals": false
+    }
+  ],
+  "categories": [
+    { "id": "CAT-ALL", "name": "Todas las Categorías (18 Productos)" },
+    { "id": "CAT-IND", "name": "Equipos y Motores Industriales" },
+    { "id": "CAT-HYD", "name": "Sistemas Hidráulicos & Válvulas" },
+    { "id": "CAT-REP", "name": "Repuestos, Rodamientos & Chumaceras" },
+    { "id": "CAT-AUT", "name": "Automatización, Sensores & PLC" },
+    { "id": "CAT-SRV", "name": "Servicios Técnicos & Mantenimiento" },
+    { "id": "CAT-CON", "name": "Consumibles, Filtros & Lubricantes" }
+  ],
+  "products": [
+    {
+      "id": "PRD-1001",
+      "sku": "MOT-IND-75KW",
+      "category": "CAT-IND",
+      "categoryName": "Equipos y Motores Industriales",
+      "name": "Motor Trifásico Industrial IE4 75kW 1500 RPM",
+      "description": "Motor de alta eficiencia energética para faenas continuas en ambientes severos. Protección IP66 y aislamiento clase H.",
+      "unitPrice": 4850.00,
+      "partnerPrice": 3637.50,
+      "stock": 14,
+      "stockStatus": "InStock",
+      "currency": "USD",
+      "leadTimeDays": 3,
+      "icon": "sap-icon://wrench",
+      "minOrder": 1,
+      "volumePricing": [
+        { "min": 1, "max": 4, "price": 4850.00, "discount": "0%" },
+        { "min": 5, "max": 9, "price": 4450.00, "discount": "8%" },
+        { "min": 10, "max": 99, "price": 4120.00, "discount": "15%" }
+      ]
+    },
+    {
+      "id": "PRD-1002",
+      "sku": "MOT-IND-110KW",
+      "category": "CAT-IND",
+      "categoryName": "Equipos y Motores Industriales",
+      "name": "Motor Eléctrico de Alta Tensión 110kW 3000 RPM",
+      "description": "Rotor bobinado de cobre para servicio pesado en chancado primario y ventilación de túneles mineros.",
+      "unitPrice": 7200.00,
+      "partnerPrice": 5400.00,
+      "stock": 8,
+      "stockStatus": "InStock",
+      "currency": "USD",
+      "leadTimeDays": 5,
+      "icon": "sap-icon://circle-task",
+      "minOrder": 1,
+      "volumePricing": [
+        { "min": 1, "max": 2, "price": 7200.00, "discount": "0%" },
+        { "min": 3, "max": 5, "price": 6650.00, "discount": "8%" }
+      ]
+    },
+    {
+      "id": "PRD-1003",
+      "sku": "MOT-SRV-5KW",
+      "category": "CAT-IND",
+      "categoryName": "Equipos y Motores Industriales",
+      "name": "Servomotor Brushless de Alta Dinámica 5kW con Freno",
+      "description": "Servomotor síncrono con encoder óptico absoluto multiturn para líneas de envasado y robótica.",
+      "unitPrice": 2150.00,
+      "partnerPrice": 1612.50,
+      "stock": 18,
+      "stockStatus": "InStock",
+      "currency": "USD",
+      "leadTimeDays": 2,
+      "icon": "sap-icon://process",
+      "minOrder": 1,
+      "volumePricing": [
+        { "min": 1, "max": 3, "price": 2150.00, "discount": "0%" },
+        { "min": 4, "max": 10, "price": 1950.00, "discount": "9%" }
+      ]
+    },
+    {
+      "id": "PRD-1004",
+      "sku": "VALV-MAR-DN300",
+      "category": "CAT-HYD",
+      "categoryName": "Sistemas Hidráulicos & Válvulas",
+      "name": "Válvula Mariposa Triple Excentricidad DN300 ANSI 300",
+      "description": "Válvula de corte estanco en acero inoxidable 316 para pulpas abrasivas y fluidos corrosivos.",
+      "unitPrice": 1620.00,
+      "partnerPrice": 1215.00,
+      "stock": 28,
+      "stockStatus": "InStock",
+      "currency": "USD",
+      "leadTimeDays": 2,
+      "icon": "sap-icon://pipeline-analysis",
+      "minOrder": 2,
+      "volumePricing": [
+        { "min": 2, "max": 5, "price": 1620.00, "discount": "0%" },
+        { "min": 6, "max": 15, "price": 1480.00, "discount": "9%" },
+        { "min": 16, "max": 99, "price": 1350.00, "discount": "17%" }
+      ]
+    },
+    {
+      "id": "PRD-1005",
+      "sku": "VALV-GLO-DN150",
+      "category": "CAT-HYD",
+      "categoryName": "Sistemas Hidráulicos & Válvulas",
+      "name": "Válvula Globo de Control Proporcional con Actuador",
+      "description": "Cuerpo en acero forjado con posicionador electro-neumático digital 4-20mA HART.",
+      "unitPrice": 3450.00,
+      "partnerPrice": 2587.50,
+      "stock": 10,
+      "stockStatus": "InStock",
+      "currency": "USD",
+      "leadTimeDays": 4,
+      "icon": "sap-icon://measure",
+      "minOrder": 1,
+      "volumePricing": [
+        { "min": 1, "max": 3, "price": 3450.00, "discount": "0%" },
+        { "min": 4, "max": 8, "price": 3150.00, "discount": "9%" }
+      ]
+    },
+    {
+      "id": "PRD-1006",
+      "sku": "VALV-BOL-SS316",
+      "category": "CAT-HYD",
+      "categoryName": "Sistemas Hidráulicos & Válvulas",
+      "name": "Válvula de Bola Paso Total Acero Inox 316 2 Pulgadas",
+      "description": "Válvula de bola de 3 piezas con asiento de PTFE reforzado para vapor y químicos hasta 1000 WOG.",
+      "unitPrice": 480.00,
+      "partnerPrice": 360.00,
+      "stock": 45,
+      "stockStatus": "InStock",
+      "currency": "USD",
+      "leadTimeDays": 1,
+      "icon": "sap-icon://action",
+      "minOrder": 2,
+      "volumePricing": [
+        { "min": 2, "max": 5, "price": 480.00, "discount": "0%" },
+        { "min": 6, "max": 20, "price": 430.00, "discount": "10%" }
+      ]
+    },
+    {
+      "id": "PRD-1007",
+      "sku": "BOMB-CENT-ISO50",
+      "category": "CAT-HYD",
+      "categoryName": "Sistemas Hidráulicos & Válvulas",
+      "name": "Bomba Centrífuga Multietapa Horizontal ISO 5199",
+      "description": "Bomba de alta presión para inyección de agua de proceso y recirculación en plantas químicas.",
+      "unitPrice": 3290.00,
+      "partnerPrice": 2467.50,
+      "stock": 6,
+      "stockStatus": "LowStock",
+      "currency": "USD",
+      "leadTimeDays": 7,
+      "icon": "sap-icon://fallback",
+      "minOrder": 1,
+      "volumePricing": [
+        { "min": 1, "max": 2, "price": 3290.00, "discount": "0%" },
+        { "min": 3, "max": 5, "price": 3050.00, "discount": "7%" },
+        { "min": 6, "max": 99, "price": 2800.00, "discount": "15%" }
+      ]
+    },
+    {
+      "id": "PRD-1008",
+      "sku": "BOMB-SUM-SLURRY",
+      "category": "CAT-HYD",
+      "categoryName": "Sistemas Hidráulicos & Válvulas",
+      "name": "Bomba Sumergible para Pulpa Abrasiva y Relaves 30HP",
+      "description": "Impulsor de alto cromo 28% endurecido para lodos pesados con paso de sólidos hasta 50mm.",
+      "unitPrice": 8900.00,
+      "partnerPrice": 6675.00,
+      "stock": 4,
+      "stockStatus": "InStock",
+      "currency": "USD",
+      "leadTimeDays": 6,
+      "icon": "sap-icon://database",
+      "minOrder": 1,
+      "volumePricing": [
+        { "min": 1, "max": 2, "price": 8900.00, "discount": "0%" },
+        { "min": 3, "max": 5, "price": 8100.00, "discount": "9%" }
+      ]
+    },
+    {
+      "id": "PRD-1009",
+      "sku": "ROD-ESF-SKF22320",
+      "category": "CAT-REP",
+      "categoryName": "Repuestos, Rodamientos & Chumaceras",
+      "name": "Rodamiento de Rodillos a Rótula 22320 CC/W33 SKF",
+      "description": "Rodamiento reforzado para soportar cargas radiales y axiales pesadas en trituradores y chancadores.",
+      "unitPrice": 380.00,
+      "partnerPrice": 285.00,
+      "stock": 75,
+      "stockStatus": "InStock",
+      "currency": "USD",
+      "leadTimeDays": 1,
+      "icon": "sap-icon://circle-task",
+      "minOrder": 4,
+      "volumePricing": [
+        { "min": 4, "max": 9, "price": 380.00, "discount": "0%" },
+        { "min": 10, "max": 24, "price": 340.00, "discount": "10%" },
+        { "min": 25, "max": 99, "price": 310.00, "discount": "18%" }
+      ]
+    },
+    {
+      "id": "PRD-1010",
+      "sku": "ROD-CON-TIMKEN",
+      "category": "CAT-REP",
+      "categoryName": "Repuestos, Rodamientos & Chumaceras",
+      "name": "Rodamiento de Rodillos Cónicos Timken 32224 Reforzado",
+      "description": "Alta capacidad de carga combinada para reductores de velocidad industriales y transmisiones.",
+      "unitPrice": 520.00,
+      "partnerPrice": 390.00,
+      "stock": 32,
+      "stockStatus": "InStock",
+      "currency": "USD",
+      "leadTimeDays": 1,
+      "icon": "sap-icon://dimension",
+      "minOrder": 2,
+      "volumePricing": [
+        { "min": 2, "max": 5, "price": 520.00, "discount": "0%" },
+        { "min": 6, "max": 15, "price": 475.00, "discount": "9%" }
+      ]
+    },
+    {
+      "id": "PRD-1011",
+      "sku": "CHUM-DIV-FAG",
+      "category": "CAT-REP",
+      "categoryName": "Repuestos, Rodamientos & Chumaceras",
+      "name": "Soporte de Chumacera Bipartida FAG SNL 520 en Fundición",
+      "description": "Carcasa de hierro fundido modular con sellos laberínticos para protección contra polvo minero.",
+      "unitPrice": 610.00,
+      "partnerPrice": 457.50,
+      "stock": 22,
+      "stockStatus": "InStock",
+      "currency": "USD",
+      "leadTimeDays": 2,
+      "icon": "sap-icon://inventory",
+      "minOrder": 2,
+      "volumePricing": [
+        { "min": 2, "max": 4, "price": 610.00, "discount": "0%" },
+        { "min": 5, "max": 10, "price": 550.00, "discount": "10%" }
+      ]
+    },
+    {
+      "id": "PRD-1012",
+      "sku": "SNS-PRES-ROSE",
+      "category": "CAT-AUT",
+      "categoryName": "Automatización, Sensores & PLC",
+      "name": "Transmisor de Presión Diferencial Inteligente 4-20mA",
+      "description": "Sensor de presión con protocolo HART 7 y display LCD retroiluminado con certificación SIL 2.",
+      "unitPrice": 940.00,
+      "partnerPrice": 705.00,
+      "stock": 19,
+      "stockStatus": "InStock",
+      "currency": "USD",
+      "leadTimeDays": 2,
+      "icon": "sap-icon://electrocardiogram",
+      "minOrder": 1,
+      "volumePricing": [
+        { "min": 1, "max": 3, "price": 940.00, "discount": "0%" },
+        { "min": 4, "max": 8, "price": 860.00, "discount": "8%" }
+      ]
+    },
+    {
+      "id": "PRD-1013",
+      "sku": "SNS-TEMP-PT100",
+      "category": "CAT-AUT",
+      "categoryName": "Automatización, Sensores & PLC",
+      "name": "Sonda Termorresistencia PT100 Cabezal Marino IP68",
+      "description": "Sensor de temperatura dúplex clase A con vaina de termopozo en titanio para líquidos agresivos.",
+      "unitPrice": 185.00,
+      "partnerPrice": 138.75,
+      "stock": 60,
+      "stockStatus": "InStock",
+      "currency": "USD",
+      "leadTimeDays": 1,
+      "icon": "sap-icon://temperature",
+      "minOrder": 2,
+      "volumePricing": [
+        { "min": 2, "max": 9, "price": 185.00, "discount": "0%" },
+        { "min": 10, "max": 30, "price": 160.00, "discount": "13%" }
+      ]
+    },
+    {
+      "id": "PRD-1014",
+      "sku": "PLC-MOD-SIEMENS",
+      "category": "CAT-AUT",
+      "categoryName": "Automatización, Sensores & PLC",
+      "name": "Controlador Programable PLC con Puerto PROFINET",
+      "description": "Módulo de automatización industrial modular con 16 entradas / 16 salidas digitales a 24VDC.",
+      "unitPrice": 1750.00,
+      "partnerPrice": 1312.50,
+      "stock": 11,
+      "stockStatus": "InStock",
+      "currency": "USD",
+      "leadTimeDays": 3,
+      "icon": "sap-icon://connected",
+      "minOrder": 1,
+      "volumePricing": [
+        { "min": 1, "max": 2, "price": 1750.00, "discount": "0%" },
+        { "min": 3, "max": 6, "price": 1600.00, "discount": "9%" }
+      ]
+    },
+    {
+      "id": "PRD-1015",
+      "sku": "SRV-ALIN-LASER",
+      "category": "CAT-SRV",
+      "categoryName": "Servicios Técnicos & Mantenimiento",
+      "name": "Servicio de Alineación Láser de Ejes y Diagnóstico",
+      "description": "Servicio técnico certificado en terreno con entrega de informe termográfico y predictivo.",
+      "unitPrice": 1200.00,
+      "partnerPrice": 900.00,
+      "stock": 99,
+      "stockStatus": "InStock",
+      "currency": "USD",
+      "leadTimeDays": 2,
+      "icon": "sap-icon://stethoscope",
+      "minOrder": 1,
+      "volumePricing": [
+        { "min": 1, "max": 99, "price": 1200.00, "discount": "0%" }
+      ]
+    },
+    {
+      "id": "PRD-1016",
+      "sku": "SRV-TERM-ELEC",
+      "category": "CAT-SRV",
+      "categoryName": "Servicios Técnicos & Mantenimiento",
+      "name": "Inspección Termográfica Infrarroja de Tableros Eléctricos",
+      "description": "Auditoría en terreno con cámara FLIR calibrada y detección de puntos calientes en subestaciones.",
+      "unitPrice": 850.00,
+      "partnerPrice": 637.50,
+      "stock": 99,
+      "stockStatus": "InStock",
+      "currency": "USD",
+      "leadTimeDays": 2,
+      "icon": "sap-icon://shield",
+      "minOrder": 1,
+      "volumePricing": [
+        { "min": 1, "max": 99, "price": 850.00, "discount": "0%" }
+      ]
+    },
+    {
+      "id": "PRD-1017",
+      "sku": "KIT-SELL-HYD90",
+      "category": "CAT-CON",
+      "categoryName": "Consumibles, Filtros & Lubricantes",
+      "name": "Kit de Sellos Hidráulicos Vitón de Alta Temperatura",
+      "description": "Juego completo de empaquetaduras y O-rings resistentes a hidrocarburos y temperaturas de hasta 220°C.",
+      "unitPrice": 195.00,
+      "partnerPrice": 146.25,
+      "stock": 120,
+      "stockStatus": "InStock",
+      "currency": "USD",
+      "leadTimeDays": 1,
+      "icon": "sap-icon://dimension",
+      "minOrder": 5,
+      "volumePricing": [
+        { "min": 5, "max": 14, "price": 195.00, "discount": "0%" },
+        { "min": 15, "max": 50, "price": 170.00, "discount": "13%" }
+      ]
+    },
+    {
+      "id": "PRD-1018",
+      "sku": "LUB-SINT-HIGH",
+      "category": "CAT-CON",
+      "categoryName": "Consumibles, Filtros & Lubricantes",
+      "name": "Grasa Sintética Complejo de Litio EP2 Balde 18kg",
+      "description": "Lubricante de extrema presión con aditivos sólidos de bisulfuro de molibdeno para alta carga.",
+      "unitPrice": 310.00,
+      "partnerPrice": 232.50,
+      "stock": 50,
+      "stockStatus": "InStock",
+      "currency": "USD",
+      "leadTimeDays": 1,
+      "icon": "sap-icon://lab",
+      "minOrder": 2,
+      "volumePricing": [
+        { "min": 2, "max": 5, "price": 310.00, "discount": "0%" },
+        { "min": 6, "max": 20, "price": 275.00, "discount": "11%" }
+      ]
+    }
+  ],
+  "quickReorderLists": [
+    {
+      "id": "REORD-01",
+      "name": "Pack Mantenimiento Planta Chancado (Mensual)",
+      "itemsCount": 3,
+      "estimatedTotal": 6540.00,
+      "items": [
+        { "sku": "ROD-ESF-SKF22320", "name": "Rodamiento SKF 22320", "qty": 8, "unitPrice": 380.00 },
+        { "sku": "KIT-SELL-HYD90", "name": "Kit Sellos Vitón", "qty": 5, "unitPrice": 195.00 },
+        { "sku": "SRV-ALIN-LASER", "name": "Alineación Láser", "qty": 2, "unitPrice": 1200.00 }
+      ]
+    },
+    {
+      "id": "REORD-02",
+      "name": "Reposición de Válvulas y Actuadores Línea B",
+      "itemsCount": 2,
+      "estimatedTotal": 9720.00,
+      "items": [
+        { "sku": "VALV-MAR-DN300", "name": "Válvula Mariposa DN300", "qty": 6, "unitPrice": 1620.00 }
+      ]
+    }
+  ],
+  "quotes": [
+    {
+      "quoteId": "COT-2026-00412",
+      "c4cOpportunityId": "OPP-99082",
+      "date": "2026-09-01",
+      "validUntil": "2026-09-30",
+      "status": "En Revisión por Ejecutivo Comercial",
+      "statusState": "Information",
+      "totalAmount": 14550.00,
+      "currency": "USD",
+      "requestedBy": "Ing. Carlos Mendoza",
+      "itemsCount": 3
+    }
+  ],
+  "salesOrders": [
+    {
+      "orderNumber": "4500098231",
+      "orderDate": "2026-08-28",
+      "deliveryDate": "2026-09-04",
+      "status": "DESPACHADO",
+      "statusText": "Despachado en Tránsito",
+      "statusState": "Information",
+      "statusStepIndex": 2,
+      "currency": "USD",
+      "totalGross": 22450.00,
+      "carrier": "Starken Cargo Express",
+      "trackingCode": "TRK-CL-9082310-X",
+      "deliveryAddress": "Av. Los Parques Industriales 4500, Santiago",
+      "items": [
+        { "pos": "0010", "sku": "MOT-IND-75KW", "description": "Motor Trifásico Industrial IE4 75kW", "qty": 4, "unit": "UN", "unitPrice": 4850.00, "total": 19400.00, "itemStatus": "Despachado" },
+        { "pos": "0020", "sku": "ROD-ESF-SKF22320", "description": "Rodamiento de Rodillos 22320", "qty": 8, "unit": "UN", "unitPrice": 380.00, "total": 3040.00, "itemStatus": "Despachado" }
+      ]
+    },
+    {
+      "orderNumber": "4500098115",
+      "orderDate": "2026-08-20",
+      "deliveryDate": "2026-08-24",
+      "status": "ENTREGADO",
+      "statusText": "Entregado Conforme",
+      "statusState": "Success",
+      "statusStepIndex": 3,
+      "currency": "USD",
+      "totalGross": 9840.00,
+      "carrier": "DHL Global Forwarding",
+      "trackingCode": "DHL-98441203",
+      "deliveryAddress": "Ruta 5 Norte Km 14, Galpón B, Antofagasta",
+      "items": [
+        { "pos": "0010", "sku": "VALV-MAR-DN300", "description": "Válvula Mariposa Triple Excentricidad", "qty": 6, "unit": "UN", "unitPrice": 1620.00, "total": 9720.00, "itemStatus": "Entregado" }
+      ]
+    },
+    {
+      "orderNumber": "4500098304",
+      "orderDate": "2026-09-01",
+      "deliveryDate": "2026-09-08",
+      "status": "EN_PREPARACION",
+      "statusText": "En Preparación en Bodega",
+      "statusState": "Warning",
+      "statusStepIndex": 1,
+      "currency": "USD",
+      "totalGross": 6580.00,
+      "carrier": "Transportes Mineros SpA",
+      "trackingCode": "Pendiente de Despacho",
+      "deliveryAddress": "Av. Los Parques Industriales 4500, Santiago",
+      "items": [
+        { "pos": "0010", "sku": "BOMB-CENT-ISO50", "description": "Bomba Centrífuga Multietapa ISO", "qty": 2, "unit": "UN", "unitPrice": 3290.00, "total": 6580.00, "itemStatus": "En Preparación" }
+      ]
+    }
+  ],
+  "invoices": [
+    {
+      "invoiceNumber": "F-S4H-2026-00891",
+      "salesOrderRef": "4500098231",
+      "issueDate": "2026-08-31",
+      "dueDate": "2026-09-30",
+      "currency": "USD",
+      "netAmount": 18865.55,
+      "taxAmount": 3584.45,
+      "grossTotal": 22450.00,
+      "status": "PENDIENTE",
+      "statusText": "Pendiente de Pago (Vigente)",
+      "statusState": "Warning",
+      "paymentTerms": "Crédito 30 días",
+      "xmlDteFolio": "DTE-98120344",
+      "items": [
+        { "description": "Motor Trifásico Industrial IE4 75kW (x4)", "amount": 19400.00 },
+        { "description": "Rodamiento de Rodillos 22320 (x8)", "amount": 3050.00 }
+      ]
+    },
+    {
+      "invoiceNumber": "F-S4H-2026-00619",
+      "salesOrderRef": "4500097940",
+      "issueDate": "2026-07-15",
+      "dueDate": "2026-08-14",
+      "currency": "USD",
+      "netAmount": 3878.99,
+      "taxAmount": 737.01,
+      "grossTotal": 4616.00,
+      "status": "VENCIDA",
+      "statusText": "Vencida (18 días de mora)",
+      "statusState": "Error",
+      "paymentTerms": "Crédito 30 días",
+      "xmlDteFolio": "DTE-96441208",
+      "items": [
+        { "description": "Servicio de Calibración de Sensores en Terreno", "amount": 4616.00 }
+      ]
+    }
+  ],
+  "tickets": [
+    {
+      "ticketId": "SR-89201",
+      "subject": "Solicitud de reemplazo bajo garantía - Rodamiento SKF chancador #2",
+      "type": "GARANTIA",
+      "typeName": "Garantía de Producto",
+      "queue": "Garantías & Calidad",
+      "priority": "ALTA",
+      "priorityText": "Alta",
+      "priorityState": "Error",
+      "status": "En Atención por Soporte",
+      "statusState": "Information",
+      "createdAt": "2026-09-01 10:15",
+      "slaMaxHours": 12,
+      "slaRemainingHours": 4.5,
+      "slaStatus": "WARNING",
+      "slaStatusText": "SLA por Vencer (4.5h restantes)",
+      "slaState": "Warning",
+      "assignedAgent": "Marcos Rivera (Especialista en Garantías)",
+      "relatedOrder": "4500098231",
+      "deflected": false,
+      "messages": [
+        {
+          "sender": "Ing. Carlos Mendoza (Cliente)",
+          "role": "Customer",
+          "timestamp": "2026-09-01 10:15",
+          "text": "Detectamos una fisura anómala en la pista exterior del rodamiento recién desembalado.",
+          "attachments": ["Informe_Inspeccion_Fisura.pdf"]
+        }
+      ]
+    }
+  ],
+  "faqs": [
+    {
+      "id": "FAQ-01",
+      "category": "Garantías y Devoluciones",
+      "title": "¿Cuál es el procedimiento y plazo para solicitar la garantía de un equipo?",
+      "keywords": ["garantía", "garantia", "falla", "fisura", "roto", "rma", "defecto", "reemplazo", "rodamiento", "chancador"],
+      "views": 420,
+      "usefulVotes": 98,
+      "content": "Para hacer efectiva la garantía de fábrica de 24 meses, debes contar con el número de serie y fotografías de la placa. La autorización de retiro RMA se procesa en menos de 2 horas hábiles."
+    },
+    {
+      "id": "FAQ-02",
+      "category": "Facturación y Pagos",
+      "title": "¿Cómo descargar facturas electrónicas y certificados tributarios?",
+      "keywords": ["factura", "facturas", "dte", "xml", "pdf", "iva", "vencimiento", "pago", "cobranza", "saldo"],
+      "views": 680,
+      "usefulVotes": 142,
+      "content": "En la pestaña 'Estado de Cuenta y Facturas' puedes previsualizar y descargar el PDF con validez fiscal y el archivo XML (DTE) emitidos por SAP S/4HANA en tiempo real."
+    },
+    {
+      "id": "FAQ-03",
+      "category": "Logística y Despachos",
+      "title": "¿Cómo rastrear el despacho de un pedido en tiempo real?",
+      "keywords": ["despacho", "seguimiento", "tracking", "guía", "guia", "starken", "dhl", "camión", "entrega", "pedido"],
+      "views": 530,
+      "usefulVotes": 115,
+      "content": "En el módulo 'Historial y Seguimiento de Pedidos' encontrarás el semáforo de despacho con la guía de transporte en tiempo real."
+    },
+    {
+      "id": "FAQ-04",
+      "category": "Mantenimiento y Torque",
+      "title": "Guía de instalación y pares de apriete para bombas y válvulas",
+      "keywords": ["calibración", "presostatos", "bomba", "torque", "apriete", "valvula", "válvula", "brida", "presion"],
+      "views": 390,
+      "usefulVotes": 88,
+      "content": "El torque recomendado según la norma ISO 5199 para bridas ANSI 300 es de 145 Nm con llave dinamométrica calibrada."
+    }
+  ],
+  "prmDeals": [
+    {
+      "dealId": "DEAL-PRM-2026-089",
+      "dealName": "Suministro Motores y Bombas para Faena Minera Los Bronces",
+      "endCustomer": "Minera Anglo American Los Bronces",
+      "registeredBy": "Ing. Carlos Mendoza (Industrial Global Corp)",
+      "estimatedAmount": 185000.00,
+      "partnerMargin": "25% (USD $46,250)",
+      "stage": "APROBADO",
+      "stageText": "Aprobado (Canal Protegido)",
+      "stageState": "Success",
+      "exclusivityUntil": "2026-11-30",
+      "channelConflict": "Sin Conflicto (Exclusividad Vigente)",
+      "notes": "Deal validado por el Director de Canales de SAP."
+    },
+    {
+      "dealId": "DEAL-PRM-2026-092",
+      "dealName": "Modernización de Válvulas en Planta Concentradora",
+      "endCustomer": "Codelco División Andina",
+      "registeredBy": "Lucía Arismendi",
+      "estimatedAmount": 92000.00,
+      "partnerMargin": "20% (USD $18,400)",
+      "stage": "EN_EVALUACION",
+      "stageText": "En Evaluación por Salesforce CPQ",
+      "stageState": "Warning",
+      "exclusivityUntil": "2026-10-15",
+      "channelConflict": "En Verificación de Cuentas Nombradas",
+      "notes": "Validando registro previo en el CRM."
+    }
+  ],
+  "prmCertifications": [
+    {
+      "id": "CERT-01",
+      "courseName": "Especialista Certificado en Motores Industriales IE4",
+      "track": "Technical Sales & Engineering",
+      "duration": "12 horas",
+      "progress": 100,
+      "status": "Certificado",
+      "statusState": "Success",
+      "score": "98/100",
+      "certificateCode": "SAP-PRM-IE4-88910",
+      "badgeIcon": "sap-icon://badge"
+    },
+    {
+      "id": "CERT-02",
+      "courseName": "Certificación en Salesforce CPQ & Descuentos por Canal",
+      "track": "Partner Commercial Enablement",
+      "duration": "8 horas",
+      "progress": 75,
+      "status": "En Curso (Módulo 3/4)",
+      "statusState": "Warning",
+      "score": "Pendiente Examen",
+      "certificateCode": "-",
+      "badgeIcon": "sap-icon://education"
+    },
+    {
+      "id": "CERT-03",
+      "courseName": "Diagnóstico Predictivo y Alineación Láser de Maquinaria",
+      "track": "Field Service & Maintenance",
+      "duration": "16 horas",
+      "progress": 100,
+      "status": "Certificado",
+      "statusState": "Success",
+      "score": "95/100",
+      "certificateCode": "SAP-PRM-ALIN-77412",
+      "badgeIcon": "sap-icon://stethoscope"
+    }
+  ],
+  "communityForums": [
+    {
+      "id": "POST-01",
+      "title": "¿Cómo optimizar el consumo eléctrico en motores IE4 en régimen continuo?",
+      "category": "Eficiencia Energética",
+      "author": "Ing. Carlos Mendoza",
+      "authorRank": "Master B2B",
+      "date": "2026-09-01 14:30",
+      "likes": 24,
+      "repliesCount": 6,
+      "solved": true,
+      "content": "Hemos implementado variadores de frecuencia VFD en conjunto con los motores IE4 de 75kW, reduciendo la temperatura de operación en 12°C y el consumo en un 18%.",
+      "comments": [
+        { "author": "Rodrigo Silva (Especialista SAP)", "date": "2026-09-01 15:10", "text": "Excelente aporte Carlos. Recuerden ajustar la curva V/f para cargas de par cuadrático en bombas." },
+        { "author": "Francisca Gómez", "date": "2026-09-01 16:00", "text": "¿Qué modelo de VFD utilizaron para faena minera?" }
+      ]
+    },
+    {
+      "id": "POST-02",
+      "title": "Mejores prácticas para almacenamiento de rodamientos de gran diámetro en bodega",
+      "category": "Mantenimiento Mecánico",
+      "author": "Lucía Arismendi",
+      "authorRank": "Especialista",
+      "date": "2026-08-30 11:20",
+      "likes": 18,
+      "repliesCount": 3,
+      "solved": false,
+      "content": "Es fundamental almacenar los rodamientos en posición horizontal y sobre superficies aisladas de vibraciones externas para evitar el falso brinelling.",
+      "comments": [
+        { "author": "Marcos Rivera (QA Support)", "date": "2026-08-30 13:45", "text": "Totalmente de acuerdo. Además la humedad ambiente no debe superar el 60%." }
+      ]
+    }
+  ],
+  "chatterFeeds": [
+    {
+      "recordId": "ORD-4500098231",
+      "recordType": "Pedido S/4HANA",
+      "author": "Starken Logística",
+      "avatar": "sap-icon://shipping-status",
+      "date": "2026-09-01 16:30",
+      "text": "El camión de carga pesada ha salido de CD Lo Boza. Conductor asignado: Juan Morales (+56 9 8812 3344). @CarlosMendoza favor coordinar grúa horquilla para descarga.",
+      "likes": 4
+    },
+    {
+      "recordId": "COT-2026-00412",
+      "recordType": "Cotización Comercial",
+      "author": "Valentina Morales (Account Executive)",
+      "avatar": "sap-icon://lead",
+      "date": "2026-09-01 12:00",
+      "text": "He aplicado un 8% adicional de descuento por volumen en los motores IE4. @CarlosMendoza la propuesta final está lista para tu aprobación.",
+      "likes": 2
+    }
+  ],
+  "gamification": {
+    "userPoints": 1450,
+    "userLevel": "Master B2B",
+    "pointsToNextLevel": 550,
+    "levelProgressPercent": 72,
+    "badges": [
+      { "id": "B-01", "name": "Super Contribuidor", "icon": "sap-icon://award", "description": "+10 respuestas aceptadas en foros técnicos", "unlocked": true },
+      { "id": "B-02", "name": "Partner Gold Certified", "icon": "sap-icon://shield", "description": "Certificación anual PRM aprobada", "unlocked": true },
+      { "id": "B-03", "name": "Comprador Estrella", "icon": "sap-icon://cart-full", "description": "+$100K USD en órdenes autogestionadas", "unlocked": true },
+      { "id": "B-04", "name": "Einstein Deflector", "icon": "sap-icon://da", "description": "5 casos resueltos mediante Knowledge Base", "unlocked": true }
+    ],
+    "leaderboard": [
+      { "rank": 1, "name": "Ing. Carlos Mendoza (Industrial Global Corp)", "points": 1450, "badge": "Master B2B" },
+      { "rank": 2, "name": "Hernán Bustamante (Minería del Norte)", "points": 1280, "badge": "Master B2B" },
+      { "rank": 3, "name": "Lucía Arismendi (Industrial Global Corp)", "points": 820, "badge": "Especialista" },
+      { "rank": 4, "name": "Diego Navarro (Suministros Austral)", "points": 640, "badge": "Especialista" }
+    ]
+  },
+  "builderConfig": {
+    "activeTemplate": "Customer Account Portal",
+    "templates": [
+      { "id": "T-01", "name": "Customer Account Portal", "description": "Plantilla B2B centrada en catálogo, pedidos S/4HANA y facturas electrónicas.", "icon": "sap-icon://customer" },
+      { "id": "T-02", "name": "Partner Central", "description": "Plantilla PRM enfocada en Deal Registration, CPQ Co-Selling y certificaciones.", "icon": "sap-icon://family-care" },
+      { "id": "T-03", "name": "Customer Service & Help Center", "description": "Plantilla orientada a deflexión de casos, Knowledge Base y DROID IA.", "icon": "sap-icon://headset" }
+    ],
+    "components": [
+      { "id": "CMP-01", "name": "Hero Banner Personalizado", "type": "Lightning Web Component (LWC)", "visible": true, "category": "Layout" },
+      { "id": "CMP-02", "name": "Cuadrícula de KPIs Ejecutivos", "type": "Fiori GenericTile Grid", "visible": true, "category": "Analytics" },
+      { "id": "CMP-03", "name": "Módulo de Deflexión de Casos en Vivo", "type": "Einstein Case Deflection LWC", "visible": true, "category": "Service" },
+      { "id": "CMP-04", "name": "Widget de Registro de Deals PRM", "type": "Partner Opportunity Pipeline", "visible": true, "category": "PRM" },
+      { "id": "CMP-05", "name": "Feed de Chatter & Colaboración", "type": "Chatter Social Stream", "visible": true, "category": "Community" },
+      { "id": "CMP-06", "name": "Matriz de Reorden B2B Rápido", "type": "B2B Commerce Quick Order", "visible": true, "category": "Commerce" }
+    ],
+    "audienceRules": [
+      { "id": "AUD-01", "name": "Audiencia Enterprise Minería Chile", "criteria": "Industry == 'Minería' AND Country == 'Chile'", "banner": "Descuentos exclusivos en Equipos Mineros de Alta Potencia", "pricingTier": "Tier 1 Enterprise" },
+      { "id": "AUD-02", "name": "Audiencia Distribuidores Partner Gold", "criteria": "Role == 'Partner' AND Tier == 'Gold'", "banner": "Acceso a Deal Registration con 25% de Margen Protegido", "pricingTier": "Partner Gold CPQ" }
+    ]
+  },
+  "mobileConfig": {
+    "appName": "SAP Customer & Partner Portal",
+    "appVersion": "2.4.0 (Build 128)",
+    "appIcon": "sap-icon://customer",
+    "bundleId": "com.sap.crm.customerportal.mobile",
+    "iosStoreStatus": "Listo para Publicación (App Store)",
+    "androidStoreStatus": "Listo para Publicación (Google Play)",
+    "pushNotificationsEnabled": true,
+    "offlineSyncEnabled": true,
+    "qrPreviewUrl": "https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=https://customerportal.sap.corp/mobile"
+  },
+  "cpiIntegrations": [
+    {
+      "id": "INT-01",
+      "service": "Creación de Lead/Cotización Comercial",
+      "endpoint": "/c4c/odata/v2/OpportunityCollection",
+      "protocol": "OData V2/V4",
+      "destination": "SAP Sales Cloud",
+      "frequency": "Tiempo Real (Síncrono)",
+      "lastStatus": "201 Created",
+      "latencyMs": 180,
+      "statusState": "Success"
+    },
+    {
+      "id": "INT-02",
+      "service": "Deflexión y Casos Service Cloud",
+      "endpoint": "/c4c/odata/v2/ServiceRequestCollection",
+      "protocol": "OData V2",
+      "destination": "SAP Service Cloud",
+      "frequency": "Tiempo Real (Síncrono)",
+      "lastStatus": "200 OK",
+      "latencyMs": 145,
+      "statusState": "Success"
+    },
+    {
+      "id": "INT-03",
+      "service": "MuleSoft Anypoint Enterprise Gateway",
+      "endpoint": "/mulesoft/api/v1/sales-s4-sync",
+      "protocol": "REST / Mule 4.4",
+      "destination": "MuleSoft ESB -> SAP S/4HANA",
+      "frequency": "Bidireccional (Event-Driven)",
+      "lastStatus": "200 OK",
+      "latencyMs": 160,
+      "statusState": "Success"
+    },
+    {
+      "id": "INT-04",
+      "service": "Deal Registration & Salesforce CPQ",
+      "endpoint": "/prm/api/v2/DealRegistrationSync",
+      "protocol": "REST / OData V4",
+      "destination": "Salesforce PRM / SAP CPI",
+      "frequency": "Tiempo Real (Síncrono)",
+      "lastStatus": "200 OK",
+      "latencyMs": 175,
+      "statusState": "Success"
+    }
+  ],
+  "activityAuditLog": [
+    {
+      "timestamp": "2026-09-01 19:10:45",
+      "user": "Ing. Carlos Mendoza",
+      "action": "Inicio de Sesión SSO (SAML 2.0 / MFA Activo)",
+      "category": "Seguridad & Onboarding",
+      "c4cEntity": "IdentitySessionLog",
+      "status": "Registrado en CRM"
+    },
+    {
+      "timestamp": "2026-09-01 18:40:12",
+      "user": "Lucía Arismendi",
+      "action": "Descarga de Factura PDF F-S4H-2026-00891",
+      "category": "Ventas & Facturación",
+      "c4cEntity": "CustomerInteractionLog",
+      "status": "Registrado en CRM"
+    },
+    {
+      "timestamp": "2026-09-01 17:15:00",
+      "user": "Ing. Carlos Mendoza",
+      "action": "Registro de Deal PRM DEAL-PRM-2026-089 ($185,000 USD)",
+      "category": "PRM & Canales",
+      "c4cEntity": "PartnerOpportunityLog",
+      "status": "Registrado en CRM"
+    }
+  ]
+}

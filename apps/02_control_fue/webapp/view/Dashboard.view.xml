@@ -1,0 +1,203 @@
+<mvc:View
+  controllerName="fue.control.controller.Dashboard"
+  xmlns:mvc="sap.ui.core.mvc"
+  xmlns="sap.m"
+  xmlns:core="sap.ui.core"
+  xmlns:layout="sap.ui.layout"
+  xmlns:cssgrid="sap.ui.layout.cssgrid">
+
+  <Page title="Dashboard & Control de Costos por Sociedad" showHeader="true" class="sapUiContentPadding mainViewContainer">
+    <content>
+      
+      <!-- FUE License Types Cards (5 Categories) -->
+      <HBox justifyContent="SpaceBetween" alignItems="Center" class="sapUiTinyMarginBottom">
+        <Title text="Matriz de Tipos de Licencia SAP S/4HANA & Tarifario Oficial" titleStyle="H4" />
+        <Button text="🤖 Aplicar Optimización Masiva IA" type="Accept" icon="sap-icon://lightbulb" press=".onExecuteAIOptimization" />
+      </HBox>
+
+      <cssgrid:CSSGrid gridTemplateColumns="repeat(auto-fit, minmax(200px, 1fr))" gridGap="0.75rem" class="sapUiSmallMarginBottom">
+        
+        <!-- Developer Card -->
+        <VBox class="kpiCard">
+          <HBox justifyContent="SpaceBetween" alignItems="Center">
+            <Text text="Developer FUE" class="kpiTitle" />
+            <core:Icon src="sap-icon://developer-settings" size="1.25rem" color="#4f46e5" />
+          </HBox>
+          <Text text="{fueModel>/developerFUE} FUE" class="kpiNumber kpiNumberDeveloper" />
+          <Text text="1.00 FUE | $4,500/año ($375/mes)" class="kpiSubtitle" />
+        </VBox>
+
+        <!-- Advanced Card -->
+        <VBox class="kpiCard">
+          <HBox justifyContent="SpaceBetween" alignItems="Center">
+            <Text text="Advanced FUE" class="kpiTitle" />
+            <core:Icon src="sap-icon://user-settings" size="1.25rem" color="#1d4ed8" />
+          </HBox>
+          <Text text="{fueModel>/advancedFUE} FUE" class="kpiNumber kpiNumberAdvanced" />
+          <Text text="1.00 FUE | $3,200/año ($266.67/mes)" class="kpiSubtitle" />
+        </VBox>
+
+        <!-- Core Card -->
+        <VBox class="kpiCard">
+          <HBox justifyContent="SpaceBetween" alignItems="Center">
+            <Text text="Core FUE" class="kpiTitle" />
+            <core:Icon src="sap-icon://customer-admin" size="1.25rem" color="#0891b2" />
+          </HBox>
+          <Text text="{fueModel>/coreFUE} FUE" class="kpiNumber kpiNumberCore" />
+          <Text text="0.20 FUE | $800/año ($66.67/mes)" class="kpiSubtitle" />
+        </VBox>
+
+        <!-- Self Service Card -->
+        <VBox class="kpiCard">
+          <HBox justifyContent="SpaceBetween" alignItems="Center">
+            <Text text="Self Service FUE" class="kpiTitle" />
+            <core:Icon src="sap-icon://citizen-connect" size="1.25rem" color="#ea580c" />
+          </HBox>
+          <Text text="{fueModel>/selfServiceFUE} FUE" class="kpiNumber kpiNumberSelfService" />
+          <Text text="0.05 FUE | $180/año ($15.00/mes)" class="kpiSubtitle" />
+        </VBox>
+
+        <!-- Indirect Access Card -->
+        <VBox class="kpiCard">
+          <HBox justifyContent="SpaceBetween" alignItems="Center">
+            <Text text="Indirect Access FUE" class="kpiTitle" />
+            <core:Icon src="sap-icon://chain-link" size="1.25rem" color="#16a34a" />
+          </HBox>
+          <Text text="{fueModel>/indirectFUE} FUE" class="kpiNumber kpiNumberCore" />
+          <Text text="0.02 FUE | $50/año ($4.17/mes)" class="kpiSubtitle" />
+        </VBox>
+
+      </cssgrid:CSSGrid>
+
+      <!-- Middle: Pivot Table Matrix for 5 Sociedades spanning full width -->
+      <layout:Grid defaultSpan="XL12 L12 M12 S12" hSpacing="1" vSpacing="1" class="sapUiMediumMarginBottom">
+        <layout:content>
+          
+          <VBox class="kpiContainer sapUiContentPadding">
+            <HBox justifyContent="SpaceBetween" alignItems="Center" class="sapUiSmallMarginBottom">
+              <VBox>
+                <Title text="Matriz de Consumo y Control de Presupuesto por Sociedad (5 Bukrs SAP)" titleStyle="H4" />
+                <Text text="Consumo FUE, costo total ($ USD) y potencial de ahorro distribuido por las 5 sociedades SAP HANA" style="font-size: 11px; color: #64748b;" />
+              </VBox>
+              <HBox>
+                <Button icon="sap-icon://excel-attachment" type="Emphasized" text="Exportar Excel Pivot" press=".onDownloadExcel" tooltip="Exportar Excel Estructurado" class="sapUiTinyMarginEnd" />
+              </HBox>
+            </HBox>
+
+            <Table id="pivotTable"
+              items="{fueModel>/pivot}"
+              class="pivotTable"
+              noDataText="No hay datos cargados para mostrar la matriz.">
+              <columns>
+                <Column width="25%">
+                  <Text text="Sociedad / Empresa SAP" style="font-weight: bold;" />
+                </Column>
+                <Column hAlign="End">
+                  <Text text="Developer" style="font-weight: bold;" />
+                </Column>
+                <Column hAlign="End">
+                  <Text text="Advanced" style="font-weight: bold;" />
+                </Column>
+                <Column hAlign="End">
+                  <Text text="Core" style="font-weight: bold;" />
+                </Column>
+                <Column hAlign="End">
+                  <Text text="Self Service" style="font-weight: bold;" />
+                </Column>
+                <Column hAlign="End">
+                  <Text text="Indirect" style="font-weight: bold;" />
+                </Column>
+                <Column hAlign="End" width="12%">
+                  <Text text="Total FUE" style="font-weight: bold;" />
+                </Column>
+                <Column hAlign="End" width="14%">
+                  <Text text="Costo Anual ($ USD)" style="font-weight: bold;" />
+                </Column>
+                <Column hAlign="End" width="14%">
+                  <Text text="Ahorro Potencial" style="font-weight: bold;" />
+                </Column>
+              </columns>
+              <items>
+                <ColumnListItem class="{= ${fueModel>isTotalRow} ? 'pivotRowTotal' : 'pivotRow' }">
+                  <cells>
+                    <HBox alignItems="Center">
+                      <core:Icon src="{= ${fueModel>isTotalRow} ? 'sap-icon://world' : 'sap-icon://building' }" color="{= ${fueModel>isTotalRow} ? '#1d4ed8' : '#64748b' }" class="sapUiTinyMarginEnd" />
+                      <Text text="{fueModel>Empresa}" design="{= ${fueModel>isTotalRow} ? 'Bold' : 'Standard' }" />
+                    </HBox>
+
+                    <Text text="{= ${fueModel>Developer} === 0 ? '-' : ${fueModel>Developer} }" 
+                          design="{= ${fueModel>isTotalRow} ? 'Bold' : 'Standard' }" />
+
+                    <Text text="{= ${fueModel>Advanced} === 0 ? '-' : ${fueModel>Advanced} }" 
+                          design="{= ${fueModel>isTotalRow} ? 'Bold' : 'Standard' }" />
+
+                    <Text text="{= ${fueModel>Core} === 0 ? '-' : ${fueModel>Core} }" 
+                          design="{= ${fueModel>isTotalRow} ? 'Bold' : 'Standard' }" />
+
+                    <Text text="{= ${fueModel>SelfService} === 0 ? '-' : ${fueModel>SelfService} }" 
+                          design="{= ${fueModel>isTotalRow} ? 'Bold' : 'Standard' }" />
+
+                    <Text text="{= ${fueModel>Indirect} === 0 ? '-' : ${fueModel>Indirect} }" 
+                          design="{= ${fueModel>isTotalRow} ? 'Bold' : 'Standard' }" />
+
+                    <ObjectStatus text="{fueModel>TotalFue} FUE" state="Information" design="Bold" />
+
+                    <Text text="{= '$' + ${fueModel>costUSD} + ' USD' }" design="Bold" />
+
+                    <ObjectStatus text="{= '$' + ${fueModel>savingsUSD} + ' USD' }" state="{= ${fueModel>savingsUSD} > 0 ? 'Success' : 'None' }" design="Bold" />
+                  </cells>
+                </ColumnListItem>
+              </items>
+            </Table>
+          </VBox>
+
+        </layout:content>
+      </layout:Grid>
+
+      <!-- Bottom: Visual Breakdown Cards Section -->
+      <layout:Grid defaultSpan="XL6 L6 M12 S12" hSpacing="1" vSpacing="1">
+        <layout:content>
+
+          <!-- Left Card: FUE Capacity per Sociedad -->
+          <VBox class="kpiContainer sapUiContentPadding">
+            <Title text="Capacidad FUE por Sociedad SAP (5 Bukrs)" titleStyle="H4" class="sapUiSmallMarginBottom" />
+            <Text text="Porcentaje de utilización respecto a la cuota contratada por sociedad." style="font-size: 11px; color: #64748b;" class="sapUiMediumMarginBottom" />
+            
+            <List items="{fueModel>/pivotRowsOnly}">
+              <CustomListItem class="sapUiTinyMarginBottom">
+                <VBox class="sapUiTinyPadding">
+                  <HBox justifyContent="SpaceBetween" class="sapUiTinyMarginBottom">
+                    <Text text="{fueModel>Empresa}" style="font-weight: 600;" />
+                    <Text text="{fueModel>TotalFue} FUE / ${fueModel>costUSD} USD" style="font-size: 11px; color: #15803d; font-weight: 600;" />
+                  </HBox>
+                  <ProgressIndicator percentValue="{fueModel>fueUtilizationPct}" displayValue="{fueModel>fueUtilizationPct}% Capacidad" state="{= ${fueModel>fueUtilizationPct} > 90 ? 'Error' : 'Success' }" height="1.25rem" />
+                </VBox>
+              </CustomListItem>
+            </List>
+          </VBox>
+
+          <!-- Right Card: FUE Share per License Type -->
+          <VBox class="kpiContainer sapUiContentPadding">
+            <Title text="Distribución por Categoría de Licencia S/4HANA" titleStyle="H4" class="sapUiSmallMarginBottom" />
+            <Text text="Participación de cada tipo de licencia en el inventario total." style="font-size: 11px; color: #64748b;" class="sapUiMediumMarginBottom" />
+            
+            <List items="{fueModel>/licenseBreakdown}">
+              <CustomListItem class="sapUiTinyMarginBottom">
+                <VBox class="sapUiTinyPadding">
+                  <HBox justifyContent="SpaceBetween" class="sapUiTinyMarginBottom">
+                    <Text text="{fueModel>type} (${fueModel>unitCostUSD}/año)" style="font-weight: 600;" />
+                    <Text text="{fueModel>count} usuarios | {fueModel>fue} FUE | ${fueModel>totalCostUSD} USD" style="font-size: 11px; color: #1d4ed8; font-weight: 600;" />
+                  </HBox>
+                  <ProgressIndicator percentValue="{fueModel>pct}" displayValue="{fueModel>pct}% de Usuarios ({fueModel>count})" state="{fueModel>color}" height="1.25rem" />
+                </VBox>
+              </CustomListItem>
+            </List>
+          </VBox>
+
+        </layout:content>
+      </layout:Grid>
+
+    </content>
+  </Page>
+
+</mvc:View>

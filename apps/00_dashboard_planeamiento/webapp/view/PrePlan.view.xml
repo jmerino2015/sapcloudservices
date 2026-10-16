@@ -1,0 +1,128 @@
+<mvc:View
+    controllerName="c4c.leadmanagement.controller.PrePlan"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m"
+    xmlns:f="sap.f"
+    xmlns:t="sap.ui.table"
+    xmlns:layout="sap.ui.layout"
+    displayBlock="true">
+
+    <Page showHeader="true" showFooter="true" class="sapUiContentPadding" navButtonPress=".onNavBack" showNavButton="true" title="Tabla de Pre-Planificación">
+        <content>
+            <!-- Acciones Secundarias (Toolbar) -->
+            <OverflowToolbar class="sapUiTinyMarginBottom" design="Transparent">
+                <Input width="150px" />
+                <Button text="Additional Data" type="Transparent" />
+                <Button text="Error log" type="Transparent" />
+                <Button text="Compare" type="Transparent" />
+                <Button text="Delete" type="Transparent" />
+                <Button text="History" type="Transparent" />
+                <Button text="Item Text" type="Transparent" />
+                <Button text="Select Object" type="Transparent" />
+                <Button text="Select Block" type="Transparent" />
+                <Button text="Select All" type="Transparent" />
+                <Button text="Deselect All" type="Transparent" />
+                <ToolbarSpacer />
+                <Button text="Exit" type="Transparent" />
+            </OverflowToolbar>
+
+            <!-- Layout Header -->
+            <HBox class="sapUiSmallMarginBottom">
+                <Text text="Planning start: 20.12.2020" class="sapUiLargeMarginEnd" />
+                <Text text="Planning End: 24.01.2022" />
+            </HBox>
+
+            <!-- Tab Strip -->
+            <IconTabBar id="idIconTabBar" expanded="true" class="sapUiNoContentPadding">
+                <items>
+                    <IconTabFilter text="Table" key="table">
+                        <!-- Tabla Grilla Fija -->
+                        <t:Table
+                            id="planningTable"
+                            selectionMode="MultiToggle"
+                            rows="{preplan>/rows}"
+                            visibleRowCount="15"
+                            enableSelectAll="true"
+                            ariaLabelledBy="title">
+                            
+                            <!-- Header de tabla nativo simulando SAP GUI -->
+                            <t:extension>
+                                <OverflowToolbar style="Clear">
+                                    <Button icon="sap-icon://navigation-left-arrow" type="Transparent" />
+                                    <Button icon="sap-icon://sys-prev-page" type="Transparent" />
+                                    <Button icon="sap-icon://navigation-left-arrow" type="Transparent" />
+                                    <Button icon="sap-icon://navigation-right-arrow" type="Transparent" />
+                                    <Button icon="sap-icon://sys-next-page" type="Transparent" />
+                                    <Button icon="sap-icon://navigation-right-arrow" type="Transparent" />
+                                </OverflowToolbar>
+                            </t:extension>
+
+                            <!-- Columnas Estáticas -->
+                            <t:columns>
+                                <t:Column width="5rem">
+                                    <Label text="Material" />
+                                    <t:template>
+                                        <Text text="{preplan>Material}" />
+                                    </t:template>
+                                </t:Column>
+                                <t:Column width="4.5rem">
+                                    <Label text="MRP A..." />
+                                    <t:template>
+                                        <Text text="{preplan>MrpArea}" />
+                                    </t:template>
+                                </t:Column>
+                                <t:Column width="3rem">
+                                    <Label text="V" />
+                                    <t:template>
+                                        <Text text="{preplan>V}" />
+                                    </t:template>
+                                </t:Column>
+                                <t:Column width="3rem">
+                                    <Label text="A" />
+                                    <t:template>
+                                        <CheckBox selected="{preplan>A}" />
+                                    </t:template>
+                                </t:Column>
+                                <t:Column width="3rem">
+                                    <Label text="BU" />
+                                    <t:template>
+                                        <Text text="{preplan>BU}" />
+                                    </t:template>
+                                </t:Column>
+                                <t:Column width="8rem">
+                                    <Label text="Reqmnt Segment" />
+                                    <t:template>
+                                        <Text text="{preplan>Segment}" />
+                                    </t:template>
+                                </t:Column>
+                            </t:columns>
+                            
+                            <!-- Las columnas de fecha se añadirán en el Controller dinámicamente o podríamos definirlas aquí pero el UI5 prefiere JSON bindings dinámicos o columnas predefinidas -->
+                            <!-- Aquí definimos las de la foto -->
+                        </t:Table>
+                        
+                        <!-- Paginación Footer -->
+                        <HBox class="sapUiTinyMarginTop sapUiTinyMarginBegin">
+                            <Text text="Page: 1 / 1" />
+                        </HBox>
+                        
+                    </IconTabFilter>
+                    <IconTabFilter text="Items" key="items">
+                        <!-- Vacío por ahora -->
+                    </IconTabFilter>
+                    <IconTabFilter text="Schedule Lines" key="schedule">
+                        <!-- Vacío por ahora -->
+                    </IconTabFilter>
+                </items>
+            </IconTabBar>
+        </content>
+
+        <footer>
+            <OverflowToolbar>
+                <ToolbarSpacer/>
+                <Button text="Save" type="Emphasized" press=".onCancel" />
+                <Button text="Cancel" type="Transparent" press=".onCancel" />
+            </OverflowToolbar>
+        </footer>
+    </Page>
+</mvc:View>

@@ -1,0 +1,76 @@
+version: '3.9'
+
+services:
+  # ── Base de Datos PostgreSQL ─────────────────────────────────
+  db:
+    image: postgres:16-alpine
+    container_name: wm-light-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB:       wm_light
+      POSTGRES_USER:     postgres
+      POSTGRES_PASSWORD: ${DB_PASS} # Se lee de las variables de entorno
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ── Backend API Node.js ──────────────────────────────────────
+  api:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: wm-light-api
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      NODE_ENV:     production
+      PORT:         3000
+      DEMO_MODE:    ${DEMO_MODE:-false}
+      DB_HOST:      db
+      DB_PORT:      5432
+      DB_NAME:      wm_light
+      DB_USER:      postgres
+      DB_PASS:      ${DB_PASS}
+      JWT_SECRET:   ${JWT_SECRET}
+      JWT_EXPIRES_IN: ${JWT_EXPIRES_IN:-8h}
+      JWT_REFRESH_EXPIRES: ${JWT_REFRESH_EXPIRES:-7d}
+      SAP_ODATA_URL:  ${SAP_ODATA_URL:-}
+      SAP_CLIENT:     ${SAP_CLIENT:-100}
+      SAP_USER:       ${SAP_USER:-WM_LIGHT}
+      SAP_PASSWD:     ${SAP_PASSWD:-}
+      SAP_SYNC_CRON:  ${SAP_SYNC_CRON:-0 */6 * * *}
+      ALLOWED_ORIGINS: ${ALLOWED_ORIGINS:-*}
+      LOG_LEVEL:      ${LOG_LEVEL:-info}
+    command: >
+      sh -c "node src/models/migrate.js && node src/models/seed.js && node src/server.js"
+
+  # ── Servidor Nginx (Frontend) ────────────────────────────────
+  nginx:
+    image: nginx:alpine
+    container_name: wm-light-web
+    restart: unless-stopped
+    depends_on:
+      - api
+    # Nota: No exponemos puertos externos (80/443) para no entrar en conflicto con el Proxy principal.
+    # El proxy principal (Nginx Proxy Manager) redirigirá el tráfico internamente a través de la red "webproxy".
+    volumes:
+      - ./frontend:/usr/share/nginx/html:ro
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro
+    healthcheck:
+      test: ["CMD", "wget", "-q", "--spider", "http://localhost"]
+      interval: 30s
+
+volumes:
+  pgdata:
+
+# Conexión a la red compartida del proxy de aplicaciones
+networks:
+  default:
+    name: webproxy
+    external: true

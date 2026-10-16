@@ -1,0 +1,172 @@
+/* ============================================================
+   FUE Control Dashboard — Custom CSS Styling (style.css)
+   Aesthetic adaptations based on SAP WM Light style
+   ============================================================ */
+
+.fioriBlueHeader {
+  background-color: #354a5f !important;
+  color: #ffffff !important;
+  border-bottom: 2px solid #233241 !important;
+}
+
+.fioriBlueHeader .sapMBtnIcon, 
+.fioriBlueHeader .sapMTitle,
+.fioriBlueHeader .sapMBtn {
+  color: #ffffff !important;
+}
+
+.fioriBlueHeader .sapMBtn:hover {
+  background-color: #2c3e50 !important;
+}
+
+/* Sidebar navigation styling */
+.sapTNTNavLISelected {
+  border-left: 4px solid #354a5f !important;
+  background-color: rgba(53, 74, 95, 0.08) !important;
+}
+
+/* Main NavContainer stretch */
+.mainAppNavContainer {
+  height: 100% !important;
+  width: 100% !important;
+  overflow: auto !important;
+}
+
+/* Dashboard Tiles & KPI design */
+.kpiContainer {
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  transition: transform 0.2s, box-shadow 0.2s;
+  border: 1px solid #e2e8f0;
+}
+
+.kpiContainer:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+}
+
+.kpiHeader {
+  border-bottom: 1px solid #f1f5f9;
+  background-color: #fafbfd;
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+}
+
+/* Pivot table styling to replicate the Excel screenshot look */
+.pivotTable {
+  border-collapse: collapse !important;
+  width: 100% !important;
+  background-color: #ffffff !important;
+}
+
+.pivotHeader {
+  background-color: #D9E1F2 !important;
+  font-weight: bold !important;
+  color: #000000 !important;
+}
+
+.pivotHeaderCell {
+  background-color: #D9E1F2 !important;
+  font-weight: bold !important;
+  color: #000000 !important;
+  border: 1px solid #b0c4de !important;
+}
+
+.pivotRow {
+  background-color: #ffffff;
+}
+
+.pivotRowTotal {
+  font-weight: bold !important;
+  background-color: #f2f5fa !important;
+  border-top: 1px solid #000000 !important;
+  border-bottom: 3px double #000000 !important;
+}
+
+/* General Layout adjustments */
+.dashboardScrollContainer {
+  padding: 1.5rem;
+  background-color: #f4f6f9;
+}
+
+.mainViewContainer {
+  background-color: #f4f6f9;
+  height: 100% !important;
+}
+
+/* Apply standard Fiori Font Stack (72 font) */
+body, .sapUiBody, .sapMText, .sapMTitle, .sapMLabel, .sapMBtnContent, .sapMInputBaseInner {
+  font-family: "72", "72full", Arial, Helvetica, sans-serif !important;
+}
+
+/* Modern Spacious Dashboard Cards */
+.kpiCard {
+  background-color: #ffffff !important;
+  border-radius: 8px !important;
+  border: 1px solid #d9e1e8 !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05) !important;
+  padding: 1.25rem !important;
+  height: 140px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: space-between !important;
+  transition: transform 0.2s, box-shadow 0.2s !important;
+}
+
+.kpiCard:hover {
+  transform: translateY(-4px) !important;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1) !important;
+}
+
+.kpiTitle {
+  font-size: 0.875rem !important;
+  font-weight: 600 !important;
+  color: #556b82 !important;
+}
+
+.kpiNumber {
+  font-size: 2.25rem !important;
+  font-weight: 700 !important;
+  margin: 0.35rem 0 !important;
+  font-family: "72", "72full", Arial, Helvetica, sans-serif !important;
+}
+
+.kpiSubtitle {
+  font-size: 0.75rem !important;
+  color: #6a829c !important;
+  font-weight: 500 !important;
+}
+
+.kpiNumberAdvanced { color: #0a6ed1 !important; }
+.kpiNumberCore { color: #2b7d2b !important; }
+.kpiNumberDeveloper { color: #5c6b7a !important; }
+.kpiNumberSelfService { color: #d04900 !important; }
+
+.fioriHeaderBanner {
+  background: linear-gradient(135deg, #1c2d3d, #354a5f) !important;
+  border-radius: 8px !important;
+  color: #ffffff !important;
+  box-shadow: 0 4px 12px rgba(28, 45, 61, 0.15) !important;
+}
+
+.fioriHeaderBannerTitle {
+  color: #ffffff !important;
+  font-weight: 700 !important;
+}
+
+.fioriHeaderBannerText {
+  color: #cbd5e1 !important;
+  font-size: 0.925rem !important;
+  line-height: 1.5 !important;
+}
+
+.clickableCard {
+  transition: transform 0.2s, box-shadow 0.2s !important;
+}
+
+.clickableCard:hover {
+  transform: translateY(-4px) !important;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1) !important;
+  border-color: #0a6ed1 !important;
+}

@@ -1,0 +1,5 @@
+CLASS zbp_r_kpialmacensede DEFINITION PUBLIC ABSTRACT FINAL FOR BEHAVIOR OF r_kpialmacensede.
+ENDCLASS.
+
+CLASS zbp_r_kpialmacensede IMPLEMENTATION.
+ENDCLASS.

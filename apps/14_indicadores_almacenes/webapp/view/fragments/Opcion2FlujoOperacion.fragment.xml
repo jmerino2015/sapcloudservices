@@ -1,0 +1,326 @@
+<core:FragmentDefinition
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core"
+    xmlns:layout="sap.ui.layout"
+    xmlns:f="sap.f"
+    xmlns:card="sap.f.cards"
+    xmlns:micro="sap.suite.ui.microchart">
+
+    <VBox class="sapUiNoContentPadding sapUiSmallMarginBottom">
+
+        <!-- ===================================================================
+             1. CHEVRON PROCESS FLOW INTERACTIVO END-TO-END
+             =================================================================== -->
+        <Panel
+            headerText="{i18n>secProcessFlow}"
+            expandable="false"
+            class="contentPanel customShadowPanel sapUiTinyMarginBottom">
+            <headerToolbar>
+                <Toolbar>
+                    <core:Icon src="sap-icon://workflow-tasks" />
+                    <Title text="{i18n>secProcessFlow}" level="H3" />
+                    <ToolbarSpacer />
+                    <Text text="Flujo Continuo del Día — Haz clic en una etapa para filtrar detalle" class="textMuted" />
+                </Toolbar>
+            </headerToolbar>
+
+            <layout:Grid
+                defaultSpan="XL3 L3 M6 S12"
+                class="chevronGridContainer sapUiSmallMargin"
+                vSpacing="0.5"
+                hSpacing="0.5">
+
+                <!-- Etapa 1: Recepción -->
+                <f:Card class="chevronStepCard" press=".onSelectChevronStage">
+                    <f:header>
+                        <card:Header
+                            title="1. Recepción"
+                            subtitle="Descarga y Tarja MB51"
+                            iconSrc="sap-icon://inbox-into"
+                            statusText="88% Avance" />
+                    </f:header>
+                    <f:content>
+                        <VBox class="sapUiSmallMargin">
+                            <HBox justifyContent="SpaceBetween" alignItems="Center">
+                                <Text text="1,630 Paletas" class="kpiMediumNumber textSuccess" />
+                                <ObjectStatus text="43 OTs" state="Warning" inverted="true" />
+                            </HBox>
+                            <ProgressIndicator
+                                percentValue="88"
+                                displayValue="88% Procesado"
+                                state="Success"
+                                class="sapUiTinyMarginTop sapUiTinyMarginBottom" />
+                            <HBox class="bottleneckBox sapUiTinyMarginTop" alignItems="Center">
+                                <core:Icon src="sap-icon://message-warning" class="sapUiTinyMarginEnd" />
+                                <Text text="Muelle 04 con congestión leve" class="textMuted bottleneckText" />
+                            </HBox>
+                        </VBox>
+                    </f:content>
+                </f:Card>
+
+                <!-- Etapa 2: Almacenamiento -->
+                <f:Card class="chevronStepCard" press=".onSelectChevronStage">
+                    <f:header>
+                        <card:Header
+                            title="2. Almacenamiento"
+                            subtitle="Ubicación en Bins LX03"
+                            iconSrc="sap-icon://shelf"
+                            statusText="82% Avance" />
+                    </f:header>
+                    <f:content>
+                        <VBox class="sapUiSmallMargin">
+                            <HBox justifyContent="SpaceBetween" alignItems="Center">
+                                <Text text="1,420 Paletas" class="kpiMediumNumber textPrimary" />
+                                <ObjectStatus text="58 OTs" state="Warning" inverted="true" />
+                            </HBox>
+                            <ProgressIndicator
+                                percentValue="82"
+                                displayValue="82% Ubicado"
+                                state="Information"
+                                class="sapUiTinyMarginTop sapUiTinyMarginBottom" />
+                            <HBox class="bottleneckBox sapUiTinyMarginTop" alignItems="Center">
+                                <core:Icon src="sap-icon://message-information" class="sapUiTinyMarginEnd" />
+                                <Text text="Racks 12-14 en reposición activa" class="textMuted bottleneckText" />
+                            </HBox>
+                        </VBox>
+                    </f:content>
+                </f:Card>
+
+                <!-- Etapa 3: Picking -->
+                <f:Card class="chevronStepCard" press=".onSelectChevronStage">
+                    <f:header>
+                        <card:Header
+                            title="3. Picking"
+                            subtitle="Preparación Pedidos LT23"
+                            iconSrc="sap-icon://activity-items"
+                            statusText="91% Avance" />
+                    </f:header>
+                    <f:content>
+                        <VBox class="sapUiSmallMargin">
+                            <HBox justifyContent="SpaceBetween" alignItems="Center">
+                                <Text text="1,180 Pedidos" class="kpiMediumNumber textWarning" />
+                                <ObjectStatus text="85 OTs" state="Error" inverted="true" />
+                            </HBox>
+                            <ProgressIndicator
+                                percentValue="91"
+                                displayValue="91% Preparado"
+                                state="Warning"
+                                class="sapUiTinyMarginTop sapUiTinyMarginBottom" />
+                            <HBox class="bottleneckBox sapUiTinyMarginTop" alignItems="Center">
+                                <core:Icon src="sap-icon://alert" class="sapUiTinyMarginEnd" />
+                                <Text text="Líneas de empaque al 95% capacidad" class="textMuted bottleneckText" />
+                            </HBox>
+                        </VBox>
+                    </f:content>
+                </f:Card>
+
+                <!-- Etapa 4: Despacho -->
+                <f:Card class="chevronStepCard" press=".onSelectChevronStage">
+                    <f:header>
+                        <card:Header
+                            title="4. Despacho"
+                            subtitle="Staging &amp; Rampa Drivin"
+                            iconSrc="sap-icon://shipping-status"
+                            statusText="78% Avance" />
+                    </f:header>
+                    <f:content>
+                        <VBox class="sapUiSmallMargin">
+                            <HBox justifyContent="SpaceBetween" alignItems="Center">
+                                <Text text="84 / 128 Camiones" class="kpiMediumNumber textSuccess" />
+                                <ObjectStatus text="26 OTs" state="Success" inverted="true" />
+                            </HBox>
+                            <ProgressIndicator
+                                percentValue="78"
+                                displayValue="78% Despachado"
+                                state="Success"
+                                class="sapUiTinyMarginTop sapUiTinyMarginBottom" />
+                            <HBox class="bottleneckBox sapUiTinyMarginTop" alignItems="Center">
+                                <core:Icon src="sap-icon://accept" class="sapUiTinyMarginEnd" />
+                                <Text text="Espera rampa Drivin fluida" class="textMuted bottleneckText" />
+                            </HBox>
+                        </VBox>
+                    </f:content>
+                </f:Card>
+            </layout:Grid>
+        </Panel>
+
+        <!-- ===================================================================
+             2. ALERTAS DE ACCIÓN INMEDIATA (MINIMALISTAS SIN BOTONES SÓLIDOS)
+             =================================================================== -->
+        <Panel
+            headerText="{i18n>secActionAlerts}"
+            expandable="false"
+            class="contentPanel customShadowPanel sapUiTinyMarginBottom">
+            <headerToolbar>
+                <Toolbar>
+                    <core:Icon src="sap-icon://bell" />
+                    <Title text="{i18n>secActionAlerts}" level="H3" />
+                    <ToolbarSpacer />
+                    <ObjectStatus text="4 Alertas Operativas Activas" state="Warning" />
+                </Toolbar>
+            </headerToolbar>
+
+            <List items="{wms>/alertas}" class="sapUiNoContentPadding">
+                <CustomListItem class="actionAlertListItem">
+                    <HBox class="sapUiSmallMargin" justifyContent="SpaceBetween" alignItems="Center">
+                        <HBox alignItems="Center">
+                            <core:Icon
+                                src="{= ${wms>severidad} === 'Error' ? 'sap-icon://message-error' : (${wms>severidad} === 'Warning' ? 'sap-icon://message-warning' : 'sap-icon://hint') }"
+                                size="1.5rem"
+                                class="sapUiSmallMarginEnd" />
+                            <VBox>
+                                <HBox alignItems="Center">
+                                    <Text text="{wms>titulo}" class="fontBold alertItemTitle" />
+                                    <ObjectStatus
+                                        text="{wms>sede}"
+                                        state="{wms>severidad}"
+                                        class="sapUiTinyMarginBegin" />
+                                    <Text text="· {wms>tiempo}" class="textMuted sapUiTinyMarginBegin" />
+                                </HBox>
+                                <Text text="{wms>descripcion}" class="alertItemDesc sapUiTinyMarginTop" />
+                            </VBox>
+                        </HBox>
+                        <VBox alignItems="End">
+                            <!-- Botón Fiori Horizon transparente y sobrio sin fondo sólido de color -->
+                            <Button
+                                text="{wms>accionSugerida}"
+                                icon="sap-icon://action"
+                                type="Transparent"
+                                press=".onExecuteAlertAction" />
+                        </VBox>
+                    </HBox>
+                </CustomListItem>
+            </List>
+        </Panel>
+
+        <!-- ===================================================================
+             3. SECCIÓN INFERIOR: OCUPABILIDAD FAMILIAS + DONUT DE UNIDADES
+             =================================================================== -->
+        <layout:Grid
+            defaultSpan="XL7 L7 M12 S12"
+            class="sapUiTinyMarginBottom"
+            vSpacing="0.5"
+            hSpacing="0.5">
+
+            <!-- Panel Izquierdo: Ocupabilidad de Posiciones por Familia -->
+            <Panel
+                headerText="{i18n>secFamilyOccupancy}"
+                expandable="false"
+                class="contentPanel customShadowPanel">
+                <headerToolbar>
+                    <Toolbar>
+                        <core:Icon src="sap-icon://pie-chart" />
+                        <Title text="{i18n>secFamilyOccupancy}" level="H3" />
+                        <ToolbarSpacer />
+                        <Text text="Umbral Crítico: &gt;= 90%" class="textMuted" />
+                    </Toolbar>
+                </headerToolbar>
+
+                <Table
+                    id="tableFamilias"
+                    items="{wms>/familias}"
+                    inset="false"
+                    noDataText="No hay familias de materiales registradas"
+                    growing="true"
+                    growingThreshold="7">
+                    <columns>
+                        <Column><Text text="{i18n>colFamilia}" class="fontBold" /></Column>
+                        <Column width="110px" hAlign="End"><Text text="Posiciones" /></Column>
+                        <Column width="150px" hAlign="Center"><Text text="{i18n>colPorcentaje}" /></Column>
+                        <Column width="90px" hAlign="Center"><Text text="{i18n>colCriticidad}" /></Column>
+                    </columns>
+                    <items>
+                        <ColumnListItem>
+                            <cells>
+                                <VBox>
+                                    <Text text="{wms>FamiliaNombre}" class="fontBold" />
+                                    <Text text="{wms>OperativeNotes}" class="textMuted sapUiTinyMarginTop" />
+                                </VBox>
+                                <VBox alignItems="End">
+                                    <Text text="{wms>OccupiedPositions} / {wms>TotalPositions}" class="fontBold" />
+                                    <Text text="{wms>FreePositions} libres" class="textMuted" />
+                                </VBox>
+                                <ProgressIndicator
+                                    percentValue="{wms>OccupancyRate}"
+                                    displayValue="{wms>OccupancyRate}%"
+                                    state="{= ${wms>OccupancyRate} >= 90 ? 'Error' : (${wms>OccupancyRate} >= 80 ? 'Warning' : 'Success') }" />
+                                <ObjectStatus
+                                    text="{= ${wms>OccupancyRate} >= 90 ? 'Crítico' : (${wms>OccupancyRate} >= 80 ? 'Alerta' : 'Normal') }"
+                                    state="{= ${wms>OccupancyRate} >= 90 ? 'Error' : (${wms>OccupancyRate} >= 80 ? 'Warning' : 'Success') }"
+                                    inverted="true" />
+                            </cells>
+                        </ColumnListItem>
+                    </items>
+                </Table>
+            </Panel>
+
+            <!-- Panel Derecho: Estado de Flota de Despacho (Donut / Resumen) -->
+            <Panel
+                headerText="{i18n>secUnitStatusDonut}"
+                expandable="false"
+                class="contentPanel customShadowPanel">
+                <layoutData>
+                    <layout:GridData span="XL5 L5 M12 S12" />
+                </layoutData>
+                <headerToolbar>
+                    <Toolbar>
+                        <core:Icon src="sap-icon://chart-donut" />
+                        <Title text="{i18n>secUnitStatusDonut}" level="H3" />
+                        <ToolbarSpacer />
+                        <ObjectStatus text="Total: {wms>/currentKpi/ScheduledUnitsCount} Camiones" state="Information" />
+                    </Toolbar>
+                </headerToolbar>
+
+                <VBox class="sapUiSmallMargin">
+                    <!-- Donut Microchart -->
+                    <HBox justifyContent="Center" alignItems="Center" class="sapUiMediumMarginTopBottom">
+                        <micro:InteractiveDonutChart
+                            selectionChanged=".onDonutSelectionChanged"
+                            segments="{wms>/unitStatsDonut}">
+                            <micro:segments>
+                                <micro:InteractiveDonutChartSegment
+                                    value="{wms>value}"
+                                    label="{wms>status}"
+                                    displayedValue="{wms>value}"
+                                    color="{wms>color}" />
+                            </micro:segments>
+                        </micro:InteractiveDonutChart>
+                    </HBox>
+
+                    <!-- Tarjetas de Resumen de Flota -->
+                    <layout:Grid defaultSpan="XL4 L4 M4 S12" class="sapUiTinyMarginTop" vSpacing="0" hSpacing="0.5">
+                        <VBox class="donutStatCard sapUiSmallPadding" alignItems="Center">
+                            <Text text="{wms>/currentKpi/LoadedUnitsCount}" class="kpiMediumNumber textSuccess" />
+                            <Text text="Cargadas (66%)" class="textMuted fontBold" />
+                        </VBox>
+                        <VBox class="donutStatCard sapUiSmallPadding" alignItems="Center">
+                            <Text text="{wms>/currentKpi/InProcessUnitsCount}" class="kpiMediumNumber textWarning" />
+                            <Text text="En Proceso (22%)" class="textMuted fontBold" />
+                        </VBox>
+                        <VBox class="donutStatCard sapUiSmallPadding" alignItems="Center">
+                            <Text text="{wms>/currentKpi/PendingUnitsCount}" class="kpiMediumNumber textError" />
+                            <Text text="Pendientes (12%)" class="textMuted fontBold" />
+                        </VBox>
+                    </layout:Grid>
+
+                    <!-- Resumen de Carga Movilizada -->
+                    <VBox class="cargoSummaryBox sapUiSmallMarginTop sapUiSmallPadding">
+                        <HBox justifyContent="SpaceBetween">
+                            <Text text="Peso Total Despachado:" class="fontBold" />
+                            <Text text="{wms>/currentKpi/WeightOutTodayTN} Toneladas" class="textPrimary fontBold" />
+                        </HBox>
+                        <HBox justifyContent="SpaceBetween" class="sapUiTinyMarginTop">
+                            <Text text="Paletas Despachadas Hoy:" class="fontBold" />
+                            <Text text="{wms>/currentKpi/PalletsOutToday} Paletas" class="textSuccess fontBold" />
+                        </HBox>
+                        <HBox justifyContent="SpaceBetween" class="sapUiTinyMarginTop">
+                            <Text text="Ventana 7-10h Cumplida:" class="fontBold" />
+                            <Text text="{wms>/currentKpi/Units7to10AmComplianceRate}%" class="textSuccess fontBold" />
+                        </HBox>
+                    </VBox>
+                </VBox>
+            </Panel>
+        </layout:Grid>
+
+    </VBox>
+</core:FragmentDefinition>

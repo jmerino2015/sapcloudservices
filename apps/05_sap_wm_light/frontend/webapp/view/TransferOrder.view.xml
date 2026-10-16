@@ -1,0 +1,107 @@
+<mvc:View
+  controllerName="wm.light.controller.TransferOrder"
+  xmlns:mvc="sap.ui.core.mvc"
+  xmlns="sap.m"
+  xmlns:f="sap.f"
+  xmlns:app="http://schemas.sap.com/sapui5/extension/sap.ui.core.CustomData/1">
+
+  <Page id="toPage" title="{i18n>toTitle}" showNavButton="false" backgroundDesign="List">
+
+    <subHeader>
+      <Bar>
+        <contentLeft>
+          <SegmentedButton id="toFilter" selectionChange=".onFilterChange">
+            <items>
+              <SegmentedButtonItem key="ALL"       text="{i18n>toFilterAll}" />
+              <SegmentedButtonItem key="OPEN"      text="{i18n>toFilterOpen}" />
+              <SegmentedButtonItem key="CONFIRMED" text="{i18n>toFilterConfirmed}" />
+            </items>
+          </SegmentedButton>
+        </contentLeft>
+        <contentRight>
+          <SearchField width="14rem" search=".onSearch" liveChange=".onSearch" placeholder="{i18n>btnSearch}" />
+          <Button icon="sap-icon://refresh" type="Transparent" tooltip="{i18n>btnRefresh}" press=".onRefresh" />
+        </contentRight>
+      </Bar>
+    </subHeader>
+
+    <content>
+      <VBox class="sapUiResponsivePadding">
+
+        <!-- Table -->
+        <Table id="toTable"
+          items="{to>/items}"
+          growing="true"
+          growingThreshold="25"
+          noDataText="{i18n>msgNoData}"
+          sticky="ColumnHeaders,HeaderToolbar">
+
+          <headerToolbar>
+            <Toolbar>
+              <Title text="{i18n>toTitle}" level="H3" />
+              <Text text="{= '(' + ${to>/total} + ')'}" class="sapUiSmallMarginBegin" />
+              <ToolbarSpacer />
+              <Button text="{i18n>toCreate}" icon="sap-icon://add" type="Emphasized" press=".onCreateTO" />
+            </Toolbar>
+          </headerToolbar>
+
+          <columns>
+            <Column><Text text="{i18n>toNumber}" /></Column>
+            <Column><Text text="{i18n>toType}" /></Column>
+            <Column><Text text="{i18n>toWarehouse}" /></Column>
+            <Column><Text text="{i18n>toStatus}" /></Column>
+            <Column><Text text="{i18n>toCreatedAt}" /></Column>
+            <Column hAlign="End"><Text text="{i18n>toActions}" /></Column>
+          </columns>
+
+          <items>
+            <ColumnListItem highlight="{= ${to>status} === 'OPEN' ? 'Information' : ${to>status} === 'CONFIRMED' ? 'Success' : 'None' }">
+              <cells>
+                <ObjectIdentifier
+                  title="{to>to_number}"
+                  text="{to>notes}"
+                  titleActive="true"
+                  titlePress=".onTODetail" />
+                <ObjectStatus
+                  text="{to>to_type}"
+                  state="None"
+                  icon="sap-icon://transfer" />
+                <Text text="{to>warehouse_id}" />
+                <ObjectStatus
+                  text="{to>status}"
+                  state="{= ${to>status} === 'OPEN' ? 'Information' : ${to>status} === 'IN_PROGRESS' ? 'Warning' : ${to>status} === 'CONFIRMED' ? 'Success' : ${to>status} === 'CANCELLED' ? 'Error' : 'None' }"
+                  icon="{= ${to>status} === 'OPEN' ? 'sap-icon://pending' : ${to>status} === 'IN_PROGRESS' ? 'sap-icon://in-progress' : ${to>status} === 'CONFIRMED' ? 'sap-icon://accept' : 'sap-icon://decline' }" />
+                <Text text="{parts: [{path:'to>created_at'}], formatter: '.formatDate'}" />
+                <HBox justifyContent="End" gap="0.25rem">
+                  <Button
+                    icon="sap-icon://begin"
+                    type="Emphasized"
+                    tooltip="Iniciar Tarea (LMS)"
+                    visible="{= ${to>status} === 'OPEN' }"
+                    press=".onStartTO"
+                    app:id="{to>id}" />
+                  <Button
+                    icon="sap-icon://accept"
+                    type="Accept"
+                    tooltip="{i18n>toConfirm}"
+                    visible="{= ${to>status} === 'OPEN' || ${to>status} === 'IN_PROGRESS' }"
+                    press=".onConfirmTO"
+                    app:id="{to>id}" />
+                  <Button
+                    icon="sap-icon://decline"
+                    type="Reject"
+                    tooltip="{i18n>toCancel}"
+                    visible="{= ${to>status} === 'OPEN' }"
+                    press=".onCancelTO"
+                    app:id="{to>id}" />
+                </HBox>
+              </cells>
+            </ColumnListItem>
+          </items>
+
+        </Table>
+      </VBox>
+    </content>
+
+  </Page>
+</mvc:View>

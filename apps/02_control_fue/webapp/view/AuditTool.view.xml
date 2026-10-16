@@ -1,0 +1,128 @@
+<mvc:View
+  controllerName="fue.control.controller.AuditTool"
+  xmlns:mvc="sap.ui.core.mvc"
+  xmlns="sap.m"
+  xmlns:core="sap.ui.core"
+  xmlns:layout="sap.ui.layout"
+  xmlns:cssgrid="sap.ui.layout.cssgrid">
+
+  <Page title="Auditoría USMM / LAW 2.0 & Control de Segregación de Funciones (SoD)" showHeader="true" class="sapUiContentPadding mainViewContainer">
+    <content>
+      
+      <!-- Header Banner -->
+      <VBox class="fioriHeaderBanner sapUiMediumMarginBottom sapUiLargePadding">
+        <HBox justifyContent="SpaceBetween" alignItems="Center">
+          <VBox>
+            <Title text="Herramienta Estándar de Auditoría de Licencias SAP (USMM / LAW 2.0)" titleStyle="H2" class="fioriHeaderBannerTitle sapUiTinyMarginBottom" />
+            <Text text="Simula la medición oficial de licencias SAP en la instalación SAP S/4HANA (Mandante 100). Inspecciona perfiles de superusuario (SAP_ALL), cuentas duplicadas en las 5 sociedades y matriz de segregación de funciones (SoD)." class="fioriHeaderBannerText" />
+          </VBox>
+          <Button text="▶️ Ejecutar Simulación USMM" type="Emphasized" icon="sap-icon://play" press=".onRunUSMMAudit" class="sapUiSmallMarginBegin" />
+        </HBox>
+      </VBox>
+
+      <!-- KPI Summary Cards for Audit -->
+      <HBox class="sapUiMediumMarginBottom" justifyContent="SpaceBetween" wrap="Wrap" width="100%">
+        
+        <VBox class="kpiCard" width="23.5%">
+          <HBox justifyContent="SpaceBetween" alignItems="Center">
+            <Text text="Superusuarios SAP_ALL" class="kpiTitle" />
+            <core:Icon src="sap-icon://shield" size="1.25rem" color="#dc2626" />
+          </HBox>
+          <Text text="{fueModel>/sodRiskHighCount} Cuentas" class="kpiNumber kpiNumberAdvanced" />
+          <Text text="Riesgo de Seguridad Crítico" class="kpiSubtitle" />
+        </VBox>
+
+        <VBox class="kpiCard" width="23.5%">
+          <HBox justifyContent="SpaceBetween" alignItems="Center">
+            <Text text="Cuentas Inactivas (>90d)" class="kpiTitle" />
+            <core:Icon src="sap-icon://history" size="1.25rem" color="#ea580c" />
+          </HBox>
+          <Text text="{fueModel>/inactiveUsersCount} Usuarios" class="kpiNumber kpiNumberSelfService" />
+          <Text text="Candidatos a Reasignación" class="kpiSubtitle" />
+        </VBox>
+
+        <VBox class="kpiCard" width="23.5%">
+          <HBox justifyContent="SpaceBetween" alignItems="Center">
+            <Text text="Cuentas Bloqueadas" class="kpiTitle" />
+            <core:Icon src="sap-icon://locked" size="1.25rem" color="#7c3aed" />
+          </HBox>
+          <Text text="{fueModel>/lockedUsersCount} Cuentas" class="kpiNumber kpiNumberDeveloper" />
+          <Text text="Licencias Reservadas sin Uso" class="kpiSubtitle" />
+        </VBox>
+
+        <VBox class="kpiCard" width="23.5%">
+          <HBox justifyContent="SpaceBetween" alignItems="Center">
+            <Text text="Score Cumplimiento" class="kpiTitle" />
+            <core:Icon src="sap-icon://sys-enter-2" size="1.25rem" color="#16a34a" />
+          </HBox>
+          <Text text="96.8%" class="kpiNumber kpiNumberCore" />
+          <Text text="Auditoría LAW 2.0 Conforme" class="kpiSubtitle" />
+        </VBox>
+
+      </HBox>
+
+      <!-- Audit Actions Grid -->
+      <Title text="Acciones de Saneamiento e Inspección GRC" titleStyle="H4" class="sapUiSmallMarginBottom" />
+      
+      <cssgrid:CSSGrid gridTemplateColumns="repeat(auto-fit, minmax(280px, 1fr))" gridGap="1rem" class="sapUiMediumMarginBottom">
+        
+        <VBox class="kpiContainer sapUiContentPadding">
+          <core:Icon src="sap-icon://shield" size="2rem" color="#dc2626" class="sapUiSmallMarginBottom" />
+          <Title text="Revocar Superusuarios No Autorizados" titleStyle="H5" class="sapUiTinyMarginBottom" />
+          <Text text="Remueve de inmediato el perfil SAP_ALL a usuarios operativos de las 5 sociedades que no pertenezcan al equipo BASIS." style="font-size: 12px; color: #556b82;" />
+          <Button text="Saneamiento SAP_ALL" type="Reject" icon="sap-icon://delete" press=".onRevokeSuperusers" class="sapUiMediumMarginTop" />
+        </VBox>
+
+        <VBox class="kpiContainer sapUiContentPadding">
+          <core:Icon src="sap-icon://lightbulb" size="2rem" color="#16a34a" class="sapUiSmallMarginBottom" />
+          <Title text="Optimización de Licencias Inactivas" titleStyle="H5" class="sapUiTinyMarginBottom" />
+          <Text text="Ejecuta el algoritmo IA para reasignar cuentas inactivas a Self Service y liberar licencias Advanced/Developer." style="font-size: 12px; color: #556b82;" />
+          <Button text="Reoptimizar Licencias" type="Accept" icon="sap-icon://lightbulb" press=".onExecuteAIOptimization" class="sapUiMediumMarginTop" />
+        </VBox>
+
+        <VBox class="kpiContainer sapUiContentPadding">
+          <core:Icon src="sap-icon://duplicate" size="2rem" color="#0284c7" class="sapUiSmallMarginBottom" />
+          <Title text="Detectar Cuentas Duplicadas entre Sociedades" titleStyle="H5" class="sapUiTinyMarginBottom" />
+          <Text text="Identifica usuarios registrados simultáneamente en PE10, CL20, CO30, MX40 o US50 para consolidación." style="font-size: 12px; color: #556b82;" />
+          <Button text="Consolidar Duplicados" type="Emphasized" icon="sap-icon://duplicate" press=".onCleanDuplicateUsers" class="sapUiMediumMarginTop" />
+        </VBox>
+
+      </cssgrid:CSSGrid>
+
+      <!-- Audit User Table Focus -->
+      <VBox class="kpiContainer sapUiContentPadding">
+        <HBox justifyContent="SpaceBetween" alignItems="Center" class="sapUiSmallMarginBottom">
+          <VBox>
+            <Title text="Usuarios con Conflicto SoD o Inactividad Prolongada en la Instalación" titleStyle="H4" />
+            <Text text="Listado filtrado de cuentas que requieren atención o ajuste de licenciamiento en las 5 sociedades" style="font-size: 11px; color: #64748b;" />
+          </VBox>
+        </HBox>
+
+        <Table items="{fueModel>/optimizationRecordsOnly}" noDataText="No se encontraron hallazgos críticos de auditoría en las 5 sociedades.">
+          <columns>
+            <Column width="18%"><Text text="Usuario (SU01)" style="font-weight: bold;" /></Column>
+            <Column width="22%"><Text text="Nombre Completo" style="font-weight: bold;" /></Column>
+            <Column width="18%"><Text text="Sociedad SAP" style="font-weight: bold;" /></Column>
+            <Column width="16%"><Text text="Licencia Actual" style="font-weight: bold;" /></Column>
+            <Column width="14%"><Text text="Estado" style="font-weight: bold;" /></Column>
+            <Column width="12%" hAlign="End"><Text text="Ahorro USD" style="font-weight: bold;" /></Column>
+          </columns>
+          <items>
+            <ColumnListItem highlight="Warning">
+              <cells>
+                <Text text="{fueModel>Usuarios}" style="font-weight: 700;" />
+                <Text text="{fueModel>NombreCompleto}" />
+                <ObjectStatus text="{fueModel>Sociedad}" state="Information" />
+                <Text text="{fueModel>TipoFue} (${fueModel>CostoAnualUSD}/año)" />
+                <ObjectStatus text="{fueModel>EstadoUsuario}" state="Warning" icon="sap-icon://warning" />
+                <Text text="{= '$' + ${fueModel>AhorroPotencialUSD} + ' USD' }" style="font-weight: 700; color: #047857;" />
+              </cells>
+            </ColumnListItem>
+          </items>
+        </Table>
+      </VBox>
+
+    </content>
+  </Page>
+
+</mvc:View>

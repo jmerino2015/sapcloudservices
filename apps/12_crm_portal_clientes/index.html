@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portal de Clientes &amp; Socios SAP | SAP Fiori</title>
+    
+    <!-- SAP Fiori 72 Font and Styling Preload -->
+    <link rel="stylesheet" href="css/style.css">
+    
+    <!-- OpenUI5 Bootstrap with sap_horizon (Morning Horizon) theme -->
+    <script id="sap-ui-bootstrap"
+        src="https://sdk.openui5.org/resources/sap-ui-core.js"
+        data-sap-ui-theme="sap_horizon"
+        data-sap-ui-libs="sap.m, sap.f, sap.tnt, sap.ui.layout, sap.ui.unified, sap.ui.table"
+        data-sap-ui-compatVersion="edge"
+        data-sap-ui-async="true"
+        data-sap-ui-resourceroots='{
+            "sap.crm.customerportal": "./"
+        }'
+        data-sap-ui-oninit="module:sap/ui/core/ComponentSupport">
+    </script>
+    <script>
+        if (window.self !== window.top) {
+            document.body.classList.add('in-iframe');
+        }
+        window.addEventListener('message', function(event) {
+            if (event.data && event.data.type === 'SET_THEME') {
+                var isDark = (event.data.theme === 'dark' || event.data.theme === 'evening' || event.data.theme === 'sap_horizon_dark');
+                var theme = isDark ? 'sap_horizon_dark' : 'sap_horizon';
+                if (window.sap && sap.ui && sap.ui.getCore) {
+                    sap.ui.getCore().applyTheme(theme);
+                }
+                if (isDark) {
+                    document.documentElement.setAttribute('data-theme', 'evening');
+                    document.body.classList.add('sapTheme-sap_horizon_dark');
+                } else {
+                    document.documentElement.setAttribute('data-theme', 'morning');
+                    document.body.classList.remove('sapTheme-sap_horizon_dark');
+                }
+            }
+        });
+    </script>
+</head>
+<body class="sapUiBody sapUiSizeCompact" id="content">
+    <div data-sap-ui-component
+        data-name="sap.crm.customerportal"
+        data-id="container"
+        data-settings='{"id" : "customerportal"}'
+        style="height: 100vh;">
+    </div>
+</body>
+</html>

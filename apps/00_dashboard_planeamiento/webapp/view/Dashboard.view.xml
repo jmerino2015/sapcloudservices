@@ -1,0 +1,163 @@
+<mvc:View
+    controllerName="c4c.leadmanagement.controller.Dashboard"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m"
+    xmlns:f="sap.f"
+    xmlns:fb="sap.ui.comp.filterbar"
+    xmlns:l="sap.ui.layout"
+    xmlns:viz="sap.viz.ui5.controls"
+    xmlns:viz.feeds="sap.viz.ui5.controls.common.feeds"
+    xmlns:viz.data="sap.viz.ui5.data"
+    xmlns:core="sap.ui.core"
+    displayBlock="true">
+    
+    <Page showHeader="true" showNavButton="true" navButtonPress=".onNavBack" title="Analíticas &amp; Proyecciones de Demanda">
+        <content>
+            <!-- Filter Bar -->
+            <fb:FilterBar id="filterbar" reset="onReset" search="onSearch" useToolbar="false" showGoOnFB="false">
+                <fb:filterGroupItems>
+                    <fb:FilterGroupItem groupName="G1" name="search" label="Search" visibleInFilterBar="true">
+                        <fb:control>
+                            <SearchField placeholder="Search" />
+                        </fb:control>
+                    </fb:FilterGroupItem>
+                    <fb:FilterGroupItem groupName="G1" name="semana" label="semana" visibleInFilterBar="true">
+                        <fb:control>
+                            <ComboBox placeholder="All">
+                                <core:Item key="1" text="All" />
+                            </ComboBox>
+                        </fb:control>
+                    </fb:FilterGroupItem>
+                    <fb:FilterGroupItem groupName="G1" name="familia" label="Familia" visibleInFilterBar="true">
+                        <fb:control>
+                            <ComboBox placeholder="All">
+                                <core:Item key="1" text="All" />
+                            </ComboBox>
+                        </fb:control>
+                    </fb:FilterGroupItem>
+                    <fb:FilterGroupItem groupName="G1" name="subfamilia" label="Subfamilia" visibleInFilterBar="true">
+                        <fb:control>
+                            <ComboBox placeholder="All">
+                                <core:Item key="1" text="All" />
+                            </ComboBox>
+                        </fb:control>
+                    </fb:FilterGroupItem>
+                    <fb:FilterGroupItem groupName="G1" name="linea" label="Linea" visibleInFilterBar="true">
+                        <fb:control>
+                            <ComboBox placeholder="NUGGETS FRITOS">
+                                <core:Item key="1" text="NUGGETS FRITOS" />
+                            </ComboBox>
+                        </fb:control>
+                    </fb:FilterGroupItem>
+                    <fb:FilterGroupItem groupName="G1" name="centro" label="Centro de Prod..." visibleInFilterBar="true">
+                        <fb:control>
+                            <ComboBox placeholder="All">
+                                <core:Item key="1" text="All" />
+                            </ComboBox>
+                        </fb:control>
+                    </fb:FilterGroupItem>
+                </fb:filterGroupItems>
+            </fb:FilterBar>
+
+            <!-- Dashboard Charts Grid -->
+            <l:Grid defaultSpan="L6 M6 S12" vSpacing="1" hSpacing="1">
+                <!-- Panel 1: Frescura Proyectada -->
+                <Panel headerText="Frescura Proyectada" height="400px" class="sapUiTinyMarginTop">
+                    <content>
+                        <viz:VizFrame id="vizFrescura" vizType="column" uiConfig="{applicationSet:'fiori'}" height="100%" width="100%">
+                            <viz:dataset>
+                                <viz.data:FlattenedDataset data="{dashboard>/frescura}">
+                                    <viz.data:dimensions>
+                                        <viz.data:DimensionDefinition name="Fecha" value="{dashboard>fecha}" />
+                                    </viz.data:dimensions>
+                                    <viz.data:measures>
+                                        <viz.data:MeasureDefinition name="Valor" value="{dashboard>valor}" />
+                                    </viz.data:measures>
+                                </viz.data:FlattenedDataset>
+                            </viz:dataset>
+                            <viz:feeds>
+                                <viz.feeds:FeedItem uid="valueAxis" type="Measure" values="Valor" />
+                                <viz.feeds:FeedItem uid="categoryAxis" type="Dimension" values="Fecha" />
+                            </viz:feeds>
+                        </viz:VizFrame>
+                    </content>
+                </Panel>
+
+                <!-- Panel 2: Inventario Proyectado (KG) -->
+                <Panel headerText="Inventario Proyectado (KG)" height="400px" class="sapUiTinyMarginTop">
+                    <content>
+                        <viz:VizFrame id="vizInventario" vizType="combination" uiConfig="{applicationSet:'fiori'}" height="100%" width="100%">
+                            <viz:dataset>
+                                <viz.data:FlattenedDataset data="{dashboard>/inventario}">
+                                    <viz.data:dimensions>
+                                        <viz.data:DimensionDefinition name="Fecha" value="{dashboard>fecha}" />
+                                    </viz.data:dimensions>
+                                    <viz.data:measures>
+                                        <viz.data:MeasureDefinition name="Produccion (Kg)" value="{dashboard>produccion}" />
+                                        <viz.data:MeasureDefinition name="Vencidos (Fecha Corta)" value="{dashboard>vencidos}" />
+                                        <viz.data:MeasureDefinition name="Inventario" value="{dashboard>inventario}" />
+                                        <viz.data:MeasureDefinition name="MAX" value="{dashboard>max}" />
+                                        <viz.data:MeasureDefinition name="MIN" value="{dashboard>min}" />
+                                    </viz.data:measures>
+                                </viz.data:FlattenedDataset>
+                            </viz:dataset>
+                            <viz:feeds>
+                                <viz.feeds:FeedItem uid="valueAxis" type="Measure" values="Produccion (Kg),Vencidos (Fecha Corta),Inventario,MAX,MIN" />
+                                <viz.feeds:FeedItem uid="categoryAxis" type="Dimension" values="Fecha" />
+                            </viz:feeds>
+                        </viz:VizFrame>
+                    </content>
+                </Panel>
+
+                <!-- Panel 3: Cumplimiento demanda -->
+                <Panel headerText="Cumplimiento demanda" height="400px">
+                    <content>
+                        <viz:VizFrame id="vizDemanda" vizType="line" uiConfig="{applicationSet:'fiori'}" height="100%" width="100%">
+                            <viz:dataset>
+                                <viz.data:FlattenedDataset data="{dashboard>/demanda}">
+                                    <viz.data:dimensions>
+                                        <viz.data:DimensionDefinition name="Fecha" value="{dashboard>fecha}" />
+                                    </viz.data:dimensions>
+                                    <viz.data:measures>
+                                        <viz.data:MeasureDefinition name="Demanda" value="{dashboard>demanda}" />
+                                        <viz.data:MeasureDefinition name="Ventas" value="{dashboard>ventas}" />
+                                        <viz.data:MeasureDefinition name="Vencimiento" value="{dashboard>vencimiento}" />
+                                    </viz.data:measures>
+                                </viz.data:FlattenedDataset>
+                            </viz:dataset>
+                            <viz:feeds>
+                                <viz.feeds:FeedItem uid="valueAxis" type="Measure" values="Demanda,Ventas,Vencimiento" />
+                                <viz.feeds:FeedItem uid="categoryAxis" type="Dimension" values="Fecha" />
+                            </viz:feeds>
+                        </viz:VizFrame>
+                    </content>
+                </Panel>
+
+                <!-- Panel 4: Cobertura Proyectada & produccion en lotes -->
+                <Panel headerText="Cobertura Proyectada &amp; produccion en lotes" height="400px">
+                    <content>
+                        <viz:VizFrame id="vizCobertura" vizType="combination" uiConfig="{applicationSet:'fiori'}" height="100%" width="100%">
+                            <viz:dataset>
+                                <viz.data:FlattenedDataset data="{dashboard>/cobertura}">
+                                    <viz.data:dimensions>
+                                        <viz.data:DimensionDefinition name="Fecha" value="{dashboard>fecha}" />
+                                    </viz.data:dimensions>
+                                    <viz.data:measures>
+                                        <viz.data:MeasureDefinition name="LOTES" value="{dashboard>lotes}" />
+                                        <viz.data:MeasureDefinition name="Cobertura" value="{dashboard>coberturaVal}" />
+                                        <viz.data:MeasureDefinition name="MAX" value="{dashboard>max}" />
+                                        <viz.data:MeasureDefinition name="MIN" value="{dashboard>min}" />
+                                    </viz.data:measures>
+                                </viz.data:FlattenedDataset>
+                            </viz:dataset>
+                            <viz:feeds>
+                                <viz.feeds:FeedItem uid="valueAxis" type="Measure" values="LOTES,Cobertura,MAX,MIN" />
+                                <viz.feeds:FeedItem uid="categoryAxis" type="Dimension" values="Fecha" />
+                            </viz:feeds>
+                        </viz:VizFrame>
+                    </content>
+                </Panel>
+            </l:Grid>
+        </content>
+    </Page>
+</mvc:View>

@@ -1,0 +1,112 @@
+<mvc:View
+  controllerName="wm.light.controller.LabelPrint"
+  xmlns:mvc="sap.ui.core.mvc"
+  xmlns="sap.m"
+  xmlns:f="sap.ui.layout.form"
+  xmlns:core="sap.ui.core"
+  xmlns:l="sap.ui.layout">
+
+  <Page title="Impresión de Rótulos" showNavButton="false" class="sapUiContentPadding">
+    
+    <l:Splitter height="100%">
+      
+      <!-- Panel Izquierdo: Formulario -->
+        <VBox fitContainer="true" class="sapUiSmallMargin">
+          <layoutData>
+            <l:SplitterLayoutData size="35%" />
+          </layoutData>
+          <f:SimpleForm id="labelForm" editable="true" layout="ResponsiveGridLayout" title="Datos de la Etiqueta">
+            <f:content>
+              <Label text="Nombre del Producto" />
+              <Input value="{labelModel>/productName}" liveChange=".onLiveChange" />
+
+              <Label text="Remitente (Empresa)" />
+              <Input value="{labelModel>/fromCompany}" liveChange=".onLiveChange" />
+              <Label text="Remitente (Dirección)" />
+              <Input value="{labelModel>/fromAddress}" liveChange=".onLiveChange" />
+              <Label text="Remitente (Ciudad)" />
+              <Input value="{labelModel>/fromCity}" liveChange=".onLiveChange" />
+              <Label text="Remitente (Cód. Postal)" />
+              <Input value="{labelModel>/fromZip}" liveChange=".onLiveChange" />
+
+              <Label text="Destinatario (Empresa)" />
+              <Input value="{labelModel>/toCompany}" liveChange=".onLiveChange" />
+              <Label text="Destinatario (Dirección)" />
+              <Input value="{labelModel>/toAddress}" liveChange=".onLiveChange" />
+              <Label text="Destinatario (Ciudad)" />
+              <Input value="{labelModel>/toCity}" liveChange=".onLiveChange" />
+              <Label text="Destinatario (Cód. Postal)" />
+              <Input value="{labelModel>/toZip}" liveChange=".onLiveChange" />
+
+              <Label text="N° Artículo" />
+              <Input value="{labelModel>/itemNo}" liveChange=".onLiveChange" />
+              
+              <Label text="Instrucciones" />
+              <Input value="{labelModel>/instruction}" liveChange=".onLiveChange" />
+              <Label text="Info Importante" />
+              <Input value="{labelModel>/important}" liveChange=".onLiveChange" />
+
+              <Label text="Código de Barras" />
+              <Input value="{labelModel>/barcodeValue}" liveChange=".onLiveChange" />
+            </f:content>
+          </f:SimpleForm>
+          
+          <Button text="Imprimir Etiqueta" icon="sap-icon://print" type="Emphasized" press=".onPrint" class="sapUiSmallMarginTop" />
+        </VBox>
+
+      <!-- Panel Derecho: Vista Previa de la Etiqueta -->
+        <VBox id="printAreaWrapper" class="sapUiSmallMargin labelPreviewArea" alignContent="Center" justifyContent="Center" width="100%" height="100%">
+          <layoutData>
+            <l:SplitterLayoutData size="65%" />
+          </layoutData>
+          <core:HTML content="&lt;div id='labelContainer' class='label-container'&gt;
+              &lt;div class='label-row-1'&gt;
+                &lt;div class='label-logo'&gt;LOGO&lt;/div&gt;
+                &lt;div class='label-product'&gt;&lt;span id='lblProduct'&gt;&lt;/span&gt;&lt;/div&gt;
+              &lt;/div&gt;
+              
+              &lt;div class='label-row-2'&gt;
+                &lt;div class='label-from'&gt;
+                  &lt;b&gt;De :&lt;/b&gt; &lt;span id='lblFromCompany'&gt;&lt;/span&gt;&lt;br&gt;
+                  &lt;span class='addr-pad' id='lblFromAddress'&gt;&lt;/span&gt;&lt;br&gt;
+                  &lt;span class='addr-pad' id='lblFromCity'&gt;&lt;/span&gt;&lt;br&gt;
+                  &lt;span class='addr-pad' id='lblFromZip'&gt;&lt;/span&gt;
+                &lt;/div&gt;
+                &lt;div class='label-to'&gt;
+                  &lt;b&gt;Para :&lt;/b&gt; &lt;span id='lblToCompany'&gt;&lt;/span&gt;&lt;br&gt;
+                  &lt;span class='addr-pad' id='lblToAddress'&gt;&lt;/span&gt;&lt;br&gt;
+                  &lt;span class='addr-pad' id='lblToCity'&gt;&lt;/span&gt;&lt;br&gt;
+                  &lt;span class='addr-pad' id='lblToZip'&gt;&lt;/span&gt;
+                &lt;/div&gt;
+                &lt;div class='label-qr' id='qrCodeContainer'&gt;
+                  
+                &lt;/div&gt;
+              &lt;/div&gt;
+
+              &lt;div class='label-row-3'&gt;
+                &lt;div class='label-barcode'&gt;
+                  &lt;svg id='barcodeImage'&gt;&lt;/svg&gt;
+                &lt;/div&gt;
+                &lt;div class='label-bottom-right'&gt;
+                   &lt;div class='label-icons'&gt;
+                      &lt;div class='icon-box'&gt;&lt;img src='https://cdn-icons-png.flaticon.com/512/107/107148.png' style='height:40px;'/&gt;&lt;/div&gt;
+                      &lt;div class='icon-box'&gt;&lt;img src='https://cdn-icons-png.flaticon.com/512/3063/3063822.png' style='height:40px;'/&gt;&lt;/div&gt;
+                      &lt;div class='icon-box'&gt;&lt;img src='https://cdn-icons-png.flaticon.com/512/107/107085.png' style='height:40px;'/&gt;&lt;/div&gt;
+                   &lt;/div&gt;
+                   &lt;div class='label-footer'&gt;
+                      &lt;div class='label-item'&gt;
+                        &lt;b&gt;N° Art :&lt;/b&gt;&lt;br&gt;&lt;span id='lblItem'&gt;&lt;/span&gt;
+                      &lt;/div&gt;
+                      &lt;div class='label-instructions'&gt;
+                        &lt;b id='lblInstr'&gt;&lt;/b&gt;&lt;br&gt;
+                        &lt;span id='lblImportant' style='font-size: 13px;'&gt;&lt;/span&gt;
+                      &lt;/div&gt;
+                   &lt;/div&gt;
+                &lt;/div&gt;
+              &lt;/div&gt;
+            &lt;/div&gt;" />
+        </VBox>
+
+    </l:Splitter>
+  </Page>
+</mvc:View>

@@ -1,0 +1,146 @@
+<mvc:View
+    controllerName="sap.crm.customerportal.controller.App"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m"
+    xmlns:tnt="sap.tnt"
+    xmlns:core="sap.ui.core"
+    xmlns:f="sap.f"
+    displayBlock="true"
+    height="100%">
+
+    <tnt:ToolPage id="toolPage" class="sapUiResponsivePadding--header sapUiResponsivePadding--content">
+        
+        <!-- SAP Fiori Signature Blue Shell & Tool Header -->
+        <tnt:header>
+            <tnt:ToolHeader id="shellHeader" class="fioriPortalHeader">
+                <Button
+                    id="sideNavToggleButton"
+                    icon="sap-icon://menu2"
+                    type="Transparent"
+                    press=".onToggleSideNav"
+                    tooltip="Alternar menú lateral">
+                    <layoutData>
+                        <OverflowToolbarLayoutData priority="NeverOverflow" />
+                    </layoutData>
+                </Button>
+
+                <core:Icon src="sap-icon://customer" class="sapUiTinyMarginEnd" size="1.35rem" color="#ffffff" />
+                
+                <Title text="Portal de Clientes &amp; Socios SAP" level="H2" class="sapUiTinyMarginEnd">
+                    <layoutData>
+                        <OverflowToolbarLayoutData priority="NeverOverflow" />
+                    </layoutData>
+                </Title>
+
+                <ToolbarSpacer />
+
+                <!-- B2B Account Switcher / Hierarchy Role Selector -->
+                <HBox alignItems="Center" class="sapUiTinyMarginEnd">
+                    <Label text="Rol:" class="sapUiTinyMarginEnd sapUiHideOnPhone" design="Bold" />
+                    <Select
+                        id="roleSelector"
+                        selectedKey="{session>/currentUser/role}"
+                        change=".onRoleChange"
+                        tooltip="Seleccionar rol jerárquico B2B"
+                        width="240px">
+                        <core:Item key="ADMIN" text="Admin B2B &amp; Partner Gold" />
+                        <core:Item key="BUYER" text="Comprador Autorizado" />
+                        <core:Item key="VIEWER" text="Visualizador (Solo Lectura)" />
+                    </Select>
+                </HBox>
+
+                <!-- DROID IA Copilot ShellBar Trigger Button -->
+                <Button
+                    id="btnDroidHeader"
+                    icon="sap-icon://da"
+                    text="DROID IA"
+                    press=".onOpenDroidDialog"
+                    tooltip="Abrir Asistente con Inteligencia Artificial DROID IA"
+                    class="droidShellBtn sapUiTinyMarginEnd">
+                    <layoutData>
+                        <OverflowToolbarLayoutData priority="NeverOverflow" />
+                    </layoutData>
+                </Button>
+
+                <!-- Notifications Button with Badge -->
+                <Button
+                    id="btnNotifications"
+                    icon="sap-icon://bell"
+                    type="Transparent"
+                    press=".onOpenNotifications"
+                    tooltip="Notificaciones de Pedidos, Deals y Tickets">
+                    <customData>
+                        <core:CustomData key="badge" value="{session>/unreadNotifications}" writeToDom="true" />
+                    </customData>
+                </Button>
+
+                <!-- User Profile Avatar (Standard Fiori ShellBar) -->
+                <Avatar
+                    src="{session>/currentUser/avatar}"
+                    displaySize="XS"
+                    initials="CM"
+                    press=".onOpenUserProfile"
+                    tooltip="Perfil de usuario"
+                    class="sapUiTinyMarginBegin" />
+            </tnt:ToolHeader>
+        </tnt:header>
+
+        <!-- SAP Fiori Side Navigation with Experience Cloud Modules -->
+        <tnt:sideContent>
+            <tnt:SideNavigation id="sideNavigation" selectedKey="{session>/activeNavigationKey}" itemSelect=".onSideNavItemSelect">
+                <tnt:NavigationList>
+                    <tnt:NavigationListItem
+                        text="Dashboard Principal"
+                        icon="sap-icon://bbyd-dashboard"
+                        key="dashboard" />
+                    <tnt:NavigationListItem
+                        text="Ventas &amp; B2B Commerce"
+                        icon="sap-icon://sales-order"
+                        key="sales" />
+                    <tnt:NavigationListItem
+                        text="Servicio &amp; Deflexión"
+                        icon="sap-icon://headset"
+                        key="service" />
+                    <tnt:NavigationListItem
+                        text="Gestión de Socios (PRM)"
+                        icon="sap-icon://family-care"
+                        key="prm" />
+                    <tnt:NavigationListItem
+                        text="Comunidad &amp; Chatter"
+                        icon="sap-icon://discussion-2"
+                        key="community" />
+                    <tnt:NavigationListItem
+                        text="Experience Builder &amp; App"
+                        icon="sap-icon://wrench"
+                        key="builder" />
+                    <tnt:NavigationListItem
+                        text="Ficha y Equipo B2B"
+                        icon="sap-icon://user-settings"
+                        key="profile" />
+                    <tnt:NavigationListItem
+                        text="Consola MuleSoft &amp; CPI"
+                        icon="sap-icon://connected"
+                        key="integration" />
+                </tnt:NavigationList>
+                
+                <tnt:fixedItem>
+                    <tnt:NavigationList>
+                        <tnt:NavigationListItem
+                            text="DROID IA Copilot"
+                            icon="sap-icon://da"
+                            select=".onOpenDroidDialog" />
+                        <tnt:NavigationListItem
+                            text="Ayuda &amp; Soporte"
+                            icon="sap-icon://sys-help"
+                            select=".onOpenHelpDialog" />
+                    </tnt:NavigationList>
+                </tnt:fixedItem>
+            </tnt:SideNavigation>
+        </tnt:sideContent>
+
+        <!-- Main View Container -->
+        <tnt:mainContents>
+            <NavContainer id="rootNavContainer" />
+        </tnt:mainContents>
+    </tnt:ToolPage>
+</mvc:View>

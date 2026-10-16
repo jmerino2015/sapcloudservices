@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Demand Planning SAP</title>
+    <style>
+        html, body, body > div, #container, #container-uiarea {
+            height: 100%;
+        }
+    </style>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script
+        id="sap-ui-bootstrap"
+        src="https://sapui5.hana.ondemand.com/resources/sap-ui-core.js"
+        data-sap-ui-theme="sap_horizon"
+        data-sap-ui-libs="sap.m,sap.f,sap.ui.layout,sap.viz,sap.suite.ui.microchart,sap.ui.table"
+        data-sap-ui-resource-roots='{
+            "c4c.leadmanagement": "./"
+        }'
+        data-sap-ui-on-init="module:sap/ui/core/ComponentSupport"
+        data-sap-ui-compat-version="edge"
+        data-sap-ui-async="true"
+        data-sap-ui-frame-options="trusted"
+    ></script>
+</head>
+<body class="sapUiBody sapUiSizeCompact" id="content">
+    <div
+        data-sap-ui-component
+        data-name="c4c.leadmanagement"
+        data-id="container"
+        data-settings='{"id" : "c4c.leadmanagement"}'
+        data-handle-validation="true"
+    ></div>
+    <script>
+        window.addEventListener('message', function(e) {
+            if (e.data && e.data.type === 'SET_THEME') {
+                var isDark = e.data.theme === 'dark';
+                if (window.sap && sap.ui && sap.ui.getCore) {
+                    try {
+                        sap.ui.getCore().applyTheme(isDark ? 'sap_horizon_dark' : 'sap_horizon');
+                    } catch(err) {}
+                }
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,254 @@
+{
+    "_version": "1.58.0",
+    "sap.app": {
+        "id": "com.antigravity.portalProveedores",
+        "type": "application",
+        "i18n": "i18n/i18n.properties",
+        "title": "{{appTitle}}",
+        "description": "{{appDescription}}",
+        "applicationVersion": {
+            "version": "1.0.0"
+        },
+        "dataSources": {
+            "mainService": {
+                "uri": "/sap/opu/odata/sap/ZPP_PORTAL_PROVEEDORES_SRV/",
+                "type": "OData",
+                "settings": {
+                    "odataVersion": "2.0"
+                }
+            }
+        }
+    },
+    "sap.ui": {
+        "technology": "UI5",
+        "icons": {
+            "icon": "sap-icon://supplier",
+            "favIcon": "",
+            "phone": "",
+            "phone@2": "",
+            "tablet": "",
+            "tablet@2": ""
+        },
+        "deviceTypes": {
+            "desktop": true,
+            "tablet": true,
+            "phone": true
+        },
+        "fullWidth": true
+    },
+    "sap.ui5": {
+        "flexEnabled": true,
+        "rootView": {
+            "viewName": "com.antigravity.portalProveedores.view.App",
+            "type": "XML",
+            "async": true,
+            "id": "app"
+        },
+        "dependencies": {
+            "minUI5Version": "1.108.0",
+            "libs": {
+                "sap.m": {},
+                "sap.f": {},
+                "sap.ui.core": {},
+                "sap.ui.layout": {},
+                "sap.ui.unified": {},
+                "sap.uxap": {},
+                "sap.tnt": {}
+            }
+        },
+        "contentDensities": {
+            "compact": true,
+            "cozy": true
+        },
+        "models": {
+            "i18n": {
+                "type": "sap.ui.model.resource.ResourceModel",
+                "settings": {
+                    "bundleName": "com.antigravity.portalProveedores.i18n.i18n"
+                }
+            }
+        },
+        "resources": {
+            "css": [
+                {
+                    "uri": "css/style.css"
+                }
+            ]
+        },
+        "routing": {
+            "config": {
+                "routerClass": "sap.m.routing.Router",
+                "viewType": "XML",
+                "viewPath": "com.antigravity.portalProveedores.view",
+                "controlId": "appNav",
+                "controlAggregation": "pages",
+                "async": true,
+                "transition": "slide"
+            },
+            "routes": [
+                {
+                    "name": "home",
+                    "pattern": "",
+                    "target": ["home"]
+                },
+                {
+                    "name": "login",
+                    "pattern": "login",
+                    "target": ["login"]
+                },
+                {
+                    "name": "launchpad",
+                    "pattern": "launchpad",
+                    "target": ["launchpad"]
+                },
+                {
+                    "name": "expenses",
+                    "pattern": "expenses",
+                    "target": ["expenses"]
+                },
+                {
+                    "name": "autoRegister",
+                    "pattern": "auto-register",
+                    "target": ["autoRegister"]
+                },
+                {
+                    "name": "preRegister",
+                    "pattern": "pre-register",
+                    "target": ["preRegister"]
+                },
+                {
+                    "name": "accountingInvoices",
+                    "pattern": "accounting-invoices",
+                    "target": ["accountingInvoices"]
+                },
+                {
+                    "name": "invoiceHistory",
+                    "pattern": "invoice-history",
+                    "target": ["invoiceHistory"]
+                },
+                {
+                    "name": "paymentHistory",
+                    "pattern": "payment-history",
+                    "target": ["paymentHistory"]
+                },
+                {
+                    "name": "purchaseOrders",
+                    "pattern": "purchase-orders",
+                    "target": ["purchaseOrders"]
+                },
+                {
+                    "name": "purchaseOrderDetail",
+                    "pattern": "purchase-orders/{poId}",
+                    "target": ["purchaseOrderDetail"]
+                },
+                {
+                    "name": "invoices",
+                    "pattern": "invoices",
+                    "target": ["invoices"]
+                },
+                {
+                    "name": "deliveries",
+                    "pattern": "deliveries",
+                    "target": ["deliveries"]
+                },
+                {
+                    "name": "documents",
+                    "pattern": "documents",
+                    "target": ["documents"]
+                },
+                {
+                    "name": "profile",
+                    "pattern": "profile",
+                    "target": ["profile"]
+                },
+                {
+                    "name": "creditNotes",
+                    "pattern": "credit-notes",
+                    "target": ["creditNotes"]
+                }
+            ],
+            "targets": {
+                "login": {
+                    "viewName": "Login",
+                    "viewLevel": 0,
+                    "viewId": "login"
+                },
+                "launchpad": {
+                    "viewName": "Launchpad",
+                    "viewLevel": 1,
+                    "viewId": "launchpad"
+                },
+                "home": {
+                    "viewName": "Home",
+                    "viewLevel": 2,
+                    "viewId": "home"
+                },
+                "creditNotes": {
+                    "viewName": "CreditNotes",
+                    "viewLevel": 2,
+                    "viewId": "creditNotes"
+                },
+                "expenses": {
+                    "viewName": "ExpenseClaims",
+                    "viewLevel": 2,
+                    "viewId": "expenses"
+                },
+                "autoRegister": {
+                    "viewName": "AutoRegister",
+                    "viewLevel": 2,
+                    "viewId": "autoRegister"
+                },
+                "preRegister": {
+                    "viewName": "PreRegister",
+                    "viewLevel": 2,
+                    "viewId": "preRegister"
+                },
+                "accountingInvoices": {
+                    "viewName": "AccountingInvoices",
+                    "viewLevel": 2,
+                    "viewId": "accountingInvoices"
+                },
+                "invoiceHistory": {
+                    "viewName": "InvoiceHistory",
+                    "viewLevel": 2,
+                    "viewId": "invoiceHistory"
+                },
+                "paymentHistory": {
+                    "viewName": "PaymentHistory",
+                    "viewLevel": 2,
+                    "viewId": "paymentHistory"
+                },
+                "purchaseOrders": {
+                    "viewName": "PurchaseOrders",
+                    "viewLevel": 2,
+                    "viewId": "purchaseOrders"
+                },
+                "purchaseOrderDetail": {
+                    "viewName": "PurchaseOrderDetail",
+                    "viewLevel": 3,
+                    "viewId": "purchaseOrderDetail"
+                },
+                "invoices": {
+                    "viewName": "Invoices",
+                    "viewLevel": 2,
+                    "viewId": "invoices"
+                },
+                "deliveries": {
+                    "viewName": "Deliveries",
+                    "viewLevel": 2,
+                    "viewId": "deliveries"
+                },
+                "documents": {
+                    "viewName": "Documents",
+                    "viewLevel": 2,
+                    "viewId": "documents"
+                },
+                "profile": {
+                    "viewName": "Profile",
+                    "viewLevel": 2,
+                    "viewId": "profile"
+                }
+            }
+        }
+    }
+}

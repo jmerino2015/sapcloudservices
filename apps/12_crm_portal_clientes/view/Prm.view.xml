@@ -1,0 +1,174 @@
+<mvc:View
+    controllerName="sap.crm.customerportal.controller.Prm"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m"
+    xmlns:f="sap.f"
+    xmlns:core="sap.ui.core"
+    xmlns:layout="sap.ui.layout">
+
+    <Page id="prmPage" title="{i18n>prmTitle}" showNavButton="false">
+        <headerContent>
+            <Button
+                text="Registrar Nuevo Deal"
+                icon="sap-icon://add"
+                type="Emphasized"
+                press=".onOpenRegisterDealDialog"
+                tooltip="Registrar nuevo prospecto para proteger exclusividad de canal" />
+        </headerContent>
+
+        <content>
+            <!-- Partner Header & Overview Banner -->
+            <VBox class="sapUiResponsiveContentPadding">
+                <layout:Grid defaultSpan="XL3 L3 M6 S12" class="sapUiSmallMarginBottom">
+                    <VBox class="sapUiContentPadding fioriCardCustom" style="background:#f7f9fa; border:1px solid #e2e8f0;">
+                        <Text text="Nivel de Socio Comercial" class="sapUiTinyText sapUiLightText" />
+                        <Title text="{customer>/partnerTier}" level="H3" class="sapUiPositiveElement" />
+                        <Text text="Margen de Descuento: 25%" class="sapUiTinyText" />
+                    </VBox>
+
+                    <VBox class="sapUiContentPadding fioriCardCustom" style="background:#f7f9fa; border:1px solid #e2e8f0;">
+                        <Text text="Pipeline de Deals Registrados" class="sapUiTinyText sapUiLightText" />
+                        <Title text="$277,000 USD" level="H2" />
+                        <Text text="2 Oportunidades activas" class="sapUiTinyText" />
+                    </VBox>
+
+                    <VBox class="sapUiContentPadding fioriCardCustom" style="background:#f7f9fa; border:1px solid #e2e8f0;">
+                        <Text text="Margen de Ganancia Estimado" class="sapUiTinyText sapUiLightText" />
+                        <Title text="$64,650 USD" level="H2" class="sapUiPositiveElement" />
+                        <Text text="Comisión protegida por canal" class="sapUiTinyText" />
+                    </VBox>
+
+                    <VBox class="sapUiContentPadding fioriCardCustom" style="background:#f7f9fa; border:1px solid #e2e8f0;">
+                        <Text text="Certificaciones de Equipo" class="sapUiTinyText sapUiLightText" />
+                        <Title text="2 / 3 Completadas" level="H3" />
+                        <Text text="Estatus: Partner Certificado 2026" class="sapUiTinyText sapUiPositiveElement" />
+                    </VBox>
+                </layout:Grid>
+
+                <IconTabBar
+                    id="prmIconTabBar"
+                    select=".onTabSelect"
+                    expanded="true"
+                    class="sapUiResponsiveContentPadding">
+                    <items>
+
+                        <!-- ======================================================== -->
+                        <!-- TAB 1: DEAL REGISTRATION (PROTECCIÓN DE CANAL)           -->
+                        <!-- ======================================================== -->
+                        <IconTabFilter
+                            key="deals"
+                            icon="sap-icon://opportunity"
+                            text="Registro y Protección de Oportunidades (Deal Reg)">
+                            
+                            <Table
+                                id="dealsTable"
+                                items="{/prmDeals}"
+                                noDataText="No hay deals registrados">
+                                <headerToolbar>
+                                    <OverflowToolbar>
+                                        <Title text="Oportunidades Registradas en Salesforce PRM" level="H3" />
+                                        <ToolbarSpacer />
+                                        <Button text="Nuevo Registro" icon="sap-icon://add" press=".onOpenRegisterDealDialog" type="Emphasized" />
+                                    </OverflowToolbar>
+                                </headerToolbar>
+                                <columns>
+                                    <Column><Text text="Nº Deal" design="Bold" /></Column>
+                                    <Column><Text text="Oportunidad / Proyecto" /></Column>
+                                    <Column minScreenWidth="Tablet" demandPopin="true"><Text text="Cliente Final" /></Column>
+                                    <Column hAlign="End"><Text text="Monto Estimado" /></Column>
+                                    <Column minScreenWidth="Desktop" demandPopin="true"><Text text="Margen Partner" /></Column>
+                                    <Column><Text text="Etapa de Aprobación" /></Column>
+                                    <Column minScreenWidth="Desktop" demandPopin="true"><Text text="Exclusividad Hasta" /></Column>
+                                    <Column hAlign="Center"><Text text="Detalle" /></Column>
+                                </columns>
+                                <items>
+                                    <ColumnListItem>
+                                        <cells>
+                                            <Text text="{dealId}" class="sapUiBoldText" />
+                                            <Text text="{dealName}" />
+                                            <Text text="{endCustomer}" />
+                                            <Text text="{parts: [{path: 'estimatedAmount'}, {value: 'USD'}], formatter: '.formatCurrency'}" class="sapUiBoldText" />
+                                            <Text text="{partnerMargin}" class="sapUiPositiveElement" />
+                                            <ObjectStatus text="{stageText}" state="{stageState}" />
+                                            <Text text="{exclusivityUntil}" />
+                                            <Button icon="sap-icon://inspect" text="Ver" type="Ghost" press=".onViewDealDetail" />
+                                        </cells>
+                                    </ColumnListItem>
+                                </items>
+                            </Table>
+                        </IconTabFilter>
+
+                        <!-- ======================================================== -->
+                        <!-- TAB 2: CO-SELLING & COTIZADOR CPQ CON MÁRGENES           -->
+                        <!-- ======================================================== -->
+                        <IconTabFilter
+                            key="cpq"
+                            icon="sap-icon://cart-4"
+                            text="Co-Selling &amp; Cotizador CPQ">
+                            
+                            <VBox class="sapUiSmallMargin">
+                                <MessageStrip
+                                    text="Como Partner Gold dispones de un 25% de margen directo sobre el precio de lista. Utiliza el cotizador CPQ para simular precios al cliente final y tu margen de beneficio neto."
+                                    type="Information"
+                                    showIcon="true"
+                                    class="sapUiSmallMarginBottom" />
+
+                                <Table items="{/products}" noDataText="No hay productos disponibles">
+                                    <columns>
+                                        <Column><Text text="SKU" design="Bold" /></Column>
+                                        <Column><Text text="Descripción del Producto" /></Column>
+                                        <Column hAlign="End"><Text text="Precio Lista ERP" /></Column>
+                                        <Column hAlign="End"><Text text="Precio Partner (25% desc.)" design="Bold" /></Column>
+                                        <Column hAlign="Center"><Text text="Margen Unitario" /></Column>
+                                        <Column hAlign="Center"><Text text="Acción CPQ" /></Column>
+                                    </columns>
+                                    <items>
+                                        <ColumnListItem>
+                                            <cells>
+                                                <Text text="{sku}" class="sapUiBoldText" />
+                                                <Text text="{name}" />
+                                                <Text text="{parts: [{path: 'unitPrice'}, {path: 'currency'}], formatter: '.formatCurrency'}" />
+                                                <Text text="{parts: [{path: 'partnerPrice'}, {path: 'currency'}], formatter: '.formatCurrency'}" class="sapUiPositiveElement sapUiBoldText" />
+                                                <ObjectStatus text="+$1,212.50 USD" state="Success" />
+                                                <Button text="Cotizar CPQ" icon="sap-icon://lead" type="Ghost" press=".onCpqQuote" />
+                                            </cells>
+                                        </ColumnListItem>
+                                    </items>
+                                </Table>
+                            </VBox>
+                        </IconTabFilter>
+
+                        <!-- ======================================================== -->
+                        <!-- TAB 3: ONBOARDING & CERTIFICACIONES DIGITALES            -->
+                        <!-- ======================================================== -->
+                        <IconTabFilter
+                            key="cert"
+                            icon="sap-icon://education"
+                            text="Onboarding &amp; Certificaciones">
+                            
+                            <List items="{/prmCertifications}" class="sapUiSmallMargin">
+                                <CustomListItem>
+                                    <HBox justifyContent="SpaceBetween" alignItems="Center" class="sapUiMediumMargin">
+                                        <HBox alignItems="Center">
+                                            <core:Icon src="{badgeIcon}" size="2rem" color="#0854a0" class="sapUiSmallMarginEnd" />
+                                            <VBox>
+                                                <Text text="{courseName}" class="sapUiBoldText" />
+                                                <Text text="Especialidad: {track} | Duración: {duration}" class="sapUiTinyText sapUiLightText" />
+                                                <ProgressIndicator percentValue="{progress}" displayValue="{progress}% completado" state="{statusState}" width="240px" class="sapUiTinyMarginTop" />
+                                            </VBox>
+                                        </HBox>
+                                        <VBox alignItems="End">
+                                            <ObjectStatus text="{status}" state="{statusState}" class="sapUiSmallMarginBottom" />
+                                            <Button text="Descargar Credencial" icon="sap-icon://pdf-attachment" type="Ghost" press=".onDownloadCertificate" />
+                                        </VBox>
+                                    </HBox>
+                                </CustomListItem>
+                            </List>
+                        </IconTabFilter>
+
+                    </items>
+                </IconTabBar>
+            </VBox>
+        </content>
+    </Page>
+</mvc:View>

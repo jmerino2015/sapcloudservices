@@ -1,0 +1,78 @@
+<core:FragmentDefinition
+  xmlns:core="sap.ui.core"
+  xmlns="sap.m"
+  xmlns:l="sap.ui.layout">
+  
+  <Popover
+    id="chatbotPopover"
+    title="SAP Joule WMS — Asistente Inteligente"
+    placement="Bottom"
+    contentWidth="380px"
+    contentHeight="500px"
+    showArrow="true">
+    
+    <customHeader>
+      <Bar>
+        <contentLeft>
+          <core:Icon src="sap-icon://customer-and-contacts" size="1.25rem" color="Highlight" class="sapUiTinyMarginBegin" />
+          <Title text="SAP Joule WMS" titleStyle="H5" />
+        </contentLeft>
+        <contentRight>
+          <Button icon="sap-icon://refresh" type="Transparent" press=".onClearChat" tooltip="Limpiar chat" />
+        </contentRight>
+      </Bar>
+    </customHeader>
+
+    <content>
+      <VBox height="100%" justifyContent="SpaceBetween" class="sapUiContentPadding">
+        
+        <!-- Scrollable Message List -->
+        <ScrollContainer
+          id="chatScrollContainer"
+          height="380px"
+          vertical="true"
+          horizontal="false"
+          focusable="true">
+          <List id="chatList" items="{chatModel>/messages}" showSeparators="None" noDataText="Inicia una conversación preguntándome sobre stock, OTs, o procesos WM.">
+            <CustomListItem>
+              <HBox class="sapUiTinyMarginBottom"
+                justifyContent="{= ${chatModel>sender} === 'bot' ? 'Start' : 'End' }">
+                
+                <!-- Bot Avatar -->
+                <Avatar
+                  visible="{= ${chatModel>sender} === 'bot' }"
+                  src="sap-icon://customer-and-contacts"
+                  displayShape="Circle"
+                  displaySize="XS"
+                  class="sapUiTinyMarginEnd" />
+                  
+                <!-- Message Bubble -->
+                <VBox class="{= ${chatModel>sender} === 'bot' ? 'chat-bubble-bot' : 'chat-bubble-user' }" style="max-width: 80%;">
+                  <FormattedText htmlText="{chatModel>text}" />
+                  <Text text="{chatModel>timestamp}" style="font-size: 9px; color: #888;" class="sapUiTinyMarginTop" />
+                </VBox>
+                
+              </HBox>
+            </CustomListItem>
+          </List>
+        </ScrollContainer>
+        
+        <!-- Input Row -->
+        <HBox alignItems="Center" width="100%" class="sapUiTinyMarginTop">
+          <Input
+            id="chatInput"
+            placeholder="Pregúntame algo... (ej: stock de Switch)"
+            value="{chatModel>/inputValue}"
+            submit=".onSendChatMessage"
+            width="100%"
+            class="sapUiTinyMarginEnd" />
+          <Button
+            icon="sap-icon://paper-plane"
+            type="Emphasized"
+            press=".onSendChatMessage" />
+        </HBox>
+        
+      </VBox>
+    </content>
+  </Popover>
+</core:FragmentDefinition>

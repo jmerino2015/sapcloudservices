@@ -1,0 +1,29 @@
+<core:FragmentDefinition
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core">
+    <TableSelectDialog
+        title="Seleccionar Contacto"
+        noDataText="No se encontraron contactos"
+        search="onContactSearch"
+        confirm="onContactConfirm"
+        items="{selectionModel>/contacts}">
+        <ColumnListItem>
+            <cells>
+                <ObjectIdentifier title="{selectionModel>name} {selectionModel>surname}" text="{selectionModel>id}"/>
+                <Text text="{selectionModel>role}" />
+            </cells>
+        </ColumnListItem>
+        <columns>
+            <Column>
+                <header>
+                    <Text text="Nombre" />
+                </header>
+            </Column>
+            <Column minScreenWidth="Tablet" demandPopin="true">
+                <header>
+                    <Text text="Rol" />
+                </header>
+            </Column>
+        </columns>
+    </TableSelectDialog>
+</core:FragmentDefinition>

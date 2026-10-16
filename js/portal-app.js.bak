@@ -1,0 +1,579 @@
+/**
+ * SAP Fiori Launchpad Horizon — Core Application Engine
+ * Architecture: Clean Core & Modern Responsive ToolPage Layout
+ */
+
+document.addEventListener('DOMContentLoaded', () => {
+  PortalApp.init();
+});
+
+const PortalApp = {
+  activeTab: 'home',
+  searchQuery: '',
+  currentTheme: localStorage.getItem('sap_fiori_theme') || 'light', // 'light' (Morning) or 'dark' (Evening)
+  isSidebarCollapsed: localStorage.getItem('sap_sidebar_collapsed') === 'true',
+
+  init() {
+    this.applyTheme(this.currentTheme);
+    this.initSidebarState();
+    this.renderSidebar();
+    this.renderLaunchpad();
+    this.setupEventListeners();
+  },
+
+  initSidebarState() {
+    const layout = document.getElementById('fioriShellLayout');
+    if (layout && this.isSidebarCollapsed && window.innerWidth > 1024) {
+      layout.classList.add('sidebar-collapsed');
+    }
+  },
+
+  applyTheme(theme) {
+    this.currentTheme = theme;
+    localStorage.setItem('sap_fiori_theme', theme);
+    const isDark = theme === 'dark';
+    
+    // Set theme attribute on root html element
+    document.documentElement.setAttribute('data-theme', isDark ? 'dark' : 'light');
+
+    // Update labels & icons in shell bar and modal
+    const portalBtnLabel = document.getElementById('portalThemeLabel');
+    const modalBtnLabel = document.querySelector('.modal-theme-label');
+    const portalThemeBtn = document.getElementById('btnPortalTheme');
+    
+    const labelText = isDark ? 'Morning Horizon' : 'Evening Horizon';
+    const iconClass = isDark ? 'fas fa-sun' : 'fas fa-moon';
+
+    if (portalBtnLabel) portalBtnLabel.textContent = labelText;
+    if (modalBtnLabel) modalBtnLabel.textContent = labelText;
+
+    if (portalThemeBtn) {
+      const icon = portalThemeBtn.querySelector('i');
+      if (icon) icon.className = iconClass;
+    }
+
+    // Broadcast theme change to active embedded iframe
+    const iframe = document.getElementById('modal-iframe');
+    if (iframe && iframe.contentWindow) {
+      try {
+        iframe.contentWindow.postMessage({ type: 'SET_THEME', theme: isDark ? 'sap_horizon_dark' : 'sap_horizon' }, '*');
+      } catch (e) {
+        console.warn('Could not postMessage to iframe:', e);
+      }
+    }
+  },
+
+  toggleTheme() {
+    const newTheme = this.currentTheme === 'light' ? 'dark' : 'light';
+    this.applyTheme(newTheme);
+  },
+
+  toggleSidebar() {
+    const layout = document.getElementById('fioriShellLayout');
+    if (!layout) return;
+
+    if (window.innerWidth <= 1024) {
+      // Mobile / Tablet: Off-canvas drawer toggle
+      layout.classList.toggle('sidebar-open');
+    } else {
+      // Desktop: Collapse / Expand sidebar
+      layout.classList.toggle('sidebar-collapsed');
+      this.isSidebarCollapsed = layout.classList.contains('sidebar-collapsed');
+      localStorage.setItem('sap_sidebar_collapsed', this.isSidebarCollapsed);
+    }
+  },
+
+  setTab(tabId) {
+    this.activeTab = tabId;
+
+    // Update active breadcrumb label in shell bar
+    const spaceLabel = document.getElementById('currentSpaceLabel');
+    if (spaceLabel) {
+      if (tabId === 'home') {
+        spaceLabel.textContent = 'Mi Inicio';
+      } else if (tabId === 'all') {
+        spaceLabel.textContent = 'Todas las Soluciones';
+      } else {
+        const cat = window.SAP_CATEGORIES ? window.SAP_CATEGORIES.find(c => c.id === tabId) : null;
+        spaceLabel.textContent = cat ? cat.label : tabId;
+      }
+    }
+
+    // Close off-canvas sidebar if in mobile view
+    const layout = document.getElementById('fioriShellLayout');
+    if (layout && window.innerWidth <= 1024) {
+      layout.classList.remove('sidebar-open');
+    }
+
+    this.renderSidebar();
+    this.renderLaunchpad();
+  },
+
+  renderSidebar() {
+    const container = document.getElementById('sidebarMenuList');
+    if (!container || !window.SAP_APPS_CONFIG || !window.SAP_CATEGORIES) return;
+
+    const allApps = window.SAP_APPS_CONFIG;
+
+    // Category Icon Mapping (SAP Fiori Horizon styled icons)
+    const categoryIcons = {
+      'home': 'fa-house',
+      'all': 'fa-border-all',
+      'operaciones': 'fa-warehouse',
+      'planeamiento': 'fa-chart-pie',
+      'crm': 'fa-handshake',
+      'finanzas': 'fa-file-invoice-dollar',
+      'solman': 'fa-server'
+    };
+
+    const navItems = [
+      { id: 'home', label: 'Mi Inicio (My Home)', icon: 'fa-house', count: allApps.length },
+      { id: 'all', label: 'Todas las Soluciones', icon: 'fa-border-all', count: allApps.length },
+      ...window.SAP_CATEGORIES.filter(c => c.id !== 'all').map(c => ({
+        id: c.id,
+        label: c.label,
+        icon: categoryIcons[c.id] || 'fa-folder',
+        count: allApps.filter(a => a.category === c.id).length
+      }))
+    ];
+
+    container.innerHTML = navItems.map(item => `
+      <button class="sidebar-item ${this.activeTab === item.id ? 'active' : ''}" 
+              onclick="PortalApp.setTab('${item.id}')"
+              title="${item.label} (${item.count})">
+        <div class="sidebar-item-left">
+          <span class="sidebar-item-icon">
+            <i class="fas ${item.icon}"></i>
+          </span>
+          <span class="sidebar-item-label">${item.label}</span>
+        </div>
+        <span class="sidebar-item-count">${item.count}</span>
+      </button>
+    `).join('');
+  },
+
+  handleSearch(query) {
+    this.searchQuery = query.toLowerCase().trim();
+    const clearBtn = document.getElementById('search-clear-btn');
+    if (clearBtn) {
+      clearBtn.style.display = this.searchQuery ? 'block' : 'none';
+    }
+    this.renderLaunchpad();
+  },
+
+  clearSearch() {
+    const input = document.getElementById('fiori-search-input');
+    if (input) {
+      input.value = '';
+      this.handleSearch('');
+      input.focus();
+    }
+  },
+
+  renderLaunchpad() {
+    const container = document.getElementById('fiori-launchpad-content');
+    if (!container || !window.SAP_APPS_CONFIG) return;
+
+    // Filter apps by search query
+    let apps = window.SAP_APPS_CONFIG;
+    if (this.searchQuery) {
+      apps = apps.filter(app => {
+        return app.title.toLowerCase().includes(this.searchQuery) ||
+               app.subtitle.toLowerCase().includes(this.searchQuery) ||
+               app.sapModule.toLowerCase().includes(this.searchQuery) ||
+               app.tags.some(t => t.toLowerCase().includes(this.searchQuery));
+      });
+    }
+
+    // Update count indicator in search toolbar
+    const countLabel = document.getElementById('appsCountLabel');
+    if (countLabel) {
+      countLabel.textContent = `${apps.length} ${apps.length === 1 ? 'Solución Disponible' : 'Soluciones Disponibles'}`;
+    }
+
+    // Define Group Sections
+    const groupsDefinition = [
+      {
+        id: 'operaciones',
+        title: 'Operaciones, Logística & Almacén (WMS)',
+        icon: 'fa-warehouse',
+        apps: apps.filter(a => a.category === 'operaciones')
+      },
+      {
+        id: 'planeamiento',
+        title: 'Planeamiento, Analítica & Calidad',
+        icon: 'fa-chart-pie',
+        apps: apps.filter(a => a.category === 'planeamiento')
+      },
+      {
+        id: 'crm',
+        title: 'CRM, Ventas & Experiencia del Cliente',
+        icon: 'fa-handshake',
+        apps: apps.filter(a => a.category === 'crm')
+      },
+      {
+        id: 'finanzas',
+        title: 'Finanzas, Proveedores & Localización Perú',
+        icon: 'fa-file-invoice-dollar',
+        apps: apps.filter(a => a.category === 'finanzas')
+      },
+      {
+        id: 'solman',
+        title: 'SolMan, Seguridad BASIS & Gobierno TI',
+        icon: 'fa-server',
+        apps: apps.filter(a => a.category === 'solman')
+      }
+    ];
+
+    // Filter groups based on activeTab
+    let visibleGroups = [];
+    if (this.activeTab === 'home' || this.activeTab === 'all') {
+      visibleGroups = groupsDefinition;
+    } else {
+      visibleGroups = groupsDefinition.filter(g => g.id === this.activeTab);
+    }
+
+    if (apps.length === 0) {
+      container.innerHTML = `
+        <div style="text-align: center; padding: 60px 20px; color: var(--sap-text-muted);">
+          <i class="fas fa-search" style="font-size: 36px; opacity: 0.4; margin-bottom: 16px;"></i>
+          <h3 style="color: var(--sap-text-primary); margin-bottom: 8px;">No se encontraron aplicaciones</h3>
+          <p>No hay resultados que coincidan con "${this.escapeHtml(this.searchQuery)}". Intenta con otro término.</p>
+          <button class="fiori-action-pill" style="margin-top: 16px;" onclick="PortalApp.clearSearch()">
+            <i class="fas fa-times"></i> Limpiar Búsqueda
+          </button>
+        </div>
+      `;
+      return;
+    }
+
+    container.innerHTML = visibleGroups.map(group => {
+      if (group.apps.length === 0) return '';
+
+      return `
+        <section class="fiori-group-section" id="group-${group.id}">
+          <div class="fiori-group-header">
+            <h2 class="fiori-group-title">
+              <i class="fas ${group.icon}"></i> ${group.title}
+            </h2>
+            <span class="group-count-badge">${group.apps.length} ${group.apps.length === 1 ? 'solución' : 'soluciones'}</span>
+          </div>
+          
+          <div class="fiori-tiles-grid">
+            ${group.apps.map(app => {
+              const trendIcon = app.kpi.trend === 'up' ? 'arrow-trend-up' : (app.kpi.trend === 'down' ? 'arrow-trend-down' : 'minus');
+              return `
+                <div class="sap-fiori-tile" onclick="PortalApp.launchApp('${app.id}', 'modal')" role="button" tabindex="0">
+                  <div class="tile-top-row">
+                    <div class="tile-icon-badge" style="background: ${app.iconBg};">
+                      <i class="fas fa-${app.faIcon}"></i>
+                    </div>
+                    <span class="tile-module-pill">${app.sapModule}</span>
+                  </div>
+
+                  <div class="tile-body">
+                    <h3 class="tile-title" title="${app.title}">${app.title}</h3>
+                    <p class="tile-subtitle" title="${app.subtitle}">${app.subtitle}</p>
+                  </div>
+
+                  <div class="tile-kpi-row">
+                    <div class="tile-kpi-block">
+                      <span class="tile-kpi-value">${app.kpi.value}</span>
+                      <div class="tile-kpi-meta">
+                        <span class="tile-kpi-trend ${app.kpi.trend}">
+                          <i class="fas fa-${trendIcon}"></i>
+                        </span>
+                        <span class="tile-kpi-label">${app.kpi.label}</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="tile-footer-actions">
+                    <span class="tile-action-link">
+                      Ejecutar Solución <i class="fas fa-angle-right"></i>
+                    </span>
+                    <button class="tile-ext-btn" onclick="event.stopPropagation(); PortalApp.launchApp('${app.id}', 'external');" title="Abrir en pestaña nueva">
+                      <i class="fas fa-arrow-up-right-from-square"></i>
+                    </button>
+                  </div>
+                </div>
+              `;
+            }).join('')}
+          </div>
+
+          <!-- Quick Action Pills Row -->
+          <div class="fiori-quick-actions-row">
+            ${group.apps.map(app => `
+              <button class="fiori-action-pill" onclick="PortalApp.launchApp('${app.id}', 'external')" title="Abrir en ventana independiente">
+                <i class="fas fa-${app.faIcon}"></i> Abrir ${app.title}
+              </button>
+            `).join('')}
+          </div>
+        </section>
+      `;
+    }).join('');
+  },
+
+  launchApp(appId, mode) {
+    const app = window.SAP_APPS_CONFIG.find(a => a.id === appId);
+    if (!app) return;
+
+    if (mode === 'external') {
+      window.open(app.path, '_blank');
+      return;
+    }
+
+    const modal = document.getElementById('fiori-app-modal');
+    const iframe = document.getElementById('modal-iframe');
+    const titleEl = document.getElementById('modal-title');
+    const spinner = document.getElementById('modal-spinner');
+
+    if (!modal || !iframe) return;
+
+    if (titleEl) titleEl.textContent = `${app.title} (${app.sapModule})`;
+
+    if (spinner) spinner.style.display = 'flex';
+
+    iframe.src = 'about:blank';
+    setTimeout(() => {
+      iframe.src = app.path;
+    }, 50);
+
+    iframe.onload = () => {
+      if (spinner) spinner.style.display = 'none';
+      // Sync current theme to the iframe content
+      try {
+        if (iframe.contentWindow) {
+          iframe.contentWindow.postMessage({ 
+            type: 'SET_THEME', 
+            theme: this.currentTheme === 'dark' ? 'sap_horizon_dark' : 'sap_horizon' 
+          }, '*');
+        }
+      } catch (e) {}
+    };
+
+    modal.classList.add('active');
+    document.body.style.overflow = 'hidden';
+  },
+
+  closeModal() {
+    const modal = document.getElementById('fiori-app-modal');
+    const iframe = document.getElementById('modal-iframe');
+    if (modal) modal.classList.remove('active');
+    if (iframe) iframe.src = 'about:blank';
+    document.body.style.overflow = 'auto';
+  },
+
+  // -----------------------------------------------------------
+  // SAP Joule AI Companion Panel Functions
+  // -----------------------------------------------------------
+  toggleJouleChat() {
+    const panel = document.getElementById('jouleSidebarPanel');
+    if (!panel) return;
+    panel.classList.toggle('active');
+    if (panel.classList.contains('active')) {
+      const input = document.getElementById('jouleInputField');
+      if (input) input.focus();
+    }
+  },
+
+  sendQuickJoule(text) {
+    const input = document.getElementById('jouleInputField');
+    if (input) input.value = text;
+    this.sendJouleMessage();
+  },
+
+  sendJouleMessage() {
+    const input = document.getElementById('jouleInputField');
+    const scrollArea = document.getElementById('jouleMessagesScroll');
+    if (!input || !scrollArea) return;
+
+    const userQuery = input.value.trim();
+    if (!userQuery) return;
+
+    // Clear input
+    input.value = '';
+
+    // Append User Bubble
+    const userBubble = document.createElement('div');
+    userBubble.className = 'joule-msg-bubble joule-user-msg';
+    userBubble.innerHTML = `<p>${this.escapeHtml(userQuery)}</p>`;
+    scrollArea.appendChild(userBubble);
+    scrollArea.scrollTop = scrollArea.scrollHeight;
+
+    // Append Typing Indicator
+    const typingBubble = document.createElement('div');
+    typingBubble.className = 'joule-msg-bubble joule-bot-msg typing';
+    typingBubble.innerHTML = `<p><em><i class="fas fa-spinner fa-spin"></i> SAP Joule AI está consultando SAP S/4HANA...</em></p>`;
+    scrollArea.appendChild(typingBubble);
+    scrollArea.scrollTop = scrollArea.scrollHeight;
+
+    // Generate Response based on query keywords
+    setTimeout(() => {
+      if (typingBubble.parentNode) {
+        scrollArea.removeChild(typingBubble);
+      }
+      const botResponse = this.generateJouleResponse(userQuery);
+
+      const botBubble = document.createElement('div');
+      botBubble.className = 'joule-msg-bubble joule-bot-msg';
+      botBubble.innerHTML = botResponse;
+      scrollArea.appendChild(botBubble);
+      scrollArea.scrollTop = scrollArea.scrollHeight;
+    }, 550);
+  },
+
+  clearJouleChat() {
+    const scrollArea = document.getElementById('jouleMessagesScroll');
+    if (!scrollArea) return;
+    scrollArea.innerHTML = `
+      <div class="joule-msg-bubble joule-bot-msg">
+        <p>¡Hola! Soy <strong>SAP Joule AI</strong>, tu asistente virtual inteligente. Puedo responder tus consultas sobre el catálogo completo de soluciones:</p>
+        <ul style="margin-top:6px; margin-left:16px; font-size:12px;">
+          <li>🏭 <strong>Torre de Control WMS Multi-Sede:</strong> Indicadores CD Eucaliptos, Callao y Praderas (LX03, LT23, MB51, Drivin).</li>
+          <li>📦 <strong>Almacenes & WMS:</strong> Stock, OTs, Ubicaciones Bins.</li>
+          <li>👤 <strong>BASIS / FUE:</strong> Licencias FUE, SUIM, Perfiles de Usuario.</li>
+          <li>📋 <strong>SolMan 7.2:</strong> Requerimientos, CHARM, Liberaciones.</li>
+          <li>🏢 <strong>Proveedores:</strong> OCR Facturas XML/PDF, Pagos SUNAT.</li>
+          <li>💱 <strong>Tipo de Cambio:</strong> TCURR / SUNAT SBS.</li>
+          <li>🤝 <strong>CRM & Ventas:</strong> Clientes VIP, Oportunidades, Experience Builder.</li>
+          <li>📜 <strong>Libros Legales:</strong> PLE 3.1-3.20, SIRE RCE y RVIE, Retenciones.</li>
+        </ul>
+      </div>
+    `;
+  },
+
+  generateJouleResponse(query) {
+    const q = query.toLowerCase();
+
+    if (q.includes('torre') || q.includes('control') || q.includes('eucaliptos') || q.includes('callao') || q.includes('praderas') || q.includes('indicador') || q.includes('ocupabilidad') || q.includes('drivin') || q.includes('bpa') || q.includes('eri') || q.includes('eru')) {
+      return `
+        <p><strong>🏭 Torre de Control WMS Multi-Sede (S/4HANA & Clean Core):</strong></p>
+        <p>Estado consolidado de las 3 sedes logísticas en tiempo real:</p>
+        <ul style="margin-top:4px; padding-left:16px;">
+          <li>📍 <strong>CD Eucaliptos:</strong> Ocupabilidad <strong>88.4%</strong> (14,250 pos) | Flujo: 184 In / 216 Out | Salida 7-10am: <strong>91.5%</strong> | Días sin accidentes: <strong>412</strong>.</li>
+          <li>📍 <strong>CD Callao:</strong> Ocupabilidad <strong>92.1% ⚠️</strong> (11,788 pos) | Flujo: 140 In / 155 Out | Salida 7-10am: <strong>86.0%</strong> | Días sin accidentes: <strong>285</strong>.</li>
+          <li>📍 <strong>CD Praderas:</strong> Ocupabilidad <strong>74.2% 🟢</strong> (7,049 pos) | Flujo: 92 In / 88 Out | Salida 7-10am: <strong>96.5%</strong> | Días sin accidentes: <strong>160</strong>.</li>
+        </ul>
+        <p style="margin-top:6px;"><strong>Métricas Calidad & Servicio:</strong> ERI: 99.4% | ERU: 98.7% | BPA: 96.0% | Precisión Picking: 99.8% | OTs Abiertas: 230.</p>
+        <button class="fiori-action-pill" style="margin-top:6px;" onclick="PortalApp.launchApp('14')">
+          <i class="fas fa-warehouse"></i> Abrir Torre de Control WMS
+        </button>
+      `;
+    }
+
+    if (q.includes('stock') || q.includes('cable') || q.includes('utp') || q.includes('wms') || q.includes('almacen') || q.includes('rack') || q.includes('pasillo')) {
+      return `
+        <p><strong>📦 Análisis de Almacén SAP WMS:</strong></p>
+        <p>Actualmente en el Almacén Central <strong>ALM-01 (Centro 1000)</strong>:</p>
+        <ul style="margin-top:4px; padding-left:16px;">
+          <li><strong>Material:</strong> Cable UTP Cat 6A Gris (Cod. MAT-40192)</li>
+          <li><strong>Stock Disponible:</strong> <strong>12,450 metros</strong> (Distribuidos en 8 pallets).</li>
+          <li><strong>Ubicación Preferente:</strong> Pasillo 04 - Rack B - Nivel 02 (Bin: <code>04-B-02</code>).</li>
+          <li><strong>OTs Abiertas:</strong> 2 órdenes de picking en proceso con Handheld RF.</li>
+        </ul>
+        <p style="margin-top:4px; font-size:11px; color:var(--sap-brand-blue);">💡 Puedes consultar el mapa de ubicaciones en la aplicación <em>SAP WMS - SRM FIORI</em>.</p>
+      `;
+    }
+
+    if (q.includes('fue') || q.includes('licencia') || q.includes('suim') || q.includes('usuario') || q.includes('perfil') || q.includes('roles')) {
+      return `
+        <p><strong>👤 Medición de Consumo FUE (Full User Equivalent):</strong></p>
+        <p>Estado del licenciamiento SAP S/4HANA Cloud / Private Edition:</p>
+        <ul style="margin-top:4px; padding-left:16px;">
+          <li><strong>Advanced Users:</strong> 45 asignados (Factor 1.0 = 45 FUE).</li>
+          <li><strong>Core Users:</strong> 120 asignados (Factor 0.2 = 24 FUE).</li>
+          <li><strong>Self-Service Users:</strong> 350 asignados (Factor 0.05 = 17.5 FUE).</li>
+          <li><strong>Consumo Total Actual:</strong> <strong>86.5 / 100.0 FUEs contratados (86.5%)</strong>.</li>
+        </ul>
+        <p style="margin-top:4px; font-size:11px; color:var(--sap-status-positive);">✅ Cumplimiento óptimo: 13.5 FUE disponibles para nuevas asignaciones.</p>
+      `;
+    }
+
+    if (q.includes('solman') || q.includes('requerimiento') || q.includes('charm') || q.includes('transporte') || q.includes('cambio')) {
+      return `
+        <p><strong>📋 SAP Solution Manager 7.2 (CHARM & Requerimientos):</strong></p>
+        <ul style="margin-top:4px; padding-left:16px;">
+          <li><strong>Requerimientos Activos:</strong> 24 solicitudes en estado <em>In Development</em> / <em>In Testing</em>.</li>
+          <li><strong>Transportes CHARM:</strong> Orden <code>DEVK908412</code> lista para importación a PRD-100.</li>
+          <li><strong>SLA Global TI:</strong> <strong>98.4%</strong> de cumplimiento en resolución.</li>
+        </ul>
+      `;
+    }
+
+    if (q.includes('proveedor') || q.includes('factura') || q.includes('ocr') || q.includes('xml') || q.includes('pdf')) {
+      return `
+        <p><strong>🏢 Portal de Proveedores & Facturación OCR:</strong></p>
+        <ul style="margin-top:4px; padding-left:16px;">
+          <li><strong>Facturas Procesadas Hoy:</strong> 142 comprobantes XML/PDF validados contra SUNAT.</li>
+          <li><strong>Precisión OCR AI:</strong> <strong>99.8%</strong> en extracción automática de RUC y Montos.</li>
+          <li><strong>Órdenes de Compra Matcheadas:</strong> 38 OCs vinculadas exitosamente con MIGO/MIRO.</li>
+        </ul>
+      `;
+    }
+
+    if (q.includes('tipo') || q.includes('cambio') || q.includes('tcurr') || q.includes('sunat') || q.includes('dolar') || q.includes('soles')) {
+      return `
+        <p><strong>💱 Tipo de Cambio SAP TCURR (USD/PEN):</strong></p>
+        <ul style="margin-top:4px; padding-left:16px;">
+          <li><strong>Tipo Cambio Compra:</strong> S/ 3.7750</li>
+          <li><strong>Tipo Cambio Venta:</strong> S/ 3.7820</li>
+          <li><strong>Sincronización SUNAT/SBS:</strong> Conectado en tiempo real (Última actualización: Hoy 08:30 hrs).</li>
+        </ul>
+      `;
+    }
+
+    if (q.includes('crm') || q.includes('cliente') || q.includes('c4c') || q.includes('oportunidad') || q.includes('builder') || q.includes('prm')) {
+      return `
+        <p><strong>🤝 CRM Portal de Clientes & Experience Cloud:</strong></p>
+        <ul style="margin-top:4px; padding-left:16px;">
+          <li><strong>Clientes VIP Registrados:</strong> <strong>4,850 clientes</strong> en catálogo SAP C4C.</li>
+          <li><strong>Pipeline de Oportunidades:</strong> <strong>$ 2,450,000 USD</strong> en etapas de negociación activa.</li>
+          <li><strong>Índice de Satisfacción (CSAT):</strong> <strong>4.9 / 5.0</strong> vía encuestas Qualtrics.</li>
+          <li><strong>Deflexión de Casos (AI deflection):</strong> <strong>68%</strong> resoluciones automáticas en autoservicio.</li>
+        </ul>
+      `;
+    }
+
+    if (q.includes('libro') || q.includes('legal') || q.includes('sire') || q.includes('ple') || q.includes('rce') || q.includes('rvie') || q.includes('detraccion') || q.includes('retencion') || q.includes('kardex') || q.includes('pdt')) {
+      return `
+        <p><strong>📜 Monitor de Localización Perú & Libros Legales SUNAT:</strong></p>
+        <ul style="margin-top:4px; padding-left:16px;">
+          <li><strong>Libros Electrónicos PLE:</strong> Formatos 3.1, 3.20, 5.1 (Diario), 6.1 (Mayor), 8.1 (Compras) y 14.1 (Ventas) <strong>100% liquidados</strong>.</li>
+          <li><strong>Integración SIRE SUNAT:</strong> Sincronización automática de propuesta RCE y RVIE sin inconsistencias.</li>
+          <li><strong>Gestión de Detracciones:</strong> Lote de pago generado y validado con constancias Masivas Banco de la Nación.</li>
+          <li><strong>Declaraciones PDT:</strong> PDT 0601 (Planilla), PDT 0626 (Retenciones) y PDT 0710 (Anual) listos para transmisión.</li>
+        </ul>
+      `;
+    }
+
+    return `
+      <p>🤖 <strong>SAP Joule AI Assistant:</strong> He procesado tu consulta "<em>${this.escapeHtml(query)}</em>".</p>
+      <p style="margin-top:4px;">Como consultor AI para el Portal de Soluciones SAP Fiori, puedo ayudarte a explorar las 12 aplicaciones SAP Fiori del portal, ejecutar la Torre de Control WMS Multi-Sede, auditar licencias FUE, consultar stock o revisar la localización tributaria SIRE/PLE.</p>
+    `;
+  },
+
+  escapeHtml(str) {
+    return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  },
+
+  setupEventListeners() {
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        this.closeModal();
+      }
+    });
+
+    window.addEventListener('resize', () => {
+      const layout = document.getElementById('fioriShellLayout');
+      if (layout && window.innerWidth > 1024) {
+        layout.classList.remove('sidebar-open');
+        if (this.isSidebarCollapsed) {
+          layout.classList.add('sidebar-collapsed');
+        }
+      }
+    });
+  }
+};
+
+window.PortalApp = PortalApp;

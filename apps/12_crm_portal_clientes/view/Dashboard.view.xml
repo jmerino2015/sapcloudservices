@@ -1,0 +1,230 @@
+<mvc:View
+    controllerName="sap.crm.customerportal.controller.Dashboard"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m"
+    xmlns:f="sap.f"
+    xmlns:card="sap.f.cards"
+    xmlns:core="sap.ui.core"
+    xmlns:layout="sap.ui.layout">
+
+    <Page id="dashboardPage" showHeader="false" class="sapUiResponsivePadding">
+        <content>
+            <!-- Top Hero Banner / Account Overview -->
+            <VBox class="sapUiSmallMarginBottom">
+                <ObjectHeader
+                    title="{customer>/name}"
+                    number="{
+                        parts: [
+                            {path: 'customer/creditAvailable'},
+                            {path: 'customer/currency'}
+                        ],
+                        formatter: '.formatCurrency'
+                    }"
+                    numberUnit="Crédito Disponible"
+                    numberState="Success"
+                    intro="Número de Cuenta Business Partner: {customer>/bpNumber}"
+                    responsive="true"
+                    fullScreenOptimized="false">
+                    <attributes>
+                        <ObjectAttribute title="Industria" text="{customer>/industry}" />
+                        <ObjectAttribute title="Segmento" text="{customer>/segment}" />
+                        <ObjectAttribute title="Ejecutivo Asignado" text="{customer>/c4cAccountOwner}" />
+                    </attributes>
+                    <statuses>
+                        <ObjectStatus
+                            title="SAP Cloud"
+                            text="{customer>/c4cSyncStatus}"
+                            state="Success"
+                            icon="sap-icon://accept" />
+                        <ObjectStatus
+                            title="SAP S/4HANA"
+                            text="{customer>/s4SyncStatus}"
+                            state="Success"
+                            icon="sap-icon://accept" />
+                    </statuses>
+                </ObjectHeader>
+            </VBox>
+
+            <!-- KPI Tiles Section (Fiori Standard GenericTiles) -->
+            <Title text="Resumen Ejecutivo &amp; Operaciones en Tiempo Real" level="H3" class="sapUiSmallMarginBottom" />
+            <layout:Grid defaultSpan="XL3 L3 M6 S12" class="sapUiSmallMarginBottom">
+                
+                <!-- Tile 1: Pedidos S/4HANA -->
+                <GenericTile
+                    header="Pedidos Activos"
+                    subheader="SAP S/4HANA"
+                    press=".onNavToOrders"
+                    class="sapUiTinyMarginEnd">
+                    <tileContent>
+                        <TileContent unit="En Tránsito / Picking" footer="Última actualización hoy">
+                            <NumericContent
+                                value="3"
+                                icon="sap-icon://shipping-status"
+                                valueColor="Good"
+                                indicator="Up" />
+                        </TileContent>
+                    </tileContent>
+                </GenericTile>
+
+                <!-- Tile 2: Cotizaciones Comerciales -->
+                <GenericTile
+                    header="Cotizaciones Activas"
+                    subheader="Oportunidades Venta"
+                    press=".onNavToCatalog"
+                    class="sapUiTinyMarginEnd">
+                    <tileContent>
+                        <TileContent unit="USD $23.2K" footer="2 En Revisión">
+                            <NumericContent
+                                value="2"
+                                icon="sap-icon://lead"
+                                valueColor="Neutral" />
+                        </TileContent>
+                    </tileContent>
+                </GenericTile>
+
+                <!-- Tile 3: Tickets de Servicio -->
+                <GenericTile
+                    header="Tickets de Servicio"
+                    subheader="Service Cloud"
+                    press=".onNavToTickets"
+                    class="sapUiTinyMarginEnd">
+                    <tileContent>
+                        <TileContent unit="1 Alerta de SLA" footer="Tiempo resp. prom: 1.8h">
+                            <NumericContent
+                                value="3"
+                                icon="sap-icon://headset"
+                                valueColor="Critical" />
+                        </TileContent>
+                    </tileContent>
+                </GenericTile>
+
+                <!-- Tile 4: Estado de Cuenta & Facturas -->
+                <GenericTile
+                    header="Facturación"
+                    subheader="S/4HANA Finance"
+                    press=".onNavToInvoices">
+                    <tileContent>
+                        <TileContent unit="USD $27.0K" footer="1 Factura por Vencer">
+                            <NumericContent
+                                value="3"
+                                icon="sap-icon://receipt"
+                                valueColor="Critical" />
+                        </TileContent>
+                    </tileContent>
+                </GenericTile>
+            </layout:Grid>
+
+            <!-- Quick Action Toolbar -->
+            <Panel headerText="Accesos Rápidos de Autogestión" expandable="false" class="sapUiSmallMarginBottom">
+                <HBox wrap="Wrap" alignItems="Center">
+                    <Button
+                        text="Solicitar Nueva Cotización"
+                        icon="sap-icon://cart"
+                        type="Emphasized"
+                        press=".onNavToCatalog"
+                        enabled="{session>/permissions/canCreateQuote}"
+                        class="sapUiTinyMarginEnd sapUiTinyMarginBottom" />
+                    
+                    <Button
+                        text="Rastrear Mis Pedidos"
+                        icon="sap-icon://shipping-status"
+                        press=".onNavToOrders"
+                        class="sapUiTinyMarginEnd sapUiTinyMarginBottom" />
+                    
+                    <Button
+                        text="Crear Reclamo / Ticket"
+                        icon="sap-icon://add-contact"
+                        type="Attention"
+                        press=".onNavToCreateTicket"
+                        enabled="{session>/permissions/canCreateTicket}"
+                        class="sapUiTinyMarginEnd sapUiTinyMarginBottom" />
+                    
+                    <Button
+                        text="Descargar Facturas PDF"
+                        icon="sap-icon://pdf-attachment"
+                        press=".onNavToInvoices"
+                        class="sapUiTinyMarginEnd sapUiTinyMarginBottom" />
+                    
+                    <Button
+                        text="Consultar Base de Conocimientos"
+                        icon="sap-icon://sys-help"
+                        press=".onNavToFaq"
+                        class="sapUiTinyMarginEnd sapUiTinyMarginBottom" />
+                </HBox>
+            </Panel>
+
+            <!-- Detailed Grid: Orders in Transit & Active Service Tickets -->
+            <layout:Grid defaultSpan="XL6 L6 M12 S12" class="sapUiNoMargin">
+                
+                <!-- Recent Orders S/4HANA -->
+                <Panel headerText="Pedidos en Curso (SAP S/4HANA)" class="sapUiTinyMarginBottom">
+                    <headerToolbar>
+                        <OverflowToolbar>
+                            <core:Icon src="sap-icon://sales-order" color="#0854a0" />
+                            <Title text="Seguimiento de Despachos" level="H4" />
+                            <ToolbarSpacer />
+                            <Button text="Ver Todos" press=".onNavToOrders" type="Transparent" />
+                        </OverflowToolbar>
+                    </headerToolbar>
+                    <List items="{/salesOrders}" noDataText="No hay pedidos registrados">
+                        <CustomListItem press=".onNavToOrders" type="Navigation">
+                            <HBox justifyContent="SpaceBetween" alignItems="Center" class="sapUiSmallMargin">
+                                <VBox>
+                                    <HBox alignItems="Center">
+                                        <Text text="Pedido #{orderNumber}" class="sapUiBoldText sapUiSmallMarginEnd" />
+                                        <ObjectStatus
+                                            text="{statusText}"
+                                            state="{parts: [{path: 'status'}], formatter: '.formatOrderStatusState'}"
+                                            icon="{parts: [{path: 'status'}], formatter: '.formatOrderStatusIcon'}" />
+                                    </HBox>
+                                    <Text text="Guía: {carrier} - {trackingCode}" class="sapUiTinyText sapUiLightText" />
+                                    <Text text="Entrega Estimada: {deliveryDate}" class="sapUiTinyText" />
+                                </VBox>
+                                <VBox alignItems="End">
+                                    <Text text="{parts: [{path: 'totalGross'}, {path: 'currency'}], formatter: '.formatCurrency'}" class="sapUiBoldText" />
+                                    <Text text="{parts: [{path: 'items/length'}], formatter: '.formatItemsCount'}" class="sapUiTinyText" />
+                                </VBox>
+                            </HBox>
+                        </CustomListItem>
+                    </List>
+                </Panel>
+
+                <!-- Active Tickets & SLAs -->
+                <Panel headerText="Casos de Servicio y SLAs Activos" class="sapUiTinyMarginBottom">
+                    <headerToolbar>
+                        <OverflowToolbar>
+                            <core:Icon src="sap-icon://headset" color="#e9730c" />
+                            <Title text="Casos de Soporte &amp; SLAs" level="H4" />
+                            <ToolbarSpacer />
+                            <Button text="Ir a Servicio" press=".onNavToTickets" type="Transparent" />
+                        </OverflowToolbar>
+                    </headerToolbar>
+                    <List items="{/tickets}" noDataText="No hay tickets de servicio activos">
+                        <CustomListItem press=".onNavToTickets" type="Navigation">
+                            <HBox justifyContent="SpaceBetween" alignItems="Center" class="sapUiSmallMargin">
+                                <VBox width="70%">
+                                    <HBox alignItems="Center" wrap="Wrap">
+                                        <Text text="{ticketId}" class="sapUiBoldText sapUiTinyMarginEnd" />
+                                        <ObjectStatus
+                                            text="{priorityText}"
+                                            state="{parts: [{path: 'priority'}], formatter: '.formatPriorityState'}"
+                                            class="sapUiTinyMarginEnd" />
+                                        <ObjectStatus
+                                            text="{slaStatusText}"
+                                            state="{parts: [{path: 'slaStatus'}], formatter: '.formatSlaState'}" />
+                                    </HBox>
+                                    <Text text="{subject}" maxLines="1" class="sapUiSmallMarginTopBottom" />
+                                    <Text text="Asignado: {assignedAgent} | Cola: {queue}" class="sapUiTinyText sapUiLightText" />
+                                </VBox>
+                                <VBox alignItems="End">
+                                    <Text text="{status}" class="sapUiBoldText" />
+                                    <Text text="{createdAt}" class="sapUiTinyText" />
+                                </VBox>
+                            </HBox>
+                        </CustomListItem>
+                    </List>
+                </Panel>
+            </layout:Grid>
+        </content>
+    </Page>
+</mvc:View>

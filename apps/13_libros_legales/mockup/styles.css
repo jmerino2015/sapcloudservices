@@ -1,0 +1,1143 @@
+/* SAP Fiori Horizons - Stylesheet */
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Segoe+UI:wght@300;400;500;600;700&display=swap');
+
+:root {
+    --sap-font: 'Segoe UI', -apple-system, BlinkMacSystemFont, Arial, sans-serif;
+    --sap-bg: #f4f5f7;
+    --sap-surface: #ffffff;
+    --sap-text: #1d2d3e;
+    --sap-text-secondary: #6a798a;
+    --sap-primary: #0a6ed1;
+    --sap-primary-hover: #0854a1;
+    --sap-primary-light: #e2f0fd;
+    --sap-success: #2b7d2b;
+    --sap-success-light: #e6f4e6;
+    --sap-warning: #c25f00;
+    --sap-warning-light: #fff3e5;
+    --sap-error: #bb0000;
+    --sap-error-light: #ffebe6;
+    --sap-border: #dcdfe3;
+    --sap-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+    --sap-shadow-sm: 0 2px 6px rgba(0, 0, 0, 0.04);
+}
+
+[data-theme="evening"], [data-theme="dark"], body.sapTheme-sap_horizon_dark {
+    --sap-bg: #182029;
+    --sap-surface: #222b36;
+    --sap-text: #e0e6ed;
+    --sap-text-secondary: #94a3b8;
+    --sap-primary: #479eff;
+    --sap-primary-hover: #3b82f6;
+    --sap-primary-light: #1e293b;
+    --sap-border: #2d3748;
+    --sap-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+    --sap-shadow-sm: 0 2px 6px rgba(0, 0, 0, 0.3);
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: var(--sap-font);
+    background-color: var(--sap-bg);
+    color: var(--sap-text);
+    height: 100vh;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+/* ------------------ SHELL BAR (HEADER) ------------------ */
+.shell-bar {
+    height: 48px;
+    background-color: var(--sap-surface);
+    border-bottom: 1px solid var(--sap-border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 16px;
+    z-index: 100;
+    box-shadow: var(--sap-shadow-sm);
+}
+
+body.in-iframe .shell-bar {
+    display: none !important;
+}
+
+.shell-left, .shell-right {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.shell-logo-container {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.sap-logo {
+    height: 22px;
+}
+
+.shell-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--sap-text);
+    border-left: 1px solid var(--sap-border);
+    padding-left: 12px;
+}
+
+.shell-search-bar {
+    width: 320px;
+    position: relative;
+}
+
+.shell-search-input {
+    width: 100%;
+    height: 28px;
+    background-color: #f0f2f5;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    padding: 0 10px 0 30px;
+    font-size: 12px;
+    color: var(--sap-text);
+    outline: none;
+    transition: all 0.2s ease;
+}
+
+.shell-search-input:focus {
+    background-color: var(--sap-surface);
+    border-color: var(--sap-primary);
+    box-shadow: 0 0 0 2px var(--sap-primary-light);
+}
+
+.search-icon {
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 12px;
+    color: var(--sap-text-secondary);
+}
+
+.shell-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    color: var(--sap-text);
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;
+    transition: background 0.2s;
+}
+
+.shell-btn:hover {
+    background-color: #f0f2f5;
+}
+
+.user-profile {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background-color: var(--sap-primary);
+    color: white;
+    font-size: 12px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+/* ------------------ MAIN WRAPPER ------------------ */
+.app-container {
+    flex: 1;
+    display: flex;
+    overflow: hidden;
+    position: relative;
+}
+
+/* ------------------ SIDEBAR (SAP TNT SIDENAVIGATION) ------------------ */
+.sidebar {
+    width: 230px;
+    background-color: #ffffff;
+    border-right: 1px solid #eaedf1;
+    display: flex;
+    flex-direction: column;
+    transition: all 0.2s ease;
+    z-index: 10;
+    user-select: none;
+    height: 100%;
+}
+
+[data-theme="evening"] .sidebar {
+    background-color: #1a222c;
+    border-right-color: #2b3644;
+}
+
+.sidebar.collapsed {
+    width: 60px;
+}
+
+.sidebar-toggle-container {
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding: 0 14px;
+    border-bottom: 1px solid #eaedf1;
+}
+
+.menu-list {
+    list-style: none;
+    flex: 1;
+    overflow-y: auto;
+    padding: 8px 10px;
+    margin: 0;
+}
+
+.menu-category {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: #1e293b;
+    padding: 14px 12px 4px 12px;
+    letter-spacing: 0.6px;
+    transition: opacity 0.2s;
+}
+
+[data-theme="evening"] .menu-category {
+    color: #94a7bc;
+}
+
+.sidebar.collapsed .menu-category {
+    opacity: 0;
+    height: 0;
+    padding: 0;
+    overflow: hidden;
+}
+
+.menu-item {
+    display: flex;
+    align-items: center;
+    padding: 8px 12px;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 500;
+    color: #1d2d3e;
+    gap: 12px;
+    border-radius: 6px;
+    border: 1.5px solid transparent;
+    transition: all 0.15s ease;
+    margin-bottom: 2px;
+}
+
+[data-theme="evening"] .menu-item {
+    color: #e4edf5;
+}
+
+.menu-item:hover {
+    background-color: #f5f7fa;
+    color: #0a6ed1;
+}
+
+[data-theme="evening"] .menu-item:hover {
+    background-color: #263342;
+    color: #479eff;
+}
+
+.menu-item.active {
+    border: 1.5px solid #0a6ed1;
+    border-radius: 6px;
+    background-color: #ffffff;
+    color: #0a6ed1;
+    font-weight: 600;
+    box-shadow: 0 1px 3px rgba(10, 110, 209, 0.08);
+}
+
+[data-theme="evening"] .menu-item.active {
+    border-color: #479eff;
+    background-color: #1a222c;
+    color: #479eff;
+    box-shadow: 0 1px 3px rgba(71, 158, 255, 0.15);
+}
+
+.menu-item.active .menu-icon {
+    color: #0a6ed1;
+}
+
+[data-theme="evening"] .menu-item.active .menu-icon {
+    color: #479eff;
+}
+
+.menu-icon {
+    font-size: 14px;
+    width: 18px;
+    text-align: center;
+    color: #475569;
+    flex-shrink: 0;
+}
+
+[data-theme="evening"] .menu-icon {
+    color: #94a3b8;
+}
+
+.menu-text {
+    white-space: nowrap;
+    opacity: 1;
+    transition: opacity 0.2s;
+    font-size: 13px;
+}
+
+.sidebar.collapsed .menu-text {
+    opacity: 0;
+    width: 0;
+    overflow: hidden;
+}
+
+.modal-back-btn {
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    color: #ffffff;
+    padding: 4px 10px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: all 0.15s ease;
+}
+
+.modal-back-btn:hover {
+    background: rgba(255, 255, 255, 0.15);
+    border-color: rgba(255, 255, 255, 0.5);
+}
+
+.sap-brand-badge {
+    display: inline-flex;
+    align-items: center;
+    text-decoration: none;
+}
+
+.sap-logo-svg {
+    height: 20px;
+    display: block;
+}
+
+.sap-logo-fallback {
+    background: #0854a0;
+    color: #fff;
+    font-size: 11px;
+    font-weight: bold;
+    padding: 2px 5px;
+    border-radius: 3px;
+}
+
+/* ------------------ CONTENT WORK AREA ------------------ */
+.content-area {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    padding: 16px;
+    gap: 16px;
+    background-color: var(--sap-bg);
+}
+
+/* Page Header & Title */
+.page-title-block {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.page-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--sap-text);
+}
+
+/* Filter Bar */
+.filter-bar {
+    background-color: var(--sap-surface);
+    border-radius: 8px;
+    border: 1px solid var(--sap-border);
+    padding: 16px;
+    box-shadow: var(--sap-shadow-sm);
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 16px;
+    align-items: end;
+}
+
+.filter-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.filter-label {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--sap-text-secondary);
+}
+
+.filter-select, .filter-input {
+    height: 32px;
+    border: 1px solid var(--sap-border);
+    border-radius: 6px;
+    padding: 0 10px;
+    font-size: 13px;
+    color: var(--sap-text);
+    outline: none;
+    background-color: var(--sap-surface);
+    transition: border 0.15s;
+}
+
+.filter-select:focus, .filter-input:focus {
+    border-color: var(--sap-primary);
+}
+
+.btn-primary {
+    background-color: var(--sap-primary);
+    color: white;
+    border: none;
+    border-radius: 6px;
+    height: 32px;
+    padding: 0 16px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.15s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+}
+
+.btn-primary:hover {
+    background-color: var(--sap-primary-hover);
+}
+
+.btn-secondary {
+    background-color: var(--sap-surface);
+    color: var(--sap-primary);
+    border: 1px solid var(--sap-primary);
+    border-radius: 6px;
+    height: 32px;
+    padding: 0 16px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+}
+
+.btn-secondary:hover {
+    background-color: var(--sap-primary-light);
+}
+
+/* Dashboard Summary Cards */
+.summary-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 16px;
+}
+
+.card {
+    background-color: var(--sap-surface);
+    border-radius: 8px;
+    border: 1px solid var(--sap-border);
+    padding: 16px;
+    box-shadow: var(--sap-shadow-sm);
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--sap-shadow);
+}
+
+.card-title {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--sap-text-secondary);
+}
+
+.card-value {
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--sap-text);
+}
+
+.card-footer {
+    font-size: 11px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.trend-up {
+    color: var(--sap-success);
+}
+.trend-down {
+    color: var(--sap-error);
+}
+
+/* Data Grid / Tables Container */
+.grid-container {
+    background-color: var(--sap-surface);
+    border-radius: 8px;
+    border: 1px solid var(--sap-border);
+    box-shadow: var(--sap-shadow-sm);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    flex: 1;
+    min-height: 300px;
+}
+
+.grid-toolbar {
+    height: 48px;
+    border-bottom: 1px solid var(--sap-border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 16px;
+    background-color: #f7f9fa;
+}
+
+.toolbar-title {
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.toolbar-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.table-wrapper {
+    overflow-x: auto;
+    overflow-y: auto;
+    flex: 1;
+}
+
+.sap-table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+    font-size: 13px;
+}
+
+.sap-table th {
+    background-color: #f0f2f5;
+    color: var(--sap-text);
+    font-weight: 600;
+    padding: 10px 16px;
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    border-bottom: 2px solid var(--sap-border);
+}
+
+.sap-table td {
+    padding: 10px 16px;
+    border-bottom: 1px solid var(--sap-border);
+    color: var(--sap-text);
+}
+
+.sap-table tr:hover {
+    background-color: #f7f9fc;
+}
+
+.status-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 600;
+}
+
+.status-badge.success {
+    background-color: var(--sap-success-light);
+    color: var(--sap-success);
+}
+
+.status-badge.warning {
+    background-color: var(--sap-warning-light);
+    color: var(--sap-warning);
+}
+
+.status-badge.error {
+    background-color: var(--sap-error-light);
+    color: var(--sap-error);
+}
+
+/* ------------------ CHATBOT (JOULE RIGHT DRAWER) ------------------ */
+.chatbot-drawer {
+    width: 340px;
+    background-color: var(--sap-surface);
+    border-left: 1px solid var(--sap-border);
+    display: flex;
+    flex-direction: column;
+    box-shadow: -4px 0 16px rgba(0, 0, 0, 0.05);
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    z-index: 20;
+}
+
+.chatbot-drawer.collapsed {
+    width: 0;
+    border-left-width: 0;
+    overflow: hidden;
+}
+
+.chat-header {
+    height: 52px;
+    padding: 0 16px;
+    border-bottom: 1px solid var(--sap-border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: var(--sap-primary-light);
+}
+
+.chat-header-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 600;
+    font-size: 14px;
+    color: var(--sap-primary);
+}
+
+.joule-avatar {
+    width: 24px;
+    height: 24px;
+    background: radial-gradient(circle, #0a6ed1 0%, #0050df 100%);
+    border-radius: 50%;
+    color: white;
+    font-size: 11px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.chat-body {
+    flex: 1;
+    overflow-y: auto;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.chat-bubble {
+    max-width: 85%;
+    padding: 10px 14px;
+    border-radius: 12px;
+    font-size: 12.5px;
+    line-height: 1.4;
+}
+
+.chat-bubble.bot {
+    background-color: #f0f2f5;
+    color: var(--sap-text);
+    align-self: flex-start;
+    border-bottom-left-radius: 2px;
+}
+
+.chat-bubble.user {
+    background-color: var(--sap-primary);
+    color: white;
+    align-self: flex-end;
+    border-bottom-right-radius: 2px;
+}
+
+.bot-suggested-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-top: 4px;
+}
+
+.suggested-action-btn {
+    background-color: white;
+    border: 1px solid var(--sap-border);
+    border-radius: 6px;
+    padding: 6px 12px;
+    font-size: 11px;
+    text-align: left;
+    cursor: pointer;
+    transition: background 0.15s, border-color 0.15s;
+    color: var(--sap-primary);
+}
+
+.suggested-action-btn:hover {
+    background-color: var(--sap-primary-light);
+    border-color: var(--sap-primary);
+}
+
+.chat-footer {
+    padding: 12px;
+    border-top: 1px solid var(--sap-border);
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.chat-input {
+    flex: 1;
+    height: 32px;
+    border: 1px solid var(--sap-border);
+    border-radius: 16px;
+    padding: 0 12px;
+    font-size: 12.5px;
+    outline: none;
+    transition: border 0.15s;
+}
+
+.chat-input:focus {
+    border-color: var(--sap-primary);
+}
+
+.chat-send-btn {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background-color: var(--sap-primary);
+    color: white;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.15s;
+}
+
+.chat-send-btn:hover {
+    background-color: var(--sap-primary-hover);
+}
+
+/* Chat toggle button floating at the bottom right when collapsed */
+.chat-toggle-floating {
+    position: absolute;
+    right: 24px;
+    bottom: 24px;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: radial-gradient(circle, #0a6ed1 0%, #0050df 100%);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: white;
+    font-size: 20px;
+    z-index: 50;
+    transition: transform 0.2s;
+}
+
+.chat-toggle-floating:hover {
+    transform: scale(1.05);
+}
+
+.chat-toggle-floating.hidden {
+    display: none;
+}
+
+/* Loading typing indicator */
+.typing-indicator {
+    display: flex;
+    gap: 4px;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 12px;
+}
+
+.typing-dot {
+    width: 6px;
+    height: 6px;
+    background-color: var(--sap-text-secondary);
+    border-radius: 50%;
+    opacity: 0.4;
+    animation: typing 1s infinite alternate;
+}
+
+.typing-dot:nth-child(2) {
+    animation-delay: 0.2s;
+}
+
+.typing-dot:nth-child(3) {
+    animation-delay: 0.4s;
+}
+
+@keyframes typing {
+    from { opacity: 0.4; transform: translateY(0); }
+    to { opacity: 1; transform: translateY(-4px); }
+}
+
+/* Submenu Styles matching exact TNT SideNavigation */
+.submenu {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: none;
+}
+
+.submenu.open {
+    display: block;
+}
+
+.submenu-item {
+    display: flex;
+    align-items: center;
+    padding: 7px 12px 7px 28px;
+    font-size: 12.5px;
+    font-weight: 500;
+    cursor: pointer;
+    color: #334155;
+    transition: all 0.15s ease;
+    border-radius: 6px;
+    border: 1.5px solid transparent;
+    margin-bottom: 1px;
+}
+
+[data-theme="evening"] .submenu-item {
+    color: #cbd5e1;
+}
+
+.submenu-item:hover {
+    color: #0a6ed1;
+    background-color: #f5f7fa;
+}
+
+[data-theme="evening"] .submenu-item:hover {
+    background-color: #263342;
+    color: #479eff;
+}
+
+.submenu-item.active {
+    color: #0a6ed1;
+    border: 1.5px solid #0a6ed1;
+    border-radius: 6px;
+    background-color: #ffffff;
+    font-weight: 600;
+    box-shadow: 0 1px 3px rgba(10, 110, 209, 0.08);
+}
+
+[data-theme="evening"] .submenu-item.active {
+    border-color: #479eff;
+    background-color: #1a222c;
+    color: #479eff;
+}
+
+.submenu-arrow {
+    margin-left: auto;
+    font-size: 11px;
+    transition: transform 0.2s ease;
+    color: #94a3b8;
+}
+
+.menu-item.open .submenu-arrow {
+    transform: rotate(90deg);
+}
+
+.sidebar-fixed-bottom {
+    border-top: 1px solid #eaedf1;
+    padding: 8px 10px;
+    background-color: #ffffff;
+}
+
+[data-theme="evening"] .sidebar-fixed-bottom {
+    border-top-color: #2b3644;
+    background-color: #1a222c;
+}
+
+.menu-item.has-submenu {
+    position: relative;
+}
+
+/* Droid Logo Styles */
+.droid-logo {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: linear-gradient(135deg, #0a6ed1 0%, #0050df 100%);
+    padding: 4px 12px;
+    border-radius: 6px;
+    color: white;
+    font-weight: 800;
+    font-size: 13px;
+    letter-spacing: 1.5px;
+    font-family: 'Outfit', 'Segoe UI', sans-serif;
+    box-shadow: 0 2px 8px rgba(10, 110, 209, 0.25);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.droid-logo:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(10, 110, 209, 0.35);
+}
+
+.droid-icon {
+    font-size: 12px;
+    animation: droid-pulse 2s infinite alternate;
+}
+
+@keyframes droid-pulse {
+    0% { transform: scale(1); opacity: 0.8; }
+    100% { transform: scale(1.15); opacity: 1; }
+}
+
+.droid-text {
+    font-weight: 800;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.15);
+}
+
+/* Dashboard View Styles */
+.dashboard-view {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    gap: 16px;
+    width: 100%;
+    animation: fadeIn 0.4s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.db-chart-card {
+    background-color: var(--sap-surface);
+    border-radius: 8px;
+    border: 1px solid var(--sap-border);
+    padding: 16px;
+    box-shadow: var(--sap-shadow-sm);
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.db-chart-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--sap-text);
+    border-bottom: 1px solid var(--sap-border);
+    padding-bottom: 8px;
+    margin-bottom: 4px;
+}
+
+.col-span-8 { grid-column: span 8; }
+.col-span-4 { grid-column: span 4; }
+.col-span-6 { grid-column: span 6; }
+.col-span-12 { grid-column: span 12; }
+
+@media (max-width: 900px) {
+    .col-span-8, .col-span-4, .col-span-6 {
+        grid-column: span 12;
+    }
+}
+
+/* Custom CSS Charts */
+.progress-ring-container {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    padding: 10px 0;
+}
+
+.progress-ring-circular {
+    width: 90px;
+    height: 90px;
+    border-radius: 50%;
+    background: conic-gradient(var(--sap-primary) 92%, #eef1f6 0);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    box-shadow: var(--sap-shadow-sm);
+}
+
+.progress-ring-circular::after {
+    content: '92%';
+    position: absolute;
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    background-color: var(--sap-surface);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--sap-text);
+}
+
+.progress-ring-info {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.progress-ring-value {
+    font-size: 20px;
+    font-weight: 700;
+}
+
+.progress-ring-desc {
+    font-size: 11.5px;
+    color: var(--sap-text-secondary);
+}
+
+.bar-chart-container {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 6px 0;
+}
+
+.bar-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.bar-label {
+    width: 140px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--sap-text-secondary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.bar-track {
+    flex: 1;
+    height: 8px;
+    background-color: #eef1f6;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.bar-fill {
+    height: 100%;
+    background-color: var(--sap-primary);
+    border-radius: 4px;
+    transition: width 0.8s ease;
+}
+
+.bar-value {
+    font-size: 12px;
+    font-weight: 600;
+    min-width: 40px;
+    text-align: right;
+}
+
+/* Activity List */
+.activity-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.activity-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    font-size: 12.5px;
+    padding-bottom: 8px;
+    border-bottom: 1px dashed var(--sap-border);
+}
+
+.activity-item:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+}
+
+.activity-time {
+    font-size: 10.5px;
+    color: var(--sap-text-secondary);
+    min-width: 70px;
+}
+
+.activity-content {
+    flex: 1;
+}
+
+.activity-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: var(--sap-primary);
+    margin-top: 5px;
+}
+
+.activity-dot.success { background-color: var(--sap-success); }
+.activity-dot.warning { background-color: var(--sap-warning); }
+.activity-dot.error { background-color: var(--sap-error); }
+
+/* Calendar Grid */
+.calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 8px;
+    text-align: center;
+    font-size: 12px;
+}
+
+.calendar-day-header {
+    font-weight: 600;
+    color: var(--sap-text-secondary);
+    padding-bottom: 4px;
+}
+
+.calendar-day {
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;
+    background-color: #f7f9fa;
+    color: var(--sap-text);
+}
+
+.calendar-day.highlight {
+    background-color: var(--sap-primary-light);
+    color: var(--sap-primary);
+    font-weight: 700;
+    border: 1px solid var(--sap-primary);
+}
+
+.calendar-day.today {
+    background-color: var(--sap-primary);
+    color: white;
+    font-weight: 700;
+}
+

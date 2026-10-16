@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="description" content="SAP Fiori Dashboard – Gestión de Incidentes y Requerimientos powered by SAP Joule"/>
+  <title>SAP Joule | Dashboard Incidentes & Requerimientos</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"/>
+  <link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+
+  <!-- ============================================================
+       SAP FIORI HORIZON SHELL HEADER
+       Shell Color: #354A5F  |  Joule: #5D36FF → #A100C2
+  ============================================================ -->
+  <header class="shell-header" id="main-header" role="banner">
+
+    <!-- Logo + Joule Brand -->
+    <div class="header-logo-area" id="logo-area" title="SAP Joule">
+      <button class="modal-back-btn" onclick="goHome()" title="Volver al Launchpad" style="background:transparent; border:1px solid rgba(255,255,255,0.3); color:#fff; padding:4px 10px; border-radius:4px; font-size:12px; cursor:pointer; display:inline-flex; align-items:center; gap:6px; margin-right:10px;">
+        <i class="fas fa-chevron-left" style="font-size:11px;"></i> Home
+      </button>
+
+      <!-- SAP JOULE OFFICIAL LOGO — Diamond gem with sparkles -->
+      <div class="joule-icon-wrap">
+        <svg width="22" height="22" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <!-- Diamond / Gem body -->
+          <path d="M50 18
+                   L72 34
+                   L72 62
+                   L50 84
+                   L28 62
+                   L28 34
+                   Z"
+                fill="white" opacity="0.97"/>
+          <!-- Inner sparkle on gem -->
+          <path d="M50 40
+                   C51.8 46 55 49 61 50
+                   C55 51 51.8 54 50 60
+                   C48.2 54 45 51 39 50
+                   C45 49 48.2 46 50 40Z"
+                fill="#8B5CF6" opacity="0.85"/>
+          <!-- Top-right large sparkle -->
+          <path d="M74 12
+                   C74.8 16.5 77.5 19.2 82 20
+                   C77.5 20.8 74.8 23.5 74 28
+                   C73.2 23.5 70.5 20.8 66 20
+                   C70.5 19.2 73.2 16.5 74 12Z"
+                fill="white" opacity="0.95"/>
+          <!-- Top-left small sparkle -->
+          <path d="M24 8
+                   C24.5 11 26.3 12.8 29 13
+                   C26.3 13.2 24.5 15 24 18
+                   C23.5 15 21.7 13.2 19 13
+                   C21.7 12.8 23.5 11 24 8Z"
+                fill="white" opacity="0.8"/>
+          <!-- Bottom-right small sparkle -->
+          <path d="M80 68
+                   C80.4 70.5 82 72 84 72.3
+                   C82 72.6 80.4 74.1 80 76.5
+                   C79.6 74.1 78 72.6 76 72.3
+                   C78 72 79.6 70.5 80 68Z"
+                fill="white" opacity="0.75"/>
+        </svg>
+      </div>
+
+      <div class="logo-text-block">
+        <span class="logo-sap-text">SAP</span>
+        <span class="logo-joule-text">Joule</span>
+      </div>
+    </div>
+
+    <!-- Divider + App title -->
+    <div class="shell-nav-item" id="shell-nav-main">
+      <div style="display:flex;flex-direction:column;">
+        <span class="shell-app-title">Dashboard Incidentes &amp; Requerimientos</span>
+        <span class="shell-app-subtitle">Created by Marco Merino &nbsp;·&nbsp; Consultant SAP &nbsp;·&nbsp; ID 0004694670</span>
+      </div>
+    </div>
+
+    <div class="shell-spacer"></div>
+
+    <!-- Right side actions -->
+    <div class="shell-actions">
+
+      <!-- Timestamp -->
+      <div class="shell-timestamp" id="shell-timestamp-wrap">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none">
+          <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
+          <path d="M12 6v6l4 2" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+        <span id="last-update-text">Sin datos</span>
+      </div>
+
+      <!-- Notifications -->
+      <button class="shell-action-btn" id="btn-notifications" title="Notificaciones">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+          <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M13.73 21a2 2 0 0 1-3.46 0" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+        </svg>
+      </button>
+
+      <!-- Settings -->
+      <button class="shell-action-btn" id="btn-settings" title="Configuración">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+          <circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="1.8"/>
+          <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z" stroke="currentColor" stroke-width="1.8"/>
+        </svg>
+      </button>
+
+      <!-- User Avatar -->
+      <div class="sap-avatar" id="user-avatar" title="Marco Merino · Consultant SAP · ID 0004694670">MM</div>
+    </div>
+
+  </header>
+
+  <!-- ============================================================
+       MAIN CONTENT
+  ============================================================ -->
+  <main class="main-content" id="main-content" role="main">
+
+    <!-- ── UPLOAD ZONE ── -->
+    <section class="upload-section" id="upload-section" aria-label="Zona de carga de archivo">
+      <div class="upload-card" id="upload-card">
+        <div class="upload-inner">
+          <div class="upload-icon-wrap">
+            <svg width="52" height="52" viewBox="0 0 24 24" fill="none" class="upload-svg">
+              <defs>
+                <linearGradient id="upGrad" x1="0" y1="0" x2="1" y2="1">
+                  <stop offset="0%" stop-color="#5D36FF"/>
+                  <stop offset="100%" stop-color="#A100C2"/>
+                </linearGradient>
+              </defs>
+              <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4" stroke="url(#upGrad)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+              <polyline points="17 8 12 3 7 8" stroke="url(#upGrad)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+              <line x1="12" y1="3" x2="12" y2="15" stroke="url(#upGrad)" stroke-width="1.8" stroke-linecap="round"/>
+            </svg>
+            <div class="upload-pulse-ring"></div>
+          </div>
+          <h1 class="upload-title">Cargar Log de Incidentes</h1>
+          <p class="upload-desc">Arrastra tu archivo Excel aquí o haz clic para seleccionarlo</p>
+          <p class="upload-formats">Formatos soportados: <strong>.xlsx · .xls · .csv</strong></p>
+          <label class="btn-upload" for="file-input" id="upload-label">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+              <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+              <polyline points="17 8 12 3 7 8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+              <line x1="12" y1="3" x2="12" y2="15" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+            Seleccionar Archivo Excel
+          </label>
+          <input type="file" id="file-input" accept=".xlsx,.xls,.csv" hidden aria-label="Seleccionar archivo Excel"/>
+        </div>
+        <div class="drop-overlay" id="drop-overlay" aria-hidden="true">
+          <div class="drop-text">
+            <svg width="36" height="36" viewBox="0 0 24 24" fill="none">
+              <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4" stroke="#0064D9" stroke-width="2" stroke-linecap="round"/>
+              <polyline points="17 8 12 3 7 8" stroke="#0064D9" stroke-width="2" stroke-linecap="round"/>
+              <line x1="12" y1="3" x2="12" y2="15" stroke="#0064D9" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+            <span>Suelta el archivo aquí</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- SAP Joule branded tagline below upload -->
+      <div style="display:flex;align-items:center;gap:8px;margin-top:4px;">
+        <div style="width:20px;height:20px;border-radius:50%;background:linear-gradient(135deg,#5D36FF,#A100C2);display:flex;align-items:center;justify-content:center;">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none">
+            <path d="M12 2C12.5 6.5 15.5 9 20 9.5C15.5 10 12.5 13 12 17.5C11.5 13 8.5 10 4 9.5C8.5 9 11.5 6.5 12 2Z" fill="white"/>
+          </svg>
+        </div>
+        <span style="font-size:12px;color:#6A6D70;">Procesado con <strong style="color:#5D36FF;">SAP Joule AI</strong> · SAP Fiori Horizon</span>
+      </div>
+    </section>
+
+    <!-- ── LOADING ── -->
+    <div class="loading-overlay" id="loading-overlay" style="display:none" role="status" aria-live="polite">
+      <div class="loading-spinner">
+        <div class="spinner-ring"></div>
+        <div class="spinner-ring delay-1"></div>
+        <div class="spinner-ring delay-2"></div>
+        <svg class="spinner-logo" viewBox="0 0 24 24" fill="none">
+          <defs>
+            <linearGradient id="spGrad" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stop-color="#5D36FF"/>
+              <stop offset="100%" stop-color="#A100C2"/>
+            </linearGradient>
+          </defs>
+          <path d="M12 2C12.5 6.5 15.5 9 20 9.5C15.5 10 12.5 13 12 17.5C11.5 13 8.5 10 4 9.5C8.5 9 11.5 6.5 12 2Z" fill="url(#spGrad)"/>
+        </svg>
+      </div>
+      <p class="loading-text">SAP Joule está procesando tu archivo…</p>
+    </div>
+
+    <!-- ── DASHBOARD ── -->
+    <div class="dashboard-wrap" id="dashboard-wrap" style="display:none">
+
+      <!-- File Info Bar -->
+      <div class="file-info-bar" id="file-info-bar" role="status">
+        <div class="file-info-left">
+          <div class="file-icon-wrap">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+              <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" stroke="#188918" stroke-width="1.8"/>
+              <polyline points="14 2 14 8 20 8" stroke="#188918" stroke-width="1.8"/>
+              <line x1="9" y1="15" x2="15" y2="15" stroke="#188918" stroke-width="1.8" stroke-linecap="round"/>
+              <line x1="9" y1="11" x2="11" y2="11" stroke="#188918" stroke-width="1.8" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <div>
+            <span class="file-name" id="file-name-display">archivo.xlsx</span>
+            <span class="file-meta" id="file-meta-display">0 registros cargados</span>
+          </div>
+        </div>
+        <button class="btn-reload" id="btn-reload" aria-label="Cargar otro archivo">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+            <polyline points="1 4 1 10 7 10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            <path d="M3.51 15a9 9 0 1 0 .49-4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+          Cargar otro archivo
+        </button>
+      </div>
+
+      <!-- ── KPI CARDS ── -->
+      <section class="kpi-section" id="kpi-section" aria-label="Indicadores clave">
+        <div class="kpi-card kpi-total" id="kpi-total">
+          <div class="kpi-icon-wrap">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+              <rect x="3" y="3" width="7" height="7" rx="1" stroke="currentColor" stroke-width="1.8"/>
+              <rect x="14" y="3" width="7" height="7" rx="1" stroke="currentColor" stroke-width="1.8"/>
+              <rect x="3" y="14" width="7" height="7" rx="1" stroke="currentColor" stroke-width="1.8"/>
+              <rect x="14" y="14" width="7" height="7" rx="1" stroke="currentColor" stroke-width="1.8"/>
+            </svg>
+          </div>
+          <div class="kpi-data">
+            <span class="kpi-value" id="kpi-total-val">0</span>
+            <span class="kpi-label">Total Casos</span>
+          </div>
+          <div class="kpi-trend" id="kpi-total-trend"></div>
+        </div>
+
+        <div class="kpi-card kpi-en-curso" id="kpi-encurso">
+          <div class="kpi-icon-wrap">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+              <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="1.8"/>
+              <polyline points="12 6 12 12 16 14" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <div class="kpi-data">
+            <span class="kpi-value" id="kpi-encurso-val">0</span>
+            <span class="kpi-label">En Curso</span>
+          </div>
+          <div class="kpi-trend" id="kpi-encurso-pct"></div>
+        </div>
+
+        <div class="kpi-card kpi-pendiente" id="kpi-pendiente">
+          <div class="kpi-icon-wrap">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+              <path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" stroke="currentColor" stroke-width="1.8"/>
+              <line x1="12" y1="9" x2="12" y2="13" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+              <circle cx="12" cy="17" r="0.5" fill="currentColor" stroke="currentColor"/>
+            </svg>
+          </div>
+          <div class="kpi-data">
+            <span class="kpi-value" id="kpi-pendiente-val">0</span>
+            <span class="kpi-label">Pendientes</span>
+          </div>
+          <div class="kpi-trend" id="kpi-pendiente-pct"></div>
+        </div>
+
+        <div class="kpi-card kpi-cerrado" id="kpi-cerrado">
+          <div class="kpi-icon-wrap">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+              <path d="M22 11.08V12a10 10 0 11-5.93-9.14" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+              <polyline points="22 4 12 14.01 9 11.01" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <div class="kpi-data">
+            <span class="kpi-value" id="kpi-cerrado-val">0</span>
+            <span class="kpi-label">Cerrados</span>
+          </div>
+          <div class="kpi-trend" id="kpi-cerrado-pct"></div>
+        </div>
+
+        <div class="kpi-card kpi-cancelado" id="kpi-cancelado">
+          <div class="kpi-icon-wrap">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+              <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="1.8"/>
+              <line x1="15" y1="9" x2="9" y2="15" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+              <line x1="9" y1="9" x2="15" y2="15" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <div class="kpi-data">
+            <span class="kpi-value" id="kpi-cancelado-val">0</span>
+            <span class="kpi-label">Cancelados</span>
+          </div>
+          <div class="kpi-trend" id="kpi-cancelado-pct"></div>
+        </div>
+
+      </section>
+
+      <!-- ── CHARTS ROW 1 ── -->
+      <section class="charts-row" id="charts-row-1">
+        <!-- Donut: Status -->
+        <div class="chart-card" id="chart-status-card">
+          <div class="chart-card-header">
+            <div class="chart-title-wrap">
+              <div class="chart-dot dot-blue"></div>
+              <h2 class="chart-title">Distribución por Estado</h2>
+            </div>
+            <div class="chart-actions">
+              <button class="chip-btn active" data-filter-type="all" onclick="filterByType('all',this)">Todos</button>
+              <button class="chip-btn" data-filter-type="Incidente" onclick="filterByType('Incidente',this)">Incidentes</button>
+              <button class="chip-btn" data-filter-type="Requerimiento" onclick="filterByType('Requerimiento',this)">Requerim.</button>
+            </div>
+          </div>
+          <div class="chart-body donut-body">
+            <div class="donut-wrap">
+              <canvas id="statusDonutChart"></canvas>
+              <div class="donut-center-label">
+                <span class="donut-center-val" id="donut-center-val">0</span>
+                <span class="donut-center-sub">Total</span>
+              </div>
+            </div>
+            <div class="donut-legend" id="donut-legend"></div>
+          </div>
+        </div>
+
+        <!-- Bar: Tipo × Estado -->
+        <div class="chart-card" id="chart-type-card">
+          <div class="chart-card-header">
+            <div class="chart-title-wrap">
+              <div class="chart-dot dot-purple"></div>
+              <h2 class="chart-title">Tipo de Caso por Estado</h2>
+            </div>
+          </div>
+          <div class="chart-body">
+            <canvas id="typeBarChart"></canvas>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- ── CHARTS ROW 2 ── -->
+      <section class="charts-row" id="charts-row-2">
+        <!-- Timeline — ancho completo -->
+        <div class="chart-card" id="chart-timeline-card">
+          <div class="chart-card-header">
+            <div class="chart-title-wrap">
+              <div class="chart-dot dot-orange"></div>
+              <h2 class="chart-title">Evolución Temporal de Casos</h2>
+            </div>
+            <div class="chart-badge" id="timeline-badge">Por fecha de registro</div>
+          </div>
+          <div class="chart-body">
+            <canvas id="timelineChart"></canvas>
+          </div>
+        </div>
+      </section>
+
+      <!-- ── DATA TABLE ── -->
+      <section class="table-section" id="table-section" aria-label="Detalle de casos">
+        <div class="table-card">
+          <div class="table-header">
+            <div class="table-title-wrap">
+              <div class="chart-dot dot-blue"></div>
+              <h2 class="table-title">Detalle de Casos</h2>
+              <span class="table-count-badge" id="table-count">0 registros</span>
+            </div>
+            <div class="table-controls">
+              <div class="search-wrap">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+                  <circle cx="11" cy="11" r="8" stroke="currentColor" stroke-width="2"/>
+                  <line x1="21" y1="21" x2="16.65" y2="16.65" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+                <input type="text" class="search-input" id="table-search" placeholder="Buscar caso, cliente, estado…" aria-label="Buscar en la tabla"/>
+              </div>
+              <select class="filter-select" id="status-filter" onchange="applyTableFilters()" aria-label="Filtrar por estado">
+                <option value="">Todos los estados</option>
+                <option value="En Curso">En Curso</option>
+                <option value="Pendiente Nota Usuario">Pendiente Nota Usuario</option>
+                <option value="Cerrado">Cerrado</option>
+                <option value="Cancelado">Cancelado</option>
+              </select>
+              <select class="filter-select" id="type-filter" onchange="applyTableFilters()" aria-label="Filtrar por tipo">
+                <option value="">Todos los tipos</option>
+                <option value="Incidente">Incidente</option>
+                <option value="Requerimiento">Requerimiento</option>
+              </select>
+              <button class="btn-export" id="btn-export" onclick="exportToExcel()">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+                  <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                  <polyline points="7 10 12 15 17 10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                  <line x1="12" y1="15" x2="12" y2="3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+                Exportar
+              </button>
+            </div>
+          </div>
+
+          <div class="table-scroll" role="region" aria-label="Tabla de incidentes">
+            <table class="data-table" id="data-table">
+              <thead>
+                <tr>
+                  <th onclick="sortTable('numero')" class="sortable" id="th-numero">N° Caso <span class="sort-icon">↕</span></th>
+                  <th onclick="sortTable('estado')" class="sortable" id="th-estado">Estado <span class="sort-icon">↕</span></th>
+                  <th onclick="sortTable('tipo')" class="sortable" id="th-tipo">Tipo <span class="sort-icon">↕</span></th>
+                  <th onclick="sortTable('fecha')" class="sortable" id="th-fecha">Fecha Registro <span class="sort-icon">↕</span></th>
+                  <th>Cliente</th>
+                  <th>Servicio</th>
+                  <th>Jerarquía / Descripción</th>
+                  <th onclick="sortTable('responsable')" class="sortable" id="th-responsable">Responsable <span class="sort-icon">↕</span></th>
+                  <th>Solicitante</th>
+                </tr>
+              </thead>
+              <tbody id="table-body"></tbody>
+            </table>
+          </div>
+
+          <div class="table-footer">
+            <span class="table-footer-text" id="table-footer-text">Mostrando 0 de 0 registros</span>
+            <div class="pagination-wrap" id="pagination-wrap"></div>
+          </div>
+        </div>
+      </section>
+
+    </div><!-- /dashboard-wrap -->
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="shell-footer" role="contentinfo">
+    <span>SAP Joule &copy; 2026 &nbsp;·&nbsp; Dashboard Incidentes &amp; Requerimientos &nbsp;·&nbsp; SAP Fiori Horizon</span>
+  </footer>
+
+  <script src="app.js"></script>
+  <script>
+    function goHome() {
+      if (window.parent && window.parent.PortalApp && typeof window.parent.PortalApp.closeModal === 'function') {
+        window.parent.PortalApp.closeModal();
+      } else {
+        window.location.href = '../../index.html';
+      }
+    }
+
+    if (window.self !== window.top) {
+      document.body.classList.add('in-iframe');
+    }
+    window.addEventListener('message', function(e) {
+      if (e.data && e.data.type === 'SET_THEME') {
+        var isDark = e.data.theme === 'dark';
+        document.documentElement.setAttribute('data-theme', isDark ? 'dark' : 'light');
+        document.body.classList.toggle('dark-mode', isDark);
+      }
+    });
+  </script>
+</body>
+</html>

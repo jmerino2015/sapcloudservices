@@ -1,0 +1,53 @@
+<core:FragmentDefinition
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core">
+
+    <Dialog
+        title="{i18n>preRegXmlValidationTitle}"
+        contentWidth="600px">
+        <content>
+            <VBox class="sapUiMediumMargin">
+                <Table>
+                    <columns>
+                        <Column width="3rem"><Text text="Nro" /></Column>
+                        <Column><Text text="Mensaje" /></Column>
+                        <Column width="10rem"><Text text="Estado" /></Column>
+                    </columns>
+                    <items>
+                        <ColumnListItem>
+                            <cells>
+                                <Text text="1" />
+                                <Text text="{i18n>preRegXmlValEstadoComp}" />
+                                <ObjectStatus text="✓ 1 Aceptado" state="Success" icon="sap-icon://accept" />
+                            </cells>
+                        </ColumnListItem>
+                        <ColumnListItem>
+                            <cells>
+                                <Text text="2" />
+                                <Text text="{i18n>preRegXmlValEstadoContrib}" />
+                                <ObjectStatus text="✓ 00 Activo" state="Success" icon="sap-icon://accept" />
+                            </cells>
+                        </ColumnListItem>
+                        <ColumnListItem>
+                            <cells>
+                                <Text text="3" />
+                                <Text text="{i18n>preRegXmlValCondDomicilio}" />
+                                <ObjectStatus text="✓ 00 Habido" state="Success" icon="sap-icon://accept" />
+                            </cells>
+                        </ColumnListItem>
+                    </items>
+                </Table>
+
+                <MessageStrip
+                    text="Datos de comprobante XML validados correctamente contra SUNAT."
+                    type="Success"
+                    showIcon="true"
+                    class="sapUiSmallMarginTop" />
+            </VBox>
+        </content>
+        <endButton>
+            <Button text="{i18n>commonClose}" type="Transparent" press=".onCloseXmlLogDialog" />
+        </endButton>
+    </Dialog>
+
+</core:FragmentDefinition>

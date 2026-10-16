@@ -1,0 +1,119 @@
+<mvc:View
+    controllerName="com.antigravity.portalProveedores.controller.Documents"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m"
+    xmlns:unified="sap.ui.unified"
+    displayBlock="true"
+    height="100%">
+
+    <Page
+        id="documentsPage"
+        title="{i18n>docTitle}"
+        showNavButton="true"
+        navButtonPress=".onNavBack"
+        backgroundDesign="List">
+
+        <headerContent>
+            <unified:FileUploader
+                id="docFileUploader"
+                name="docUpload"
+                uploadUrl=""
+                tooltip="{i18n>docUpload}"
+                uploadOnChange="false"
+                change=".onFileSelected"
+                buttonOnly="true"
+                buttonText="{i18n>docUpload}"
+                icon="sap-icon://upload"
+                style="Emphasized" />
+        </headerContent>
+
+        <subHeader>
+            <Toolbar>
+                <SearchField
+                    id="docSearchField"
+                    placeholder="{i18n>docSearchPlaceholder}"
+                    width="20rem"
+                    liveChange=".onSearchLive" />
+                <ToolbarSpacer />
+                <Button
+                    id="btnRefreshDoc"
+                    icon="sap-icon://refresh"
+                    type="Transparent"
+                    tooltip="{i18n>commonRefresh}"
+                    press=".onRefresh" />
+            </Toolbar>
+        </subHeader>
+
+        <content>
+            <VBox class="sapUiResponsivePadding">
+
+                <Table
+                    id="docTable"
+                    items="{doc>/documents}"
+                    noDataText="{i18n>docNoData}"
+                    growing="true"
+                    growingThreshold="15"
+                    alternateRowColors="true"
+                    sticky="ColumnHeaders">
+
+                    <columns>
+                        <Column hAlign="Begin">
+                            <Text text="{i18n>docColName}" />
+                        </Column>
+                        <Column hAlign="Center" minScreenWidth="Tablet" demandPopin="true">
+                            <Text text="{i18n>docColType}" />
+                        </Column>
+                        <Column hAlign="Begin" minScreenWidth="Desktop" demandPopin="true">
+                            <Text text="{i18n>docColDate}" />
+                        </Column>
+                        <Column hAlign="End" minScreenWidth="Desktop" demandPopin="true">
+                            <Text text="{i18n>docColSize}" />
+                        </Column>
+                        <Column hAlign="Center">
+                            <Text text="{i18n>docColActions}" />
+                        </Column>
+                    </columns>
+
+                    <items>
+                        <ColumnListItem
+                            id="docTableItem"
+                            type="Active">
+                            <cells>
+                                <HBox alignItems="Center">
+                                    <core:Icon
+                                        xmlns:core="sap.ui.core"
+                                        src="{doc>typeIcon}"
+                                        size="1.5rem"
+                                        class="sapUiSmallMarginEnd"
+                                        tooltip="{doc>type}" />
+                                    <VBox>
+                                        <Text text="{doc>name}" />
+                                        <Text text="{doc>category}" class="sapUiTinyMarginTop" />
+                                    </VBox>
+                                </HBox>
+                                <ObjectStatus
+                                    text="{doc>type}"
+                                    state="{doc>typeState}" />
+                                <Text text="{doc>date}" />
+                                <Text text="{doc>size}" />
+                                <HBox>
+                                    <Button
+                                        icon="sap-icon://download"
+                                        type="Transparent"
+                                        tooltip="{i18n>docDownload}"
+                                        press=".onDownloadDoc" />
+                                    <Button
+                                        icon="sap-icon://delete"
+                                        type="Transparent"
+                                        tooltip="{i18n>docDelete}"
+                                        press=".onDeleteDoc" />
+                                </HBox>
+                            </cells>
+                        </ColumnListItem>
+                    </items>
+                </Table>
+            </VBox>
+        </content>
+    </Page>
+
+</mvc:View>

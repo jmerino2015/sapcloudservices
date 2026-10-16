@@ -1,0 +1,63 @@
+@Metadata.layer: #CUSTOMER
+@UI: {
+  headerInfo: {
+    typeName: 'Familia de Material',
+    typeNamePlural: 'Familias de Materiales',
+    title: { type: #STANDARD, value: 'FamiliaNombre' },
+    description: { type: #STANDARD, value: 'FamiliaId' }
+  }
+}
+
+annotate view C_KpiAlmacenFamilia with {
+
+  @UI.facet: [
+    {
+      id: 'FamiliaGeneral',
+      purpose: #STANDARD,
+      type: #IDENTIFICATION_REFERENCE,
+      label: 'Detalle de Ocupabilidad por Familia',
+      position: 10
+    }
+  ]
+
+  @UI.lineItem: [{ position: 10, importance: #HIGH, label: 'Código Familia' }]
+  @UI.identification: [{ position: 10, label: 'Código Familia' }]
+  FamiliaId;
+
+  @UI.lineItem: [{ position: 20, importance: #HIGH, label: 'Familia de Producto' }]
+  @UI.identification: [{ position: 20, label: 'Familia de Producto' }]
+  FamiliaNombre;
+
+  @UI.lineItem: [{ position: 30, importance: #MEDIUM, label: 'Total Posiciones' }]
+  @UI.identification: [{ position: 30, label: 'Posiciones Totales' }]
+  TotalPositions;
+
+  @UI.lineItem: [{ position: 40, importance: #HIGH, label: 'Ocupadas' }]
+  @UI.identification: [{ position: 40, label: 'Posiciones Ocupadas' }]
+  OccupiedPositions;
+
+  @UI.lineItem: [{ position: 50, importance: #MEDIUM, label: 'Libres' }]
+  @UI.identification: [{ position: 50, label: 'Posiciones Libres' }]
+  FreePositions;
+
+  @UI.lineItem: [
+    {
+      position: 60,
+      importance: #HIGH,
+      label: '% Ocupabilidad',
+      criticality: 'CriticalityCode'
+    }
+  ]
+  @UI.identification: [
+    {
+      position: 60,
+      label: '% Ocupabilidad',
+      criticality: 'CriticalityCode'
+    }
+  ]
+  OccupancyRate;
+
+  @UI.lineItem: [{ position: 70, importance: #LOW, label: 'Comentarios Operativos' }]
+  @UI.identification: [{ position: 70, label: 'Comentarios Operativos' }]
+  OperativeNotes;
+}

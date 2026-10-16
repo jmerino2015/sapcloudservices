@@ -1,0 +1,163 @@
+<core:FragmentDefinition
+    xmlns="sap.m"
+    xmlns:f="sap.ui.layout.form"
+    xmlns:core="sap.ui.core">
+
+    <Dialog
+        title="Gestión Operativa del Flujo de 10 Pasos — SAP S/4HANA"
+        contentWidth="960px"
+        resizable="true"
+        draggable="true">
+        <content>
+            <VBox class="sapUiSmallMargin">
+
+                <!-- Header info & Progress -->
+                <Panel class="sapUiTinyMarginBottom">
+                    <VBox class="sapUiTinyMargin">
+                        <HBox justifyContent="SpaceBetween" alignItems="Center" class="sapUiTinyMarginBottom">
+                            <VBox>
+                                <Label text="Solicitud / Expediente:" bold="true" />
+                                <Text text="{flowDetail>/id} — {flowDetail>/motivo}" class="sapUiTinyMarginBottom" />
+                                <Label text="Solicitante / CECO / Monto:" bold="true" />
+                                <Text text="{flowDetail>/solicitante} ({flowDetail>/ceco}) — {flowDetail>/monto} {flowDetail>/moneda}" />
+                            </VBox>
+                            <VBox alignItems="End">
+                                <ObjectStatus text="{flowDetail>/stepLabel}" state="{= ${flowDetail>/currentStep} === 10 ? 'Success' : 'Warning' }" icon="sap-icon://process" class="sapUiTinyMarginBottom" />
+                                <Button
+                                    text="⚡ Ejecutar Siguiente Paso Operativo"
+                                    icon="sap-icon://navigation-right-arrow"
+                                    type="Emphasized"
+                                    press=".onExecuteNextStepFromDialog"
+                                    enabled="{= ${flowDetail>/currentStep} &lt; 10 }" />
+                            </VBox>
+                        </HBox>
+
+                        <ProgressIndicator
+                            percentValue="{flowDetail>/percent}"
+                            displayValue="{flowDetail>/percent}% Completado ({flowDetail>/currentStep}/10 Pasos)"
+                            state="{= ${flowDetail>/currentStep} === 10 ? 'Success' : 'Warning' }"
+                            class="sapUiTinyMarginBottom" />
+                    </VBox>
+                </Panel>
+
+                <!-- Diagrama de Flujo de Proceso Visual Interactivo -->
+                <Panel headerText="Diagrama de Flujo de Proceso Visual — Trazabilidad de 10 Pasos SAP FI" class="sapUiTinyMarginBottom">
+                    <VBox class="sapUiTinyMargin">
+                        <HBox wrap="NoWrap" class="process-flow-container">
+                            <!-- Node 1 -->
+                            <VBox alignItems="Center" class="flow-step {= ${flowDetail>/currentStep} &gt; 1 ? 'completed' : (${flowDetail>/currentStep} === 1 ? 'active' : '') }">
+                                <HBox class="flow-step-circle"><Text text="{= ${flowDetail>/currentStep} &gt; 1 ? '✓' : '1' }" /></HBox>
+                                <Text text="1. Solicitud OP" class="flow-step-title" />
+                                <Text text="Empleado" class="flow-step-actor" />
+                            </VBox>
+                            <HBox class="flow-line {= ${flowDetail>/currentStep} &gt; 1 ? 'completed' : '' }" />
+
+                            <!-- Node 2 -->
+                            <VBox alignItems="Center" class="flow-step {= ${flowDetail>/currentStep} &gt; 2 ? 'completed' : (${flowDetail>/currentStep} === 2 ? 'active' : '') }">
+                                <HBox class="flow-step-circle"><Text text="{= ${flowDetail>/currentStep} &gt; 2 ? '✓' : '2' }" /></HBox>
+                                <Text text="2. Código FI" class="flow-step-title" />
+                                <Text text="Contabilidad" class="flow-step-actor" />
+                            </VBox>
+                            <HBox class="flow-line {= ${flowDetail>/currentStep} &gt; 2 ? 'completed' : '' }" />
+
+                            <!-- Node 3 -->
+                            <VBox alignItems="Center" class="flow-step {= ${flowDetail>/currentStep} &gt; 3 ? 'completed' : (${flowDetail>/currentStep} === 3 ? 'active' : '') }">
+                                <HBox class="flow-step-circle"><Text text="{= ${flowDetail>/currentStep} &gt; 3 ? '✓' : '3' }" /></HBox>
+                                <Text text="3. Aprobación OP" class="flow-step-title" />
+                                <Text text="Jefatura" class="flow-step-actor" />
+                            </VBox>
+                            <HBox class="flow-line {= ${flowDetail>/currentStep} &gt; 3 ? 'completed' : '' }" />
+
+                            <!-- Node 4 -->
+                            <VBox alignItems="Center" class="flow-step {= ${flowDetail>/currentStep} &gt; 4 ? 'completed' : (${flowDetail>/currentStep} === 4 ? 'active' : '') }">
+                                <HBox class="flow-step-circle"><Text text="{= ${flowDetail>/currentStep} &gt; 4 ? '✓' : '4' }" /></HBox>
+                                <Text text="4. Desembolso" class="flow-step-title" />
+                                <Text text="Tesorería" class="flow-step-actor" />
+                            </VBox>
+                            <HBox class="flow-line {= ${flowDetail>/currentStep} &gt; 4 ? 'completed' : '' }" />
+
+                            <!-- Node 5 -->
+                            <VBox alignItems="Center" class="flow-step {= ${flowDetail>/currentStep} &gt; 5 ? 'completed' : (${flowDetail>/currentStep} === 5 ? 'active' : '') }">
+                                <HBox class="flow-step-circle"><Text text="{= ${flowDetail>/currentStep} &gt; 5 ? '✓' : '5' }" /></HBox>
+                                <Text text="5. Rendición OCR" class="flow-step-title" />
+                                <Text text="Empleado" class="flow-step-actor" />
+                            </VBox>
+                            <HBox class="flow-line {= ${flowDetail>/currentStep} &gt; 5 ? 'completed' : '' }" />
+
+                            <!-- Node 6 -->
+                            <VBox alignItems="Center" class="flow-step {= ${flowDetail>/currentStep} &gt; 6 ? 'completed' : (${flowDetail>/currentStep} === 6 ? 'active' : '') }">
+                                <HBox class="flow-step-circle"><Text text="{= ${flowDetail>/currentStep} &gt; 6 ? '✓' : '6' }" /></HBox>
+                                <Text text="6. Aprobación Gasto" class="flow-step-title" />
+                                <Text text="Jefatura" class="flow-step-actor" />
+                            </VBox>
+                            <HBox class="flow-line {= ${flowDetail>/currentStep} &gt; 7 ? 'completed' : '' }" />
+
+                            <!-- Node 7 -->
+                            <VBox alignItems="Center" class="flow-step {= ${flowDetail>/currentStep} &gt; 7 ? 'completed' : (${flowDetail>/currentStep} === 7 ? 'active' : '') }">
+                                <HBox class="flow-step-circle"><Text text="{= ${flowDetail>/currentStep} &gt; 7 ? '✓' : '7' }" /></HBox>
+                                <Text text="7. SUNAT" class="flow-step-title" />
+                                <Text text="Validación" class="flow-step-actor" />
+                            </VBox>
+                            <HBox class="flow-line {= ${flowDetail>/currentStep} &gt; 8 ? 'completed' : '' }" />
+
+                            <!-- Node 8 -->
+                            <VBox alignItems="Center" class="flow-step {= ${flowDetail>/currentStep} &gt; 8 ? 'completed' : (${flowDetail>/currentStep} === 8 ? 'active' : '') }">
+                                <HBox class="flow-step-circle"><Text text="{= ${flowDetail>/currentStep} &gt; 8 ? '✓' : '8' }" /></HBox>
+                                <Text text="8. SAP MIGO" class="flow-step-title" />
+                                <Text text="Contabilidad" class="flow-step-actor" />
+                            </VBox>
+                            <HBox class="flow-line {= ${flowDetail>/currentStep} &gt; 9 ? 'completed' : '' }" />
+
+                            <!-- Node 9 -->
+                            <VBox alignItems="Center" class="flow-step {= ${flowDetail>/currentStep} &gt; 9 ? 'completed' : (${flowDetail>/currentStep} === 9 ? 'active' : '') }">
+                                <HBox class="flow-step-circle"><Text text="{= ${flowDetail>/currentStep} &gt; 9 ? '✓' : '9' }" /></HBox>
+                                <Text text="9. Liquidación" class="flow-step-title" />
+                                <Text text="Contabilidad" class="flow-step-actor" />
+                            </VBox>
+                            <HBox class="flow-line {= ${flowDetail>/currentStep} === 10 ? 'completed' : '' }" />
+
+                            <!-- Node 10 -->
+                            <VBox alignItems="Center" class="flow-step {= ${flowDetail>/currentStep} === 10 ? 'completed' : '' }">
+                                <HBox class="flow-step-circle"><Text text="{= ${flowDetail>/currentStep} === 10 ? '✓' : '10' }" /></HBox>
+                                <Text text="10. Cierre FI" class="flow-step-title" />
+                                <Text text="Compensado" class="flow-step-actor" />
+                            </VBox>
+                        </HBox>
+                    </VBox>
+                </Panel>
+
+                <!-- 10-Step Operational Table -->
+                <Table items="{flowDetail>/steps}">
+                    <headerToolbar>
+                        <OverflowToolbar>
+                            <Title text="Trazabilidad y Estado Operativo de Pasos FI" level="H4" />
+                        </OverflowToolbar>
+                    </headerToolbar>
+                    <columns>
+                        <Column width="3.5rem"><Text text="Nro" /></Column>
+                        <Column><Text text="Paso del Proceso" /></Column>
+                        <Column><Text text="Actor Responsable" /></Column>
+                        <Column><Text text="Estado" /></Column>
+                        <Column><Text text="Registro / Documento SAP Generado" /></Column>
+                    </columns>
+                    <items>
+                        <ColumnListItem highlight="{path: 'flowDetail>status', formatter: '.stepHighlight'}">
+                            <cells>
+                                <Text text="{flowDetail>stepNum}" />
+                                <ObjectIdentifier title="{flowDetail>title}" />
+                                <ObjectStatus text="{flowDetail>actor}" state="Information" />
+                                <ObjectStatus text="{flowDetail>statusText}" state="{path: 'flowDetail>status', formatter: '.stepHighlight'}" />
+                                <Text text="{flowDetail>details}" />
+                            </cells>
+                        </ColumnListItem>
+                    </items>
+                </Table>
+
+            </VBox>
+        </content>
+        <endButton>
+            <Button text="Cerrar Gestión" type="Transparent" press=".onCloseFlowDialog" />
+        </endButton>
+    </Dialog>
+
+</core:FragmentDefinition>

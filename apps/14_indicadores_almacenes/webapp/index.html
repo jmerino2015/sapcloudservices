@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Torre de Control WMS — Indicadores de Almacén Multi-Sede SAP S/4HANA & Clean Core" />
+    <title>Torre de Control WMS Multi-Sede</title>
+
+    <style>
+        html, body, #content {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+        }
+    </style>
+
+    <!-- SAPUI5 Bootstrap -->
+    <script
+        id="sap-ui-bootstrap"
+        src="https://sapui5.hana.ondemand.com/resources/sap-ui-core.js"
+        data-sap-ui-theme="sap_horizon"
+        data-sap-ui-libs="sap.m,sap.f,sap.ui.layout,sap.suite.ui.microchart,sap.tnt"
+        data-sap-ui-compat-version="edge"
+        data-sap-ui-async="true"
+        data-sap-ui-frame-options="trusted"
+        data-sap-ui-resource-roots='{
+            "com.antigravity.indicadoresAlmacenes": "./"
+        }'
+    ></script>
+
+    <script>
+        sap.ui.getCore().attachInit(function() {
+            sap.ui.require([
+                "sap/ui/core/ComponentContainer"
+            ], function(ComponentContainer) {
+                new ComponentContainer({
+                    name: "com.antigravity.indicadoresAlmacenes",
+                    settings: { id: "indicadoresAlmacenes" },
+                    async: true,
+                    height: "100%",
+                    autoPrefixId: true
+                }).placeAt("content");
+            });
+        });
+    </script>
+</head>
+<body class="sapUiBody sapUiSizeCompact" id="content">
+
+    <!-- Sincronización de Tema Fiori Horizon con Launchpad / Shell Padre -->
+    <script>
+        if (window.self !== window.top) {
+            document.body.classList.add('in-iframe');
+        }
+        window.addEventListener('message', function(e) {
+            if (e.data && e.data.type === 'SET_THEME') {
+                var isDark = (e.data.theme === 'dark' || e.data.theme === 'sap_horizon_dark');
+                var sTheme = isDark ? 'sap_horizon_dark' : 'sap_horizon';
+                if (window.sap && sap.ui && sap.ui.getCore) {
+                    try {
+                        sap.ui.getCore().applyTheme(sTheme);
+                    } catch(err) {
+                        console.warn("No se pudo aplicar el tema dinámico:", err);
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>

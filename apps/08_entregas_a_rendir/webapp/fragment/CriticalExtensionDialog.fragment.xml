@@ -1,0 +1,70 @@
+<core:FragmentDefinition
+    xmlns="sap.m"
+    xmlns:f="sap.ui.layout.form"
+    xmlns:core="sap.ui.core"
+    xmlns:u="sap.ui.unified">
+
+    <Dialog
+        title="Extensión Esporádica de Caja Chica por Criticidad (Req. N° 3)"
+        contentWidth="780px"
+        resizable="true"
+        draggable="true">
+        <content>
+            <VBox class="sapUiSmallMargin">
+
+                <MessageStrip
+                    text="Solicitud de desembolso adicional puntual por emergencia o necesidad crítica que excede el saldo disponible del fondo, sin alterar el límite del fondo fijo permanente (Aprobación Abreviada Parametrizable)."
+                    type="Warning"
+                    showIcon="true"
+                    class="sapUiSmallMarginBottom" />
+
+                <f:SimpleForm
+                    editable="true"
+                    layout="ResponsiveGridLayout"
+                    labelSpanXL="4" labelSpanL="4" labelSpanM="4" labelSpanS="12">
+                    <f:content>
+                        <core:Title text="Datos de la Caja Chica &amp; Extensión" />
+
+                        <Label text="Seleccionar Caja Chica" required="true" />
+                        <Select selectedKey="{criticalForm>/cajaId}" width="100%" change=".onCriticalCajaChange">
+                            <core:Item key="CCH-S01-084" text="CCH-S01-084 - Caja Chica Central Lima (Saldo: S/ 1,240.50)" />
+                            <core:Item key="CCH-S02-042" text="CCH-S02-042 - Caja Chica Planta Lurin (Saldo: S/ 420.00)" />
+                            <core:Item key="CCH-S03-019" text="CCH-S03-019 - Caja Chica Sucursal Arequipa (Saldo: S/ 1,890.00)" />
+                        </Select>
+
+                        <Label text="Saldo Disponible Actual" />
+                        <Input value="{criticalForm>/saldoActual}" editable="false" />
+
+                        <Label text="Monto Extensión Requerido (S/)" required="true" />
+                        <Input value="{criticalForm>/montoExtension}" placeholder="Ej. 1500.00" />
+
+                        <Label text="Nivel de Criticidad" required="true" />
+                        <Select selectedKey="{criticalForm>/criticidad}" width="100%">
+                            <core:Item key="ALTA" text="🔴 ALTA - Impacto Operativo Directo" />
+                            <core:Item key="CRITICA" text="🔥 CRÍTICA - Parada Emergencia de Planta" />
+                            <core:Item key="DESVIACION" text="🟡 URGENTE - Exceso por Cotización Proveedor" />
+                        </Select>
+
+                        <Label text="Justificación del Motivo Crítico" required="true" />
+                        <TextArea value="{criticalForm>/motivoJustificacion}" rows="3" placeholder="Describa el motivo urgente que requiere el desembolso adicional esporádico..." />
+
+                        <Label text="Adjunto de Sustento (Cotización / Ticket)" />
+                        <u:FileUploader buttonText="Examinar Sustento" placeholder="Adjunte PDF o Imagen de emergencia" width="100%" />
+                    </f:content>
+                </f:SimpleForm>
+
+            </VBox>
+        </content>
+        <beginButton>
+            <Button
+                text="🚀 Solicitar Desembolso Adicional Express"
+                icon="sap-icon://flash"
+                type="Emphasized"
+                press=".onSaveCriticalExtension" />
+        </beginButton>
+        <endButton>
+            <Button text="Cancelar" type="Transparent" press=".onCloseCriticalExtensionDialog" />
+        </endButton>
+    </Dialog>
+
+</core:FragmentDefinition>

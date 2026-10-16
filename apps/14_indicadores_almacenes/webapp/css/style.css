@@ -1,0 +1,351 @@
+/* ==========================================================================
+   SAP Fiori Horizon - Torre de Control WMS Multi-Sede Stylesheet
+   Minimalist & Clean Core Horizon Standards (Morning / Evening Horizon)
+   ========================================================================== */
+
+/* Variables y Tokens de Diseño Fiori Horizon */
+:root {
+    --wms-bg-canvas: var(--sapBackgroundColor, #f5f7fa);
+    --wms-card-bg: var(--sapTile_Background, #ffffff);
+    --wms-card-border: var(--sapTile_BorderColor, rgba(0, 0, 0, 0.08));
+    --wms-card-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+    --wms-text-primary: var(--sapTextColor, #1d2d3e);
+    --wms-text-secondary: var(--sapContent_LabelColor, #64748b);
+
+    /* Paleta Funcional de 4 Colores Fiori Horizon (Obligatoria para KPIs) */
+    --kpi-color-orange: #e06a3b;  /* Pendientes / Alertas */
+    --kpi-color-slate: #1e293b;   /* Total Base / Estructura */
+    --kpi-color-green: #107e3e;   /* Cumplimiento % / Éxito */
+    --kpi-color-critical: #e06a3b;/* Críticos / Saturación */
+}
+
+/* Modo Horizon Oscuro */
+html[data-sap-ui-theme="sap_horizon_dark"] {
+    --wms-bg-canvas: #12171d;
+    --wms-card-bg: #1d232a;
+    --wms-card-border: rgba(255, 255, 255, 0.1);
+    --wms-card-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+    --wms-text-primary: #f8fafc;
+    --wms-text-secondary: #94a3b8;
+    --kpi-color-slate: #f1f5f9;
+}
+
+/* Contenedor General de la Página */
+.wmsPageContainer {
+    background-color: var(--wms-bg-canvas) !important;
+}
+
+/* ==========================================================================
+   1. TOOLHEADER & SUBHEADER (ESTÁNDAR FIORI HORIZON LIMPIO)
+   ========================================================================== */
+.wmsToolHeader {
+    border-bottom: 1px solid var(--wms-card-border) !important;
+}
+
+/* Ocultar botón Home cuando se ejecuta en Iframe modal */
+body.in-iframe #btnGoHome {
+    display: none !important;
+}
+
+/* Sub-barra de navegación y filtros */
+.wmsSubHeaderToolbar {
+    background: transparent !important;
+    border-bottom: 1px solid var(--wms-card-border) !important;
+    min-height: 44px;
+}
+
+.wmsSectionTitle {
+    font-size: 1.15rem !important;
+    font-weight: 600 !important;
+    color: var(--wms-text-primary) !important;
+}
+
+/* Chip Visual Regresivo de Sincronización (Discreto y Minimalista) */
+.countdownBadgeBox {
+    background: rgba(0, 112, 243, 0.08);
+    border: 1px solid rgba(0, 112, 243, 0.2);
+    border-radius: 6px;
+    padding: 2px 8px;
+}
+
+html[data-sap-ui-theme="sap_horizon_dark"] .countdownBadgeBox {
+    background: rgba(56, 189, 248, 0.12);
+    border: 1px solid rgba(56, 189, 248, 0.25);
+}
+
+.countdownTimerText {
+    font-family: 'Consolas', 'Courier New', monospace;
+    font-size: 0.9rem !important;
+    line-height: 1.2;
+}
+
+/* Segmented Buttons */
+.wmsSegmentedTabs .sapMSegBBtn {
+    font-weight: 500;
+}
+
+/* ==========================================================================
+   2. CHECKLIST OBLIGATORIO: BARRA LATERAL sap.tnt.SideNavigation
+   ========================================================================== */
+.sapTntSideNavigation {
+    width: 230px !important;
+    background-color: #ffffff !important;
+    border-right: 1px solid #eaedf1 !important;
+}
+
+html[data-sap-ui-theme="sap_horizon_dark"] .sapTntSideNavigation {
+    background-color: #1d232a !important;
+    border-right: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+
+/* Elemento Activo en Sidebar: Recuadro azul Fiori Horizon */
+.sapTntSideNavigation .sapTntNavListItem.sapTntNavListItemSelected,
+.sapTntSideNavigation .sapTntNavListItem[aria-selected="true"],
+.sapTntSideNavigation .sapTntNavLI.sapTntNavLISelected {
+    border: 1.5px solid #0a6ed1 !important;
+    border-radius: 6px !important;
+    background: #ffffff !important;
+    color: #0a6ed1 !important;
+}
+
+html[data-sap-ui-theme="sap_horizon_dark"] .sapTntSideNavigation .sapTntNavListItem.sapTntNavListItemSelected,
+html[data-sap-ui-theme="sap_horizon_dark"] .sapTntSideNavigation .sapTntNavListItem[aria-selected="true"] {
+    background: #1d232a !important;
+    border-color: #4db3ff !important;
+    color: #4db3ff !important;
+}
+
+/* Iconografía outline Slate #475569 (activo en #0a6ed1) - CERO EMOJIS */
+.sapTntSideNavigation .sapUiIcon {
+    color: #475569 !important;
+}
+
+.sapTntSideNavigation .sapTntNavListItemSelected .sapUiIcon,
+.sapTntSideNavigation .sapTntNavListItem[aria-selected="true"] .sapUiIcon {
+    color: #0a6ed1 !important;
+}
+
+/* Pie de Barra Lateral con Item Administración anclado */
+.sapTntSideNavigation .sapTntSideNavigationFixed {
+    border-top: 1px solid #eaedf1 !important;
+}
+
+html[data-sap-ui-theme="sap_horizon_dark"] .sapTntSideNavigation .sapTntSideNavigationFixed {
+    border-top: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+
+/* ==========================================================================
+   3. TARJETAS KPI Y PALETA FUNCIONAL DE 4 COLORES
+   ========================================================================== */
+.kpiCardTile {
+    border-radius: 8px !important;
+    border: 1px solid var(--wms-card-border) !important;
+    box-shadow: var(--wms-card-shadow) !important;
+    background-color: var(--wms-card-bg) !important;
+    transition: box-shadow 0.15s ease, transform 0.15s ease;
+}
+
+.kpiCardTile:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08) !important;
+}
+
+/* Escala Tipográfica Reducida según Directrices Fiori Horizon */
+.kpiLargeNumber {
+    font-size: 1.55rem !important;
+    font-weight: 600 !important;
+    line-height: 1.2;
+}
+
+.kpiMediumNumber {
+    font-size: 1.2rem !important;
+    font-weight: 600 !important;
+    line-height: 1.25;
+}
+
+.kpiMatrixNumber {
+    font-size: 1.15rem !important;
+}
+
+.badgeBigValue {
+    font-size: 1.4rem !important;
+    font-weight: 600 !important;
+}
+
+/* Clases de Color Funcional para la Franja de 4 KPIs */
+.kpiColorOrange,
+.kpi-value-orange {
+    color: var(--kpi-color-orange) !important; /* #e06a3b - Pendientes / Alertas */
+    font-size: 1.55rem !important;
+    font-weight: 600 !important;
+    line-height: 1.2;
+}
+
+.kpiColorSlate,
+.kpi-value-slate {
+    color: var(--kpi-color-slate) !important;  /* #1e293b - Base total */
+    font-size: 1.55rem !important;
+    font-weight: 600 !important;
+    line-height: 1.2;
+}
+
+.kpiColorGreen,
+.kpi-value-green {
+    color: var(--kpi-color-green) !important;  /* #107e3e - Cumplimiento % */
+    font-size: 1.55rem !important;
+    font-weight: 600 !important;
+    line-height: 1.2;
+}
+
+.kpiColorCriticalOrange {
+    color: var(--kpi-color-critical) !important;/* #e06a3b - Críticos / Desviación */
+    font-size: 1.55rem !important;
+    font-weight: 600 !important;
+    line-height: 1.2;
+}
+
+/* Clases de Utilidad de Texto Semánticas Estándar */
+.textSuccess {
+    color: var(--sapPositiveColor, #107e3e) !important;
+}
+
+.textWarning {
+    color: var(--sapCriticalColor, #e65100) !important;
+}
+
+.textError {
+    color: var(--sapNegativeColor, #bb0000) !important;
+}
+
+.textPrimary {
+    color: var(--sapHighlightColor, #0070f3) !important;
+}
+
+.textMuted {
+    color: var(--wms-text-secondary) !important;
+    font-size: 0.82rem;
+}
+
+.fontSizeSmall {
+    font-size: 0.8rem !important;
+}
+
+.fontSizeTiny {
+    font-size: 0.72rem !important;
+}
+
+.fontBold {
+    font-weight: 600 !important;
+}
+
+/* Paneles Limpios Horizon */
+.customShadowPanel {
+    border-radius: 8px !important;
+    border: 1px solid var(--wms-card-border) !important;
+    box-shadow: var(--wms-card-shadow) !important;
+    background-color: var(--wms-card-bg) !important;
+    margin-bottom: 0.75rem;
+}
+
+.customShadowPanel .sapMPanelHdr {
+    background-color: transparent !important;
+    font-weight: 600;
+}
+
+/* ==========================================================================
+   4. CHEVRON PROCESS FLOW (LIMPIO SIN BORDES GRUESOS LATERALES)
+   ========================================================================== */
+.chevronStepCard {
+    cursor: pointer;
+    border-radius: 8px !important;
+    border: 1px solid var(--wms-card-border) !important;
+    box-shadow: var(--wms-card-shadow) !important;
+    background-color: var(--wms-card-bg) !important;
+    transition: all 0.2s ease;
+}
+
+.chevronStepCard:hover {
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08) !important;
+}
+
+.bottleneckBox {
+    background: rgba(0, 0, 0, 0.02);
+    border-radius: 6px;
+    padding: 3px 6px;
+    border: 1px solid var(--wms-card-border);
+}
+
+.bottleneckText {
+    font-size: 0.78rem !important;
+}
+
+/* Alertas de Acción Inmediata (Estilo Minimalista) */
+.actionAlertListItem {
+    transition: background-color 0.15s ease;
+}
+
+.actionAlertListItem:hover {
+    background-color: rgba(0, 112, 243, 0.03);
+}
+
+.alertItemTitle {
+    font-size: 0.95rem !important;
+}
+
+.alertItemDesc {
+    color: var(--wms-text-secondary);
+    font-size: 0.82rem;
+}
+
+/* Tarjetas de Resumen de Flota Donut */
+.donutStatCard {
+    border-radius: 6px;
+    border: 1px solid var(--wms-card-border);
+    background: transparent;
+}
+
+.cargoSummaryBox {
+    background: rgba(0, 0, 0, 0.02);
+    border-radius: 6px;
+    border: 1px solid var(--wms-card-border);
+}
+
+/* ==========================================================================
+   5. BADGES SUPERIORES Y SEGURIDAD INDUSTRIAL
+   ========================================================================== */
+.kpiBadgeCard {
+    border-radius: 8px !important;
+    border: 1px solid var(--wms-card-border) !important;
+    box-shadow: var(--wms-card-shadow) !important;
+    background-color: var(--wms-card-bg) !important;
+    text-align: center;
+    transition: transform 0.15s ease;
+}
+
+.kpiBadgeCard:hover {
+    transform: translateY(-1px);
+}
+
+.badgeTitle {
+    font-size: 0.95rem !important;
+    color: var(--wms-text-primary);
+}
+
+.safetyCard {
+    border-radius: 8px !important;
+    border: 1px solid var(--wms-card-border) !important;
+    box-shadow: var(--wms-card-shadow) !important;
+    background-color: var(--wms-card-bg) !important;
+}
+
+.actionToolbarTop {
+    background: transparent !important;
+    border: none !important;
+    padding: 0 !important;
+}
+
+/* Responsividad para móviles */
+@media (max-width: 768px) {
+    .hideOnMobile {
+        display: none !important;
+    }
+}

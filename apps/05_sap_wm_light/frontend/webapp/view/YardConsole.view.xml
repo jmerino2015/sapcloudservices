@@ -1,0 +1,109 @@
+<mvc:View
+  controllerName="wm.light.controller.YardConsole"
+  xmlns:mvc="sap.ui.core.mvc"
+  xmlns="sap.m"
+  xmlns:f="sap.f"
+  xmlns:layout="sap.ui.layout"
+  xmlns:core="sap.ui.core">
+
+  <Page id="yardPage" title="Gestión de Patios (Yard Console)" showNavButton="false" class="sapUiResponsiveContentPadding">
+    <headerContent>
+      <Button text="Nueva Cita" icon="sap-icon://calendar" press=".onCreateApptPress" />
+      <Button text="Caseta de Puerta (Gatehouse)" icon="sap-icon://sys-enter" type="Emphasized" press=".onGatehousePress" />
+      <Button icon="sap-icon://refresh" press=".onRefresh" />
+    </headerContent>
+
+    <content>
+      <!-- Vista de Consola: Rejilla de ubicaciones -->
+      <VBox class="sapUiSmallMargin">
+        <Title text="Mapa del Patio" level="H2" class="sapUiSmallMarginBottom" />
+        
+        <HBox wrap="Wrap">
+          
+          <!-- Puertas (Gates) -->
+          <VBox width="250px" class="sapUiMediumMarginEnd sapUiSmallMarginBottom">
+            <Title text="Puertas (Gates)" level="H3" class="sapUiTinyMarginBottom" />
+            <List items="{yard>/gates}" noDataText="Sin puertas">
+              <CustomListItem>
+                <VBox class="sapUiSmallMargin">
+                  <HBox justifyContent="SpaceBetween">
+                    <ObjectIdentifier title="{yard>code}" text="{yard>description}" />
+                    <ObjectStatus text="{yard>status}" state="{= ${yard>status}==='AVAILABLE' ? 'Success' : 'Error'}" />
+                  </HBox>
+                  <HBox visible="{= !!${yard>currentVehicle}}" class="sapUiTinyMarginTop">
+                    <core:Icon src="sap-icon://shipping-status" class="sapUiTinyMarginEnd" color="#d04343" />
+                    <Text text="{yard>currentVehicle/license_plate} ({yard>currentVehicle/carrier})" />
+                  </HBox>
+                </VBox>
+              </CustomListItem>
+            </List>
+          </VBox>
+
+          <!-- Estacionamientos -->
+          <VBox width="300px" class="sapUiMediumMarginEnd sapUiSmallMarginBottom">
+            <Title text="Estacionamientos (Parking)" level="H3" class="sapUiTinyMarginBottom" />
+            <List items="{yard>/parking}" noDataText="Sin parqueos">
+              <CustomListItem type="{= !!${yard>currentVehicle} ? 'Active' : 'Inactive' }" press=".onLocationPress">
+                <VBox class="sapUiSmallMargin">
+                  <HBox justifyContent="SpaceBetween">
+                    <ObjectIdentifier title="{yard>code}" text="{yard>description}" />
+                    <ObjectStatus text="{yard>status}" state="{= ${yard>status}==='AVAILABLE' ? 'Success' : 'Warning'}" />
+                  </HBox>
+                  <HBox visible="{= !!${yard>currentVehicle}}" class="sapUiTinyMarginTop">
+                    <core:Icon src="sap-icon://cargo-train" class="sapUiTinyMarginEnd" color="#e69a17" />
+                    <Text text="{yard>currentVehicle/license_plate} - {yard>currentVehicle/driver_name}" />
+                  </HBox>
+                </VBox>
+              </CustomListItem>
+            </List>
+          </VBox>
+
+          <!-- Muelles de Carga -->
+          <VBox width="300px" class="sapUiMediumMarginEnd sapUiSmallMarginBottom">
+            <Title text="Muelles (Dock Doors)" level="H3" class="sapUiTinyMarginBottom" />
+            <List items="{yard>/docks}" noDataText="Sin muelles">
+              <CustomListItem type="Active" press=".onLocationPress">
+                <VBox class="sapUiSmallMargin">
+                  <HBox justifyContent="SpaceBetween">
+                    <ObjectIdentifier title="{yard>code}" text="{yard>description}" />
+                    <ObjectStatus text="{yard>status}" state="{= ${yard>status}==='AVAILABLE' ? 'Success' : 'Error'}" />
+                  </HBox>
+                  <HBox visible="{= !!${yard>currentVehicle}}" class="sapUiTinyMarginTop">
+                    <core:Icon src="sap-icon://shipping-status" class="sapUiTinyMarginEnd" color="#d04343" />
+                    <Text text="{yard>currentVehicle/license_plate} - {yard>currentVehicle/carrier}" />
+                  </HBox>
+                </VBox>
+              </CustomListItem>
+            </List>
+          </VBox>
+
+        </HBox>
+
+        <VBox height="1px" class="sapUiMediumMarginTopBottom" renderType="Div" />
+
+        <Title text="Vehículos Esperados (Appointments)" level="H2" class="sapUiSmallMarginBottom" />
+        <Table items="{yard>/expected}">
+          <columns>
+            <Column><Text text="Cita N°" /></Column>
+            <Column><Text text="Placa / Transportista" /></Column>
+            <Column><Text text="Llegada Planificada" /></Column>
+            <Column><Text text="Operación" /></Column>
+            <Column><Text text="Estado" /></Column>
+          </columns>
+          <items>
+            <ColumnListItem>
+              <cells>
+                <Text text="{yard>appointments/0/appointment_num}" />
+                <ObjectIdentifier title="{yard>license_plate}" text="{yard>carrier}" />
+                <Text text="{yard>appointments/0/planned_arrival}" />
+                <Text text="{yard>appointments/0/operation_type}" />
+                <ObjectStatus text="{yard>status}" state="Information" />
+              </cells>
+            </ColumnListItem>
+          </items>
+        </Table>
+
+      </VBox>
+    </content>
+  </Page>
+</mvc:View>

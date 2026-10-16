@@ -1,0 +1,41 @@
+<core:FragmentDefinition
+  xmlns="sap.m"
+  xmlns:core="sap.ui.core"
+  xmlns:f="sap.ui.layout.form">
+  <Dialog title="Ingreso de Conteo Físico (LI11N) - {countDoc>/count_number}" contentWidth="700px" stretch="{device>/system/phone}">
+    <content>
+      <List items="{countDoc>/bins}">
+        <CustomListItem class="sapUiTinyMarginBottom">
+          <VBox class="sapUiSmallMargin">
+            <Title text="Ubicación: {countDoc>bin/bin_code}" level="H4" class="sapUiTinyMarginBottom" />
+            <Table items="{countDoc>items}" noDataText="Ubicación vacía - Ingrese 0 si realmente está vacía">
+              <columns>
+                <Column><Text text="Material" /></Column>
+                <Column width="5rem"><Text text="Lote" /></Column>
+                <Column width="7rem" hAlign="Center"><Text text="Cant. Sistema" /></Column>
+                <Column width="8rem" hAlign="End"><Text text="Cant. Física" /></Column>
+              </columns>
+              <items>
+                <ColumnListItem>
+                  <cells>
+                    <ObjectIdentifier title="{countDoc>material/sap_code}" text="{countDoc>material/description}" />
+                    <Text text="{countDoc>batch/batch_number}" />
+                    <Text text="{countDoc>system_qty} {countDoc>unit}" />
+                    <Input value="{countDoc>counted_qty}" type="Number" placeholder="Ej. 10" 
+                           description="{countDoc>unit}" fieldWidth="60%" />
+                  </cells>
+                </ColumnListItem>
+              </items>
+            </Table>
+          </VBox>
+        </CustomListItem>
+      </List>
+    </content>
+    <beginButton>
+      <Button text="Guardar Cantidades" type="Emphasized" press=".onSaveCount" />
+    </beginButton>
+    <endButton>
+      <Button text="Cerrar" press=".onCloseCount" />
+    </endButton>
+  </Dialog>
+</core:FragmentDefinition>

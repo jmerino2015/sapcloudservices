@@ -1,0 +1,220 @@
+managed implementation in class zbp_r_kpialmacensede unique;
+strict ( 2 );
+with draft;
+
+/* ======================================================================
+   ROOT BEHAVIOR DEFINITION: R_KpiAlmacenSede
+   Torre de Control WMS Multi-Sede (CD Eucaliptos, CD Callao, CD Praderas)
+   Principio Clean Core - ABAP RESTful Application Programming Model (RAP)
+   ====================================================================== */
+define behavior for R_KpiAlmacenSede alias KpiAlmacenSede
+persistent table ztb_wh_sede
+draft table ztb_wh_sede_d
+lock master total etag LastChangedAt
+authorization master ( instance )
+etag master LocalLastChangedAt
+{
+  // Operaciones estándar transaccionales
+  create;
+  update;
+  delete;
+
+  // Acciones y ciclo de vida de Draft
+  draft action Edit;
+  draft action Activate optimized;
+  draft action Discard;
+  draft action Resume;
+  draft determine action Prepare
+  {
+    validation validarCapacidadAlmacen;
+  }
+
+  // Comportamiento de Campos
+  field ( readonly )
+    FreePositions,
+    OccupancyRate,
+    TotalOpenOt,
+    Units7to10AmComplianceRate,
+    CreatedBy,
+    CreatedAt,
+    LastChangedBy,
+    LastChangedAt,
+    LocalLastChangedAt;
+
+  field ( mandatory : create, readonly : update )
+    SedeId;
+
+  field ( mandatory )
+    TotalPositions;
+
+  // Acción de negocio: Sincronización multi-fuente (MB51, LT23, LX03, OneDrive)
+  action ( features : instance ) sincronizarKpis parameter ZA_ParamSincronizar result [1] $self;
+
+  // Determinaciones automáticas
+  determination calcularOcupabilidad on modify { field TotalPositions, OccupiedPositions; }
+  determination calcularTotalesOT on modify { field OpenOtPicking, OpenOtReceiving, OpenOtPutaway, OpenOtDispatch; }
+
+  // Validaciones de consistencia de negocio
+  validation validarCapacidadAlmacen on save { field TotalPositions, OccupiedPositions; create; update; }
+
+  // Relaciones de Composición
+  association _Familias { create; with draft; }
+  association _Transportes { create; with draft; }
+
+  // Mapeo transparente a base de datos
+  mapping for ztb_wh_sede
+  {
+    SedeId                      = sede_id;
+    SedeNombre                  = sede_nombre;
+    CentroSap                   = centro_sap;
+    AlmacenSap                  = almacen_sap;
+    TotalPositions              = posiciones_totales;
+    OccupiedPositions           = posiciones_ocupadas;
+    FreePositions               = posiciones_libres;
+    OccupancyRate               = porcentaje_ocupabilidad;
+    PalletsInToday              = paletas_ingreso_hoy;
+    PalletsOutToday             = paletas_salida_hoy;
+    WeightInTodayTN             = peso_ingreso_tn_hoy;
+    WeightOutTodayTN            = peso_salida_tn_hoy;
+    WeightUnit                  = unidad_peso;
+    PercentageUnit              = unidad_porcentaje;
+    OpenOtPicking               = ot_pendientes_picking;
+    OpenOtReceiving             = ot_pendientes_recepcion;
+    OpenOtPutaway               = ot_pendientes_ubicacion;
+    OpenOtDispatch              = ot_pendientes_despacho;
+    TotalOpenOt                 = ot_pendientes_total;
+    ScheduledUnitsCount         = unidades_programadas;
+    LoadedUnitsCount            = unidades_cargadas;
+    InProcessUnitsCount         = unidades_en_proceso;
+    PendingUnitsCount           = unidades_pendientes;
+    Units7to10AmComplianceRate  = cumplimiento_ventana_7_10;
+    EriPercentage               = eri_porcentaje;
+    EruPercentage               = eru_porcentaje;
+    BpaPercentage               = bpa_porcentaje;
+    PickingAccuracy             = precision_picking;
+    OrdersFulfilledCount        = pedidos_atendidos;
+    OtifPercentage              = otif_porcentaje;
+    RaccsOpenCount              = raccs_abiertos;
+    RaccsClosedCount            = raccs_cerrados;
+    FiveSScore                  = cinco_s_score;
+    DaysWithoutAccidents        = dias_sin_accidentes;
+    CreatedBy                   = created_by;
+    CreatedAt                   = created_at;
+    LastChangedBy               = last_changed_by;
+    LastChangedAt               = last_changed_at;
+    LocalLastChangedAt          = local_last_changed_at;
+  }
+}
+
+/* ======================================================================
+   CHILD BEHAVIOR DEFINITION: R_KpiAlmacenFamilia
+   Ocupabilidad y Bins agrupados por Familia de Materiales
+   ====================================================================== */
+define behavior for R_KpiAlmacenFamilia alias KpiAlmacenFamilia
+persistent table ztb_wh_familia
+draft table ztb_wh_fam_d
+lock dependent by _Sede
+authorization dependent by _Sede
+etag master LocalLastChangedAt
+{
+  update;
+  delete;
+
+  field ( readonly )
+    SedeId,
+    FreePositions,
+    OccupancyRate,
+    CriticalityCode,
+    CreatedBy,
+    CreatedAt,
+    LastChangedBy,
+    LastChangedAt,
+    LocalLastChangedAt;
+
+  field ( mandatory : create, readonly : update )
+    FamiliaId;
+
+  field ( mandatory )
+    TotalPositions;
+
+  // Determinación de ocupabilidad por familia
+  determination calcularOcupabilidadFamilia on modify { field TotalPositions, OccupiedPositions; }
+
+  association _Sede { with draft; }
+
+  mapping for ztb_wh_familia
+  {
+    SedeId                  = sede_id;
+    FamiliaId               = familia_id;
+    FamiliaNombre           = familia_nombre;
+    TotalPositions          = posiciones_totales;
+    OccupiedPositions       = posiciones_ocupadas;
+    FreePositions           = posiciones_libres;
+    OccupancyRate           = porcentaje_ocupabilidad;
+    PercentageUnit          = unidad_porcentaje;
+    CriticalityCode         = criticidad_ocupabilidad;
+    OperativeNotes          = comentario_operativo;
+    CreatedBy               = created_by;
+    CreatedAt               = created_at;
+    LastChangedBy           = last_changed_by;
+    LastChangedAt           = last_changed_at;
+    LocalLastChangedAt      = local_last_changed_at;
+  }
+}
+
+/* ======================================================================
+   CHILD BEHAVIOR DEFINITION: R_KpiAlmacenUnidadTransporte
+   Seguimiento de Despacho y Ventanas Horarias de Camiones (Drivin / VL06F)
+   ====================================================================== */
+define behavior for R_KpiAlmacenUnidadTransporte alias KpiAlmacenTransporte
+persistent table ztb_wh_transp
+draft table ztb_wh_tra_d
+lock dependent by _Sede
+authorization dependent by _Sede
+etag master LocalLastChangedAt
+{
+  update;
+  delete;
+
+  field ( readonly )
+    SedeId,
+    DemoraMinutos,
+    CumpleVentana7a10,
+    StatusCriticality,
+    VentanaCriticality,
+    CreatedBy,
+    CreatedAt,
+    LastChangedBy,
+    LastChangedAt,
+    LocalLastChangedAt;
+
+  field ( mandatory : create, readonly : update )
+    TransportUnitId;
+
+  association _Sede { with draft; }
+
+  mapping for ztb_wh_transp
+  {
+    SedeId                  = sede_id;
+    TransportUnitId         = transport_unit_id;
+    PlacaVehiculo           = placa_vehiculo;
+    Transportista           = transportista;
+    Destino                 = destino;
+    EstatusTransporte       = estatus_transporte;
+    StatusCriticality       = status_criticality;
+    HoraPlanificadaSalida   = hora_planificada_salida;
+    HoraRealSalida          = hora_real_salida;
+    DemoraMinutos           = demora_minutos;
+    CumpleVentana7a10       = cumple_ventana_7_10;
+    VentanaCriticality      = ventana_criticality;
+    DocumentoEntrega        = documento_entrega;
+    BultosTotal             = bultos_total;
+    PesoTotalTN             = peso_total_tn;
+    WeightUnit              = unidad_peso;
+    CreatedBy               = created_by;
+    CreatedAt               = created_at;
+    LastChangedBy           = last_changed_by;
+    LastChangedAt           = last_changed_at;
+    LocalLastChangedAt      = local_last_changed_at;
+  }
+}

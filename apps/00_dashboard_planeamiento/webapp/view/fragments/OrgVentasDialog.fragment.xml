@@ -1,0 +1,55 @@
+<core:FragmentDefinition
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core"
+>
+    <TableSelectDialog
+        noDataText="No se encontraron organizaciones"
+        title="Seleccione Organización de Ventas"
+        search=".handleOrgVentasSearch"
+        searchPlaceholder="Buscar"
+        confirm=".handleOrgVentasClose"
+        cancel=".handleOrgVentasClose"
+        showClearButton="true"
+        items="{
+            path : 'localOrgVentasFilteredModel>/items',
+            sorter : {
+                path : 'organizacionVentas',
+                descending : false
+            }
+        }"
+    >
+        <ColumnListItem>
+            <cells>
+                <ObjectIdentifier
+                    title="{localOrgVentasFilteredModel>organizacionVentas} - {localOrgVentasFilteredModel>descripcionOrg}"
+                />
+                <Text
+                    text="{localOrgVentasFilteredModel>canalDistribucion} - {localOrgVentasFilteredModel>descripcionCanal}"
+                />
+                <Text
+                    text="{localOrgVentasFilteredModel>sector} - {localOrgVentasFilteredModel>descripcionSector}"
+                />
+            </cells>
+        </ColumnListItem>
+        <columns>
+            <Column>
+                <header>
+                    <Text text="Organización de ventas" />
+                </header>
+            </Column>
+            <Column>
+                <header>
+                    <Text text="Canal de distribución" />
+                </header>
+            </Column>
+            <Column
+                minScreenWidth="Tablet"
+                demandPopin="true"
+            >
+                <header>
+                    <Text text="Sector" />
+                </header>
+            </Column>
+        </columns>
+    </TableSelectDialog>
+</core:FragmentDefinition>

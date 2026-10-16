@@ -1,0 +1,504 @@
+/* Custom CSS for SAP Fiori Portal de Clientes & Socios (Experience Cloud Suite) */
+
+/* Ensure SAP 72 typography fallback */
+body, .sapUiBody {
+    font-family: "72", "72full", Arial, Helvetica, sans-serif !important;
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+}
+
+/* ========================================================================== */
+/* SAP FIORI SIGNATURE DEEP BLUE HEADER STYLING                              */
+/* ========================================================================== */
+.fioriPortalHeader,
+.sapTntToolHeader.fioriPortalHeader,
+header.sapTntToolHeader {
+    background-color: #002d5a !important;
+    background: #002d5a !important;
+    color: #ffffff !important;
+    box-shadow: 0 2px 8px rgba(0, 45, 90, 0.2) !important;
+    border-bottom: 1px solid #001933 !important;
+}
+
+/* ============================================================
+   EMBEDDED IN FIORI PORTAL MODAL VIEWER
+   ============================================================ */
+body.in-iframe .fioriPortalHeader,
+body.in-iframe .sapTntToolHeader,
+body.in-iframe #shellHeader {
+    display: none !important;
+}
+
+body.in-iframe .sapTntToolPageContainer {
+    top: 0 !important;
+    height: 100% !important;
+}
+
+.fioriPortalHeader .sapMTitle,
+.fioriPortalHeader .sapMText,
+.fioriPortalHeader .sapMLabel,
+.fioriPortalHeader .sapUiIcon,
+.fioriPortalHeader .sapMBtnIcon,
+.fioriPortalHeader .sapMBtnTransparent {
+    color: #ffffff !important;
+}
+
+.fioriPortalHeader .sapMBtnTransparent:hover {
+    background-color: rgba(255, 255, 255, 0.15) !important;
+    border-radius: 4px;
+}
+
+.fioriPortalHeader .sapMSelect {
+    background: rgba(255, 255, 255, 0.18) !important;
+    border: 1px solid rgba(255, 255, 255, 0.35) !important;
+    border-radius: 4px !important;
+}
+
+.fioriPortalHeader .sapMSelect .sapMSltLabel {
+    color: #ffffff !important;
+    font-weight: 600 !important;
+}
+
+.fioriPortalHeader .sapMSelect .sapMSltArrow {
+    color: #ffffff !important;
+}
+
+/* DROID IA Copilot Button in ShellBar */
+.droidShellBtn {
+    background: linear-gradient(135deg, #182a4d 0%, #3f1269 100%) !important;
+    border: 1px solid #c29ffa !important;
+    color: #ffffff !important;
+    border-radius: 16px !important;
+    font-weight: bold !important;
+    box-shadow: 0 0 10px rgba(194, 159, 250, 0.4) !important;
+}
+
+.droidShellBtn .sapMBtnContent {
+    color: #ffffff !important;
+}
+
+/* ========================================================================== */
+/* CASE DEFLECTION SMART PANEL                                                */
+/* ========================================================================== */
+.caseDeflectionBox {
+    background: #f0fdf4;
+    border: 1px solid #86efac;
+    border-left: 5px solid #16a34a;
+    border-radius: 8px;
+    padding: 14px 18px;
+    margin: 12px 0;
+    animation: fadeIn 0.4s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-6px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* ========================================================================== */
+/* EXPERIENCE BUILDER & CANVAS                                                */
+/* ========================================================================== */
+.builderCanvas {
+    background: #f1f5f9;
+    border: 2px dashed #94a3b8;
+    border-radius: 10px;
+    padding: 20px;
+    min-height: 420px;
+}
+
+.builderComponentCard {
+    background: #ffffff;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    padding: 12px 16px;
+    margin-bottom: 12px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+    transition: all 0.2s ease;
+}
+
+.builderComponentCard:hover {
+    border-color: #0854a0;
+    box-shadow: 0 4px 12px rgba(8, 84, 160, 0.15);
+}
+
+/* ========================================================================== */
+/* MOBILE PUBLISHER SMARTPHONE FRAME PREVIEW                                  */
+/* ========================================================================== */
+.smartphoneFrame {
+    width: 320px;
+    height: 560px;
+    background: #ffffff;
+    border: 12px solid #1e293b;
+    border-radius: 36px;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.25);
+    margin: 0 auto;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+.smartphoneNotch {
+    width: 130px;
+    height: 18px;
+    background: #1e293b;
+    border-bottom-left-radius: 12px;
+    border-bottom-right-radius: 12px;
+    margin: 0 auto;
+}
+
+.smartphoneScreen {
+    flex: 1;
+    padding: 12px;
+    background: #f8fafc;
+    overflow-y: auto;
+    font-size: 11px;
+}
+
+/* ========================================================================== */
+/* GAMIFICATION BADGES & REPUTATION                                           */
+/* ========================================================================== */
+.gamificationBadgeCard {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    padding: 16px;
+    text-align: center;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+}
+
+.badgeIconCircle {
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #e0e7ff 0%, #c7d2fe 100%);
+    color: #4338ca;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 10px auto;
+    font-size: 24px;
+}
+
+/* ========================================================================== */
+/* CHATTER TIMELINE FEEDS                                                     */
+/* ========================================================================== */
+.chatterCard {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-left: 4px solid #0854a0;
+    border-radius: 8px;
+    padding: 12px 16px;
+    margin-bottom: 12px;
+}
+
+/* ========================================================================== */
+/* DROID IA STRUCTURED COPILOT DIALOG & CARDS                                 */
+/* ========================================================================== */
+.droidChatContainer {
+    background-color: #f8fafc;
+    border-radius: 8px;
+    padding: 16px;
+    height: 460px;
+    max-height: 480px;
+    overflow-y: auto;
+    border: 1px solid #e2e8f0;
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.04);
+}
+
+.droidInputBarFull {
+    width: 100% !important;
+    display: flex !important;
+    align-items: center !important;
+}
+
+.droidInputBarFull .sapMInput {
+    flex: 1 1 auto !important;
+    width: 100% !important;
+}
+
+.droidInputBarFull .sapMInputBaseInner {
+    border-radius: 6px !important;
+    font-size: 13px !important;
+    padding: 8px 12px !important;
+}
+
+.droidMessageCard {
+    margin-bottom: 14px;
+    border-radius: 8px;
+    padding: 14px 18px;
+    font-family: "72", Arial, sans-serif;
+    line-height: 1.5;
+}
+
+.droidMessageBot {
+    background: #ffffff;
+    border-left: 4px solid #5b21b6;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    margin-right: 40px;
+    border-top: 1px solid #eef2f6;
+    border-right: 1px solid #eef2f6;
+    border-bottom: 1px solid #eef2f6;
+}
+
+.droidMessageUser {
+    background: #e8f3fc;
+    border-left: 4px solid #0854a0;
+    box-shadow: 0 2px 6px rgba(8, 84, 160, 0.08);
+    margin-left: 50px;
+    border-top: 1px solid #d0e4f7;
+    border-right: 1px solid #d0e4f7;
+    border-bottom: 1px solid #d0e4f7;
+}
+
+.droidStructuredCard {
+    background: #ffffff;
+    border: 1px solid #d9e1e8;
+    border-radius: 8px;
+    padding: 14px 16px;
+    margin: 10px 0;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
+}
+
+.droidStructuredHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #eaedf1;
+    padding-bottom: 8px;
+    margin-bottom: 10px;
+}
+
+.droidDataGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 10px;
+    margin: 10px 0;
+}
+
+.droidDataField {
+    background: #f8fafc;
+    padding: 8px 12px;
+    border-radius: 6px;
+    border: 1px solid #edf2f7;
+}
+
+.droidDataFieldLabel {
+    font-size: 11px;
+    color: #64748b;
+    text-transform: uppercase;
+    font-weight: 600;
+    margin-bottom: 2px;
+}
+
+.droidDataFieldValue {
+    font-size: 13px;
+    font-weight: bold;
+    color: #1e293b;
+}
+
+.droidMiniStepper {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #f1f5f9;
+    padding: 10px 14px;
+    border-radius: 6px;
+    margin: 10px 0;
+}
+
+.droidMiniStep {
+    display: flex;
+    align-items: center;
+    font-size: 11px;
+    font-weight: 600;
+    color: #64748b;
+}
+
+.droidMiniStepActive {
+    color: #0854a0;
+    font-weight: bold;
+}
+
+.droidMiniStepCompleted {
+    color: #107e3e;
+    font-weight: bold;
+}
+
+.droidMiniStepDot {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #cbd5e1;
+    margin-right: 6px;
+}
+
+.droidMiniStepCompleted .droidMiniStepDot {
+    background: #107e3e;
+}
+
+.droidMiniStepActive .droidMiniStepDot {
+    background: #0854a0;
+    box-shadow: 0 0 0 3px rgba(8, 84, 160, 0.25);
+}
+
+.droidCategoryBar {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 8px 12px;
+    margin-bottom: 12px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px;
+}
+
+.droidCategoryBtn {
+    border-radius: 16px !important;
+    font-size: 12px !important;
+    font-weight: 600 !important;
+}
+
+/* ========================================================================== */
+/* SLA & STATUS BADGES                                                        */
+/* ========================================================================== */
+.slaBadgeOnTime {
+    background-color: #107e3e !important;
+    color: #ffffff !important;
+    font-weight: 600;
+    border-radius: 4px;
+    padding: 2px 8px;
+}
+
+.slaBadgeWarning {
+    background-color: #e9730c !important;
+    color: #ffffff !important;
+    font-weight: 600;
+    border-radius: 4px;
+    padding: 2px 8px;
+}
+
+.slaBadgeBreached {
+    background-color: #bb0000 !important;
+    color: #ffffff !important;
+    font-weight: 600;
+    border-radius: 4px;
+    padding: 2px 8px;
+}
+
+/* ========================================================================== */
+/* ORDER TRACKING STEPPER & PROCESS FLOW                                      */
+/* ========================================================================== */
+.processStepContainer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: relative;
+    padding: 20px 10px;
+    margin-bottom: 20px;
+}
+
+.processStep {
+    text-align: center;
+    z-index: 2;
+    flex: 1;
+}
+
+.stepIconCircle {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background-color: #ebebeb;
+    color: #555;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 8px auto;
+    font-size: 20px;
+    transition: all 0.3s ease;
+}
+
+.stepActive .stepIconCircle {
+    background-color: #0854a0;
+    color: #ffffff;
+    box-shadow: 0 0 0 4px rgba(8, 84, 160, 0.2);
+}
+
+.stepCompleted .stepIconCircle {
+    background-color: #107e3e;
+    color: #ffffff;
+}
+
+/* ========================================================================== */
+/* DIGITAL INVOICE PDF SHEET STYLES                                           */
+/* ========================================================================== */
+.invoicePdfSheet {
+    background-color: #ffffff;
+    border: 1px solid #c0c0c0;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+    padding: 30px;
+    margin: 10px auto;
+    max-width: 800px;
+    font-family: "72", Arial, sans-serif;
+    color: #32363a;
+}
+
+.invoicePdfHeader {
+    border-bottom: 2px solid #0854a0;
+    padding-bottom: 15px;
+    margin-bottom: 20px;
+}
+
+.invoicePdfTable {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+}
+
+.invoicePdfTable th {
+    background-color: #f5f6f7;
+    border-bottom: 2px solid #d9d9d9;
+    padding: 8px 10px;
+    text-align: left;
+    font-weight: 600;
+}
+
+.invoicePdfTable td {
+    padding: 8px 10px;
+    border-bottom: 1px solid #ededed;
+}
+
+/* CPI Latency KPI Pulse Indicator */
+.cpiHealthyPulse {
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    background-color: #107e3e;
+    border-radius: 50%;
+    margin-right: 6px;
+    box-shadow: 0 0 0 0 rgba(16, 126, 62, 0.7);
+    animation: pulse 1.8s infinite;
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(0.95);
+        box-shadow: 0 0 0 0 rgba(16, 126, 62, 0.7);
+    }
+    70% {
+        transform: scale(1);
+        box-shadow: 0 0 0 8px rgba(16, 126, 62, 0);
+    }
+    100% {
+        transform: scale(0.95);
+        box-shadow: 0 0 0 0 rgba(16, 126, 62, 0);
+    }
+}
+
+.fioriCardCustom {
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}

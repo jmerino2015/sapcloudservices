@@ -1,0 +1,44 @@
+@AccessControl.authorizationCheck: #NOT_REQUIRED
+@EndUserText.label: 'Unidades de Transporte WMS / Drivin - Consumo'
+@Metadata.allowExtensions: true
+@Search.searchable: true
+
+define view entity C_KpiAlmacenUnidadTransporte
+  provider contract transactional_query
+  as projection on R_KpiAlmacenUnidadTransporte
+{
+  key SedeId,
+      @Search.defaultSearchElement: true
+  key TransportUnitId,
+      @Search.defaultSearchElement: true
+      PlacaVehiculo,
+      @Search.defaultSearchElement: true
+      @Search.fuzzinessThreshold: 0.8
+      Transportista,
+      @Search.defaultSearchElement: true
+      Destino,
+      
+      EstatusTransporte,
+      StatusCriticality,
+      
+      HoraPlanificadaSalida,
+      HoraRealSalida,
+      DemoraMinutos,
+      CumpleVentana7a10,
+      VentanaCriticality,
+      
+      DocumentoEntrega,
+      BultosTotal,
+      @Semantics.quantity.unitOfMeasure: 'WeightUnit'
+      PesoTotalTN,
+      WeightUnit,
+      
+      CreatedBy,
+      CreatedAt,
+      LastChangedBy,
+      LastChangedAt,
+      LocalLastChangedAt,
+      
+      // Asociación Padre Redireccionada
+      _Sede : redirected to parent C_KpiAlmacenSede
+}

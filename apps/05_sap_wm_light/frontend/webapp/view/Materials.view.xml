@@ -1,0 +1,53 @@
+<mvc:View
+  controllerName="wm.light.controller.Materials"
+  xmlns:mvc="sap.ui.core.mvc"
+  xmlns="sap.m">
+
+  <Page id="materialsPage" title="{i18n>materialsTitle}" showNavButton="false" backgroundDesign="List">
+    <subHeader>
+      <Bar>
+        <contentRight>
+          <SearchField width="16rem" search=".onSearch" placeholder="{i18n>materialsColDesc}" />
+          <Button icon="sap-icon://synchronize" type="Default" text="{i18n>materialsSapSync}" press=".onSapSync" />
+          <Button icon="sap-icon://refresh" type="Transparent" press=".onRefresh" />
+        </contentRight>
+      </Bar>
+    </subHeader>
+    <content>
+      <VBox class="sapUiResponsivePadding">
+        <Table id="matTable" items="{mat>/items}" growing="true" growingThreshold="50"
+          noDataText="{i18n>msgNoData}" sticky="ColumnHeaders,HeaderToolbar">
+          <headerToolbar>
+            <Toolbar>
+              <Title text="{i18n>materialsTitle}" level="H3" />
+              <Text text="{= '(' + ${mat>/total} + ')'}" class="sapUiSmallMarginBegin" />
+            </Toolbar>
+          </headerToolbar>
+          <columns>
+            <Column><Text text="{i18n>materialsColCode}" /></Column>
+            <Column><Text text="{i18n>materialsColDesc}" /></Column>
+            <Column><Text text="{i18n>materialsColType}" /></Column>
+            <Column><Text text="{i18n>materialsColUnit}" /></Column>
+            <Column><Text text="{i18n>materialsColBatchManaged}" /></Column>
+            <Column hAlign="End"><Text text="{i18n>materialsColStock}" /></Column>
+          </columns>
+          <items>
+            <ColumnListItem>
+              <cells>
+                <ObjectIdentifier title="{mat>sap_code}" />
+                <Text text="{mat>description}" />
+                <ObjectStatus text="{mat>material_type}" state="None" />
+                <Text text="{mat>base_unit}" />
+                <ObjectStatus
+                  text="{= ${mat>batch_managed} ? ${i18n>materialsBatchYes} : ${i18n>materialsBatchNo} }"
+                  state="{= ${mat>batch_managed} ? 'Information' : 'None' }"
+                  icon="{= ${mat>batch_managed} ? 'sap-icon://batch-payments' : '' }" />
+                <ObjectNumber number="{mat>totalStock}" unit="{mat>base_unit}" />
+              </cells>
+            </ColumnListItem>
+          </items>
+        </Table>
+      </VBox>
+    </content>
+  </Page>
+</mvc:View>

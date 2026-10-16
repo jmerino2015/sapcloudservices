@@ -1,0 +1,81 @@
+<core:FragmentDefinition
+    xmlns="sap.m"
+    xmlns:f="sap.ui.layout.form"
+    xmlns:core="sap.ui.core">
+
+    <Dialog
+        title="Detalle Historial Facturas {detail>/comprobante}"
+        contentWidth="850px"
+        resizable="true"
+        draggable="true">
+        <content>
+            <VBox class="sapUiSmallMargin">
+                <f:SimpleForm
+                    editable="false"
+                    layout="ResponsiveGridLayout"
+                    labelSpanXL="4" labelSpanL="4" labelSpanM="4" labelSpanS="12"
+                    columnsXL="2" columnsL="2" columnsM="2">
+                    <f:content>
+                        <core:Title text="Cabecera Documento" />
+                        <Label text="Comprobante:" />
+                        <Text text="{detail>/comprobante}" />
+
+                        <Label text="Tipo:" />
+                        <Text text="{detail>/tipo}" />
+
+                        <Label text="Doc. Contable:" />
+                        <Text text="{detail>/docContable}" />
+
+                        <Label text="Importe Total:" />
+                        <ObjectNumber number="{path: 'detail>/importeTotal', formatter: '.formatter.currency'}" unit="{detail>/moneda}" />
+
+                        <core:Title text="Montos Impositivos" />
+                        <Label text="Fecha de Vencimiento:" />
+                        <Text text="{detail>/fechaVencimiento}" />
+
+                        <Label text="Detracción:" />
+                        <ObjectNumber number="{path: 'detail>/detraccion', formatter: '.formatter.currency'}" unit="{detail>/moneda}" />
+
+                        <Label text="Retención:" />
+                        <ObjectNumber number="{path: 'detail>/retencion', formatter: '.formatter.currency'}" unit="{detail>/moneda}" />
+
+                        <Label text="IGV:" />
+                        <ObjectNumber number="{path: 'detail>/igv', formatter: '.formatter.currency'}" unit="{detail>/moneda}" />
+                    </f:content>
+                </f:SimpleForm>
+
+                <Title text="Posiciones Asociadas" level="H4" class="sapUiSmallMarginTopBottom" />
+                <Table items="{detail>/items}">
+                    <columns>
+                        <Column><Text text="OC" /></Column>
+                        <Column><Text text="Pos." /></Column>
+                        <Column><Text text="Fecha Recepción" /></Column>
+                        <Column><Text text="Material/Servicio" /></Column>
+                        <Column><Text text="Cant. Solicitada." /></Column>
+                        <Column><Text text="Cant. Entregada." /></Column>
+                        <Column><Text text="Cant. Facturada." /></Column>
+                        <Column><Text text="Valor de venta" /></Column>
+                    </columns>
+                    <items>
+                        <ColumnListItem>
+                            <cells>
+                                <Text text="{detail>oc}" />
+                                <Text text="{detail>pos}" />
+                                <Text text="{detail>fechaRecepcion}" />
+                                <Text text="{detail>material}" />
+                                <Text text="{detail>cantSolicitada}" />
+                                <Text text="{detail>cantEntregada}" />
+                                <Text text="{detail>cantFacturada}" />
+                                <ObjectNumber number="{path: 'detail>valorVenta', formatter: '.formatter.currency'}" unit="{detail>/moneda}" />
+                            </cells>
+                        </ColumnListItem>
+                    </items>
+                </Table>
+            </VBox>
+        </content>
+        <endButton>
+            <Button text="{i18n>commonClose}" type="Transparent" press=".onCloseDetailDialog" />
+        </endButton>
+    </Dialog>
+
+</core:FragmentDefinition>

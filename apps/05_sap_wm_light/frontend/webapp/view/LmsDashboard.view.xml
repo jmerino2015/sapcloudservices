@@ -1,0 +1,75 @@
+<mvc:View
+    controllerName="wm.light.controller.LmsDashboard"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m"
+    xmlns:l="sap.ui.layout"
+    xmlns:f="sap.f"
+    xmlns:core="sap.ui.core"
+    xmlns:mc="sap.suite.ui.microchart">
+    
+    <Page title="{i18n>lmsDashboardTitle}" showNavButton="true" navButtonPress=".onNavBack">
+        <headerContent>
+            <Button icon="sap-icon://refresh" press=".onRefresh" tooltip="{i18n>refresh}"/>
+        </headerContent>
+        <content>
+            <l:Grid defaultSpan="L12 M12 S12" class="sapUiSmallMargin">
+                <l:content>
+                    
+                    <!-- KPI Cards (Top) -->
+                    <HBox class="sapUiSmallMarginBottom" justifyContent="SpaceBetween" wrap="Wrap">
+                        <GenericTile class="sapUiTinyMarginBegin sapUiTinyMarginTop" header="Eficiencia del Almacén" subheader="Hoy">
+                            <TileContent>
+                                <mc:RadialMicroChart size="L" percentage="{lms>/dashboard/efficiency_percent}" 
+                                                     valueColor="{= ${lms>/dashboard/efficiency_percent} >= 100 ? 'Good' : (${lms>/dashboard/efficiency_percent} >= 80 ? 'Neutral' : 'Critical') }"/>
+                            </TileContent>
+                        </GenericTile>
+                        
+                        <GenericTile class="sapUiTinyMarginBegin sapUiTinyMarginTop" header="Tareas Completadas" subheader="Hoy">
+                            <TileContent>
+                                <NumericContent value="{lms>/dashboard/total_tasks}" valueColor="Good" />
+                            </TileContent>
+                        </GenericTile>
+
+                        <GenericTile class="sapUiTinyMarginBegin sapUiTinyMarginTop" header="Tiempo Estándar" subheader="Segundos Totales">
+                            <TileContent>
+                                <NumericContent value="{lms>/dashboard/total_standard_sec}" valueColor="Neutral" />
+                            </TileContent>
+                        </GenericTile>
+                        
+                        <GenericTile class="sapUiTinyMarginBegin sapUiTinyMarginTop" header="Tiempo Real" subheader="Segundos Totales">
+                            <TileContent>
+                                <NumericContent value="{lms>/dashboard/total_actual_sec}" valueColor="{= ${lms>/dashboard/total_actual_sec} > ${lms>/dashboard/total_standard_sec} ? 'Critical' : 'Good' }" />
+                            </TileContent>
+                        </GenericTile>
+                    </HBox>
+
+                    <!-- Leaderboard -->
+                    <Panel headerText="Ranking de Operadores" class="sapUiResponsiveMargin" width="auto">
+                        <Table items="{path: 'lms>/leaderboard'}" noDataText="No hay datos de operadores hoy.">
+                            <columns>
+                                <Column><Text text="Operador"/></Column>
+                                <Column hAlign="Center"><Text text="Tareas Completadas"/></Column>
+                                <Column hAlign="Center"><Text text="Eficiencia (%)"/></Column>
+                                <Column hAlign="Center"><Text text="Estado"/></Column>
+                            </columns>
+                            <items>
+                                <ColumnListItem>
+                                    <cells>
+                                        <ObjectIdentifier 
+                                          title="{lms>user/name}" text="{lms>user/email}"/>
+                                        <Text text="{lms>task_count}" />
+                                        <ObjectNumber number="{lms>efficiency_percent}" unit="%" 
+                                                      state="{= parseFloat(${lms>efficiency_percent}) >= 100 ? 'Success' : (parseFloat(${lms>efficiency_percent}) >= 80 ? 'Warning' : 'Error') }" />
+                                        <core:Icon src="{= parseFloat(${lms>efficiency_percent}) >= 100 ? 'sap-icon://sys-enter-2' : (parseFloat(${lms>efficiency_percent}) >= 80 ? 'sap-icon://sys-help-2' : 'sap-icon://sys-cancel-2') }"
+                                                   color="{= parseFloat(${lms>efficiency_percent}) >= 100 ? 'Positive' : (parseFloat(${lms>efficiency_percent}) >= 80 ? 'Critical' : 'Negative') }" />
+                                    </cells>
+                                </ColumnListItem>
+                            </items>
+                        </Table>
+                    </Panel>
+
+                </l:content>
+            </l:Grid>
+        </content>
+    </Page>
+</mvc:View>

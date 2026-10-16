@@ -1,0 +1,124 @@
+<mvc:View
+    controllerName="sap.crm.customerportal.controller.Integration"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m"
+    xmlns:f="sap.f"
+    xmlns:core="sap.ui.core"
+    xmlns:layout="sap.ui.layout">
+
+    <Page id="integrationPage" title="Consola de Integración &amp; Auditoría" showNavButton="false">
+        <headerContent>
+            <Button
+                text="Probar Conectividad"
+                icon="sap-icon://connected"
+                type="Emphasized"
+                press=".onTestAllEndpoints"
+                tooltip="Ejecutar Health Check en endpoints de integración" />
+        </headerContent>
+
+        <content>
+            <VBox class="sapUiResponsiveContentPadding">
+
+                <!-- Performance KPI Banner -->
+                <layout:Grid defaultSpan="XL3 L3 M6 S12" class="sapUiSmallMarginBottom">
+                    
+                    <VBox class="sapUiContentPadding fioriCardCustom" style="background: #f7f9fa; border: 1px solid #e0e0e0;">
+                        <Text text="Arquitectura de Conectividad" class="sapUiTinyText sapUiLightText" />
+                        <HBox alignItems="Center">
+                            <core:HTML content="&lt;span class='cpiHealthyPulse'&gt;&lt;/span&gt;" />
+                            <Title text="MuleSoft &amp; CPI Online" level="H3" class="sapUiPositiveElement" />
+                        </HBox>
+                        <Text text="Anypoint Mule 4.4 + SAP CPI" class="sapUiTinyText" />
+                    </VBox>
+
+                    <VBox class="sapUiContentPadding fioriCardCustom" style="background: #f7f9fa; border: 1px solid #e0e0e0;">
+                        <Text text="Seguridad &amp; Licencias Activas" class="sapUiTinyText sapUiLightText" />
+                        <Title text="Partner Community Plus" level="H3" class="sapUiPositiveElement" />
+                        <Text text="SSO SAML 2.0 &amp; MFA Activo" class="sapUiTinyText" />
+                    </VBox>
+
+                    <VBox class="sapUiContentPadding fioriCardCustom" style="background: #f7f9fa; border: 1px solid #e0e0e0;">
+                        <Text text="Latencia Promedio OData / REST" class="sapUiTinyText sapUiLightText" />
+                        <Title text="142 ms" level="H2" class="sapUiPositiveElement" />
+                        <Text text="Criterio UX: &lt; 2000 ms (Cumplido)" class="sapUiTinyText sapUiPositiveElement" />
+                    </VBox>
+
+                    <VBox class="sapUiContentPadding fioriCardCustom">
+                        <Text text="Arquitectura de Conectividad" class="sapUiTinyText sapUiLightText" />
+                        <Title text="SAP S/4HANA + Salesforce" level="H3" />
+                        <Text text="Orquestación mediante MuleSoft y SAP CPI" class="sapUiTinyText sapUiPositiveElement" />
+                    </VBox>
+                </layout:Grid>
+
+                <!-- Matriz de Integración Table -->
+                <Panel headerText="Matriz de Integración de Servicios (MuleSoft Anypoint &amp; SAP CPI)" class="sapUiSmallMarginBottom">
+                    <Table items="{/cpiIntegrations}" noDataText="No hay servicios configurados">
+                        <columns>
+                            <Column><Text text="Proceso / Servicio" design="Bold" /></Column>
+                            <Column><Text text="Endpoint / API Gateway" /></Column>
+                            <Column minScreenWidth="Tablet" demandPopin="true"><Text text="Tipo de Interfaz" /></Column>
+                            <Column minScreenWidth="Desktop" demandPopin="true"><Text text="Destino SAP / CRM" /></Column>
+                            <Column minScreenWidth="Tablet" demandPopin="true"><Text text="Frecuencia" /></Column>
+                            <Column hAlign="Center"><Text text="Latencia" /></Column>
+                            <Column hAlign="Center"><Text text="Estado HTTP" /></Column>
+                            <Column hAlign="Center"><Text text="Inspector" /></Column>
+                        </columns>
+                        <items>
+                            <ColumnListItem>
+                                <cells>
+                                    <Text text="{service}" class="sapUiBoldText" />
+                                    <Text text="{endpoint}" class="sapUiTinyText" />
+                                    <ObjectStatus text="{protocol}" state="Information" />
+                                    <Text text="{destination}" />
+                                    <Text text="{frequency}" />
+                                    <Text text="{latencyMs} ms" class="sapUiBoldText sapUiPositiveElement" />
+                                    <ObjectStatus text="{lastStatus}" state="{statusState}" icon="sap-icon://accept" />
+                                    <Button
+                                        icon="sap-icon://inspect"
+                                        text="Ver Payload"
+                                        type="Ghost"
+                                        press=".onInspectPayload" />
+                                </cells>
+                            </ColumnListItem>
+                        </items>
+                    </Table>
+                </Panel>
+
+                <!-- Auditoría y Trazabilidad CRM -->
+                <Panel headerText="Trazabilidad y Registro de Actividades en CRM (Auditoría Omnicanal)" class="sapUiSmallMarginBottom">
+                    <headerToolbar>
+                        <OverflowToolbar>
+                            <core:Icon src="sap-icon://activity-items" color="#0854a0" />
+                            <Title text="Historial de Interacciones del Cliente y Socio (Activity Stream)" level="H4" />
+                            <ToolbarSpacer />
+                            <Button icon="sap-icon://refresh" text="Actualizar Log" press=".onRefreshLogs" type="Transparent" />
+                        </OverflowToolbar>
+                    </headerToolbar>
+                    <Table items="{/activityAuditLog}" noDataText="No hay actividades registradas">
+                        <columns>
+                            <Column width="180px"><Text text="Timestamp" design="Bold" /></Column>
+                            <Column minScreenWidth="Tablet" demandPopin="true"><Text text="Usuario" /></Column>
+                            <Column><Text text="Acción Ejecutada en el Portal" /></Column>
+                            <Column minScreenWidth="Desktop" demandPopin="true"><Text text="Categoría" /></Column>
+                            <Column minScreenWidth="Tablet" demandPopin="true"><Text text="Entidad API / OData" /></Column>
+                            <Column hAlign="Center"><Text text="Estado CRM" /></Column>
+                        </columns>
+                        <items>
+                            <ColumnListItem>
+                                <cells>
+                                    <Text text="{timestamp}" class="sapUiTinyText" />
+                                    <Text text="{user}" class="sapUiBoldText" />
+                                    <Text text="{action}" />
+                                    <Text text="{category}" />
+                                    <ObjectStatus text="{c4cEntity}" state="None" />
+                                    <ObjectStatus text="{status}" state="Success" icon="sap-icon://accept" />
+                                </cells>
+                            </ColumnListItem>
+                        </items>
+                    </Table>
+                </Panel>
+
+            </VBox>
+        </content>
+    </Page>
+</mvc:View>

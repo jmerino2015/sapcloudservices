@@ -1,0 +1,258 @@
+<core:FragmentDefinition
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core"
+    xmlns:layout="sap.ui.layout"
+    xmlns:f="sap.f"
+    xmlns:micro="sap.suite.ui.microchart">
+
+    <VBox class="sapUiNoContentPadding sapUiSmallMarginBottom">
+
+        <!-- ===================================================================
+             1. 5 BADGES SUPERIORES DE EXCELENCIA OPERATIVA & AUDITORÍA
+             =================================================================== -->
+        <layout:Grid
+            defaultSpan="XL2 L2 M4 S6"
+            class="badgeGridContainer sapUiTinyMarginBottom"
+            vSpacing="0.5"
+            hSpacing="0.5">
+
+            <!-- Badge 1: ERI -->
+            <f:Card class="kpiBadgeCard">
+                <f:content>
+                    <VBox class="sapUiSmallPadding" alignItems="Center">
+                        <Text text="ERI" class="badgeTitle fontBold" />
+                        <Text text="Exactitud Inventario" class="textMuted fontSizeSmall" />
+                        <Text text="{wms>/currentKpi/EriPercentage}%" class="badgeBigValue textSuccess sapUiTinyMarginTop" />
+                        <ObjectStatus text="Meta &gt;= 98%" state="Success" class="sapUiTinyMarginTop" />
+                    </VBox>
+                </f:content>
+            </f:Card>
+
+            <!-- Badge 2: ERU -->
+            <f:Card class="kpiBadgeCard">
+                <f:content>
+                    <VBox class="sapUiSmallPadding" alignItems="Center">
+                        <Text text="ERU" class="badgeTitle fontBold" />
+                        <Text text="Exactitud Ubicación" class="textMuted fontSizeSmall" />
+                        <Text text="{wms>/currentKpi/EruPercentage}%" class="badgeBigValue textSuccess sapUiTinyMarginTop" />
+                        <ObjectStatus text="Meta &gt;= 98%" state="Success" class="sapUiTinyMarginTop" />
+                    </VBox>
+                </f:content>
+            </f:Card>
+
+            <!-- Badge 3: BPA -->
+            <f:Card class="kpiBadgeCard">
+                <f:content>
+                    <VBox class="sapUiSmallPadding" alignItems="Center">
+                        <Text text="BPA" class="badgeTitle fontBold" />
+                        <Text text="Buenas Prácticas Alm." class="textMuted fontSizeSmall" />
+                        <Text text="{wms>/currentKpi/BpaPercentage}%" class="badgeBigValue textSuccess sapUiTinyMarginTop" />
+                        <ObjectStatus text="Meta &gt;= 95%" state="Success" class="sapUiTinyMarginTop" />
+                    </VBox>
+                </f:content>
+            </f:Card>
+
+            <!-- Badge 4: Salida 7-10 AM -->
+            <f:Card class="kpiBadgeCard">
+                <f:content>
+                    <VBox class="sapUiSmallPadding" alignItems="Center">
+                        <Text text="Salida 7-10 AM" class="badgeTitle fontBold" />
+                        <Text text="Ventana de Despacho" class="textMuted fontSizeSmall" />
+                        <Text text="{wms>/currentKpi/Units7to10AmComplianceRate}%" class="badgeBigValue textPrimary sapUiTinyMarginTop" />
+                        <ObjectStatus text="Meta &gt;= 90%" state="Success" class="sapUiTinyMarginTop" />
+                    </VBox>
+                </f:content>
+            </f:Card>
+
+            <!-- Badge 5: Precisión Picking -->
+            <f:Card class="kpiBadgeCard">
+                <f:content>
+                    <VBox class="sapUiSmallPadding" alignItems="Center">
+                        <Text text="Precisión Picking" class="badgeTitle fontBold" />
+                        <Text text="Sin Errores en Pedidos" class="textMuted fontSizeSmall" />
+                        <Text text="{wms>/currentKpi/PickingAccuracy}%" class="badgeBigValue textSuccess sapUiTinyMarginTop" />
+                        <ObjectStatus text="Meta &gt;= 99%" state="Success" class="sapUiTinyMarginTop" />
+                    </VBox>
+                </f:content>
+            </f:Card>
+
+            <!-- Badge 6: OTIF Nivel de Servicio -->
+            <f:Card class="kpiBadgeCard">
+                <f:content>
+                    <VBox class="sapUiSmallPadding" alignItems="Center">
+                        <Text text="OTIF Global" class="badgeTitle fontBold" />
+                        <Text text="On-Time In-Full" class="textMuted fontSizeSmall" />
+                        <Text text="{wms>/currentKpi/OtifPercentage}%" class="badgeBigValue textSuccess sapUiTinyMarginTop" />
+                        <ObjectStatus text="Meta &gt;= 98%" state="Success" class="sapUiTinyMarginTop" />
+                    </VBox>
+                </f:content>
+            </f:Card>
+        </layout:Grid>
+
+        <!-- ===================================================================
+             2. BITÁCORA DE EXCEPCIONES CRÍTICAS + PANELES DE APOYO
+             =================================================================== -->
+        <layout:Grid
+            defaultSpan="XL7 L7 M12 S12"
+            class="sapUiTinyMarginBottom"
+            vSpacing="0.5"
+            hSpacing="0.5">
+
+            <!-- Panel Izquierdo: Lista de Excepciones Críticas -->
+            <Panel
+                headerText="{i18n>secCriticalExceptions}"
+                expandable="false"
+                class="contentPanel customShadowPanel">
+                <headerToolbar>
+                    <Toolbar>
+                        <core:Icon src="sap-icon://error" />
+                        <Title text="{i18n>secCriticalExceptions}" level="H3" />
+                        <ToolbarSpacer />
+                        <SearchField
+                            width="200px"
+                            placeholder="Buscar en excepciones..."
+                            liveChange=".onSearchExcepcion" />
+                        <Select
+                            id="selectSeveridadExcepcion"
+                            change=".onFilterSeveridadExcepcion"
+                            width="140px">
+                            <core:Item key="ALL" text="Todas las Sev." />
+                            <core:Item key="Crítica" text="Crítica" />
+                            <core:Item key="Alta" text="Alta" />
+                            <core:Item key="Media" text="Media" />
+                        </Select>
+                    </Toolbar>
+                </headerToolbar>
+
+                <Table
+                    id="tableExcepciones"
+                    items="{wms>/excepciones}"
+                    inset="false"
+                    noDataText="No se registran excepciones pendientes"
+                    growing="true"
+                    growingThreshold="8">
+                    <columns>
+                        <Column width="100px"><Text text="ID / Severidad" class="fontBold" /></Column>
+                        <Column width="110px"><Text text="Sede" /></Column>
+                        <Column><Text text="Proceso / Desviación" class="fontBold" /></Column>
+                        <Column width="95px" hAlign="Center"><Text text="Tiempo" /></Column>
+                        <Column width="140px" hAlign="Center"><Text text="Acción" /></Column>
+                    </columns>
+                    <items>
+                        <ColumnListItem>
+                            <cells>
+                                <VBox>
+                                    <Text text="{wms>id}" class="fontBold" />
+                                    <ObjectStatus
+                                        text="{wms>severidadTexto}"
+                                        state="{wms>severidad}"
+                                        class="sapUiTinyMarginTop" />
+                                </VBox>
+                                <VBox>
+                                    <Text text="{wms>sede}" class="fontBold" />
+                                    <Text text="{wms>proceso}" class="textMuted fontSizeSmall" />
+                                </VBox>
+                                <VBox>
+                                    <Text text="{wms>descripcion}" class="fontBold" />
+                                    <Text text="Impacto: {wms>impacto}" class="textMuted fontSizeSmall sapUiTinyMarginTop" />
+                                    <Text text="Propuesta: {wms>accion}" class="textPrimary fontSizeSmall" />
+                                </VBox>
+                                <Text text="{wms>tiempo}" class="textMuted" />
+                                <HBox justifyContent="Center">
+                                    <Button
+                                        text="Resolver"
+                                        type="Transparent"
+                                        icon="sap-icon://accept"
+                                        press=".onResolveException"
+                                        class="sapUiTinyMarginEnd" />
+                                    <Button
+                                        icon="sap-icon://alert"
+                                        type="Transparent"
+                                        tooltip="Escalar a Gerencia"
+                                        press=".onEscalateException" />
+                                </HBox>
+                            </cells>
+                        </ColumnListItem>
+                    </items>
+                </Table>
+            </Panel>
+
+            <!-- Panel Derecho: Cumplimiento de Pedidos y Top 5 Ocupabilidad -->
+            <VBox>
+                <layoutData>
+                    <layout:GridData span="XL5 L5 M12 S12" />
+                </layoutData>
+
+                <!-- Tarjeta 1: Cumplimiento de Pedidos del Día -->
+                <Panel
+                    headerText="{i18n>secDailyFulfillment}"
+                    expandable="false"
+                    class="contentPanel customShadowPanel sapUiTinyMarginBottom">
+                    <headerToolbar>
+                        <Toolbar>
+                            <core:Icon src="sap-icon://order-status" />
+                            <Title text="{i18n>secDailyFulfillment}" level="H3" />
+                            <ToolbarSpacer />
+                            <ObjectStatus text="En Ventana" state="Success" />
+                        </Toolbar>
+                    </headerToolbar>
+                    <VBox class="sapUiSmallMargin">
+                        <HBox justifyContent="SpaceAround" alignItems="Center">
+                            <micro:RadialMicroChart
+                                size="M"
+                                percentage="94.8"
+                                valueColor="Good" />
+                            <VBox>
+                                <HBox alignItems="Baseline">
+                                    <Text text="{wms>/currentKpi/OrdersFulfilledCount}" class="kpiMediumNumber textSuccess" />
+                                    <Text text=" / {wms>/currentKpi/OrdersTotalCount}" class="kpiMediumNumber textMuted sapUiTinyMarginBegin" />
+                                </HBox>
+                                <Text text="Pedidos Atendidos Hoy (94.8%)" class="textMuted fontBold sapUiTinyMarginTop" />
+                                <Text text="Cumplimiento OTIF: {wms>/currentKpi/OtifPercentage}%" class="textPrimary fontBold sapUiTinyMarginTop" />
+                                <Text text="Pendientes de cierre: 70 pedidos" class="textMuted fontSizeSmall" />
+                            </VBox>
+                        </HBox>
+                    </VBox>
+                </Panel>
+
+                <!-- Tarjeta 2: Top 5 Familias con Mayor Ocupabilidad -->
+                <Panel
+                    headerText="{i18n>secTopOccupancyFamilies}"
+                    expandable="false"
+                    class="contentPanel customShadowPanel">
+                    <headerToolbar>
+                        <Toolbar>
+                            <core:Icon src="sap-icon://vertical-bar-chart" />
+                            <Title text="{i18n>secTopOccupancyFamilies}" level="H3" />
+                            <ToolbarSpacer />
+                            <Text text="Riesgo de Saturación" class="textMuted" />
+                        </Toolbar>
+                    </headerToolbar>
+
+                    <List items="{wms>/topFamilias}" class="sapUiNoContentPadding">
+                        <CustomListItem>
+                            <VBox class="sapUiSmallMarginTopBottom sapUiSmallMarginBeginEnd">
+                                <HBox justifyContent="SpaceBetween" alignItems="Center">
+                                    <VBox>
+                                        <Text text="{wms>FamiliaNombre}" class="fontBold" />
+                                        <Text text="{wms>Sede} · {wms>Ocupadas} de {wms>Total} Bins" class="textMuted fontSizeSmall" />
+                                    </VBox>
+                                    <ObjectStatus
+                                        text="{wms>OccupancyRate}%"
+                                        state="{wms>Status}"
+                                        inverted="true" />
+                                </HBox>
+                                <ProgressIndicator
+                                    percentValue="{wms>OccupancyRate}"
+                                    displayValue="{wms>OccupancyRate}%"
+                                    state="{wms>Status}"
+                                    class="sapUiTinyMarginTop" />
+                            </VBox>
+                        </CustomListItem>
+                    </List>
+                </Panel>
+            </VBox>
+        </layout:Grid>
+
+    </VBox>
+</core:FragmentDefinition>

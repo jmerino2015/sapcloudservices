@@ -1,0 +1,133 @@
+<mvc:View
+    controllerName="com.antigravity.portalProveedores.controller.PreRegister"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m"
+    xmlns:f="sap.ui.layout.form"
+    xmlns:core="sap.ui.core"
+    xmlns:u="sap.ui.unified">
+
+    <Page id="preRegisterPage" title="{i18n>preRegTitle}" showNavButton="true" navButtonPress=".onNavBack">
+        <content>
+            <VBox class="sapUiSmallMargin">
+
+                <!-- Header Info Banner -->
+                <Panel class="sapUiSmallMarginBottom">
+                    <HBox wrap="Wrap" justifyContent="SpaceBetween" alignItems="Center">
+                        <VBox>
+                            <HBox>
+                                <Label text="{i18n>preRegBannerSupplier}" class="sapUiTinyMarginEnd" bold="true" />
+                                <Text text="{app>/user/name}" class="sapUiSmallMarginEnd" />
+                            </HBox>
+                            <HBox>
+                                <Label text="{i18n>preRegBannerRuc}" class="sapUiTinyMarginEnd" bold="true" />
+                                <Text text="{app>/user/nif}" class="sapUiSmallMarginEnd" />
+                            </HBox>
+                        </VBox>
+                        <VBox>
+                            <HBox>
+                                <Label text="{i18n>preRegBannerAddress}" class="sapUiTinyMarginEnd" bold="true" />
+                                <Text text="{app>/user/address}" class="sapUiSmallMarginEnd" />
+                            </HBox>
+                            <HBox>
+                                <Label text="{i18n>preRegBannerSociety}" class="sapUiTinyMarginEnd" bold="true" />
+                                <Text text="{app>/user/sociedad}" />
+                            </HBox>
+                        </VBox>
+                    </HBox>
+                </Panel>
+
+                <!-- Filter Bar -->
+                <Panel expandable="true" expanded="true" class="sapUiSmallMarginBottom">
+                    <HBox wrap="Wrap" alignItems="End" class="sapUiTinyMarginBottom">
+                        <VBox class="sapUiSmallMarginEnd">
+                            <Label text="{i18n>preRegDateFrom}" />
+                            <DatePicker id="dpDateFrom" value="23/02/2022" displayFormat="dd/MM/yyyy" width="10rem" />
+                        </VBox>
+
+                        <VBox class="sapUiSmallMarginEnd">
+                            <Label text="{i18n>preRegDateTo}" />
+                            <DatePicker id="dpDateTo" value="23/02/2024" displayFormat="dd/MM/yyyy" width="10rem" />
+                        </VBox>
+
+                        <VBox class="sapUiSmallMarginEnd">
+                            <Label text="{i18n>preRegFilterStatus}" />
+                            <Select id="selectStatus" selectedKey="ALL" change=".onFilterSearch" width="12rem">
+                                <core:Item key="ALL" text="{i18n>preRegFilterAll}" />
+                                <core:Item key="SIN_COMPROBANTE" text="{i18n>preRegFilterWithoutInvoice}" />
+                                <core:Item key="COMPROBANTE_REGISTRADO" text="{i18n>preRegFilterWithInvoice}" />
+                            </Select>
+                        </VBox>
+
+                        <HBox class="sapUiSmallMarginEnd">
+                            <Button text="{i18n>preRegBtnGo}" type="Emphasized" press=".onFilterSearch" class="sapUiTinyMarginEnd" />
+                            <Button text="{i18n>preRegBtnReset}" type="Transparent" press=".onFilterReset" class="sapUiTinyMarginEnd" />
+                            <Button text="{i18n>preRegBtnAdapt}" type="Transparent" />
+                        </HBox>
+                    </HBox>
+                </Panel>
+
+                <!-- Table of Goods Receipts / Pre-Invoices -->
+                <Table
+                    id="tableEMAS"
+                    mode="MultiSelect"
+                    items="{app>/goodsReceipts}"
+                    class="sapUiResponsiveMargin">
+                    <headerToolbar>
+                        <OverflowToolbar>
+                            <Title text="Total Documentos ({= ${app>/goodsReceipts}.length })" level="H3" />
+                            <SearchField id="searchEMAS" placeholder="Buscar...." width="16rem" liveChange=".onFilterSearch" />
+                            <ToolbarSpacer />
+                            <Button text="{i18n>preRegBtnPreRegister}" icon="sap-icon://save" type="Emphasized" press=".onOpenPreRegisterDialog" />
+                            <Button text="{i18n>preRegBtnExport}" icon="sap-icon://excel-attachment" press=".onExportExcel" />
+                            <Button icon="sap-icon://action-settings" tooltip="{i18n>preRegBtnConfig}" />
+                        </OverflowToolbar>
+                    </headerToolbar>
+                    <columns>
+                        <Column><Text text="{i18n>colParteIngreso}" /></Column>
+                        <Column><Text text="{i18n>colPosParte}" /></Column>
+                        <Column><Text text="{i18n>colHojaEntrada}" /></Column>
+                        <Column><Text text="{i18n>colNotaEntrega}" /></Column>
+                        <Column><Text text="{i18n>colFechCont}" /></Column>
+                        <Column><Text text="{i18n>colDescripcion}" /></Column>
+                        <Column><Text text="{i18n>colCantEntrega}" /></Column>
+                        <Column><Text text="{i18n>colImporte}" /></Column>
+                        <Column><Text text="{i18n>colOC}" /></Column>
+                        <Column><Text text="{i18n>colPosOC}" /></Column>
+                        <Column><Text text="{i18n>colComprobante}" /></Column>
+                        <Column><Text text="{i18n>colCorrelativoSCP}" /></Column>
+                        <Column><Text text="{i18n>colEjercicio}" /></Column>
+                    </columns>
+                    <items>
+                        <ColumnListItem highlight="{path: 'app>estado', formatter: '.formatter.statusState'}">
+                            <cells>
+                                <ObjectIdentifier title="{app>parteIngreso}" />
+                                <Text text="{app>posParte}" />
+                                <Text text="{app>hojaEntrada}" />
+                                <Text text="{app>notaEntrega}" />
+                                <Text text="{app>fechCont}" />
+                                <Text text="{app>descripcion}" />
+                                <Text text="{app>cantEntrega}" />
+                                <ObjectNumber number="{path: 'app>importe', formatter: '.formatter.currency'}" unit="{app>moneda}" />
+                                <Link text="{app>ordenCompra}" press=".onViewOC" />
+                                <Text text="{app>posOC}" />
+                                <Text text="{app>comprobante}" />
+                                <Text text="{app>correlativoSCP}" />
+                                <VBox>
+                                    <Text text="{app>ejercicio}" />
+                                    <Button
+                                        text="Ver Rechazo"
+                                        type="Reject"
+                                        size="Small"
+                                        visible="{= ${app>estado} === 'RECHAZADO' }"
+                                        press=".onShowRejectionReason" />
+                                </VBox>
+                            </cells>
+                        </ColumnListItem>
+                    </items>
+                </Table>
+
+            </VBox>
+        </content>
+    </Page>
+
+</mvc:View>

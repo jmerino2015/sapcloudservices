@@ -1,0 +1,46 @@
+<core:FragmentDefinition
+  xmlns="sap.m"
+  xmlns:core="sap.ui.core"
+  xmlns:layout="sap.ui.layout">
+  <Dialog title="Nueva Cita de Patio" contentWidth="450px">
+    <content>
+      <layout:VerticalLayout width="100%" class="sapUiContentPadding">
+        
+        <Label text="Almacén" />
+        <Input value="{appt>/warehouse_id}" editable="false" />
+
+        <Label text="Placa / Matrícula" class="sapUiTinyMarginTop" required="true" />
+        <Input value="{appt>/license_plate}" placeholder="Ej. ABC-123" />
+
+        <Label text="Transportista" class="sapUiTinyMarginTop" />
+        <Input value="{appt>/carrier}" placeholder="Ej. Transportes Rápidos" />
+
+        <Label text="Nombre Conductor" class="sapUiTinyMarginTop" />
+        <Input value="{appt>/driver_name}" />
+
+        <Label text="Tipo de Operación" class="sapUiTinyMarginTop" />
+        <Select selectedKey="{appt>/operation_type}" width="100%">
+          <core:Item key="INBOUND" text="Entrada de Mercancía (Inbound)" />
+          <core:Item key="OUTBOUND" text="Salida de Mercancía (Outbound)" />
+        </Select>
+
+        <Label text="Tipo de Vehículo" class="sapUiTinyMarginTop" />
+        <Select selectedKey="{appt>/vehicle_type}" width="100%">
+          <core:Item key="TRUCK" text="Camión" />
+          <core:Item key="TRAILER" text="Tráiler" />
+          <core:Item key="VAN" text="Furgoneta" />
+        </Select>
+
+        <Label text="Llegada Planificada" class="sapUiTinyMarginTop" required="true" />
+        <DateTimePicker value="{appt>/planned_arrival}" valueFormat="yyyy-MM-ddTHH:mm" displayFormat="yyyy-MM-dd HH:mm" width="100%" />
+
+      </layout:VerticalLayout>
+    </content>
+    <beginButton>
+      <Button text="Crear Cita" type="Emphasized" press=".onSaveAppt" />
+    </beginButton>
+    <endButton>
+      <Button text="Cancelar" press=".onCloseAppt" />
+    </endButton>
+  </Dialog>
+</core:FragmentDefinition>

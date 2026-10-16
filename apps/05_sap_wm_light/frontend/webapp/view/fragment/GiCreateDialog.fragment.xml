@@ -1,0 +1,102 @@
+<core:FragmentDefinition
+  xmlns="sap.m"
+  xmlns:core="sap.ui.core"
+  xmlns:layout="sap.ui.layout"
+  xmlns:form="sap.ui.layout.form">
+  <Dialog id="giCreateDialog" title="Registrar Salida de Mercancías" contentWidth="650px">
+    <content>
+      <layout:VerticalLayout width="100%" class="sapUiContentPadding">
+        
+        <Label text="Tipo de Salida" required="true" class="sapUiTinyMarginBottom" />
+        <SegmentedButton selectedKey="{giCreate>/issue_type}" width="100%" class="sapUiSmallMarginBottom" select=".onIssueTypeChange">
+          <items>
+            <SegmentedButtonItem key="SO" text="Pedido de Venta" icon="sap-icon://sales-order-item" />
+            <SegmentedButtonItem key="TRANSFER" text="Pedido de Traslado" icon="sap-icon://shipping-status" />
+            <SegmentedButtonItem key="SUBCONTRACTING" text="Orden de Maquila" icon="sap-icon://factory" />
+          </items>
+        </SegmentedButton>
+
+        <form:SimpleForm editable="true" layout="ResponsiveGridLayout" labelSpanL="3" labelSpanM="3" emptySpanL="0" emptySpanM="0" columnsL="1" columnsM="1">
+          <form:content>
+            <Label text="Referencia Doc." required="true" id="lblGiRefDoc" />
+            <Input value="{giCreate>/sap_so_number}" placeholder="Ej: 5000000101, TR-2026-001..." />
+
+            <Label text="Cliente / Destino" required="true" id="lblGiCustomerDest" />
+            <Input value="{giCreate>/customer_name}" placeholder="Ej: Cliente B, Almacén WH002..." />
+
+            <Label text="N° Entrega / Despacho" required="true" />
+            <Input value="{giCreate>/delivery_number}" placeholder="Ej: DEL-9901, GD-12345..." />
+
+            <Label text="Estrategia Picking" />
+            <Select selectedKey="{giCreate>/picking_strategy}">
+              <core:Item key="FEFO" text="FEFO — Expiración Primero" />
+              <core:Item key="FIFO" text="FIFO — Primero en Entrar" />
+              <core:Item key="LIFO" text="LIFO — Último en Entrar" />
+            </Select>
+
+            <Label text="Notas / Observaciones" />
+            <TextArea value="{giCreate>/notes}" rows="2" placeholder="Observaciones adicionales..." />
+          </form:content>
+        </form:SimpleForm>
+
+        <VBox class="sapUiSmallMarginTop">
+          <Title text="Materiales a Despachar" level="H4" class="sapUiTinyMarginBottom" />
+          
+          <HBox width="100%" alignItems="Center" class="sapUiTinyMarginBottom">
+            <ComboBox id="cbGiMaterial" placeholder="Seleccione material..." items="{materials>/items}" width="65%" class="sapUiTinyMarginEnd" change=".onMaterialChange">
+              <core:Item key="{materials>id}" text="{materials>sap_code} - {materials>description} ({materials>base_unit})" />
+            </ComboBox>
+            <Input id="inputGiQty" placeholder="Cant." type="Number" width="20%" class="sapUiTinyMarginEnd" submit=".onAddItem" />
+            <Button icon="sap-icon://add" type="Emphasized" press=".onAddItem" width="15%" tooltip="Agregar Material" />
+          </HBox>
+
+          <!-- Stock Visor Panel (Stocks y Lotes por Almacén) -->
+          <Panel expandable="false" expanded="true" visible="{= ${materialStock>/items}.length > 0 }" class="sapUiTinyMarginBottom" headerText="Consulta en Vivo: Stock y Lotes en Almacén">
+            <Table items="{materialStock>/items}" noDataText="No hay stock físico de este material">
+              <columns>
+                <Column><Text text="Ubicación" /></Column>
+                <Column><Text text="Lote (Batch)" /></Column>
+                <Column hAlign="End"><Text text="Cant. Disponible" /></Column>
+                <Column><Text text="Fecha Expiración" /></Column>
+              </columns>
+              <items>
+                <ColumnListItem>
+                  <cells>
+                    <Text text="{materialStock>bin/bin_code}" />
+                    <Text text="{= ${materialStock>batch/batch_number} || 'Sin lote'}" />
+                    <ObjectStatus text="{materialStock>quantity} {materialStock>unit}" state="{= ${materialStock>quantity} > 0 ? 'Success' : 'Error'}" />
+                    <Text text="{parts:[{path:'materialStock>batch/expiry_date'}],formatter:'.formatDate'}" />
+                  </cells>
+                </ColumnListItem>
+              </items>
+            </Table>
+          </Panel>
+
+          <Table id="tblGiItems" items="{giCreate>/items}" noDataText="No hay materiales agregados" class="sapUiTinyMarginTop">
+            <columns>
+              <Column width="55%"><Text text="Material" /></Column>
+              <Column width="25%"><Text text="Cantidad" /></Column>
+              <Column width="20%" hAlign="End"><Text text="Acción" /></Column>
+            </columns>
+            <items>
+              <ColumnListItem>
+                <cells>
+                  <Text text="{giCreate>material_desc}" />
+                  <Text text="{giCreate>requested_qty} {giCreate>unit}" />
+                  <Button icon="sap-icon://delete" type="Reject" press=".onRemoveItem" tooltip="Eliminar ítem" />
+                </cells>
+              </ColumnListItem>
+            </items>
+          </Table>
+        </VBox>
+
+      </layout:VerticalLayout>
+    </content>
+    <beginButton>
+      <Button text="Registrar Salida" type="Emphasized" press=".onSaveGI" />
+    </beginButton>
+    <endButton>
+      <Button text="Cerrar" press=".onCloseGI" />
+    </endButton>
+  </Dialog>
+</core:FragmentDefinition>

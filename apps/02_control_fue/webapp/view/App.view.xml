@@ -1,0 +1,63 @@
+<mvc:View
+  controllerName="fue.control.controller.App"
+  xmlns:mvc="sap.ui.core.mvc"
+  xmlns="sap.m"
+  xmlns:tnt="sap.tnt"
+  xmlns:core="sap.ui.core"
+  displayBlock="true">
+
+  <tnt:ToolPage id="toolPage" sideExpanded="{app>/sideNavExpanded}">
+
+    <!-- ── Shell Header ──────────────────────────────── -->
+    <tnt:header>
+      <tnt:ToolHeader class="fioriBlueHeader">
+
+        <Button icon="sap-icon://menu2" type="Transparent"
+          tooltip="Menú de Navegación" press=".onToggleNav" />
+
+        <core:Icon src="sap-icon://user-edit" size="1.25rem" color="white" class="sapUiSmallMarginBegin" />
+        <Title text="Control de FUE, Usuarios y Costos SAP (5 Sociedades)" titleStyle="H5"
+          class="sapUiTinyMarginBegin sapUiSmallMarginEnd" />
+
+        <ToolbarSpacer />
+
+        <ObjectStatus text="Sistema SAP HANA: S4H / Mandante 100" state="Information" icon="sap-icon://database" class="sapUiSmallMarginEnd" />
+
+        <ToolbarSeparator />
+
+        <Avatar id="userAvatar"
+          initials="BASIS"
+          displayShape="Circle"
+          displaySize="S"
+          tooltip="Administrador BASIS & Licencias SAP"
+          class="sapUiSmallMarginBegin" />
+
+      </tnt:ToolHeader>
+    </tnt:header>
+
+    <!-- ── Side Navigation ───────────────────────────── -->
+    <tnt:sideContent>
+      <tnt:SideNavigation id="sideNav" itemSelect=".onNavSelect">
+        <tnt:item>
+          <tnt:NavigationList>
+            <tnt:NavigationListItem text="Inicio & Resumen Ejecutivo"
+              icon="sap-icon://home" key="home" />
+            <tnt:NavigationListItem text="Dashboard & Costos (5 Sociedades)"
+              icon="sap-icon://manager-insight" key="dashboard" />
+            <tnt:NavigationListItem text="Gestión de Usuarios SU01"
+              icon="sap-icon://user-settings" key="fueList" />
+            <tnt:NavigationListItem text="Auditoría USMM / LAW 2.0 & SoD"
+              icon="sap-icon://security-officer" key="auditTool" />
+          </tnt:NavigationList>
+        </tnt:item>
+      </tnt:SideNavigation>
+    </tnt:sideContent>
+
+    <!-- ── Main Content ───────────────────────────────── -->
+    <tnt:mainContents>
+      <NavContainer id="appNav" height="100%" width="100%" class="mainAppNavContainer" />
+    </tnt:mainContents>
+
+  </tnt:ToolPage>
+
+</mvc:View>

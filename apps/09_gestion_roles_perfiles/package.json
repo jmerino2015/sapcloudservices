@@ -1,0 +1,11 @@
+{
+  "name": "sap-fiori-horizon-fue-manager",
+  "version": "1.0.0",
+  "description": "Aplicación SAP Fiori Horizon para el control de usuarios, licencias y medición de FUE (Full User Equivalent)",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {},
+  "devDependencies": {}
+}

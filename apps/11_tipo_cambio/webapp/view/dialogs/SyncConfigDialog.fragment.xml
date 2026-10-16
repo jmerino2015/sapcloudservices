@@ -1,0 +1,52 @@
+<core:FragmentDefinition
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core"
+    xmlns:form="sap.ui.layout.form">
+    <Dialog
+        id="syncConfigDialog"
+        title="{i18n>dialogSyncTitle}"
+        contentWidth="550px"
+        icon="sap-icon://synchronize">
+        <content>
+            <form:SimpleForm
+                editable="true"
+                layout="ResponsiveGridLayout"
+                labelSpanXL="4" labelSpanL="4" labelSpanM="4" labelSpanS="12">
+                <form:content>
+                    <Label text="Proveedor / API Mercado"/>
+                    <Select id="syncProvider" selectedKey="SUNAT">
+                        <core:Item key="SUNAT" text="SUNAT / Banco Central Reserva (Perú)"/>
+                        <core:Item key="REFINITIV" text="SAP Market Rates (Refinitiv SaaS)"/>
+                        <core:Item key="OANDA" text="OANDA FX Exchange API"/>
+                        <core:Item key="BANXICO" text="Banxico Service API (México)"/>
+                        <core:Item key="CPI" text="SAP Integration Suite (CPI Middleware)"/>
+                    </Select>
+
+                    <Label text="Modo de Ejecución"/>
+                    <Select id="syncMode" selectedKey="REALTIME">
+                        <core:Item key="REALTIME" text="Sincronización Directa (BAPI_EXCHANGERATE_CREATE)"/>
+                        <core:Item key="SIMULATION" text="Modo Simulación (Sin persistir en TCURR)"/>
+                    </Select>
+
+                    <Label text="Monedas Objetivos"/>
+                    <MultiComboBox id="syncCurrencies" selectedKeys="USD,EUR,BRL,CLP">
+                        <core:Item key="USD" text="USD - Dólar Estadounidense"/>
+                        <core:Item key="EUR" text="EUR - Euro"/>
+                        <core:Item key="BRL" text="BRL - Real Brasileño"/>
+                        <core:Item key="CLP" text="CLP - Peso Chileno"/>
+                        <core:Item key="MXN" text="MXN - Peso Mexicano"/>
+                    </MultiComboBox>
+
+                    <Label text="Notificación de Errores"/>
+                    <CheckBox id="syncNotifyEmail" text="Enviar correo a Tesorería/Costos si hay falla" selected="true"/>
+                </form:content>
+            </form:SimpleForm>
+        </content>
+        <beginButton>
+            <Button text="Iniciar Sincronización" type="Emphasized" icon="sap-icon://play" press="onExecuteMarketSync"/>
+        </beginButton>
+        <endButton>
+            <Button text="{i18n>btnClose}" press="onCloseSyncConfigDialog"/>
+        </endButton>
+    </Dialog>
+</core:FragmentDefinition>

@@ -1,0 +1,80 @@
+{
+  "_version": "1.60.0",
+  "sap.app": {
+    "id": "wm.light",
+    "type": "application",
+    "title": "SAP WMS - SRM FIORI — Warehouse Management",
+    "description": "Sistema de Gestión de Almacenes estilo SAP WM",
+    "applicationVersion": { "version": "1.0.0" }
+  },
+  "sap.ui": {
+    "technology": "UI5",
+    "deviceTypes": { "desktop": true, "tablet": true, "phone": true },
+    "fullWidth": true
+  },
+  "sap.ui5": {
+    "rootView": {
+      "viewName": "wm.light.view.App",
+      "type": "XML"
+    },
+    "routing": {
+      "config": {
+        "routerClass": "sap.m.routing.Router",
+        "viewType": "XML",
+        "async": true
+      },
+      "targets": {
+        "home": { "viewName": "Home" },
+        "dashboard": { "viewName": "Dashboard" },
+        "goodsReceipt": { "viewName": "GoodsReceipt" },
+        "goodsIssue": { "viewName": "GoodsIssue" },
+        "transferOrders": { "viewName": "TransferOrder" },
+        "stock": { "viewName": "Stock" },
+        "materials": { "viewName": "Material" },
+        "locations": { "viewName": "Locations" },
+        "admin": { "viewName": "Admin" },
+        "configWarehouse": { "viewName": "ConfigWarehouse" },
+        "configMovement": { "viewName": "ConfigMovement" },
+        "kpi": { "viewName": "Kpi" },
+        "kpiDetail": { "viewName": "KpiDetail" },
+        "lmsDashboard": { "viewName": "LmsDashboard" },
+        "slottingDashboard": { "viewName": "SlottingDashboard" }
+      }
+    },
+    "dependencies": {
+      "minUI5Version": "1.108.0",
+      "libs": {
+        "sap.m": {},
+        "sap.f": {},
+        "sap.tnt": {},
+        "sap.ui.layout": {},
+        "sap.ui.core": {},
+        "sap.suite.ui.microchart": {}
+      }
+    },
+    "contentDensities": { "compact": true, "cozy": true },
+    "resources": {
+      "css": [
+        { "uri": "css/style.css" }
+      ]
+    },
+    "models": {
+      "i18n": {
+        "type": "sap.ui.model.resource.ResourceModel",
+        "settings": { "bundleName": "wm.light.i18n.i18n" }
+      },
+      "app": {
+        "type": "sap.ui.model.json.JSONModel",
+        "settings": {
+          "data": {
+            "user": null,
+            "token": null,
+            "sideNavExpanded": true,
+            "loginError": false,
+            "currentView": "home"
+          }
+        }
+      }
+    }
+  }
+}

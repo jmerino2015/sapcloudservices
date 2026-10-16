@@ -1,0 +1,1392 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Implementación SAP HANA WMS - JM Holding</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts: Inter / Roboto -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+          },
+          colors: {
+            sap: {
+              blue: '#0070F2',
+              darkblue: '#0A2540',
+              navy: '#0F172A',
+              accent: '#12B3B1',
+              lightbg: '#F4F6F9',
+              card: '#FFFFFF',
+              border: '#E2E8F0',
+              text: '#1E293B',
+              muted: '#64748B',
+              gold: '#E28000',
+              green: '#107E3E',
+              red: '#BB0000'
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #0A2540;
+      color: #1E293B;
+      overflow: hidden;
+    }
+    .slide {
+      display: none;
+      opacity: 0;
+      transition: opacity 0.4s ease-in-out, transform 0.4s ease-in-out;
+      transform: scale(0.98);
+    }
+    .slide.active {
+      display: flex;
+      opacity: 1;
+      transform: scale(1);
+    }
+    /* SAP Fiori Tile Card Effect */
+    .fiori-card {
+      background: #FFFFFF;
+      border: 1px solid #E2E8F0;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03), 0 1px 3px rgba(0, 0, 0, 0.05);
+      border-radius: 10px;
+      transition: all 0.2s ease-in-out;
+    }
+    .fiori-card:hover {
+      box-shadow: 0 8px 20px rgba(0, 112, 242, 0.08);
+      border-color: #0070F2;
+    }
+    .fiori-header {
+      background: linear-gradient(135deg, #0A2540 0%, #0070F2 100%);
+    }
+    /* Custom Scrollbars inside slides if needed */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #F1F5F9;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #CBD5E1;
+      border-radius: 3px;
+    }
+  </style>
+</head>
+<body class="h-screen w-screen flex flex-col justify-between select-none">
+
+  <!-- TOP BAR / SAP FIORI HEADER BAR -->
+  <header class="h-14 bg-[#0A2540] text-white px-6 flex items-center justify-between border-b border-slate-700 shadow-md z-50">
+    <div class="flex items-center space-x-3">
+      <!-- JM Holding Logo Badge -->
+      <div class="bg-white text-[#0A2540] font-black px-2.5 py-1 rounded text-sm tracking-wider flex items-center gap-1.5 shadow-sm">
+        <i data-lucide="building-2" class="w-4 h-4 text-sky-500"></i>
+        JM HOLDING <span class="text-sky-500 text-xs font-normal">LOGISTICS</span>
+      </div>
+      <span class="text-slate-400 text-sm hidden sm:inline">|</span>
+      <span class="text-xs font-medium tracking-wide bg-sky-950 text-sky-300 px-2.5 py-1 rounded-full border border-sky-800">
+        SAP S/4HANA EWM / FIORI WMS
+      </span>
+    </div>
+
+    <!-- Title of Current Presentation -->
+    <div class="hidden md:block text-sm font-semibold text-slate-200">
+      Implementación de SAP HANA WMS Web Edition
+    </div>
+
+    <!-- Slide Navigation Controls Header -->
+    <div class="flex items-center space-x-3">
+      <span id="slide-counter" class="text-xs font-mono bg-slate-800 text-slate-300 px-3 py-1 rounded-full border border-slate-700">
+        1 / 14
+      </span>
+      <button onclick="toggleOverview()" class="p-1.5 hover:bg-slate-800 rounded text-slate-300 transition" title="Vista Global de Diapositivas">
+        <i data-lucide="grid" class="w-5 h-5"></i>
+      </button>
+      <button onclick="toggleFullscreen()" class="p-1.5 hover:bg-slate-800 rounded text-slate-300 transition" title="Pantalla Completa">
+        <i data-lucide="maximize" class="w-5 h-5"></i>
+      </button>
+    </div>
+  </header>
+
+  <!-- MAIN SLIDE DISPLAY CONTAINER -->
+  <main class="flex-1 relative bg-[#F4F6F9] overflow-y-auto p-4 md:p-8 flex items-center justify-center">
+
+    <!-- SLIDE 1: COVER PAGE -->
+    <section class="slide active w-full max-w-6xl h-full flex-col justify-between fiori-card p-8 md:p-12 relative overflow-hidden bg-gradient-to-br from-slate-900 via-[#0A2540] to-slate-900 text-white border-0 shadow-2xl">
+      <!-- Background Graphic Pattern -->
+      <div class="absolute -right-20 -bottom-20 w-96 h-96 bg-blue-600/10 rounded-full blur-3xl pointer-events-none"></div>
+      <div class="absolute right-10 top-10 opacity-10 pointer-events-none">
+        <i data-lucide="boxes" class="w-96 h-96 text-white"></i>
+      </div>
+
+      <!-- Header Content -->
+      <div class="z-10">
+        <div class="inline-flex items-center gap-2 bg-blue-500/20 text-blue-300 px-3 py-1.5 rounded-full border border-blue-400/30 text-xs font-semibold uppercase tracking-wider mb-6">
+          <i data-lucide="sparkles" class="w-4 h-4 text-sky-400"></i> Solución WMS / EWM para SAP S/4HANA
+        </div>
+        <h1 class="text-4xl md:text-6xl font-extrabold tracking-tight text-white mb-4 leading-tight">
+          Implementación de <br/><span class="text-transparent bg-clip-text bg-gradient-to-r from-sky-400 to-blue-300">SAP HANA WMS</span>
+        </h1>
+        <p class="text-lg md:text-xl text-slate-300 max-w-2xl font-light leading-relaxed mb-8">
+          Enfoque integral en Almacén Lurín: Recepción contra OC, Putaway por slotting, Picking por olas, Unidades de Manipulación (HU) y conectividad Fiori 100% en tiempo real.
+        </p>
+      </div>
+
+      <!-- Feature Grid Bottom -->
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4 z-10 my-6">
+        <div class="bg-white/5 backdrop-blur-md p-4 rounded-xl border border-white/10">
+          <i data-lucide="log-in" class="w-6 h-6 text-sky-400 mb-2"></i>
+          <h4 class="font-bold text-sm text-white">Recepción & Putaway</h4>
+          <p class="text-xs text-slate-400">Automatizada contra OC y HU</p>
+        </div>
+        <div class="bg-white/5 backdrop-blur-md p-4 rounded-xl border border-white/10">
+          <i data-lucide="shopping-cart" class="w-6 h-6 text-sky-400 mb-2"></i>
+          <h4 class="font-bold text-sm text-white">Picking & Packing</h4>
+          <p class="text-xs text-slate-400">Olas, FEFO/FIFO y RF Scanners</p>
+        </div>
+        <div class="bg-white/5 backdrop-blur-md p-4 rounded-xl border border-white/10">
+          <i data-lucide="scan" class="w-6 h-6 text-sky-400 mb-2"></i>
+          <h4 class="font-bold text-sm text-white">Stock Room & Bins</h4>
+          <p class="text-xs text-slate-400">Conteo cíclico sin paradas</p>
+        </div>
+        <div class="bg-white/5 backdrop-blur-md p-4 rounded-xl border border-white/10">
+          <i data-lucide="code-2" class="w-6 h-6 text-sky-400 mb-2"></i>
+          <h4 class="font-bold text-sm text-white">Clean Core + 400h ABAP</h4>
+          <p class="text-xs text-slate-400">Desarrollos Z & Fiori Launchpad</p>
+        </div>
+      </div>
+
+      <!-- Footer Info -->
+      <div class="pt-6 border-t border-white/10 flex justify-between items-center text-xs text-slate-400 z-10">
+        <div>
+          <p class="font-semibold text-slate-200">JM HOLDING LOGISTICS</p>
+          <p>Transformación Digital & Soluciones Logísticas SAP</p>
+        </div>
+        <div class="text-right">
+          <span class="bg-sky-500/20 text-sky-300 px-3 py-1 rounded-full border border-sky-400/30">Operación Logística Eficiente - 10 Usuarios</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 2: QUIÉNES SOMOS -->
+    <section class="slide w-full max-w-6xl h-full flex-col justify-between fiori-card p-6 md:p-10">
+      <div>
+        <div class="flex items-center justify-between mb-4">
+          <span class="text-xs font-bold uppercase tracking-wider text-sap-blue bg-blue-50 px-3 py-1 rounded-full border border-blue-200">
+            Quiénes Somos
+          </span>
+          <span class="text-xs text-sap-muted">Líderes en Soluciones Logísticas Enterprise</span>
+        </div>
+        <h2 class="text-2xl md:text-3xl font-bold text-sap-darkblue mb-6">JM HOLDING: Líderes en Integración y Tecnología Logística</h2>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <!-- Card 1 -->
+          <div class="bg-slate-50 p-5 rounded-xl border border-slate-200">
+            <div class="w-10 h-10 rounded-lg bg-blue-100 text-sap-blue flex items-center justify-center mb-3">
+              <i data-lucide="award" class="w-6 h-6"></i>
+            </div>
+            <h3 class="font-bold text-lg text-sap-darkblue mb-1">10+ Años de Experiencia</h3>
+            <p class="text-xs text-sap-muted leading-relaxed mb-3">
+              Impulsando la optimización operativa con consultores senior certificados en SAP S/4HANA Cloud, EWM y arquitecturas Fiori.
+            </p>
+            <div class="bg-white p-3 rounded-lg border border-slate-200 text-xs">
+              <span class="font-bold text-sap-blue">Enfoque Integral:</span> Gestión de Almacenes + Fiori UX + Metodología SAP Activate.
+            </div>
+          </div>
+
+          <!-- Card 2 -->
+          <div class="bg-slate-50 p-5 rounded-xl border border-slate-200">
+            <div class="w-10 h-10 rounded-lg bg-teal-100 text-teal-700 flex items-center justify-center mb-3">
+              <i data-lucide="cloud" class="w-6 h-6"></i>
+            </div>
+            <h3 class="font-bold text-lg text-sap-darkblue mb-1">Ecosistema Cloud & SAP</h3>
+            <p class="text-xs text-sap-muted leading-relaxed mb-3">
+              Expertos en arquitecturas SAP S/4HANA (Private/Public Cloud), FES 2022, OData Gateway e infraestructuras certificadas.
+            </p>
+            <div class="grid grid-cols-2 gap-2 text-center text-xs font-semibold">
+              <div class="bg-white py-1.5 rounded border border-slate-200 text-sky-600">Azure</div>
+              <div class="bg-white py-1.5 rounded border border-slate-200 text-amber-600">AWS</div>
+              <div class="bg-white py-1.5 rounded border border-slate-200 text-blue-600">Google Cloud</div>
+              <div class="bg-white py-1.5 rounded border border-slate-200 text-red-600">HANA Cloud</div>
+            </div>
+          </div>
+
+          <!-- Card 3 -->
+          <div class="bg-slate-50 p-5 rounded-xl border border-slate-200">
+            <div class="w-10 h-10 rounded-lg bg-indigo-100 text-indigo-700 flex items-center justify-center mb-3">
+              <i data-lucide="factory" class="w-6 h-6"></i>
+            </div>
+            <h3 class="font-bold text-lg text-sap-darkblue mb-1">Alcance Destacado</h3>
+            <p class="text-xs text-sap-muted leading-relaxed mb-3">
+              Diseñado para centros de distribución críticos (ej. Almacén Lurín) habilitando Stock Room Management y Unidades de Manipulación (HU).
+            </p>
+            <div class="flex flex-wrap gap-1.5 text-xs">
+              <span class="bg-white px-2 py-1 rounded border border-slate-200 text-slate-700"><i data-lucide="box" class="w-3 h-3 inline mr-1"></i>Stock Room</span>
+              <span class="bg-white px-2 py-1 rounded border border-slate-200 text-slate-700"><i data-lucide="qr-code" class="w-3 h-3 inline mr-1"></i>GS1-128</span>
+              <span class="bg-white px-2 py-1 rounded border border-slate-200 text-slate-700"><i data-lucide="layers" class="w-3 h-3 inline mr-1"></i>Handling Units</span>
+              <span class="bg-white px-2 py-1 rounded border border-slate-200 text-slate-700"><i data-lucide="shield-check" class="w-3 h-3 inline mr-1"></i>Clean Core</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bottom Value Props -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 pt-4 border-t border-slate-200 text-xs">
+        <div class="flex items-center gap-3">
+          <div class="p-2 bg-blue-50 text-sap-blue rounded-lg"><i data-lucide="target" class="w-5 h-5"></i></div>
+          <div>
+            <span class="font-bold block text-sap-darkblue">Enfoque Best Practices</span>
+            <span class="text-sap-muted">Metodología SAP Activate comprobada.</span>
+          </div>
+        </div>
+        <div class="flex items-center gap-3">
+          <div class="p-2 bg-green-50 text-green-700 rounded-lg"><i data-lucide="shield-check" class="w-5 h-5"></i></div>
+          <div>
+            <span class="font-bold block text-sap-darkblue">Garantía Post Go-Live</span>
+            <span class="text-sap-muted">60 días de soporte garantizado.</span>
+          </div>
+        </div>
+        <div class="flex items-center gap-3">
+          <div class="p-2 bg-amber-50 text-amber-700 rounded-lg"><i data-lucide="clock" class="w-5 h-5"></i></div>
+          <div>
+            <span class="font-bold block text-sap-darkblue">Bolsa de 400 Horas ABAP</span>
+            <span class="text-sap-muted">Para reportes, forms y desarrollos Z.</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 3: VENTAJAS COMPETITIVAS Y CLIENTES -->
+    <section class="slide w-full max-w-6xl h-full flex-col justify-between fiori-card p-6 md:p-10">
+      <div>
+        <div class="flex items-center justify-between mb-4">
+          <span class="text-xs font-bold uppercase tracking-wider text-sap-blue bg-blue-50 px-3 py-1 rounded-full border border-blue-200">
+            Ventajas Competitivas
+          </span>
+          <span class="text-xs text-sap-muted">Lo que nos diferencia en el mercado</span>
+        </div>
+        <h2 class="text-2xl md:text-3xl font-bold text-sap-darkblue mb-6">Propuesta de Valor Única & Casos de Éxito</h2>
+
+        <!-- Ventajas Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+          <div class="p-4 bg-gradient-to-br from-blue-50 to-white rounded-xl border border-blue-100">
+            <div class="flex items-center gap-2 font-bold text-sap-blue text-sm mb-2">
+              <i data-lucide="star" class="w-4 h-4 text-amber-500"></i> Doble Especialización
+            </div>
+            <p class="text-xs text-sap-muted leading-relaxed">
+              Combinamos talento SAP certificado con aceleradores BTP y FIORI, ofreciendo recursos y soluciones en un solo proveedor.
+            </p>
+          </div>
+
+          <div class="p-4 bg-gradient-to-br from-indigo-50 to-white rounded-xl border border-indigo-100">
+            <div class="flex items-center gap-2 font-bold text-indigo-700 text-sm mb-2">
+              <i data-lucide="git-fork" class="w-4 h-4 text-indigo-600"></i> Arquitectura Side-by-Side
+            </div>
+            <p class="text-xs text-sap-muted leading-relaxed">
+              Desarrollamos extensiones desacopladas que evitan el lock-in, facilitan actualizaciones y reducen complejidad.
+            </p>
+          </div>
+
+          <div class="p-4 bg-gradient-to-br from-teal-50 to-white rounded-xl border border-teal-100">
+            <div class="flex items-center gap-2 font-bold text-teal-800 text-sm mb-2">
+              <i data-lucide="zap" class="w-4 h-4 text-teal-600"></i> Velocidad y Calidad
+            </div>
+            <p class="text-xs text-sap-muted leading-relaxed">
+              Kits de aceleración y pruebas automatizadas que reducen hasta un 30% el time-to-market sin descuidar el código.
+            </p>
+          </div>
+        </div>
+
+        <!-- Clientes que confían -->
+        <div>
+          <h3 class="text-sm font-bold text-sap-darkblue uppercase tracking-wider mb-3">Empresas que confían en nuestro expertise:</h3>
+          <div class="grid grid-cols-2 sm:grid-cols-5 gap-3 text-center">
+            <div class="p-2.5 bg-slate-50 rounded-lg border border-slate-200 font-bold text-slate-700 text-xs flex items-center justify-center h-12">QUIMTIA</div>
+            <div class="p-2.5 bg-slate-50 rounded-lg border border-slate-200 font-bold text-slate-700 text-xs flex items-center justify-center h-12">IBERO PLAST</div>
+            <div class="p-2.5 bg-slate-50 rounded-lg border border-slate-200 font-bold text-slate-700 text-xs flex items-center justify-center h-12">MACHU PICCHU FOODS</div>
+            <div class="p-2.5 bg-slate-50 rounded-lg border border-slate-200 font-bold text-slate-700 text-xs flex items-center justify-center h-12">FARMACIAS PERUANAS</div>
+            <div class="p-2.5 bg-slate-50 rounded-lg border border-slate-200 font-bold text-slate-700 text-xs flex items-center justify-center h-12">PROTIVITI</div>
+            <div class="p-2.5 bg-slate-50 rounded-lg border border-slate-200 font-bold text-slate-700 text-xs flex items-center justify-center h-12">GRUPO JJC</div>
+            <div class="p-2.5 bg-slate-50 rounded-lg border border-slate-200 font-bold text-slate-700 text-xs flex items-center justify-center h-12">AJINOMOTO</div>
+            <div class="p-2.5 bg-slate-50 rounded-lg border border-slate-200 font-bold text-slate-700 text-xs flex items-center justify-center h-12">CORPORACIÓN E. WONG</div>
+            <div class="p-2.5 bg-slate-50 rounded-lg border border-slate-200 font-bold text-slate-700 text-xs flex items-center justify-center h-12">GRUPO DC</div>
+            <div class="p-2.5 bg-slate-50 rounded-lg border border-slate-200 font-bold text-slate-700 text-xs flex items-center justify-center h-12">TAI LOY</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="pt-4 border-t border-slate-200 flex items-center gap-2 text-xs text-sap-muted">
+        <i data-lucide="globe" class="w-4 h-4 text-sap-blue"></i>
+        <span>Operación 24/7 multirregional con soporte continuo AMS ITIL y FinOps en LATAM y Europa.</span>
+      </div>
+    </section>
+
+    <!-- SLIDE 4: JERARQUÍA DE ALMACÉN EN SAP WM -->
+    <section class="slide w-full max-w-6xl h-full flex-col justify-between fiori-card p-6 md:p-10">
+      <div>
+        <div class="flex items-center justify-between mb-4">
+          <span class="text-xs font-bold uppercase tracking-wider text-sap-blue bg-blue-50 px-3 py-1 rounded-full border border-blue-200">
+            Estructura Organizativa
+          </span>
+          <span class="text-xs text-sap-muted">Modelado del Almacén en SAP</span>
+        </div>
+        <h2 class="text-2xl md:text-3xl font-bold text-sap-darkblue mb-6">Jerarquía de Almacén en Sistema WMS</h2>
+
+        <!-- Structure Cards Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div class="p-5 bg-gradient-to-r from-blue-50 to-white rounded-xl border-l-4 border-sap-blue shadow-sm">
+            <div class="flex justify-between items-center mb-2">
+              <h3 class="font-bold text-lg text-sap-darkblue">1. Número de Almacén</h3>
+              <span class="text-xs font-mono bg-blue-100 text-sap-blue px-2 py-0.5 rounded font-bold">WM1</span>
+            </div>
+            <p class="text-xs text-sap-muted leading-relaxed">
+              Unidad organizativa principal. Controla parámetros globales: pesos, unidades de medida y gestión de unidades de almacén (SU / Pallets).
+            </p>
+          </div>
+
+          <div class="p-5 bg-gradient-to-r from-sky-50 to-white rounded-xl border-l-4 border-sky-500 shadow-sm">
+            <div class="flex justify-between items-center mb-2">
+              <h3 class="font-bold text-lg text-sap-darkblue">2. Tipo de Almacén</h3>
+              <span class="text-xs font-mono bg-sky-100 text-sky-800 px-2 py-0.5 rounded font-bold">Storage Type</span>
+            </div>
+            <p class="text-xs text-sap-muted leading-relaxed">
+              División física (Racks, Bulk, Picking). Define estrategias de entrada/salida y si se requiere confirmación de las órdenes de transporte.
+            </p>
+          </div>
+
+          <div class="p-5 bg-gradient-to-r from-teal-50 to-white rounded-xl border-l-4 border-teal-500 shadow-sm">
+            <div class="flex justify-between items-center mb-2">
+              <h3 class="font-bold text-lg text-sap-darkblue">3. Área de Almacenamiento</h3>
+              <span class="text-xs font-mono bg-teal-100 text-teal-800 px-2 py-0.5 rounded font-bold">Storage Section</span>
+            </div>
+            <p class="text-xs text-sap-muted leading-relaxed">
+              Subdivisión lógica de un tipo de almacén (ej. Áreas rápidas/lentas). Optimiza los recorridos de los operarios durante el picking.
+            </p>
+          </div>
+
+          <div class="p-5 bg-gradient-to-r from-indigo-50 to-white rounded-xl border-l-4 border-indigo-500 shadow-sm">
+            <div class="flex justify-between items-center mb-2">
+              <h3 class="font-bold text-lg text-sap-darkblue">4. Ubicación (Storage Bin)</h3>
+              <span class="text-xs font-mono bg-indigo-100 text-indigo-800 px-2 py-0.5 rounded font-bold">Bin Master</span>
+            </div>
+            <p class="text-xs text-sap-muted leading-relaxed">
+              Mínima unidad funcional. Identificada por coordenadas. Puede tener restricciones de capacidad (peso, volumen o cantidad de palets).
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Hierarchy Visual Step -->
+      <div class="p-4 bg-slate-50 rounded-xl border border-slate-200 mt-4">
+        <div class="flex items-center justify-between text-xs font-bold text-sap-darkblue text-center">
+          <div class="flex-1 p-2 bg-white rounded border border-slate-200 shadow-sm">Número de Almacén</div>
+          <i data-lucide="chevron-right" class="w-4 h-4 text-slate-400 mx-2"></i>
+          <div class="flex-1 p-2 bg-white rounded border border-slate-200 shadow-sm">Tipo de Almacén</div>
+          <i data-lucide="chevron-right" class="w-4 h-4 text-slate-400 mx-2"></i>
+          <div class="flex-1 p-2 bg-white rounded border border-slate-200 shadow-sm">Área Almacenamiento</div>
+          <i data-lucide="chevron-right" class="w-4 h-4 text-slate-400 mx-2"></i>
+          <div class="flex-1 p-2 bg-blue-50 text-sap-blue border border-blue-200 rounded shadow-sm">Ubicación (Storage Bin)</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 5: RECEPCIÓN Y UBICACIÓN (PUTAWAY) -->
+    <section class="slide w-full max-w-6xl h-full flex-col justify-between fiori-card p-6 md:p-10">
+      <div>
+        <div class="flex items-center justify-between mb-2">
+          <span class="text-xs font-bold uppercase tracking-wider text-sap-blue bg-blue-50 px-3 py-1 rounded-full border border-blue-200">
+            Funcionalidades Estándar (SAP WMS – SRM)
+          </span>
+          <span class="text-xs text-sap-muted">Flujos de Almacén</span>
+        </div>
+        <h2 class="text-2xl md:text-3xl font-bold text-sap-darkblue mb-3">1. Recepción y Ubicación (Putaway)</h2>
+        <p class="text-xs text-sap-muted mb-6">
+          Validación de OC, ingreso de mercancía, control de lotes y fechas de vencimiento. Sugerencia de ubicación automática en base a slotting.
+        </p>
+
+        <!-- Process Flow Bar -->
+        <div class="grid grid-cols-1 sm:grid-cols-4 gap-3 mb-6">
+          <div class="bg-blue-50 p-3.5 rounded-xl border border-blue-200 text-center">
+            <span class="text-xs font-bold text-sap-blue block mb-1">MIGO (IM)</span>
+            <p class="text-[11px] text-slate-600">Recepción de pedido. Se genera stock en tipo de almacén intermedio (ej. 902).</p>
+          </div>
+          <div class="bg-blue-50 p-3.5 rounded-xl border border-blue-200 text-center">
+            <span class="text-xs font-bold text-sap-blue block mb-1">Necesidad (TR)</span>
+            <p class="text-[11px] text-slate-600">Documento TR generado automáticamente que indica la necesidad de mover stock.</p>
+          </div>
+          <div class="bg-blue-50 p-3.5 rounded-xl border border-blue-200 text-center">
+            <span class="text-xs font-bold text-sap-blue block mb-1">Orden (TO)</span>
+            <p class="text-[11px] text-slate-600">Creación de la TO. El sistema aplica estrategias para proponer el bin destino.</p>
+          </div>
+          <div class="bg-emerald-50 p-3.5 rounded-xl border border-emerald-200 text-center">
+            <span class="text-xs font-bold text-emerald-700 block mb-1">Confirmación</span>
+            <p class="text-[11px] text-slate-600">El operario confirma. El stock pasa del interim a la ubicación final real.</p>
+          </div>
+        </div>
+
+        <!-- Putaway Strategies Grid -->
+        <div class="bg-slate-50 p-4 rounded-xl border border-slate-200">
+          <h3 class="text-xs font-bold text-sap-darkblue uppercase tracking-wider mb-3">
+            Estrategias de Búsqueda de Ubicación Destino:
+          </h3>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+            <div class="bg-white p-3 rounded-lg border border-slate-200 text-xs">
+              <span class="font-bold text-sap-blue block mb-1">Estrategia 'C' (Ubicación Libre)</span>
+              <p class="text-slate-600 text-[11px]">Búsqueda secuencial del primer espacio vacío disponible en el tipo de almacén.</p>
+            </div>
+            <div class="bg-white p-3 rounded-lg border border-slate-200 text-xs">
+              <span class="font-bold text-sap-blue block mb-1">Estrategia 'I' (Adición)</span>
+              <p class="text-slate-600 text-[11px]">Consolida stock del mismo material en una ubicación ocupada para maximizar densidad.</p>
+            </div>
+            <div class="bg-white p-3 rounded-lg border border-slate-200 text-xs">
+              <span class="font-bold text-sap-blue block mb-1">Estrategia 'F' (Fija)</span>
+              <p class="text-slate-600 text-[11px]">Asignación estricta de una ubicación predefinida por material en el maestro.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="p-3 bg-blue-900 text-white rounded-lg flex items-center justify-between text-xs mt-4">
+        <span>El sistema decide automáticamente dónde colocar la mercancía en base a reglas de negocio preconfiguradas.</span>
+        <i data-lucide="check-circle-2" class="w-4 h-4 text-sky-400"></i>
+      </div>
+    </section>
+
+    <!-- SLIDE 6: PREPARACIÓN DE PEDIDOS (PICKING) -->
+    <section class="slide w-full max-w-6xl h-full flex-col justify-between fiori-card p-6 md:p-10">
+      <div>
+        <div class="flex items-center justify-between mb-2">
+          <span class="text-xs font-bold uppercase tracking-wider text-sap-blue bg-blue-50 px-3 py-1 rounded-full border border-blue-200">
+            Funcionalidades Estándar (SAP WMS – SRM)
+          </span>
+          <span class="text-xs text-sap-muted">Flujos de Almacén</span>
+        </div>
+        <h2 class="text-2xl md:text-3xl font-bold text-sap-darkblue mb-3">2. Preparación de Pedidos (Picking)</h2>
+        <p class="text-xs text-sap-muted mb-6">
+          Picking guiado por terminal móvil agrupado por olas. Cálculo de ruta más corta y despacho rápido en zona de staging.
+        </p>
+
+        <!-- Process Flow -->
+        <div class="grid grid-cols-1 sm:grid-cols-4 gap-3 mb-6">
+          <div class="bg-blue-50 p-3.5 rounded-xl border border-blue-200 text-center">
+            <span class="text-xs font-bold text-sap-blue block mb-1">Entrega (SD)</span>
+            <p class="text-[11px] text-slate-600">Creación de Entrega de Salida. Disparador para la actividad de almacén.</p>
+          </div>
+          <div class="bg-blue-50 p-3.5 rounded-xl border border-blue-200 text-center">
+            <span class="text-xs font-bold text-sap-blue block mb-1">Picking (TO)</span>
+            <p class="text-[11px] text-slate-600">Generación de TO aplicando estrategias de selección (FIFO / FEFO).</p>
+          </div>
+          <div class="bg-blue-50 p-3.5 rounded-xl border border-blue-200 text-center">
+            <span class="text-xs font-bold text-sap-blue block mb-1">Zona Interim (916)</span>
+            <p class="text-[11px] text-slate-600">Mover stock a zona de expedición (916) vinculada al número de entrega.</p>
+          </div>
+          <div class="bg-emerald-50 p-3.5 rounded-xl border border-emerald-200 text-center">
+            <span class="text-xs font-bold text-emerald-700 block mb-1">Post Goods Issue (PGI)</span>
+            <p class="text-[11px] text-slate-600">Cierre de entrega. El stock desaparece legal y físicamente del ERP.</p>
+          </div>
+        </div>
+
+        <!-- Strategy Metrics Bar Chart Visual -->
+        <div class="bg-slate-50 p-4 rounded-xl border border-slate-200">
+          <h3 class="text-xs font-bold text-sap-darkblue uppercase tracking-wider mb-3">
+            Impacto en la precisión del inventario y rotación de stock (%)
+          </h3>
+          <div class="space-y-3">
+            <div>
+              <div class="flex justify-between text-xs mb-1">
+                <span class="font-bold text-slate-700">FEFO (Vencimiento)</span>
+                <span class="font-bold text-emerald-600">92% Precisión</span>
+              </div>
+              <div class="w-full bg-slate-200 h-3 rounded-full overflow-hidden">
+                <div class="bg-gradient-to-r from-blue-500 to-emerald-500 h-3 rounded-full" style="width: 92%"></div>
+              </div>
+            </div>
+            <div>
+              <div class="flex justify-between text-xs mb-1">
+                <span class="font-bold text-slate-700">FIFO (Antigüedad)</span>
+                <span class="font-bold text-blue-600">85% Eficiencia</span>
+              </div>
+              <div class="w-full bg-slate-200 h-3 rounded-full overflow-hidden">
+                <div class="bg-gradient-to-r from-sky-500 to-blue-600 h-3 rounded-full" style="width: 85%"></div>
+              </div>
+            </div>
+            <div>
+              <div class="flex justify-between text-xs mb-1">
+                <span class="font-bold text-slate-700">Picking Parcial</span>
+                <span class="font-bold text-teal-600">65% Consolidación</span>
+              </div>
+              <div class="w-full bg-slate-200 h-3 rounded-full overflow-hidden">
+                <div class="bg-gradient-to-r from-slate-400 to-teal-500 h-3 rounded-full" style="width: 65%"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="pt-4 border-t border-slate-200 flex justify-between text-xs text-sap-muted">
+        <span>Garantiza despacho libre de errores reduciendo recorridos innecesarios en pasillo.</span>
+        <span class="font-bold text-sap-blue">FEFO / FIFO Automático</span>
+      </div>
+    </section>
+
+    <!-- SLIDE 7: INVENTARIO CÍCLICO Y FÍSICO -->
+    <section class="slide w-full max-w-6xl h-full flex-col justify-between fiori-card p-6 md:p-10">
+      <div>
+        <div class="flex items-center justify-between mb-2">
+          <span class="text-xs font-bold uppercase tracking-wider text-sap-blue bg-blue-50 px-3 py-1 rounded-full border border-blue-200">
+            Funcionalidades Core (SAP WMS – SRM)
+          </span>
+          <span class="text-xs text-sap-muted">Flujos de Almacén</span>
+        </div>
+        <h2 class="text-2xl md:text-3xl font-bold text-sap-darkblue mb-3">3. Inventario Cíclico y Físico</h2>
+        <p class="text-xs text-sap-muted mb-6">
+          Conteos cíclicos y físicos directos desde el pasillo sin detener la operación. Registro inmediato de diferencias y ajustes en SAP.
+        </p>
+
+        <!-- Transaction Timeline Pipeline -->
+        <div class="relative py-4 mb-6">
+          <div class="absolute left-0 right-0 top-1/2 h-1 bg-slate-200 -translate-y-1/2 z-0"></div>
+          <div class="grid grid-cols-5 gap-2 relative z-10 text-center">
+
+            <div class="bg-white p-3 rounded-xl border border-slate-200 shadow-sm">
+              <span class="text-xs font-bold text-sap-blue font-mono bg-blue-50 px-2 py-0.5 rounded block w-max mx-auto mb-1">LI01N</span>
+              <p class="text-[11px] font-semibold text-slate-800">Doc. Inventario</p>
+              <p class="text-[10px] text-slate-500">Bloqueo de Bins</p>
+            </div>
+
+            <div class="bg-white p-3 rounded-xl border border-slate-200 shadow-sm">
+              <span class="text-xs font-bold text-sap-blue font-mono bg-blue-50 px-2 py-0.5 rounded block w-max mx-auto mb-1">LI11N</span>
+              <p class="text-[11px] font-semibold text-slate-800">Resultados</p>
+              <p class="text-[10px] text-slate-500">Entrada conteo piezas</p>
+            </div>
+
+            <div class="bg-white p-3 rounded-xl border border-slate-200 shadow-sm">
+              <span class="text-xs font-bold text-amber-700 font-mono bg-amber-50 px-2 py-0.5 rounded block w-max mx-auto mb-1">LI14</span>
+              <p class="text-[11px] font-semibold text-slate-800">Recuento</p>
+              <p class="text-[10px] text-slate-500">Opcional para difer.</p>
+            </div>
+
+            <div class="bg-white p-3 rounded-xl border border-slate-200 shadow-sm">
+              <span class="text-xs font-bold text-sap-blue font-mono bg-blue-50 px-2 py-0.5 rounded block w-max mx-auto mb-1">LI20</span>
+              <p class="text-[11px] font-semibold text-slate-800">Ajuste WM</p>
+              <p class="text-[10px] text-slate-500">Limpia difer. ubicac.</p>
+            </div>
+
+            <div class="bg-emerald-50 p-3 rounded-xl border border-emerald-200 shadow-sm">
+              <span class="text-xs font-bold text-emerald-800 font-mono bg-emerald-100 px-2 py-0.5 rounded block w-max mx-auto mb-1">LI21</span>
+              <p class="text-[11px] font-semibold text-emerald-900">Ajuste IM</p>
+              <p class="text-[10px] text-emerald-700">Interfaz contable MM</p>
+            </div>
+
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div class="p-4 bg-slate-50 rounded-xl border border-slate-200 text-xs">
+            <span class="font-bold text-sap-darkblue block mb-1">Cero Paradas de Planta</span>
+            <p class="text-sap-muted">Conteo dinámico por ubicaciones (Bin counting) manteniendo el despacho activo en otras zonas.</p>
+          </div>
+          <div class="p-4 bg-slate-50 rounded-xl border border-slate-200 text-xs">
+            <span class="font-bold text-sap-darkblue block mb-1">Sincronización Total FI/CO</span>
+            <p class="text-sap-muted">Pase contable inmediato mediante la transacción LI21 hacia la gestión de mercancías MM-IM.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="pt-4 border-t border-slate-200 flex justify-between text-xs text-sap-muted">
+        <span>Trazabilidad completa por operario, fecha y hora en cada recuento.</span>
+        <span class="font-bold text-emerald-600">Exactitud de Inventario > 99.9%</span>
+      </div>
+    </section>
+
+    <!-- SLIDE 8: CONSIDERACIONES CARTAVIO - MEJORAS DE PROCESOS ACTUALES -->
+    <section class="slide w-full max-w-6xl h-full flex-col justify-between fiori-card p-6 md:p-10">
+      <div>
+        <div class="flex items-center justify-between mb-2">
+          <span class="text-xs font-bold uppercase tracking-wider text-sap-blue bg-blue-50 px-3 py-1 rounded-full border border-blue-200">
+            Consideraciones Cartavio
+          </span>
+          <span class="text-xs text-sap-muted">Mejoras de Procesos Actuales (1 de 2)</span>
+        </div>
+        <h2 class="text-2xl md:text-3xl font-bold text-sap-darkblue mb-4">Consideraciones Cartavio: Propuestas de Mejora de Procesos</h2>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+
+          <!-- Card 1: Despacho por Ventas -->
+          <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 flex flex-col justify-between">
+            <div>
+              <div class="flex items-center gap-2 font-bold text-sap-darkblue text-sm mb-2 pb-2 border-b border-slate-200">
+                <i data-lucide="truck" class="w-4 h-4 text-sap-blue"></i>
+                <span>Despacho por Ventas (Sin Salida Física)</span>
+              </div>
+              <p class="text-[11px] text-slate-500 mb-3">Situación donde el producto no sale físicamente del almacén al momento de la venta.</p>
+              
+              <div class="space-y-2 text-xs">
+                <div class="bg-white p-2.5 rounded-lg border border-slate-200 shadow-sm">
+                  <span class="font-bold text-sap-blue block mb-1">Opción 1: Bloqueo de Bins en WM</span>
+                  <p class="text-slate-600 text-[11px]">Realizar una ampliación dentro de WM que permita bloquear las ubicaciones donde todavía hay producto físico pero no en SAP, omitiéndolas en la determinación de ubicaciones libres.</p>
+                </div>
+                <div class="bg-white p-2.5 rounded-lg border border-slate-200 shadow-sm">
+                  <span class="font-bold text-emerald-700 block mb-1">Opción 2: Flujo de Facturación</span>
+                  <p class="text-slate-600 text-[11px]">Cambio del proceso de facturación para no requerir la entrega contabilizada, manteniendo el stock en la ubicación correcta y evitando reprocesos.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 2: Gestión de Saldos -->
+          <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 flex flex-col justify-between">
+            <div>
+              <div class="flex items-center gap-2 font-bold text-sap-darkblue text-sm mb-2 pb-2 border-b border-slate-200">
+                <i data-lucide="layers" class="w-4 h-4 text-amber-600"></i>
+                <span>Gestión de Saldos de Productos</span>
+              </div>
+              <p class="text-[11px] text-slate-500 mb-3">Consolidación y picking optimizado de remanentes o fracciones.</p>
+
+              <div class="space-y-2 text-xs">
+                <div class="bg-white p-2.5 rounded-lg border border-slate-200 shadow-sm">
+                  <span class="font-bold text-amber-800 block mb-1">Área Física Específica</span>
+                  <p class="text-slate-600 text-[11px]">Determinar un área específica físicamente para manejar los saldos de todos los grupos de productos donde se puedan consolidar en una zona única.</p>
+                </div>
+                <div class="bg-white p-2.5 rounded-lg border border-slate-200 shadow-sm">
+                  <span class="font-bold text-sap-blue block mb-1">Estrategia de Salida Mixta</span>
+                  <p class="text-slate-600 text-[11px]">Determinar la estrategia de salida para realizar un picking efectivo considerando pallets completos y unidades tomadas de la zona de saldos.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 3: Gestión EAN / Código SAP -->
+          <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 flex flex-col justify-between">
+            <div>
+              <div class="flex items-center gap-2 font-bold text-sap-darkblue text-sm mb-2 pb-2 border-b border-slate-200">
+                <i data-lucide="barcode" class="w-4 h-4 text-indigo-600"></i>
+                <span>Gestión de EAN / Código SAP</span>
+              </div>
+              <p class="text-[11px] text-slate-500 mb-3">Identificación precisa en terminales RF para lecturas y promociones.</p>
+
+              <div class="space-y-2 text-xs">
+                <div class="bg-white p-2.5 rounded-lg border border-slate-200 shadow-sm">
+                  <span class="font-bold text-indigo-700 block mb-1">Opción 1: Lectura de Código SAP</span>
+                  <p class="text-slate-600 text-[11px]">Utilizar el etiquetado actual para leer a nivel de RF en WM el código SAP y realizar las confirmaciones de EM o SM de WM de esa manera.</p>
+                </div>
+                <div class="bg-white p-2.5 rounded-lg border border-slate-200 shadow-sm">
+                  <span class="font-bold text-emerald-700 block mb-1">Opción 2: Nuevo EAN para Promociones</span>
+                  <p class="text-slate-600 text-[11px]">Usar un nuevo EAN para aquellas promociones donde el producto final cambie por cualquier atributo, otorgando visibilidad adecuada del material a despachar.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <div class="pt-3 border-t border-slate-200 flex justify-between items-center text-xs text-sap-muted">
+        <span>Análisis operativo para maximizar la efectividad en el Almacén Cartavio.</span>
+        <span class="font-bold text-sap-blue">Consideraciones Cartavio</span>
+      </div>
+    </section>
+
+    <!-- SLIDE 9: PROBLEMA VS SOLUCIÓN -->
+    <section class="slide w-full max-w-6xl h-full flex-col justify-between fiori-card p-6 md:p-10">
+      <div>
+        <div class="flex items-center justify-between mb-2">
+          <span class="text-xs font-bold uppercase tracking-wider text-sap-blue bg-blue-50 px-3 py-1 rounded-full border border-blue-200">
+            SAP HANA WMS Web Edition
+          </span>
+          <span class="text-xs text-sap-muted">El Futuro de la Gestión de Almacenes</span>
+        </div>
+        <h2 class="text-2xl md:text-3xl font-bold text-sap-darkblue mb-4">El Problema vs. La Solución WMS Web</h2>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <!-- Columna El Problema -->
+          <div class="bg-red-50/50 p-5 rounded-xl border border-red-200">
+            <div class="flex items-center gap-2 text-red-600 font-bold text-sm mb-3">
+              <i data-lucide="alert-triangle" class="w-5 h-5"></i>
+              <span>Contexto Actual: El Reto</span>
+            </div>
+            <div class="space-y-3 text-xs">
+              <div class="bg-white p-3 rounded-lg border border-red-100 shadow-sm">
+                <span class="font-bold text-red-900 block mb-0.5">Operación Manual y Errores</span>
+                <p class="text-slate-600">Registro tardío de movimientos en ERP, digitación manual de ubicaciones/lotes y alta tasa de errores en picking.</p>
+              </div>
+              <div class="bg-white p-3 rounded-lg border border-red-100 shadow-sm">
+                <span class="font-bold text-red-900 block mb-0.5">Picking Lento y Cuellos de Botella</span>
+                <p class="text-slate-600">Falta de optimización en rutas de picking, procesos de preparación secuenciales y demoras en despacho.</p>
+              </div>
+              <div class="bg-white p-3 rounded-lg border border-red-100 shadow-sm">
+                <span class="font-bold text-red-900 block mb-0.5">Pérdida de Trazabilidad</span>
+                <p class="text-slate-600">Diferencias entre el inventario físico y SAP, stock "perdido" en ubicaciones y retraso en conteos cíclicos.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Columna La Solucion -->
+          <div class="bg-emerald-50/50 p-5 rounded-xl border border-emerald-200">
+            <div class="flex items-center gap-2 text-emerald-700 font-bold text-sm mb-3">
+              <i data-lucide="check-circle" class="w-5 h-5"></i>
+              <span>Propuesta de Valor: Nuestra Solución</span>
+            </div>
+            <div class="space-y-3 text-xs">
+              <div class="bg-white p-3 rounded-lg border border-emerald-100 shadow-sm">
+                <span class="font-bold text-emerald-900 block mb-0.5">Portal Web 100% Responsivo</span>
+                <p class="text-slate-600">Aplicación web adaptable a terminales RF (pistolas), tablets y móviles, con interfaz Fiori moderna y simplificada.</p>
+              </div>
+              <div class="bg-white p-3 rounded-lg border border-emerald-100 shadow-sm">
+                <span class="font-bold text-emerald-900 block mb-0.5">Validación en Origen (RF)</span>
+                <p class="text-slate-600">Lectura directa de códigos de barras (EAN, GS1), lotes y ubicaciones, validando en tiempo real contra SAP.</p>
+              </div>
+              <div class="bg-white p-3 rounded-lg border border-emerald-100 shadow-sm">
+                <span class="font-bold text-emerald-900 block mb-0.5">Confirmación de Tareas (OT)</span>
+                <p class="text-slate-600">Asignación y confirmación de órdenes de Transporte en tiempo real, guiando al operario por la ruta más corta.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="pt-4 border-t border-slate-200 flex justify-between text-xs text-sap-muted">
+        <span>Transformando la complejidad operativa en eficiencia en tiempo real.</span>
+        <span class="font-bold text-sap-blue">UX Tipo Terminal Móvil Fiori</span>
+      </div>
+    </section>
+
+    <!-- SLIDE 9: DASHBOARD DE CONTROL Y KPIS -->
+    <section class="slide w-full max-w-6xl h-full flex-col justify-between fiori-card p-6 md:p-10">
+      <div>
+        <div class="flex items-center justify-between mb-2">
+          <span class="text-xs font-bold uppercase tracking-wider text-sap-blue bg-blue-50 px-3 py-1 rounded-full border border-blue-200">
+            Monitoreo en Tiempo Real - WMS Web
+          </span>
+          <span class="text-xs text-sap-muted">Resultados Cuantificables</span>
+        </div>
+        <h2 class="text-2xl md:text-3xl font-bold text-sap-darkblue mb-4">Dashboard de Control y KPIs</h2>
+
+        <!-- KPI Cards Row -->
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+
+          <div class="bg-gradient-to-br from-blue-500 to-blue-700 text-white p-4 rounded-xl shadow-sm">
+            <span class="text-xs font-medium text-blue-100 block mb-1">Tiempo de Picking</span>
+            <div class="text-3xl font-extrabold mb-1">4.5 <span class="text-sm font-normal">Min</span></div>
+            <span class="bg-emerald-400/20 text-emerald-200 text-[10px] font-bold px-2 py-0.5 rounded-full inline-flex items-center gap-1">
+              <i data-lucide="arrow-down" class="w-3 h-3"></i> 75% vs. 18 min (Papel)
+            </span>
+          </div>
+
+          <div class="bg-gradient-to-br from-emerald-600 to-teal-700 text-white p-4 rounded-xl shadow-sm">
+            <span class="text-xs font-medium text-emerald-100 block mb-1">Precisión de Stock (IRA)</span>
+            <div class="text-3xl font-extrabold mb-1">99.9%</div>
+            <span class="text-emerald-100 text-[10px]">Exactitud física en pasillo</span>
+          </div>
+
+          <div class="bg-gradient-to-br from-indigo-600 to-purple-700 text-white p-4 rounded-xl shadow-sm">
+            <span class="text-xs font-medium text-purple-100 block mb-1">Productividad Operario</span>
+            <div class="text-3xl font-extrabold mb-1">65 <span class="text-sm font-normal">Tareas/h</span></div>
+            <span class="bg-white/20 text-white text-[10px] font-bold px-2 py-0.5 rounded-full">
+              +45% Eficiencia
+            </span>
+          </div>
+
+          <div class="bg-gradient-to-br from-slate-800 to-slate-900 text-white p-4 rounded-xl shadow-sm">
+            <span class="text-xs font-medium text-slate-300 block mb-1">OTs Procesadas / Día</span>
+            <div class="text-3xl font-extrabold mb-1">1,200</div>
+            <span class="text-sky-400 text-[10px]">Movimientos en Tiempo Real</span>
+          </div>
+
+        </div>
+
+        <!-- Detail Table OTIF & SLA -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <!-- OTIF Comparison -->
+          <div class="bg-slate-50 p-4 rounded-xl border border-slate-200">
+            <h3 class="text-xs font-bold text-sap-darkblue uppercase tracking-wider mb-3">EFICIENCIA OPERATIVA: PEDIDOS PERFECTOS (OTIF)</h3>
+            <div class="space-y-2 text-xs">
+              <div class="flex justify-between items-center p-2 bg-white rounded border border-slate-200">
+                <span class="text-slate-600">Sin la App (Proceso Antiguo)</span>
+                <span class="font-bold text-red-600">72.0%</span>
+              </div>
+              <div class="flex justify-between items-center p-2 bg-blue-50 rounded border border-blue-200">
+                <span class="font-bold text-sap-blue">Con SAP WM Web</span>
+                <span class="font-bold text-sap-blue text-sm">98.5%</span>
+              </div>
+              <div class="flex justify-between items-center p-2 bg-emerald-50 rounded border border-emerald-200">
+                <span class="font-bold text-emerald-800">Objetivo de Excelencia</span>
+                <span class="font-bold text-emerald-700">99.5%</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- SLAs -->
+          <div class="bg-slate-50 p-4 rounded-xl border border-slate-200">
+            <h3 class="text-xs font-bold text-sap-darkblue uppercase tracking-wider mb-3">SLA DE CICLO LOGÍSTICO</h3>
+            <div class="space-y-2 text-xs">
+              <div class="flex justify-between items-center p-2 bg-white rounded border border-slate-200">
+                <span>Recepción & Putaway</span>
+                <span class="font-bold text-slate-800">1.5 Horas</span>
+              </div>
+              <div class="flex justify-between items-center p-2 bg-white rounded border border-slate-200">
+                <span>Movimientos Internos</span>
+                <span class="font-bold text-slate-800">15 Minutos</span>
+              </div>
+              <div class="flex justify-between items-center p-2 bg-white rounded border border-slate-200">
+                <span>Picking & Despacho</span>
+                <span class="font-bold text-slate-800">30 Minutos</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="pt-4 border-t border-slate-200 flex justify-between text-xs text-sap-muted">
+        <span>Información actualizada segundo a segundo para supervisores de almacén.</span>
+        <span class="font-bold text-emerald-600">Reducción del SLA Logístico</span>
+      </div>
+    </section>
+
+    <!-- SLIDE 10: NOTIFICACIONES Y COMUNICACIÓN PROACTIVA -->
+    <section class="slide w-full max-w-6xl h-full flex-col justify-between fiori-card p-6 md:p-10">
+      <div>
+        <div class="flex items-center justify-between mb-2">
+          <span class="text-xs font-bold uppercase tracking-wider text-sap-blue bg-blue-50 px-3 py-1 rounded-full border border-blue-200">
+            Gestión Proactiva
+          </span>
+          <span class="text-xs text-sap-muted">Aceleración de flujos de trabajo en el almacén</span>
+        </div>
+        <h2 class="text-2xl md:text-3xl font-bold text-sap-darkblue mb-6">Notificaciones y Comunicación Proactiva</h2>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+
+          <div class="p-5 bg-gradient-to-b from-blue-50 to-white rounded-xl border border-blue-100 shadow-sm">
+            <div class="w-10 h-10 rounded-lg bg-blue-500 text-white flex items-center justify-center mb-3">
+              <i data-lucide="bell" class="w-5 h-5"></i>
+            </div>
+            <h3 class="font-bold text-base text-sap-darkblue mb-2">Centro de Notificaciones</h3>
+            <ul class="space-y-2 text-xs text-slate-600">
+              <li class="flex items-start gap-1.5"><i data-lucide="check" class="w-3.5 h-3.5 text-sap-blue mt-0.5"></i> Alertas push inmediatas en terminales RF al recibir tareas urgentes de picking.</li>
+              <li class="flex items-start gap-1.5"><i data-lucide="check" class="w-3.5 h-3.5 text-sap-blue mt-0.5"></i> Visibilidad en tiempo real de las tareas pendientes en la cola del operario.</li>
+              <li class="flex items-start gap-1.5"><i data-lucide="check" class="w-3.5 h-3.5 text-sap-blue mt-0.5"></i> Avisos proactivos sobre vencimientos de lote para evitar almacenamiento caduco.</li>
+            </ul>
+          </div>
+
+          <div class="p-5 bg-gradient-to-b from-teal-50 to-white rounded-xl border border-teal-100 shadow-sm">
+            <div class="w-10 h-10 rounded-lg bg-teal-600 text-white flex items-center justify-center mb-3">
+              <i data-lucide="mail" class="w-5 h-5"></i>
+            </div>
+            <h3 class="font-bold text-base text-sap-darkblue mb-2">Email Automation</h3>
+            <ul class="space-y-2 text-xs text-slate-600">
+              <li class="flex items-start gap-1.5"><i data-lucide="check" class="w-3.5 h-3.5 text-teal-600 mt-0.5"></i> Avisos automáticos a supervisores por diferencias de inventario detectadas.</li>
+              <li class="flex items-start gap-1.5"><i data-lucide="check" class="w-3.5 h-3.5 text-teal-600 mt-0.5"></i> Enlaces directos en correos para aprobaciones de diferencias o reubicaciones.</li>
+              <li class="flex items-start gap-1.5"><i data-lucide="check" class="w-3.5 h-3.5 text-teal-600 mt-0.5"></i> Autorizaciones logísticas directas sin salir del flujo operativo de la app.</li>
+            </ul>
+          </div>
+
+          <div class="p-5 bg-gradient-to-b from-indigo-50 to-white rounded-xl border border-indigo-100 shadow-sm">
+            <div class="w-10 h-10 rounded-lg bg-indigo-600 text-white flex items-center justify-center mb-3">
+              <i data-lucide="camera" class="w-5 h-5"></i>
+            </div>
+            <h3 class="font-bold text-base text-sap-darkblue mb-2">Comentarios y Adjuntos</h3>
+            <ul class="space-y-2 text-xs text-slate-600">
+              <li class="flex items-start gap-1.5"><i data-lucide="check" class="w-3.5 h-3.5 text-indigo-600 mt-0.5"></i> Registro de incidencias (ej. fotos de pallets dañados tomadas desde la terminal).</li>
+              <li class="flex items-start gap-1.5"><i data-lucide="check" class="w-3.5 h-3.5 text-indigo-600 mt-0.5"></i> Comentarios y alertas integrados directamente sobre la Orden de Transporte.</li>
+              <li class="flex items-start gap-1.5"><i data-lucide="check" class="w-3.5 h-3.5 text-indigo-600 mt-0.5"></i> Historial completo de movimientos por operario para auditorías e incentivos.</li>
+            </ul>
+          </div>
+
+        </div>
+      </div>
+
+      <div class="p-4 bg-slate-100 rounded-xl border border-slate-200 flex justify-between items-center text-xs">
+        <div class="flex items-center gap-2">
+          <i data-lucide="users" class="w-4 h-4 text-sap-blue"></i>
+          <span class="font-bold text-sap-darkblue">Visibilidad de Almacén:</span> Mantenga al supervisor y al operario alineados en tiempo real.
+        </div>
+        <span class="bg-blue-100 text-sap-blue font-bold px-2.5 py-1 rounded">Menor tiempo de ciclo</span>
+      </div>
+    </section>
+
+    <!-- SLIDE 11: ARQUITECTURA DE INTEGRACIÓN LOGÍSTICA -->
+    <section class="slide w-full max-w-6xl h-full flex-col justify-between fiori-card p-6 md:p-10">
+      <div>
+        <div class="flex items-center justify-between mb-2">
+          <span class="text-xs font-bold uppercase tracking-wider text-sap-blue bg-blue-50 px-3 py-1 rounded-full border border-blue-200">
+            Arquitectura Técnica
+          </span>
+          <span class="text-xs text-sap-muted">Sincronización Directa SAP S/4HANA</span>
+        </div>
+        <h2 class="text-2xl md:text-3xl font-bold text-sap-darkblue mb-4">Arquitectura de Integración Logística (EWM / S/4HANA)</h2>
+
+        <!-- Component Box Pipeline -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
+
+          <div class="p-4 bg-slate-900 text-white rounded-xl border border-slate-700">
+            <span class="text-[10px] font-mono text-sky-400 block mb-1">01. CORE SAP S/4HANA</span>
+            <h3 class="font-bold text-sm mb-1">S/4HANA Cloud (Public/Private)</h3>
+            <p class="text-[11px] text-slate-300">HANA DB (64-128 GB RAM) con EWM/WM embebido, Stock Room Management en Almacén Lurín e integración MM/SD/FI.</p>
+          </div>
+
+          <div class="p-4 bg-blue-900 text-white rounded-xl border border-blue-700">
+            <span class="text-[10px] font-mono text-blue-300 block mb-1">02. FRONT-END SERVER</span>
+            <h3 class="font-bold text-sm mb-1">SAP FES 2022 & Gateway</h3>
+            <p class="text-[11px] text-blue-100">Servicios OData REST con SAP_UI 7.57 y SAPUI5 (&ge; 1.102) para comunicación fluida sin cuellos de botella.</p>
+          </div>
+
+          <div class="p-4 bg-sky-600 text-white rounded-xl border border-sky-500">
+            <span class="text-[10px] font-mono text-sky-100 block mb-1">03. FRONTEND FIORI (10 USUARIOS)</span>
+            <h3 class="font-bold text-sm mb-1">SAP Fiori Launchpad</h3>
+            <p class="text-[11px] text-sky-50">Apps Fiori de recepción, tareas de almacén y consulta de stock en tiempo real adaptadas a roles de operador y supervisor.</p>
+          </div>
+
+          <div class="p-4 bg-emerald-700 text-white rounded-xl border border-emerald-600">
+            <span class="text-[10px] font-mono text-emerald-200 block mb-1">04. DESARROLLOS Z & CLEAN CORE</span>
+            <h3 class="font-bold text-sm mb-1">Bolsa 400 Horas ABAP</h3>
+            <p class="text-[11px] text-emerald-100">Bolsa flexible de horas para etiquetas ZPL/GS1-128, formularios, reportes Z y programas identificados en Explore.</p>
+          </div>
+
+        </div>
+
+        <!-- Security & Specs Badge -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
+          <div class="p-3 bg-slate-50 rounded-xl border border-slate-200">
+            <h4 class="font-bold text-sap-darkblue mb-0.5 flex items-center gap-1.5">
+              <i data-lucide="shield-check" class="w-4 h-4 text-emerald-600"></i> Seguridad y Accesos PFCG:
+            </h4>
+            <p class="text-sap-muted text-[11px]">
+              Autorización en doble capa (Backend PFCG + Catálogos Fiori), integración con Identity Provider y log de auditoría nativo en SAP.
+            </p>
+          </div>
+
+          <div class="p-3 bg-slate-50 rounded-xl border border-slate-200">
+            <h4 class="font-bold text-sap-darkblue mb-0.5 flex items-center gap-1.5">
+              <i data-lucide="cpu" class="w-4 h-4 text-sky-600"></i> Dimensionamiento e Infraestructura:
+            </h4>
+            <p class="text-sap-muted text-[11px]">
+              Servidores optimizados en Cloud (Azure/AWS/GCP), subredes aisladas y capacidad para lecturas intensivas con RF scanners.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="pt-3 border-t border-slate-200 flex justify-between text-xs text-sap-muted">
+        <span>Conectividad en tiempo real bajo estándares SAP Activate Clean Core.</span>
+        <span class="font-bold text-sap-blue">S/4HANA Cloud EWM Solution</span>
+      </div>
+    </section>
+
+    <!-- SLIDE 12: ROAD MAP DE DESPLIEGUE (14 SEMANAS) - GANTT MODEL -->
+    <section class="slide w-full max-w-6xl h-full flex-col justify-between fiori-card p-5 md:p-8">
+      <div>
+        <div class="flex items-center justify-between mb-1">
+          <span class="text-xs font-bold uppercase tracking-wider text-sap-blue bg-blue-50 px-3 py-1 rounded-full border border-blue-200">
+            Cronograma de Implementación (14 Semanas)
+          </span>
+          <span class="text-xs text-sap-muted">Metodología SAP Activate + Go-Live & Soporte</span>
+        </div>
+        <h2 class="text-xl md:text-2xl font-bold text-sap-darkblue mb-3">Plan de Trabajo WMS/EWM por Fases (S1 - S14)</h2>
+
+        <!-- GANTT TABLE GRID CONTAINER -->
+        <div class="bg-white rounded-xl border border-slate-200 p-3 shadow-sm mb-4 overflow-x-auto">
+          <div class="min-w-[750px]">
+            <!-- Grid Header -->
+            <div class="grid gap-1 mb-2 text-center text-[11px] font-bold text-slate-600 border-b border-slate-200 pb-2" style="grid-template-columns: 200px repeat(14, minmax(0, 1fr));">
+              <div class="text-left font-extrabold text-sap-darkblue pl-2">Fase / Hito Operativo</div>
+              <div class="bg-slate-100 rounded py-0.5 text-slate-700">S1</div>
+              <div class="bg-slate-100 rounded py-0.5 text-slate-700">S2</div>
+              <div class="bg-slate-100 rounded py-0.5 text-slate-700">S3</div>
+              <div class="bg-slate-100 rounded py-0.5 text-slate-700">S4</div>
+              <div class="bg-slate-100 rounded py-0.5 text-slate-700">S5</div>
+              <div class="bg-slate-100 rounded py-0.5 text-slate-700">S6</div>
+              <div class="bg-slate-100 rounded py-0.5 text-slate-700">S7</div>
+              <div class="bg-slate-100 rounded py-0.5 text-slate-700">S8</div>
+              <div class="bg-slate-100 rounded py-0.5 text-slate-700">S9</div>
+              <div class="bg-slate-100 rounded py-0.5 text-slate-700">S10</div>
+              <div class="bg-slate-100 rounded py-0.5 text-slate-700">S11</div>
+              <div class="bg-slate-100 rounded py-0.5 text-slate-700">S12</div>
+              <div class="bg-slate-100 rounded py-0.5 text-slate-700">S13</div>
+              <div class="bg-slate-100 rounded py-0.5 text-slate-700">S14</div>
+            </div>
+
+            <!-- Gantt Sequential Rows -->
+            <div class="space-y-2.5 text-xs py-1">
+
+              <!-- Row 1: Exploración -->
+              <div class="grid gap-1 items-center" style="grid-template-columns: 200px repeat(14, minmax(0, 1fr));">
+                <div class="text-left pl-1">
+                  <span class="font-bold text-sky-900 flex items-center gap-1.5"><i data-lucide="search" class="w-3.5 h-3.5 text-sky-600"></i> 1. Exploración</span>
+                  <span class="text-[10px] text-slate-400 block pl-5">Blueprint & Layout</span>
+                </div>
+                <div class="col-span-3 bg-gradient-to-r from-sky-500 to-blue-600 text-white text-[10px] font-bold py-2 px-2.5 rounded-lg text-center shadow-sm flex items-center justify-between gap-1 border border-blue-400">
+                  <span class="truncate">Business Blueprint (TO-BE)</span>
+                  <i data-lucide="check-circle" class="w-3 h-3 text-sky-200 shrink-0"></i>
+                </div>
+                <div class="col-span-11"></div>
+              </div>
+
+              <!-- Row 2: Realización -->
+              <div class="grid gap-1 items-center" style="grid-template-columns: 200px repeat(14, minmax(0, 1fr));">
+                <div class="text-left pl-1">
+                  <span class="font-bold text-emerald-900 flex items-center gap-1.5"><i data-lucide="wrench" class="w-3.5 h-3.5 text-emerald-600"></i> 2. Realización</span>
+                  <span class="text-[10px] text-slate-400 block pl-5">Configuración & Z (400h)</span>
+                </div>
+                <div class="col-span-2"></div>
+                <div class="col-span-5 bg-gradient-to-r from-emerald-500 to-teal-600 text-white text-[10px] font-bold py-2 px-2.5 rounded-lg text-center shadow-sm flex items-center justify-between gap-1 border border-emerald-400">
+                  <span class="truncate">Config WM + Apps Z / GS1-128 / Routing</span>
+                  <i data-lucide="code-2" class="w-3 h-3 text-emerald-200 shrink-0"></i>
+                </div>
+                <div class="col-span-7"></div>
+              </div>
+
+              <!-- Row 3: Testing -->
+              <div class="grid gap-1 items-center" style="grid-template-columns: 200px repeat(14, minmax(0, 1fr));">
+                <div class="text-left pl-1">
+                  <span class="font-bold text-amber-900 flex items-center gap-1.5"><i data-lucide="check-square" class="w-3.5 h-3.5 text-amber-600"></i> 3. Testing</span>
+                  <span class="text-[10px] text-slate-400 block pl-5">Pruebas E2E & UAT</span>
+                </div>
+                <div class="col-span-7"></div>
+                <div class="col-span-2 bg-gradient-to-r from-amber-500 to-orange-500 text-white text-[10px] font-bold py-2 px-2 rounded-lg text-center shadow-sm flex items-center justify-between gap-1 border border-amber-400">
+                  <span class="truncate">UAT & Scanner RF</span>
+                  <i data-lucide="scan" class="w-3 h-3 text-amber-100 shrink-0"></i>
+                </div>
+                <div class="col-span-5"></div>
+              </div>
+
+              <!-- Row 4: Cutover -->
+              <div class="grid gap-1 items-center" style="grid-template-columns: 200px repeat(14, minmax(0, 1fr));">
+                <div class="text-left pl-1">
+                  <span class="font-bold text-rose-900 flex items-center gap-1.5"><i data-lucide="scissors" class="w-3.5 h-3.5 text-rose-600"></i> 4. Cutover</span>
+                  <span class="text-[10px] text-slate-400 block pl-5">Capacitación & Data</span>
+                </div>
+                <div class="col-span-9"></div>
+                <div class="col-span-2 bg-gradient-to-r from-rose-500 to-red-600 text-white text-[10px] font-bold py-2 px-2 rounded-lg text-center shadow-sm flex items-center justify-between gap-1 border border-rose-400">
+                  <span class="truncate">Capacitación + Stock</span>
+                  <i data-lucide="users" class="w-3 h-3 text-rose-100 shrink-0"></i>
+                </div>
+                <div class="col-span-3"></div>
+              </div>
+
+              <!-- Row 5: Soporte -->
+              <div class="grid gap-1 items-center" style="grid-template-columns: 200px repeat(14, minmax(0, 1fr));">
+                <div class="text-left pl-1">
+                  <span class="font-bold text-indigo-900 flex items-center gap-1.5"><i data-lucide="rocket" class="w-3.5 h-3.5 text-indigo-600"></i> 5. Soporte</span>
+                  <span class="text-[10px] text-slate-400 block pl-5">Go-Live & Hypercare</span>
+                </div>
+                <div class="col-span-11"></div>
+                <div class="col-span-3 bg-gradient-to-r from-indigo-600 to-blue-700 text-white text-[10px] font-bold py-2 px-2.5 rounded-lg text-center shadow-sm flex items-center justify-between gap-1 border border-indigo-400">
+                  <span class="truncate">🚀 GO-LIVE + Hypercare (60 días)</span>
+                  <i data-lucide="shield-check" class="w-3 h-3 text-indigo-200 shrink-0"></i>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+        <!-- 5 DELIVERABLES CARDS ROW (Matching image_865039.png) -->
+        <div class="grid grid-cols-1 sm:grid-cols-5 gap-2.5 text-[11px]">
+
+          <div class="p-2.5 bg-slate-50 rounded-lg border-t-4 border-blue-600 border-x border-b border-slate-200">
+            <span class="font-bold text-blue-900 block mb-1 flex items-center gap-1"><i data-lucide="file-text" class="w-3 h-3 text-blue-600"></i> Entregables Fase 1</span>
+            <ul class="space-y-0.5 text-slate-600 text-[10px]">
+              <li>• Documento BBP Aprobado</li>
+              <li>• Levantamiento Almacén Lurín</li>
+              <li>• Matriz de Racks/Bins Definida</li>
+            </ul>
+          </div>
+
+          <div class="p-2.5 bg-slate-50 rounded-lg border-t-4 border-emerald-600 border-x border-b border-slate-200">
+            <span class="font-bold text-emerald-900 block mb-1 flex items-center gap-1"><i data-lucide="code" class="w-3 h-3 text-emerald-600"></i> Entregables Fase 2</span>
+            <ul class="space-y-0.5 text-slate-600 text-[10px]">
+              <li>• Configuración EWM/WM Base</li>
+              <li>• Apps Z-Fiori & Bolsa 400h</li>
+              <li>• Etiquetas GS1-128 Operativas</li>
+            </ul>
+          </div>
+
+          <div class="p-2.5 bg-slate-50 rounded-lg border-t-4 border-amber-500 border-x border-b border-slate-200">
+            <span class="font-bold text-amber-900 block mb-1 flex items-center gap-1"><i data-lucide="check-circle-2" class="w-3 h-3 text-amber-600"></i> Entregables Fase 3</span>
+            <ul class="space-y-0.5 text-slate-600 text-[10px]">
+              <li>• Actas Pruebas Integrales</li>
+              <li>• Validación RF en Piso</li>
+              <li>• Ajuste de Roles PFCG</li>
+            </ul>
+          </div>
+
+          <div class="p-2.5 bg-slate-50 rounded-lg border-t-4 border-rose-500 border-x border-b border-slate-200">
+            <span class="font-bold text-rose-900 block mb-1 flex items-center gap-1"><i data-lucide="users" class="w-3 h-3 text-rose-600"></i> Entregables Fase 4</span>
+            <ul class="space-y-0.5 text-slate-600 text-[10px]">
+              <li>• Manuales de Usuario</li>
+              <li>• Operadores Capacitados</li>
+              <li>• Carga de Inventario Inicial</li>
+            </ul>
+          </div>
+
+          <div class="p-2.5 bg-slate-50 rounded-lg border-t-4 border-indigo-600 border-x border-b border-slate-200">
+            <span class="font-bold text-indigo-900 block mb-1 flex items-center gap-1"><i data-lucide="headphones" class="w-3 h-3 text-indigo-600"></i> Entregables Fase 5</span>
+            <ul class="space-y-0.5 text-slate-600 text-[10px]">
+              <li>• Informe Cierre de Proyecto</li>
+              <li>• Pase a Producción Exitoso</li>
+              <li>• Garantía 60 Días / Hypercare</li>
+            </ul>
+          </div>
+
+        </div>
+      </div>
+
+      <div class="pt-2 border-t border-slate-200 flex justify-between items-center text-[11px] text-sap-muted">
+        <span>Garantía de 60 días contados a partir del Go-Live en la Semana 12.</span>
+        <span class="font-bold text-sap-blue">Duración Total: 14 Semanas</span>
+      </div>
+    </section>
+
+    <!-- SLIDE 13: POR QUÉ NOSOTROS & PRÓXIMOS PASOS -->
+    <section class="slide w-full max-w-6xl h-full flex-col justify-between fiori-card p-6 md:p-10">
+      <div>
+        <div class="flex items-center justify-between mb-2">
+          <span class="text-xs font-bold uppercase tracking-wider text-sap-blue bg-blue-50 px-3 py-1 rounded-full border border-blue-200">
+            Conclusión & Cierre
+          </span>
+          <span class="text-xs text-sap-muted">El Socio Estratégico para su Almacén</span>
+        </div>
+        <h2 class="text-2xl md:text-3xl font-bold text-sap-darkblue mb-4">¿Por Qué JM HOLDING? & Próximos Pasos</h2>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+
+          <!-- Col 1: Por qué nosotros -->
+          <div class="space-y-3">
+            <h3 class="text-xs font-bold text-sap-darkblue uppercase tracking-wider">NUESTRO DIFERENCIADOR</h3>
+            <div class="bg-slate-50 p-3.5 rounded-lg border border-slate-200 text-xs">
+              <span class="font-bold text-sap-blue block mb-1">Equipo Especializado Multidisciplinario</span>
+              <p class="text-slate-600">Consultor Sr EWM, Basis/Cloud, FI/MM, Arquitecto ABAP (Líder Técnico) y PM dedicados al éxito del proyecto.</p>
+            </div>
+            <div class="bg-slate-50 p-3.5 rounded-lg border border-slate-200 text-xs">
+              <span class="font-bold text-sap-blue block mb-1">Flexibilidad (Bolsa de 400h ABAP)</span>
+              <p class="text-slate-600">Para personalizar reportes, formularios y programas Z identificados durante la etapa Explore.</p>
+            </div>
+            <div class="bg-slate-50 p-3.5 rounded-lg border border-slate-200 text-xs">
+              <span class="font-bold text-emerald-700 block mb-1">Garantía de 60 Días Post Go-Live</span>
+              <p class="text-slate-600">Acompañamiento hypercare para asegurar la estabilidad operativa y resolver cualquier incidencia sin costo adicional.</p>
+            </div>
+          </div>
+
+          <!-- Col 2: Próximos Pasos -->
+          <div>
+            <h3 class="text-xs font-bold text-sap-darkblue uppercase tracking-wider mb-3">PLAN DE ARRANQUE RECOMENDADO</h3>
+            <div class="space-y-2.5 text-xs">
+              <div class="flex items-start gap-3 p-2.5 bg-blue-50 rounded-lg border border-blue-200">
+                <span class="bg-sap-blue text-white w-5 h-5 rounded-full flex items-center justify-center font-bold shrink-0">1</span>
+                <div>
+                  <span class="font-bold text-sap-darkblue block">Kick-off & Levantamiento en Almacén Lurín</span>
+                  <span class="text-slate-600">Visita técnica de 3 días a almacén, mapeo de estructura (racks/bins) y flujo contra OC.</span>
+                </div>
+              </div>
+              <div class="flex items-start gap-3 p-2.5 bg-blue-50 rounded-lg border border-blue-200">
+                <span class="bg-sap-blue text-white w-5 h-5 rounded-full flex items-center justify-center font-bold shrink-0">2</span>
+                <div>
+                  <span class="font-bold text-sap-darkblue block">Assessment Técnico Cloud & Fiori</span>
+                  <span class="text-slate-600">Validación de versión S/4HANA, FES 2022, redes Wi-Fi y compatibilidad de pistolas RF.</span>
+                </div>
+              </div>
+              <div class="flex items-start gap-3 p-2.5 bg-emerald-50 rounded-lg border border-emerald-200">
+                <span class="bg-emerald-600 text-white w-5 h-5 rounded-full flex items-center justify-center font-bold shrink-0">3</span>
+                <div>
+                  <span class="font-bold text-emerald-900 block">Firma BBP & Inicio Realización</span>
+                  <span class="text-slate-600">Aprobación del diseño TO-BE y arranque de configuraciones EWM y bolsa ABAP.</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Contact Box -->
+        <div class="p-4 bg-gradient-to-r from-[#0A2540] to-blue-900 text-white rounded-xl flex flex-col md:flex-row justify-between items-center gap-4 text-xs">
+          <div>
+            <span class="text-sky-400 font-bold block text-sm">JM HOLDING LOGISTICS - Transforma tu Almacén</span>
+            <p class="text-slate-300">¡Inicie la implementación de SAP HANA WMS Edition hoy con nosotros!</p>
+          </div>
+          <div class="text-right shrink-0 space-y-1">
+            <p class="font-semibold text-slate-100"><i data-lucide="mail" class="w-3.5 h-3.5 inline mr-1 text-sky-400"></i>contacto@jmholding.com</p>
+            <p class="font-semibold text-slate-100"><i data-lucide="globe" class="w-3.5 h-3.5 inline mr-1 text-sky-400"></i>www.jmholding.com</p>
+            <p class="text-slate-300"><i data-lucide="phone" class="w-3.5 h-3.5 inline mr-1 text-sky-400"></i>+51 987 733 317 | Lima, Perú</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="pt-3 flex justify-between items-center text-xs text-sap-muted">
+        <span>Garantice la máxima eficiencia en su gestión logística con JM HOLDING.</span>
+        <span class="font-bold text-sap-blue">JM HOLDING LOGISTICS</span>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- NAVIGATION BOTTOM BAR CONTROLS -->
+  <footer class="h-14 bg-[#0A2540] text-white px-6 flex items-center justify-between border-t border-slate-800 z-50">
+    <button onclick="prevSlide()" class="flex items-center gap-2 px-4 py-1.5 bg-slate-800 hover:bg-slate-700 active:bg-slate-900 rounded-lg text-xs font-semibold transition border border-slate-700">
+      <i data-lucide="chevron-left" class="w-4 h-4"></i> Anterior
+    </button>
+
+    <!-- Slide Thumb/Progress Indicators -->
+    <div id="slide-dots" class="hidden sm:flex items-center space-x-1.5">
+      <!-- Dots injected dynamically via JS -->
+    </div>
+
+    <button onclick="nextSlide()" class="flex items-center gap-2 px-5 py-1.5 bg-sap-blue hover:bg-blue-600 active:bg-blue-800 rounded-lg text-xs font-semibold transition shadow-md">
+      Siguiente <i data-lucide="chevron-right" class="w-4 h-4"></i>
+    </button>
+  </footer>
+
+  <!-- OVERVIEW DRAWER / MODAL -->
+  <div id="overview-modal" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 hidden flex-col p-6 overflow-y-auto">
+    <div class="flex justify-between items-center text-white mb-6 max-w-6xl mx-auto w-full">
+      <h2 class="text-xl font-bold flex items-center gap-2">
+        <i data-lucide="grid" class="w-5 h-5 text-sky-400"></i> Vista Global de Diapositivas (13)
+      </h2>
+      <button onclick="toggleOverview()" class="p-2 hover:bg-white/10 rounded-full text-slate-300">
+        <i data-lucide="x" class="w-6 h-6"></i>
+      </button>
+    </div>
+
+    <div id="overview-grid" class="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-6xl mx-auto w-full">
+      <!-- Grid items generated by JS -->
+    </div>
+  </div>
+
+  <script>
+    // Initialize Lucide Icons
+    lucide.createIcons();
+
+    let currentSlide = 0;
+    const slides = document.querySelectorAll('.slide');
+    const totalSlides = slides.length;
+
+    const titles = [
+      "1. Portada",
+      "2. Quiénes Somos",
+      "3. Ventajas & Clientes",
+      "4. Jerarquía SAP WM",
+      "5. Recepción & Putaway",
+      "6. Picking Optimizado",
+      "7. Inventario Cíclico",
+      "8. Consideraciones Cartavio",
+      "9. Problema vs. Solución",
+      "10. Dashboard & KPIs",
+      "11. Notificaciones",
+      "12. Arquitectura Técnica",
+      "13. Road Map 14 Semanas",
+      "14. Próximos Pasos"
+    ];
+
+    function updateSlide() {
+      slides.forEach((slide, index) => {
+        if (index === currentSlide) {
+          slide.classList.add('active');
+        } else {
+          slide.classList.remove('active');
+        }
+      });
+
+      // Update counter text
+      document.getElementById('slide-counter').innerText = `${currentSlide + 1} / ${totalSlides}`;
+
+      // Update dots
+      renderDots();
+    }
+
+    function nextSlide() {
+      if (currentSlide < totalSlides - 1) {
+        currentSlide++;
+        updateSlide();
+      }
+    }
+
+    function prevSlide() {
+      if (currentSlide > 0) {
+        currentSlide--;
+        updateSlide();
+      }
+    }
+
+    function goToSlide(index) {
+      currentSlide = index;
+      updateSlide();
+      const modal = document.getElementById('overview-modal');
+      if (!modal.classList.contains('hidden')) {
+        toggleOverview();
+      }
+    }
+
+    function renderDots() {
+      const container = document.getElementById('slide-dots');
+      container.innerHTML = '';
+      slides.forEach((_, index) => {
+        const dot = document.createElement('button');
+        dot.className = `w-2.5 h-2.5 rounded-full transition-all ${index === currentSlide ? 'bg-sky-400 w-6' : 'bg-slate-600 hover:bg-slate-400'}`;
+        dot.onclick = () => goToSlide(index);
+        container.appendChild(dot);
+      });
+    }
+
+    function toggleOverview() {
+      const modal = document.getElementById('overview-modal');
+      const grid = document.getElementById('overview-grid');
+      modal.classList.toggle('hidden');
+      modal.classList.toggle('flex');
+
+      if (!modal.classList.contains('hidden')) {
+        grid.innerHTML = '';
+        titles.forEach((title, idx) => {
+          const card = document.createElement('div');
+          card.className = `p-4 rounded-xl border text-xs cursor-pointer transition flex flex-col justify-between h-28 ${idx === currentSlide ? 'bg-sky-900 border-sky-400 text-white' : 'bg-slate-800 border-slate-700 text-slate-300 hover:bg-slate-700'}`;
+          card.onclick = () => goToSlide(idx);
+          card.innerHTML = `
+            <span class="font-bold text-sm text-sky-300">Slide ${idx + 1}</span>
+            <span class="font-medium text-slate-200">${title}</span>
+            <span class="text-[10px] text-slate-400">Ver diapositiva &rarr;</span>
+          `;
+          grid.appendChild(card);
+        });
+      }
+    }
+
+    function toggleFullscreen() {
+      if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen().catch(err => {
+          console.error(`Error attempting to enable fullscreen: ${err.message}`);
+        });
+      } else {
+        if (document.exitFullscreen) {
+          document.exitFullscreen();
+        }
+      }
+    }
+
+    // Keyboard Shortcuts
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight' || e.key === 'Space') {
+        nextSlide();
+      } else if (e.key === 'ArrowLeft') {
+        prevSlide();
+      } else if (e.key === 'Escape') {
+        const modal = document.getElementById('overview-modal');
+        if (!modal.classList.contains('hidden')) {
+          toggleOverview();
+        }
+      }
+    });
+
+    // Initialize dots on load
+    renderDots();
+  </script>
+</body>
+</html>

@@ -1,0 +1,142 @@
+<core:FragmentDefinition
+    xmlns="sap.m"
+    xmlns:f="sap.ui.layout.form"
+    xmlns:core="sap.ui.core">
+
+    <Dialog
+        title="Registro Factura Perú - Contabilidad ({review>/comprobante})"
+        contentWidth="950px"
+        resizable="true"
+        draggable="true">
+        <content>
+            <VBox class="sapUiSmallMargin">
+
+                <f:SimpleForm
+                    editable="true"
+                    layout="ResponsiveGridLayout"
+                    labelSpanXL="4" labelSpanL="4" labelSpanM="4" labelSpanS="12"
+                    columnsXL="2" columnsL="2" columnsM="2"
+                    singleContainerFullWidth="false">
+                    <f:content>
+                        <core:Title text="Información General" />
+
+                        <Label text="Nro. Serie / Correlativo:" />
+                        <Input value="{review>/comprobante}" editable="false" />
+
+                        <Label text="Fecha de Cont. Factura:" />
+                        <DatePicker value="{review>/fechaContabilizacion}" displayFormat="dd/MM/yyyy" />
+
+                        <Label text="Fecha Emisión:" />
+                        <Input value="{review>/fechaEmision}" editable="false" />
+
+                        <Label text="Fecha Base:*" />
+                        <DatePicker value="{review>/fechaEmision}" displayFormat="dd/MM/yyyy" />
+
+                        <Label text="Importe + Igv:" />
+                        <HBox alignItems="Center">
+                            <Input value="{path: 'review>/importe', formatter: '.formatter.currency'}" editable="false" width="10rem" class="sapUiTinyMarginEnd" />
+                            <Text text="{review>/moneda}" bold="true" />
+                        </HBox>
+
+                        <core:Title text="Impuestos, Retención y Glosa" />
+
+                        <Label text="Clase de Documento:" />
+                        <Input value="{review>/claseDocumento}" editable="false" />
+
+                        <Label text="Condición de Pago:" />
+                        <Input value="{review>/condicionPago}" editable="false" />
+
+                        <Label text="Detracción:" />
+                        <Select
+                            items="{app>/detracciones}"
+                            selectedKey="{review>/detraccion}"
+                            width="100%">
+                            <core:Item key="{app>code}" text="{app>name}" />
+                        </Select>
+
+                        <Label text="Retención:" />
+                        <Select
+                            items="{app>/retenciones}"
+                            selectedKey="{review>/retencion}"
+                            width="100%">
+                            <core:Item key="{app>code}" text="{app>name}" />
+                        </Select>
+
+                        <Label text="Glosa Recepción:" />
+                        <Input value="{review>/glosaRecepcion}" />
+
+                        <Label text="Glosa Factura:" />
+                        <Input value="{review>/glosaFactura}" />
+                    </f:content>
+                </f:SimpleForm>
+
+                <IconTabBar class="sapUiSmallMarginTop">
+                    <items>
+                        <IconTabFilter icon="sap-icon://product" text="Artículos / Posiciones">
+                            <Table items="{review>/items}">
+                                <columns>
+                                    <Column><Text text="OC" /></Column>
+                                    <Column><Text text="Pos. OC" /></Column>
+                                    <Column><Text text="Nro Guía" /></Column>
+                                    <Column><Text text="Descripción" /></Column>
+                                    <Column><Text text="Fecha Entrega" /></Column>
+                                    <Column><Text text="Cant. Entregada" /></Column>
+                                    <Column><Text text="Importe" /></Column>
+                                    <Column><Text text="Impuesto" /></Column>
+                                </columns>
+                                <items>
+                                    <ColumnListItem>
+                                        <cells>
+                                            <Text text="{review>oc}" />
+                                            <Text text="{review>posOC}" />
+                                            <Text text="{review>nroGuia}" />
+                                            <Text text="{review>descripcion}" />
+                                            <Text text="{review>fechaEntrega}" />
+                                            <Text text="{review>cantEntregada}" />
+                                            <ObjectNumber number="{path: 'review>importe', formatter: '.formatter.currency'}" unit="{review>/moneda}" />
+                                            <ObjectNumber number="{path: 'review>impuesto', formatter: '.formatter.currency'}" unit="{review>/moneda}" />
+                                        </cells>
+                                    </ColumnListItem>
+                                </items>
+                            </Table>
+                        </IconTabFilter>
+
+                        <IconTabFilter icon="sap-icon://pdf-attachment" text="Archivos PDF">
+                            <VBox class="sapUiSmallMargin">
+                                <HBox alignItems="Center">
+                                    <Icon src="sap-icon://pdf-attachment" size="2rem" class="sapUiSmallMarginEnd" color="Negative" />
+                                    <Text text="{review>/pdfName}" bold="true" class="sapUiSmallMarginEnd" />
+                                    <Button text="Visualizar PDF" icon="sap-icon://sys-find" type="Emphasized" class="sapUiTinyMarginEnd" />
+                                    <Button text="Descargar PDF" icon="sap-icon://download" />
+                                </HBox>
+                            </VBox>
+                        </IconTabFilter>
+
+                        <IconTabFilter icon="sap-icon://attachment" text="Archivo XML">
+                            <VBox class="sapUiSmallMargin">
+                                <HBox alignItems="Center">
+                                    <Icon src="sap-icon://attachment" size="2rem" class="sapUiSmallMarginEnd" color="Highlight" />
+                                    <Text text="{review>/xmlName}" bold="true" class="sapUiSmallMarginEnd" />
+                                    <Button text="Ver Contenido XML" icon="sap-icon://document-text" class="sapUiTinyMarginEnd" />
+                                    <Button text="Descargar XML" icon="sap-icon://download" />
+                                </HBox>
+                            </VBox>
+                        </IconTabFilter>
+                    </items>
+                </IconTabBar>
+
+            </VBox>
+        </content>
+        <beginButton>
+            <Button
+                text="{i18n>accInvBtnSendSAP}"
+                icon="sap-icon://accept"
+                type="Emphasized"
+                press=".onPostInvoiceToSAP" />
+        </beginButton>
+        <endButton>
+            <Button text="{i18n>commonClose}" type="Transparent" press=".onCloseReviewDialog" />
+        </endButton>
+    </Dialog>
+
+</core:FragmentDefinition>

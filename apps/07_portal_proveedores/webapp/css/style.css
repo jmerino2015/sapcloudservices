@@ -1,0 +1,289 @@
+html, body, #content, #content > div:not(#sap-ui-static), .sapUiComponentContainer, [id$="-uiarea"], .sapUiView, .sapMShell, .sapMApp, .sapMNav {
+    height: 100% !important;
+    margin: 0;
+    padding: 0;
+}
+
+/* ============================================================
+   TNT ToolPage & Dark Header Styling
+   ============================================================ */
+.sapTNTToolHeader.portalHeader,
+.portalHeader,
+.sapTNTToolHeader {
+    background-color: #1b2a3d !important;
+    background: #1b2a3d !important;
+    border-bottom: 1px solid #101a26 !important;
+}
+
+/* ============================================================
+   EMBEDDED IN FIORI PORTAL MODAL VIEWER
+   ============================================================ */
+body.in-iframe .portalHeader,
+body.in-iframe .sapTNTToolHeader,
+body.in-iframe #appToolHeader {
+    display: none !important;
+}
+
+body.in-iframe .sapTntToolPageContainer {
+    top: 0 !important;
+    height: 100% !important;
+}
+
+.portalHeader .sapMBtnIcon,
+.portalHeader .sapMTitle,
+.portalHeader .sapUiIcon,
+.portalHeader .sapMText,
+.portalHeader .sapMBtn .sapMBtnIcon {
+    color: #ffffff !important;
+}
+
+.portalHeader .sapMBtn:hover .sapMBtnIcon {
+    color: #4da3ff !important;
+}
+
+/* Búsqueda en el Header */
+.portalHeaderSearch.sapMSF {
+    background-color: rgba(255, 255, 255, 0.15) !important;
+    border: 1px solid rgba(255, 255, 255, 0.3) !important;
+    border-radius: 6px !important;
+}
+
+.portalHeaderSearch .sapMSFI,
+.portalHeaderSearch .sapMSFPlaceholder {
+    color: #ffffff !important;
+}
+
+.portalHeaderSearch .sapMSFBF,
+.portalHeaderSearch .sapMSFReload {
+    color: #ffffff !important;
+}
+
+/* SideNavigation styling tuning */
+.sapTNTSideNavigation {
+    border-right: 1px solid #d9d9d9;
+}
+
+/* ============================================================
+   Portal Login Card & Background Styling
+   ============================================================ */
+.portalLoginBackground {
+    background: linear-gradient(135deg, #1b2a3d 0%, #004085 50%, #0064d9 100%) !important;
+}
+
+.portalLoginCard.sapMPanel {
+    background-color: #ffffff !important;
+    border-radius: 12px !important;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3) !important;
+}
+
+/* ============================================================
+   SAP Fiori Launchpad Tiles Styling
+   ============================================================ */
+.portalFioriLaunchpadTile {
+    border-radius: 8px !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1) !important;
+    transition: transform 0.2s ease, box-shadow 0.2s ease !important;
+}
+
+.portalFioriLaunchpadTile:hover {
+    transform: translateY(-4px) !important;
+    box-shadow: 0 8px 20px rgba(0, 100, 217, 0.25) !important;
+}
+
+/* ============================================================
+   SAP Joule Droid — Side Panel Alineado a la Derecha
+   ============================================================ */
+.chatbotSidebarPanel {
+    position: absolute !important;
+    right: 0 !important;
+    top: 0 !important;
+    bottom: 0 !important;
+    z-index: 100 !important;
+    width: 390px !important;
+    background-color: #ffffff !important;
+    border-left: 1px solid #e2e8f0 !important;
+    box-shadow: -4px 0 20px rgba(0, 0, 0, 0.12) !important;
+    height: 100% !important;
+    display: flex !important;
+    flex-direction: column !important;
+    padding: 0 !important;
+    box-sizing: border-box !important;
+}
+
+.chatbotSidebarHeader {
+    border-bottom: 1px solid #e2e8f0 !important;
+    background-color: #1b2a3d !important;
+    padding: 0 12px !important;
+    height: 48px !important;
+    min-height: 48px !important;
+    box-sizing: border-box !important;
+}
+
+.chatbotSidebarHeader .sapMTitle,
+.chatbotSidebarHeader .sapMBtnIcon,
+.chatbotSidebarHeader .sapUiIcon {
+    color: #ffffff !important;
+}
+
+.chatScrollContainer {
+    flex-grow: 1 !important;
+    height: calc(100% - 130px) !important;
+    padding: 12px 14px !important;
+    overflow-y: auto !important;
+    background-color: #ffffff !important;
+    box-sizing: border-box !important;
+}
+
+.chatbotSidebarFooter {
+    padding: 10px 14px !important;
+    border-top: 1px solid #e2e8f0 !important;
+    background-color: #f8fafc !important;
+    height: 64px !important;
+    min-height: 64px !important;
+    box-sizing: border-box !important;
+}
+
+/* Adaptar NavContainer cuando el panel derecho está abierto */
+.mainAppNavContainer {
+    width: 100% !important;
+    height: 100% !important;
+    transition: margin-right 0.3s ease !important;
+    margin-right: 0 !important;
+}
+
+.chatbot-expanded-nav {
+    margin-right: 390px !important;
+}
+
+.portalDroidIaFloatingBtn {
+    position: fixed !important;
+    bottom: 2rem !important;
+    right: 2rem !important;
+    z-index: 1000 !important;
+    box-shadow: 0 6px 16px rgba(0, 100, 217, 0.35) !important;
+    border-radius: 2rem !important;
+    font-weight: bold !important;
+    background-color: #0064d9 !important;
+    border-color: #0050b3 !important;
+}
+
+.portalDroidIaFloatingBtn .sapMBtnIcon,
+.portalDroidIaFloatingBtn .sapMBtnText {
+    color: #ffffff !important;
+    font-size: 1rem !important;
+}
+
+.portalJouleTitle {
+    font-weight: 700 !important;
+    color: #ffffff !important;
+    font-size: 1.05rem !important;
+}
+
+/* Container de Input SAP Joule Droid Ampliado */
+.portalIaInputContainer {
+    width: 100% !important;
+    display: flex !important;
+    align-items: center !important;
+    background-color: #ffffff !important;
+    border: 1.5px solid #0064d9 !important;
+    border-radius: 24px !important;
+    padding: 2px 6px 2px 14px !important;
+    box-shadow: 0 2px 8px rgba(0, 100, 217, 0.12) !important;
+    box-sizing: border-box !important;
+    min-height: 42px !important;
+}
+
+.portalIaInputContainer .portalIaInput {
+    flex-grow: 1 !important;
+    width: 100% !important;
+}
+
+.portalIaInputContainer .portalIaInput .sapMInputBaseInner {
+    border: none !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    font-size: 0.95rem !important;
+    color: #1e293b !important;
+    padding: 0 !important;
+}
+
+.portalIaSendBtn {
+    border-radius: 50% !important;
+    width: 2.4rem !important;
+    height: 2.4rem !important;
+    min-width: 2.4rem !important;
+    padding: 0 !important;
+    background-color: #0064d9 !important;
+    border-color: #0050b3 !important;
+    box-shadow: 0 2px 6px rgba(0, 100, 217, 0.3) !important;
+}
+
+.portalIaSendBtn .sapMBtnIcon {
+    color: #ffffff !important;
+    font-size: 1.05rem !important;
+}
+
+/* Burbujas de Chat SAP Joule Droid */
+.portalUserBubble {
+    background-color: #e6f4ff !important;
+    border: 1px solid #91caef !important;
+    border-radius: 14px 14px 2px 14px !important;
+    padding: 10px 14px !important;
+    box-shadow: 0 2px 6px rgba(0, 100, 217, 0.08) !important;
+    color: #1e293b !important;
+}
+
+.portalBotBubble {
+    background-color: #f8fafc !important;
+    border: 1px solid #e2e8f0 !important;
+    border-radius: 14px 14px 14px 2px !important;
+    padding: 10px 14px !important;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04) !important;
+    color: #1e293b !important;
+    line-height: 1.45 !important;
+}
+
+.portalChipBtn {
+    border-radius: 16px !important;
+    border: 1px solid #0064d9 !important;
+    color: #0064d9 !important;
+    background-color: #eff6ff !important;
+    font-weight: 500 !important;
+    padding: 2px 10px !important;
+}
+
+.portalChipBtn:hover {
+    background-color: #0064d9 !important;
+    color: #ffffff !important;
+}
+
+/* ============================================================
+   Hero Banner — fondo temático usando variable CSS de SAP
+   ============================================================ */
+.portalHeroBanner {
+    background: var(--sapShellColor);
+    color: var(--sapShell_TextColor);
+    min-height: 14rem;
+    justify-content: center;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.portalHeroBanner .sapMText,
+.portalHeroBanner .sapMTitle {
+    color: var(--sapShell_TextColor);
+}
+
+/* ============================================================
+   KPI Cards — altura mínima uniforme
+   ============================================================ */
+.portalKpiCard {
+    min-height: 8rem;
+}
+
+/* ============================================================
+   Action Cards — altura mínima uniforme
+   ============================================================ */
+.portalActionCard {
+    min-height: 12rem;
+}

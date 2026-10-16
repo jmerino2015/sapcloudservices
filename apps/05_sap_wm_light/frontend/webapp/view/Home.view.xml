@@ -1,0 +1,219 @@
+<mvc:View
+  controllerName="wm.light.controller.Home"
+  xmlns:mvc="sap.ui.core.mvc"
+  xmlns="sap.m"
+  xmlns:f="sap.f"
+  xmlns:cards="sap.f.cards"
+  xmlns:l="sap.ui.layout">
+
+  <Page
+    id="homePage"
+    title="{i18n>homeTitle}"
+    showNavButton="false"
+    backgroundDesign="List">
+
+    <content>
+      <VBox class="sapUiResponsivePadding">
+
+        <!-- KPI Strip -->
+        <l:Grid defaultSpan="XL3 L3 M6 S12" class="sapUiSmallMarginBottom">
+          <f:Card id="kpiToCard">
+            <f:header>
+              <cards:NumericHeader
+                title="{i18n>kpiOpenTOs}"
+                number="{home>/kpiTOs}"
+                scale=""
+                unitOfMeasurement="TOs"
+                sideIndicatorsAlignment="Begin"
+                state="{home>/kpiTOsState}" />
+            </f:header>
+          </f:Card>
+          <f:Card>
+            <f:header>
+              <cards:NumericHeader
+                title="{i18n>kpiStockPositions}"
+                number="{home>/kpiStock}"
+                unitOfMeasurement="pos."
+                state="None" />
+            </f:header>
+          </f:Card>
+          <f:Card>
+            <f:header>
+              <cards:NumericHeader
+                title="{i18n>kpiOccupancy}"
+                number="{home>/kpiOccupancy}"
+                unitOfMeasurement="%"
+                state="{home>/kpiOccupancyState}" />
+            </f:header>
+          </f:Card>
+          <f:Card>
+            <f:header>
+              <cards:NumericHeader
+                title="{i18n>kpiExpiringSoon}"
+                number="{home>/kpiExpiring}"
+                unitOfMeasurement="lotes"
+                state="{home>/kpiExpiringState}" />
+            </f:header>
+          </f:Card>
+        </l:Grid>
+
+        <!-- Operaciones -->
+        <Title text="{i18n>homeGroupMain}" titleStyle="H4" class="sapUiSmallMarginBottom sapUiSmallMarginTop" />
+        <l:Grid defaultSpan="XL2 L3 M4 S6" class="sapUiSmallMarginBottom">
+          <GenericTile
+            header="{i18n>tileGRTitle}"
+            subheader="{i18n>tileGRSubtitle}"
+            frameType="OneByOne"
+            press=".onNavGR">
+            <tileContent>
+              <TileContent>
+                <content>
+                  <ImageContent src="sap-icon://factory" />
+                </content>
+              </TileContent>
+            </tileContent>
+          </GenericTile>
+
+          <GenericTile
+            header="{i18n>tileGITitle}"
+            subheader="{i18n>tileGISubtitle}"
+            frameType="OneByOne"
+            press=".onNavGI">
+            <tileContent>
+              <TileContent>
+                <content>
+                  <ImageContent src="sap-icon://shipping-status" />
+                </content>
+              </TileContent>
+            </tileContent>
+          </GenericTile>
+
+          <GenericTile
+            header="{i18n>tileTOTitle}"
+            subheader="{i18n>tileTOSubtitle}"
+            frameType="OneByOne"
+            press=".onNavTO">
+            <tileContent>
+              <TileContent unit="{home>/kpiTOs} abiertas">
+                <content>
+                  <NumericContent
+                    value="{home>/kpiTOs}"
+                    icon="sap-icon://transfer"
+                    valueColor="{home>/kpiTOsColor}" />
+                </content>
+              </TileContent>
+            </tileContent>
+          </GenericTile>
+
+          <GenericTile
+            header="{i18n>tileStockTitle}"
+            subheader="{i18n>tileStockSubtitle}"
+            frameType="OneByOne"
+            press=".onNavStock">
+            <tileContent>
+              <TileContent unit="{home>/kpiOccupancy}% ocupación">
+                <content>
+                  <NumericContent
+                    value="{home>/kpiStock}"
+                    icon="sap-icon://inventory"
+                    valueColor="Neutral" />
+                </content>
+              </TileContent>
+            </tileContent>
+          </GenericTile>
+          <GenericTile
+            header="LMS Dashboard"
+            subheader="Labor Management"
+            frameType="OneByOne"
+            press=".onNavLMS">
+            <tileContent>
+              <TileContent>
+                <content>
+                  <ImageContent src="sap-icon://performance" />
+                </content>
+              </TileContent>
+            </tileContent>
+          </GenericTile>
+
+          <GenericTile
+            header="Slotting Inteligente"
+            subheader="Optimización"
+            frameType="OneByOne"
+            press=".onNavSlotting">
+            <tileContent>
+              <TileContent>
+                <content>
+                  <ImageContent src="sap-icon://combine" />
+                </content>
+              </TileContent>
+            </tileContent>
+          </GenericTile>
+
+          <GenericTile
+            header="Terminal Zebra RF"
+            subheader="Radiofrecuencia (LM01)"
+            frameType="OneByOne"
+            press=".onNavRf">
+            <tileContent>
+              <TileContent unit="Zebra TC57/TC77">
+                <content>
+                  <ImageContent src="sap-icon://rfid" />
+                </content>
+              </TileContent>
+            </tileContent>
+          </GenericTile>
+        </l:Grid>
+
+        <!-- Maestros -->
+        <Title text="{i18n>homeGroupMasters}" titleStyle="H4" class="sapUiSmallMarginBottom sapUiSmallMarginTop" />
+        <l:Grid defaultSpan="XL2 L3 M4 S6" class="sapUiSmallMarginBottom">
+          <GenericTile
+            header="{i18n>tileMaterialsTitle}"
+            subheader="{i18n>tileMaterialsSubtitle}"
+            frameType="OneByOne"
+            press=".onNavMaterials">
+            <tileContent>
+              <TileContent>
+                <content>
+                  <ImageContent src="sap-icon://product" />
+                </content>
+              </TileContent>
+            </tileContent>
+          </GenericTile>
+
+          <GenericTile
+            header="{i18n>tileBatchesTitle}"
+            subheader="{i18n>tileBatchesSubtitle}"
+            frameType="OneByOne"
+            press=".onNavBatches">
+            <tileContent>
+              <TileContent unit="{home>/kpiExpiring} por vencer">
+                <content>
+                  <NumericContent
+                    value="{home>/kpiExpiring}"
+                    icon="sap-icon://batch-payments"
+                    valueColor="{home>/kpiExpiringColor}" />
+                </content>
+              </TileContent>
+            </tileContent>
+          </GenericTile>
+
+          <GenericTile
+            header="{i18n>tileAdminTitle}"
+            subheader="{i18n>tileAdminSubtitle}"
+            frameType="OneByOne"
+            press=".onNavAdmin">
+            <tileContent>
+              <TileContent>
+                <content>
+                  <ImageContent src="sap-icon://action-settings" />
+                </content>
+              </TileContent>
+            </tileContent>
+          </GenericTile>
+        </l:Grid>
+
+      </VBox>
+    </content>
+  </Page>
+</mvc:View>

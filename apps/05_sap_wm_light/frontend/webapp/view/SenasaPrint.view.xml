@@ -1,0 +1,74 @@
+<mvc:View
+  controllerName="wm.light.controller.SenasaPrint"
+  xmlns:mvc="sap.ui.core.mvc"
+  xmlns="sap.m"
+  xmlns:f="sap.ui.layout.form"
+  xmlns:core="sap.ui.core"
+  xmlns:l="sap.ui.layout">
+
+  <Page title="Etiqueta SENASA" showNavButton="false" class="sapUiContentPadding">
+    <l:Splitter height="100%">
+      
+      <!-- Panel Izquierdo: Formulario -->
+      <VBox fitContainer="true" class="sapUiSmallMargin">
+        <layoutData>
+          <l:SplitterLayoutData size="35%" />
+        </layoutData>
+        <f:SimpleForm id="senasaForm" editable="true" layout="ResponsiveGridLayout" title="Datos de Etiqueta SENASA">
+          <f:content>
+            <Label text="Producto" />
+            <Input value="{senasaModel>/producto}" liveChange=".onLiveChange" />
+
+            <Label text="Variedad" />
+            <Input value="{senasaModel>/variedad}" liveChange=".onLiveChange" />
+
+            <Label text="Origen" />
+            <Input value="{senasaModel>/origen}" liveChange=".onLiveChange" />
+
+            <Label text="Fecha" />
+            <Input value="{senasaModel>/fecha}" liveChange=".onLiveChange" />
+
+            <Label text="Condición" />
+            <Input value="{senasaModel>/condicion}" liveChange=".onLiveChange" />
+
+            <Label text="Lote" />
+            <Input value="{senasaModel>/lote}" liveChange=".onLiveChange" />
+
+            <Label text="Serie" />
+            <Input value="{senasaModel>/serie}" liveChange=".onLiveChange" />
+          </f:content>
+        </f:SimpleForm>
+        
+        <Button text="Imprimir Etiqueta" icon="sap-icon://print" type="Emphasized" press=".onPrint" class="sapUiSmallMarginTop" />
+      </VBox>
+
+      <!-- Panel Derecho: Vista Previa -->
+      <VBox id="printAreaWrapperSenasa" class="sapUiSmallMargin labelPreviewArea" alignContent="Center" justifyContent="Center" width="100%" height="100%">
+        <layoutData>
+          <l:SplitterLayoutData size="65%" />
+        </layoutData>
+        <core:HTML content="&lt;div id='senasaContainer' class='senasa-container'&gt;
+            &lt;div class='senasa-header'&gt;
+              &lt;span class='senasa-title'&gt;SENASA&lt;/span&gt; 
+              &lt;div class='senasa-product-info'&gt;
+                &lt;div class='senasa-producto' id='lblSenasaProd'&gt;&lt;/div&gt;
+                &lt;div class='senasa-variedad' id='lblSenasaVar'&gt;&lt;/div&gt;
+              &lt;/div&gt;
+            &lt;/div&gt;
+            
+            &lt;div class='senasa-body'&gt;
+              &lt;div class='senasa-qr' id='senasaQrCode'&gt;&lt;/div&gt;
+              &lt;div class='senasa-details'&gt;
+                &lt;div&gt;Origen: &lt;span id='lblSenasaOrig'&gt;&lt;/span&gt;&lt;/div&gt;
+                &lt;div&gt;Fecha: &lt;span id='lblSenasaFec'&gt;&lt;/span&gt;&lt;/div&gt;
+                &lt;div&gt;Condicion: &lt;span id='lblSenasaCond'&gt;&lt;/span&gt;&lt;/div&gt;
+                &lt;div&gt;Lote: &lt;span id='lblSenasaLote'&gt;&lt;/span&gt;&lt;/div&gt;
+                &lt;div&gt;Serie: &lt;span id='lblSenasaSer'&gt;&lt;/span&gt;&lt;/div&gt;
+              &lt;/div&gt;
+            &lt;/div&gt;
+          &lt;/div&gt;" />
+      </VBox>
+
+    </l:Splitter>
+  </Page>
+</mvc:View>

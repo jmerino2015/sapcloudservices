@@ -1,0 +1,111 @@
+<core:FragmentDefinition
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core">
+
+    <ResponsivePopover
+        id="droidIaPopover"
+        placement="Left"
+        contentWidth="390px"
+        contentHeight="530px"
+        showArrow="true"
+        class="portalDroidIaPopover">
+        <customHeader>
+            <Bar class="portalJouleHeader">
+                <contentLeft>
+                    <core:Icon src="sap-icon://customer-and-contacts" size="1.25rem" color="#0064d9" class="sapUiTinyMarginBegin sapUiTinyMarginEnd" />
+                    <Title text="SAP Joule Droid" titleStyle="H5" class="portalJouleTitle" />
+                </contentLeft>
+                <contentRight>
+                    <Button icon="sap-icon://refresh" type="Transparent" press=".onClearDroidIaChat" tooltip="Reiniciar conversación" />
+                    <Button icon="sap-icon://decline" type="Transparent" press=".onCloseDroidIaPopover" tooltip="Cerrar" />
+                </contentRight>
+            </Bar>
+        </customHeader>
+        <content>
+            <VBox height="100%" justifyContent="SpaceBetween" class="sapUiContentPadding">
+
+                <!-- Sugerencias rápidas (Quick Chips) -->
+                <HBox wrap="Wrap" class="sapUiTinyMarginBottom">
+                    <Button
+                        text="📊 Facturas"
+                        type="Transparent"
+                        size="Small"
+                        press=".onQuickQuestion"
+                        class="sapUiTinyMarginEnd sapUiTinyMarginBottom portalChipBtn" />
+                    <Button
+                        text="🛒 Órdenes OC"
+                        type="Transparent"
+                        size="Small"
+                        press=".onQuickQuestion"
+                        class="sapUiTinyMarginEnd sapUiTinyMarginBottom portalChipBtn" />
+                    <Button
+                        text="💰 Resumen Pagos"
+                        type="Transparent"
+                        size="Small"
+                        press=".onQuickQuestion"
+                        class="sapUiTinyMarginEnd sapUiTinyMarginBottom portalChipBtn" />
+                    <Button
+                        text="📄 Notas de Crédito"
+                        type="Transparent"
+                        size="Small"
+                        press=".onQuickQuestion"
+                        class="sapUiTinyMarginBottom portalChipBtn" />
+                </HBox>
+
+                <!-- Scroll de mensajes -->
+                <ScrollContainer
+                    id="droidIaChatScroll"
+                    height="380px"
+                    vertical="true"
+                    horizontal="false"
+                    focusable="true">
+                    <List id="droidIaChatList" items="{droidIaModel>/messages}" showSeparators="None">
+                        <CustomListItem>
+                            <HBox class="sapUiTinyMarginBottom"
+                                justifyContent="{= ${droidIaModel>sender} === 'bot' ? 'Start' : 'End' }">
+
+                                <!-- Bot Avatar -->
+                                <Avatar
+                                    visible="{= ${droidIaModel>sender} === 'bot' }"
+                                    src="sap-icon://customer-and-contacts"
+                                    displayShape="Circle"
+                                    displaySize="XS"
+                                    class="sapUiTinyMarginEnd" />
+
+                                <!-- Burbuja de Mensaje -->
+                                <VBox class="{= ${droidIaModel>sender} === 'bot' ? 'portalBotBubble' : 'portalUserBubble' }" style="max-width: 82%;">
+                                    <FormattedText htmlText="{droidIaModel>text}" />
+                                    <Text text="{droidIaModel>timestamp}" style="font-size: 10px; color: #888;" class="sapUiTinyMarginTop" />
+                                </VBox>
+
+                            </HBox>
+                        </CustomListItem>
+                    </List>
+                </ScrollContainer>
+
+                <!-- Campo de Entrada de Texto -->
+                <HBox alignItems="Center" width="100%" class="sapUiTinyMarginTop portalIaInputContainer">
+                    <Input
+                        id="droidIaInput"
+                        placeholder="Pregúntame algo... (ej: estado de factura F001-452)"
+                        value="{droidIaModel>/inputMessage}"
+                        submit=".onSendDroidIaMessage"
+                        width="100%"
+                        class="portalIaInput">
+                        <layoutData>
+                            <FlexItemData growFactor="1" />
+                        </layoutData>
+                    </Input>
+                    <Button
+                        icon="sap-icon://paper-plane"
+                        type="Emphasized"
+                        press=".onSendDroidIaMessage"
+                        tooltip="Enviar a SAP Joule Droid"
+                        class="portalIaSendBtn sapUiTinyMarginBegin" />
+                </HBox>
+
+            </VBox>
+        </content>
+    </ResponsivePopover>
+
+</core:FragmentDefinition>

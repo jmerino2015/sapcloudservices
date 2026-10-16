@@ -1,0 +1,230 @@
+<mvc:View
+    controllerName="com.antigravity.portalProveedores.controller.Profile"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m"
+    xmlns:uxap="sap.uxap"
+    xmlns:layout="sap.ui.layout.form"
+    displayBlock="true"
+    height="100%">
+
+    <uxap:ObjectPageLayout
+        id="profilePage"
+        alwaysShowContentHeader="false">
+
+        <uxap:headerTitle>
+            <uxap:ObjectPageDynamicHeaderTitle>
+                <uxap:heading>
+                    <HBox alignItems="Center">
+                        <Avatar
+                            id="profileAvatar"
+                            initials="VP"
+                            displayShape="Circle"
+                            displaySize="L"
+                            class="sapUiMediumMarginEnd" />
+                        <VBox>
+                            <Title
+                                text="{profile>/companyName}"
+                                titleStyle="H2" />
+                            <HBox class="sapUiTinyMarginTop">
+                                <ObjectStatus
+                                    text="{profile>/status}"
+                                    state="Success"
+                                    icon="sap-icon://accept" />
+                                <Text
+                                    text="{profile>/supplierCode}"
+                                    class="sapUiSmallMarginBegin" />
+                            </HBox>
+                        </VBox>
+                    </HBox>
+                </uxap:heading>
+
+                <uxap:actions>
+                    <Button
+                        id="btnProfileEdit"
+                        text="{i18n>profileEdit}"
+                        type="Emphasized"
+                        icon="sap-icon://edit"
+                        visible="{= !${profile>/editMode}}"
+                        press=".onEditProfile" />
+                    <Button
+                        id="btnProfileSave"
+                        text="{i18n>profileSave}"
+                        type="Emphasized"
+                        icon="sap-icon://save"
+                        visible="{profile>/editMode}"
+                        press=".onSaveProfile" />
+                    <Button
+                        id="btnProfileCancel"
+                        text="{i18n>profileCancel}"
+                        type="Transparent"
+                        visible="{profile>/editMode}"
+                        press=".onCancelEdit" />
+                </uxap:actions>
+            </uxap:ObjectPageDynamicHeaderTitle>
+        </uxap:headerTitle>
+
+        <uxap:sections>
+
+            <!-- Información de la Empresa -->
+            <uxap:ObjectPageSection
+                id="companySection"
+                title="{i18n>profileCompanySection}"
+                titleUppercase="false">
+                <uxap:subSections>
+                    <uxap:ObjectPageSubSection title="">
+                        <uxap:blocks>
+                            <layout:SimpleForm
+                                layout="ResponsiveGridLayout"
+                                labelSpanXL="3"
+                                labelSpanL="3"
+                                labelSpanM="4"
+                                labelSpanS="12"
+                                columnsXL="2"
+                                columnsL="2"
+                                columnsM="1"
+                                editable="{profile>/editMode}">
+                                <layout:content>
+                                    <Label text="{i18n>profileCompanyName}" required="true" />
+                                    <Input
+                                        id="inputCompanyName"
+                                        value="{profile>/companyName}"
+                                        editable="{profile>/editMode}" />
+
+                                    <Label text="{i18n>profileRFC}" />
+                                    <Input
+                                        id="inputRFC"
+                                        value="{profile>/rfc}"
+                                        editable="{profile>/editMode}" />
+
+                                    <Label text="{i18n>profileSupplierCode}" />
+                                    <Input
+                                        id="inputSupplierCode"
+                                        value="{profile>/supplierCode}"
+                                        editable="false" />
+
+                                    <Label text="{i18n>profileCategory}" />
+                                    <Select
+                                        id="selectCategory"
+                                        selectedKey="{profile>/category}"
+                                        enabled="{profile>/editMode}">
+                                        <core:Item xmlns:core="sap.ui.core" key="industrial" text="Industrial y Manufactura" />
+                                        <core:Item xmlns:core="sap.ui.core" key="tech" text="Tecnología e IT" />
+                                        <core:Item xmlns:core="sap.ui.core" key="services" text="Servicios Profesionales" />
+                                        <core:Item xmlns:core="sap.ui.core" key="logistics" text="Logística y Transporte" />
+                                        <core:Item xmlns:core="sap.ui.core" key="construction" text="Construcción e Infraestructura" />
+                                    </Select>
+                                </layout:content>
+                            </layout:SimpleForm>
+                        </uxap:blocks>
+                    </uxap:ObjectPageSubSection>
+                </uxap:subSections>
+            </uxap:ObjectPageSection>
+
+            <!-- Información de Contacto -->
+            <uxap:ObjectPageSection
+                id="contactSection"
+                title="{i18n>profileContactSection}"
+                titleUppercase="false">
+                <uxap:subSections>
+                    <uxap:ObjectPageSubSection title="">
+                        <uxap:blocks>
+                            <layout:SimpleForm
+                                layout="ResponsiveGridLayout"
+                                labelSpanXL="3"
+                                labelSpanL="3"
+                                labelSpanM="4"
+                                labelSpanS="12"
+                                columnsXL="2"
+                                columnsL="2"
+                                columnsM="1"
+                                editable="{profile>/editMode}">
+                                <layout:content>
+                                    <Label text="{i18n>profileContactName}" required="true" />
+                                    <Input
+                                        id="inputContactName"
+                                        value="{profile>/contactName}"
+                                        editable="{profile>/editMode}" />
+
+                                    <Label text="{i18n>profileEmail}" />
+                                    <Input
+                                        id="inputEmail"
+                                        value="{profile>/email}"
+                                        type="Email"
+                                        editable="{profile>/editMode}" />
+
+                                    <Label text="{i18n>profilePhone}" />
+                                    <Input
+                                        id="inputPhone"
+                                        value="{profile>/phone}"
+                                        type="Tel"
+                                        editable="{profile>/editMode}" />
+
+                                    <Label text="{i18n>profileAddress}" />
+                                    <TextArea
+                                        id="inputAddress"
+                                        value="{profile>/address}"
+                                        rows="2"
+                                        editable="{profile>/editMode}" />
+                                </layout:content>
+                            </layout:SimpleForm>
+                        </uxap:blocks>
+                    </uxap:ObjectPageSubSection>
+                </uxap:subSections>
+            </uxap:ObjectPageSection>
+
+            <!-- Datos Bancarios -->
+            <uxap:ObjectPageSection
+                id="bankSection"
+                title="{i18n>profileBankSection}"
+                titleUppercase="false">
+                <uxap:subSections>
+                    <uxap:ObjectPageSubSection title="">
+                        <uxap:blocks>
+                            <layout:SimpleForm
+                                layout="ResponsiveGridLayout"
+                                labelSpanXL="3"
+                                labelSpanL="3"
+                                labelSpanM="4"
+                                labelSpanS="12"
+                                columnsXL="2"
+                                columnsL="2"
+                                columnsM="1"
+                                editable="{profile>/editMode}">
+                                <layout:content>
+                                    <Label text="{i18n>profileBank}" />
+                                    <Select
+                                        id="selectBank"
+                                        selectedKey="{profile>/bank}"
+                                        enabled="{profile>/editMode}">
+                                        <core:Item xmlns:core="sap.ui.core" key="bbva" text="BBVA Bancomer" />
+                                        <core:Item xmlns:core="sap.ui.core" key="banamex" text="Citibanamex" />
+                                        <core:Item xmlns:core="sap.ui.core" key="santander" text="Santander" />
+                                        <core:Item xmlns:core="sap.ui.core" key="hsbc" text="HSBC" />
+                                        <core:Item xmlns:core="sap.ui.core" key="banorte" text="Banorte" />
+                                        <core:Item xmlns:core="sap.ui.core" key="scotiabank" text="Scotiabank" />
+                                    </Select>
+
+                                    <Label text="{i18n>profileAccount}" />
+                                    <Input
+                                        id="inputAccount"
+                                        value="{profile>/account}"
+                                        maxLength="20"
+                                        editable="{profile>/editMode}" />
+
+                                    <Label text="{i18n>profileCLABE}" />
+                                    <Input
+                                        id="inputCLABE"
+                                        value="{profile>/clabe}"
+                                        maxLength="18"
+                                        editable="{profile>/editMode}" />
+                                </layout:content>
+                            </layout:SimpleForm>
+                        </uxap:blocks>
+                    </uxap:ObjectPageSubSection>
+                </uxap:subSections>
+            </uxap:ObjectPageSection>
+
+        </uxap:sections>
+    </uxap:ObjectPageLayout>
+
+</mvc:View>

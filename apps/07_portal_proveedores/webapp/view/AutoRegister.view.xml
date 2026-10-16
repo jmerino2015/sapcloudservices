@@ -1,0 +1,89 @@
+<mvc:View
+    controllerName="com.antigravity.portalProveedores.controller.AutoRegister"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m"
+    xmlns:f="sap.ui.layout.form"
+    xmlns:core="sap.ui.core">
+
+    <Page id="autoRegisterPage" title="{i18n>autoRegTitle}" showNavButton="true" navButtonPress=".onNavBack">
+        <content>
+            <VBox class="sapUiMediumMargin">
+                <MessageStrip
+                    text="{i18n>autoRegSubTitle}"
+                    type="Information"
+                    showIcon="true"
+                    class="sapUiSmallMarginBottom" />
+
+                <Panel headerText="{i18n>autoRegSectionTitle}" expandable="false" class="sapUiResponsiveMargin">
+                    <f:SimpleForm
+                        editable="true"
+                        layout="ResponsiveGridLayout"
+                        labelSpanXL="4" labelSpanL="4" labelSpanM="4" labelSpanS="12"
+                        adjustLabelSpan="false"
+                        emptySpanXL="0" emptySpanL="0" emptySpanM="0" emptySpanS="0"
+                        columnsXL="1" columnsL="1" columnsM="1"
+                        singleContainerFullWidth="true">
+                        <f:content>
+                            <Label text="{i18n>autoRegNif}" required="true" />
+                            <Input
+                                id="inputNif"
+                                value="{/nif}"
+                                placeholder="Ej. 20517426726"
+                                maxLength="11" />
+
+                            <Label text="{i18n>autoRegRazonSocial}" required="true" />
+                            <Input
+                                id="inputRazonSocial"
+                                value="{/razonSocial}"
+                                placeholder="Ej. SERVICIOS INTEGRALES S.A.C." />
+
+                            <Label text="{i18n>autoRegEmail}" required="true" />
+                            <Input
+                                id="inputEmail"
+                                value="{/email}"
+                                type="Email"
+                                placeholder="contacto@empresa.com" />
+
+                            <Label text="{i18n>autoRegTipoEmisor}" required="true" />
+                            <Select id="selectTipoEmisor" selectedKey="{/tipoEmisor}">
+                                <core:Item key="ELECTRONICO" text="Emisor Electrónico" />
+                                <core:Item key="FISICO" text="Emisor Físico" />
+                            </Select>
+
+                            <Label text="{i18n>autoRegNombres}" required="true" />
+                            <Input id="inputNombres" value="{/nombres}" placeholder="Nombres del contacto" />
+
+                            <Label text="{i18n>autoRegApellidos}" required="true" />
+                            <Input id="inputApellidos" value="{/apellidos}" placeholder="Apellidos del contacto" />
+
+                            <Label text="{i18n>autoRegPhone}" required="true" />
+                            <Input id="inputPhone" value="{/phone}" placeholder="999888777" />
+
+                            <Label text="{i18n>autoRegPassword}" required="true" />
+                            <Input id="inputPassword" type="Password" value="{/password}" />
+
+                            <Label text="{i18n>autoRegPasswordConfirm}" required="true" />
+                            <Input id="inputPasswordConfirm" type="Password" value="{/passwordConfirm}" />
+                        </f:content>
+                    </f:SimpleForm>
+
+                    <MessageStrip
+                        text="{i18n>autoRegPasswordHelp}"
+                        type="Information"
+                        showIcon="true"
+                        class="sapUiSmallMarginTopBottom" />
+
+                    <HBox justifyContent="Center" class="sapUiSmallMarginTop">
+                        <Button
+                            text="{i18n>autoRegBtnRegister}"
+                            type="Emphasized"
+                            press=".onRegisterPress"
+                            class="sapUiSmallMarginEnd" />
+                        <Button text="{i18n>autoRegBtnCancel}" type="Transparent" press=".onNavBack" />
+                    </HBox>
+                </Panel>
+            </VBox>
+        </content>
+    </Page>
+
+</mvc:View>

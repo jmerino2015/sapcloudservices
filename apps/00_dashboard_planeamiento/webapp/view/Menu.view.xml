@@ -1,0 +1,52 @@
+<mvc:View
+    controllerName="c4c.leadmanagement.controller.Menu"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m"
+    xmlns:f="sap.f"
+    xmlns:layout="sap.ui.layout"
+    displayBlock="true">
+
+    <Page showHeader="false" class="sapUiContentPadding">
+        <content>
+
+            <Title text="My Home" class="launchpadGroupTitle sapUiSmallMarginBegin" />
+            <HBox class="sapUiSmallMarginBeginEnd" wrap="Wrap">
+                <!-- Tile 1: Tabla de pre planificacion -->
+                <GenericTile class="sapUiTinyMargin" header="Tabla de pre planificacion" subheader="Procesos de planificación" frameType="OneByOne" press=".onPrePlanPress" backgroundImage="sap-icon://table-view">
+                    <tileContent>
+                        <TileContent>
+                            <NumericContent value="En" scale="Dev" valueColor="Neutral" />
+                        </TileContent>
+                    </tileContent>
+                </GenericTile>
+
+                <!-- Tile 2: Configuracion de procesos -->
+                <GenericTile class="sapUiTinyMargin" header="Configuración de procesos" subheader="Ajustes de sistema" frameType="OneByOne" press=".onDevTilePress" backgroundImage="sap-icon://action-settings">
+                    <tileContent>
+                        <TileContent>
+                            <NumericContent value="En" scale="Dev" valueColor="Neutral" />
+                        </TileContent>
+                    </tileContent>
+                </GenericTile>
+
+                <!-- Tile 3: Dashboard -->
+                <GenericTile class="sapUiTinyMargin" header="Dashboard Planeamiento" subheader="Analíticas y proyecciones" frameType="OneByOne" press=".onNavToDashboard" style="BackgroundColor" backgroundColor="#ffffff">
+                    <tileContent>
+                        <TileContent>
+                            <NumericContent icon="sap-icon://bar-chart" valueColor="Good" />
+                        </TileContent>
+                    </tileContent>
+                </GenericTile>
+
+                <!-- Tile 4: Supply Chain Planning -->
+                <GenericTile class="sapUiTinyMargin" header="Supply Chain Planning" subheader="Planificación Integrada" frameType="OneByOne" press=".onNavToSupplyChain" style="BackgroundColor" backgroundColor="#ffffff">
+                    <tileContent>
+                        <TileContent>
+                            <NumericContent icon="sap-icon://map-2" valueColor="Neutral" />
+                        </TileContent>
+                    </tileContent>
+                </GenericTile>
+            </HBox>
+        </content>
+    </Page>
+</mvc:View>

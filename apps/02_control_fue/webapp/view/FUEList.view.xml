@@ -1,0 +1,169 @@
+<mvc:View
+  controllerName="fue.control.controller.FUEList"
+  xmlns:mvc="sap.ui.core.mvc"
+  xmlns="sap.m"
+  xmlns:core="sap.ui.core"
+  xmlns:unified="sap.ui.unified">
+
+  <Page title="Gestión de Usuarios SAP SU01 & Asignación de Licencias FUE" showHeader="true" class="sapUiContentPadding mainViewContainer">
+    <content>
+      
+      <!-- Filter Bar / Search controls -->
+      <VBox class="kpiContainer sapUiContentPadding sapUiSmallMarginBottom">
+        <HBox alignItems="Center" wrap="Wrap" justifyContent="SpaceBetween">
+          
+          <HBox alignItems="Center" wrap="Wrap" class="sapUiTinyMargin">
+            <SearchField id="searchUser" width="14rem" placeholder="Buscar usuario SU01, nombre o email..." liveChange=".onSearch" class="sapUiSmallMarginEnd" />
+            
+            <!-- Sociedad Filter -->
+            <Select id="filterCompany" change=".onSearch" class="sapUiSmallMarginEnd" autoAdjustWidth="true">
+              <core:Item key="" text="Todas las Sociedades (5 Bukrs)" />
+              <core:Item key="PE10" text="PE10 - Perú S.A.C. 🇵🇪" />
+              <core:Item key="CL20" text="CL20 - Chile SpA 🇨🇱" />
+              <core:Item key="CO30" text="CO30 - Colombia S.A.S. 🇨🇴" />
+              <core:Item key="MX40" text="MX40 - México S.A. 🇲🇽" />
+              <core:Item key="US50" text="US50 - USA Inc. 🇺🇸" />
+            </Select>
+
+            <!-- License Type Filter -->
+            <Select id="filterType" change=".onSearch" class="sapUiSmallMarginEnd" autoAdjustWidth="true">
+              <core:Item key="" text="Todos los tipos de licencia" />
+              <core:Item key="Developer" text="Developer (1.0 FUE)" />
+              <core:Item key="Advanced" text="Advanced (1.0 FUE)" />
+              <core:Item key="Core" text="Core (0.2 FUE)" />
+              <core:Item key="Self Service" text="Self Service (0.05 FUE)" />
+              <core:Item key="Indirect Access" text="Indirect Access (0.02 FUE)" />
+            </Select>
+
+            <!-- User Status Filter -->
+            <Select id="filterStatus" change=".onSearch" class="sapUiSmallMarginEnd" autoAdjustWidth="true">
+              <core:Item key="" text="Todos los estados" />
+              <core:Item key="Activo" text="Activos" />
+              <core:Item key="Inactivo (>90d)" text="Inactivos (>90 días sin logon)" />
+              <core:Item key="Bloqueado" text="Bloqueados por Admin" />
+            </Select>
+
+            <!-- SoD Risk Filter -->
+            <Select id="filterSod" change=".onSearch" class="sapUiSmallMarginEnd" autoAdjustWidth="true">
+              <core:Item key="" text="Riesgo SoD: Todos" />
+              <core:Item key="Alto" text="Riesgo Alto / SAP_ALL" />
+              <core:Item key="Medio" text="Riesgo Medio" />
+              <core:Item key="Bajo" text="Riesgo Bajo" />
+              <core:Item key="Ninguno" text="Sin Riesgo" />
+            </Select>
+
+            <Button icon="sap-icon://clear-filter" type="Transparent" press=".onResetFilters" tooltip="Limpiar filtros" />
+          </HBox>
+
+          <!-- Action buttons -->
+          <HBox alignItems="Center" wrap="Wrap" class="sapUiTinyMargin">
+            <Button text="🤖 Optimizar Licencias IA" type="Accept" icon="sap-icon://lightbulb" press=".onExecuteAIOptimization" class="sapUiTinyMarginEnd" tooltip="Reasignar usuarios inactivos o bloqueados a menor costo" />
+            <Button text="Guardar Cambios" type="Emphasized" icon="sap-icon://save" press=".onSaveLocalFile" class="sapUiTinyMarginEnd" />
+            
+            <ToolbarSeparator class="sapUiSmallMarginEnd" />
+
+            <unified:FileUploader id="fileUploader" 
+              buttonOnly="true" 
+              buttonText="Importar Excel" 
+              icon="sap-icon://upload" 
+              change=".onImportExcel" 
+              fileType="xlsx" 
+              class="sapUiTinyMarginEnd" 
+              tooltip="Importar archivo Excel de usuarios" />
+              
+            <Button text="Exportar Excel" type="Default" icon="sap-icon://excel-attachment" press=".onDownloadExcel" class="sapUiTinyMarginEnd" />
+            <Button text="➕ Nuevo Usuario SAP" type="Emphasized" icon="sap-icon://add" press=".onAddRecord" />
+          </HBox>
+        </HBox>
+      </VBox>
+
+      <!-- Main FUE & Users Table -->
+      <VBox class="kpiContainer sapUiContentPadding">
+        <Table id="fueTable"
+          items="{path: 'fueModel>/records'}"
+          growing="true"
+          growingThreshold="25"
+          noDataText="No hay usuarios disponibles que coincidan con los filtros.">
+          <columns>
+            <Column width="16%">
+              <Text text="Usuario (SU01)" style="font-weight: bold;" />
+            </Column>
+            <Column width="22%">
+              <Text text="Nombre Completo / Depto" style="font-weight: bold;" />
+            </Column>
+            <Column width="15%">
+              <Text text="Sociedad SAP (Bukrs)" style="font-weight: bold;" />
+            </Column>
+            <Column width="14%">
+              <Text text="Tipo Licencia / FUE" style="font-weight: bold;" />
+            </Column>
+            <Column width="10%">
+              <Text text="Estado" style="font-weight: bold;" />
+            </Column>
+            <Column width="10%">
+              <Text text="Riesgo SOD" style="font-weight: bold;" />
+            </Column>
+            <Column width="13%">
+              <Text text="Diagnóstico IA" style="font-weight: bold;" />
+            </Column>
+            <Column width="10%" hAlign="Center">
+              <Text text="Acciones" style="font-weight: bold;" />
+            </Column>
+          </columns>
+          <items>
+            <ColumnListItem highlight="{= ${fueModel>RequiereOptimizacion} ? 'Warning' : (${fueModel>RiesgoSOD} === 'Alto' ? 'Error' : 'None') }">
+              <cells>
+                <!-- Usuario SU01 -->
+                <VBox>
+                  <HBox alignItems="Center">
+                    <core:Icon src="sap-icon://person-placeholder" size="0.9rem" color="#1d4ed8" class="sapUiTinyMarginEnd" />
+                    <Text text="{fueModel>Usuarios}" style="font-weight: 700; color: #1e3a8a;" />
+                  </HBox>
+                  <Text text="{fueModel>Email}" style="font-size: 11px; color: #64748b;" />
+                </VBox>
+
+                <!-- Nombre completo & Depto -->
+                <VBox>
+                  <Text text="{fueModel>NombreCompleto}" style="font-weight: 600;" />
+                  <Text text="{fueModel>Departamento}" style="font-size: 11px; color: #475569;" />
+                </VBox>
+
+                <!-- Sociedad -->
+                <HBox alignItems="Center">
+                  <ObjectStatus text="{fueModel>Sociedad}" state="Information" design="Bold" />
+                </HBox>
+
+                <!-- Tipo FUE & Costo -->
+                <VBox>
+                  <ObjectStatus text="{fueModel>TipoFue} ({fueModel>Fue} FUE)" state="{= ${fueModel>TipoFue} === 'Developer' ? 'Error' : (${fueModel>TipoFue} === 'Advanced' ? 'Warning' : 'Success') }" />
+                  <Text text="{= '$' + ${fueModel>CostoAnualUSD} + ' USD/año' }" style="font-size: 11px; color: #047857; font-weight: 600;" />
+                </VBox>
+
+                <!-- Estado Usuario -->
+                <ObjectStatus text="{fueModel>EstadoUsuario}" 
+                              state="{= ${fueModel>EstadoUsuario} === 'Activo' ? 'Success' : (${fueModel>EstadoUsuario} === 'Bloqueado' ? 'Error' : 'Warning') }"
+                              icon="{= ${fueModel>EstadoUsuario} === 'Activo' ? 'sap-icon://sys-enter-2' : (${fueModel>EstadoUsuario} === 'Bloqueado' ? 'sap-icon://locked' : 'sap-icon://history') }" />
+
+                <!-- Riesgo SOD -->
+                <ObjectStatus text="{fueModel>RiesgoSOD}"
+                              state="{= ${fueModel>RiesgoSOD} === 'Alto' ? 'Error' : (${fueModel>RiesgoSOD} === 'Medio' ? 'Critical' : (${fueModel>RiesgoSOD} === 'Bajo' ? 'Warning' : 'Success')) }" />
+
+                <!-- Diagnóstico IA -->
+                <Text text="{fueModel>RecomendacionIA}" style="font-size: 11px; font-weight: 600;" />
+
+                <!-- Action Buttons -->
+                <HBox justifyContent="Center" gap="0.25rem">
+                  <Button icon="sap-icon://inspect" type="Transparent" press=".onViewUserDetail" tooltip="Ver Ficha SU01 y Roles" />
+                  <Button icon="sap-icon://edit" type="Transparent" press=".onEditRecord" tooltip="Editar Usuario" />
+                  <Button icon="sap-icon://delete" type="Transparent" press=".onDeleteRecord" tooltip="Eliminar Usuario" />
+                </HBox>
+              </cells>
+            </ColumnListItem>
+          </items>
+        </Table>
+      </VBox>
+
+    </content>
+  </Page>
+
+</mvc:View>

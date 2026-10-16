@@ -1,0 +1,112 @@
+{
+  "_version": "1.58.0",
+  "sap.app": {
+    "id": "com.antigravity.indicadoresAlmacenes",
+    "type": "application",
+    "i18n": "i18n/i18n.properties",
+    "title": "{{appTitle}}",
+    "description": "{{appDescription}}",
+    "applicationVersion": {
+      "version": "1.0.0"
+    },
+    "dataSources": {
+      "kpiAlmacenOData": {
+        "uri": "/sap/opu/odata4/sap/zui_kpi_almacen_o4/srvd/sap/zui_kpi_almacen_o4/0001/",
+        "type": "OData",
+        "settings": {
+          "odataVersion": "4.0",
+          "synchronizationMode": "None",
+          "operationMode": "Server",
+          "autoExpandSelect": true,
+          "earlyRequests": false
+        }
+      }
+    }
+  },
+  "sap.ui": {
+    "technology": "UI5",
+    "icons": {
+      "icon": "sap-icon://chart-axis"
+    },
+    "deviceTypes": {
+      "desktop": true,
+      "tablet": true,
+      "phone": true
+    },
+    "fullWidth": true
+  },
+  "sap.ui5": {
+    "flexEnabled": true,
+    "rootView": {
+      "viewName": "com.antigravity.indicadoresAlmacenes.view.App",
+      "type": "XML",
+      "async": true,
+      "id": "app"
+    },
+    "dependencies": {
+      "minUI5Version": "1.108.0",
+      "libs": {
+        "sap.m": {},
+        "sap.f": {},
+        "sap.ui.core": {},
+        "sap.ui.layout": {},
+        "sap.suite.ui.microchart": {},
+        "sap.tnt": {}
+      }
+    },
+    "contentDensities": {
+      "compact": true,
+      "cozy": true
+    },
+    "models": {
+      "i18n": {
+        "type": "sap.ui.model.resource.ResourceModel",
+        "settings": {
+          "bundleName": "com.antigravity.indicadoresAlmacenes.i18n.i18n"
+        }
+      },
+      "kpiOData": {
+        "dataSource": "kpiAlmacenOData",
+        "preload": false,
+        "settings": {
+          "synchronizationMode": "None",
+          "operationMode": "Server",
+          "autoExpandSelect": true,
+          "earlyRequests": false
+        }
+      }
+    },
+    "resources": {
+      "css": [
+        {
+          "uri": "css/style.css"
+        }
+      ]
+    },
+    "routing": {
+      "config": {
+        "routerClass": "sap.m.routing.Router",
+        "viewType": "XML",
+        "viewPath": "com.antigravity.indicadoresAlmacenes.view",
+        "controlId": "appNav",
+        "controlAggregation": "pages",
+        "async": true,
+        "transition": "slide"
+      },
+      "routes": [
+        {
+          "name": "main",
+          "pattern": "",
+          "target": ["main"]
+        }
+      ],
+      "targets": {
+        "main": {
+          "viewName": "Main",
+          "viewLevel": 1,
+          "viewId": "main"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,54 @@
+_schema-version: "3.2.0"
+ID: com.empresa.indicadoresalmacenes
+version: 1.0.0
+description: "Torre de Control WMS Multi-Sede — Indicadores de Almacén (Clean Core & Fiori Horizon)"
+provider: "Empresa S.A."
+
+parameters:
+  deploy_mode: html5-repo
+  enable-parallel-deployments: true
+
+modules:
+  - name: com-empresa-indicadoresalmacenes-deployer
+    type: com.sap.application.content
+    path: .
+    requires:
+      - name: wms_html5_repo_host
+        parameters:
+          content-target: true
+    build-parameters:
+      build-result: resources
+      requires:
+        - name: com-empresa-indicadoresalmacenes
+          artifacts:
+            - com-empresa-indicadoresalmacenes.zip
+          target-path: resources/
+
+  - name: com-empresa-indicadoresalmacenes
+    type: html5
+    path: webapp
+    build-parameters:
+      builder: custom
+      commands:
+        - echo "Packaging SAPUI5 application com.empresa.indicadoresalmacenes"
+      supported-platforms: []
+
+resources:
+  - name: wms_html5_repo_host
+    type: org.cloudfoundry.managed-service
+    parameters:
+      service: html5-apps-repo
+      service-plan: app-host
+
+  - name: wms_destination_service
+    type: org.cloudfoundry.managed-service
+    parameters:
+      service: destination
+      service-plan: lite
+
+  - name: wms_xsuaa_service
+    type: org.cloudfoundry.managed-service
+    parameters:
+      service: xsuaa
+      service-plan: application
+      path: ./xs-security.json
