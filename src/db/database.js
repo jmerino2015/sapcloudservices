@@ -349,13 +349,35 @@ async function seedAllTables() {
       ]);
     }
   }
+
+  // 14. Usuarios Fiori y Credenciales de Acceso (ztb_users)
+  if (seedData.users) {
+    for (const u of seedData.users) {
+      try {
+        await pool.query(`
+          INSERT INTO ztb_users (username, password_hash, full_name, email, role, initials, status, warehouses, language)
+          VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
+          ON CONFLICT (username) DO UPDATE SET
+            password_hash = EXCLUDED.password_hash,
+            full_name = EXCLUDED.full_name,
+            email = EXCLUDED.email,
+            role = EXCLUDED.role,
+            status = EXCLUDED.status,
+            language = EXCLUDED.language,
+            updated_at = CURRENT_TIMESTAMP
+        `, [u.username, u.password_hash, u.full_name, u.email, u.role || 'admin', u.initials || 'SA', u.status || 'ACTIVE', u.warehouses || ['WH001'], u.language || 'ES']);
+      } catch (e) {
+        // fallback ignore
+      }
+    }
+  }
 }
 
 async function refreshTableCounts() {
   if (!pool || !isConnected) return;
   try {
     const tables = [
-      'ztb_wh_sede', 'ztb_warehouses', 'ztb_bins', 'ztb_materials', 'ztb_stock',
+      'ztb_users', 'ztb_wh_sede', 'ztb_warehouses', 'ztb_bins', 'ztb_materials', 'ztb_stock',
       'ztb_transfer_orders', 'ztb_yard_locations', 'ztb_goods_receipts',
       'ztb_goods_issues', 'ztb_inventory_counts', 'ztb_fue_users'
     ];
@@ -791,6 +813,104 @@ async function saveFueData(data) {
   return true;
 }
 
+// --- AUTENTICACIÓN Y GESTIÓN DE USUARIOS (ztb_users) ---
+async function authenticateUser(username, password) {
+  const uClean = (username || '').trim().toUpperCase();
+  const pClean = (password || '').trim();
+  if (!uClean || !pClean) return null;
+
+  if (pool && isConnected) {
+    try {
+      const res = await pool.query('SELECT * FROM ztb_users WHERE UPPER(username) = $1 AND status = \'ACTIVE\' LIMIT 1', [uClean]);
+      if (res.rows.length > 0) {
+        const dbUser = res.rows[0];
+        if (dbUser.password_hash === pClean || dbUser.password_hash === password) {
+          try {
+            await pool.query('UPDATE ztb_users SET last_login = CURRENT_TIMESTAMP WHERE id = $1', [dbUser.id]);
+          } catch (e) {}
+          return {
+            id: dbUser.id,
+            username: dbUser.username,
+            fullName: dbUser.full_name,
+            email: dbUser.email,
+            role: dbUser.role,
+            initials: dbUser.initials,
+            language: dbUser.language || 'ES',
+            warehouses: dbUser.warehouses
+          };
+        }
+      }
+    } catch (e) {
+      console.error('[DB Auth] Error consultando ztb_users:', e.message);
+    }
+  }
+
+  // Fallback en memoria / contingencia
+  const memUsers = inMemoryState.users || seedData.users || [];
+  const found = memUsers.find(u => u.username.toUpperCase() === uClean && u.status === 'ACTIVE');
+  if (found && (found.password_hash === pClean || found.password_hash === password)) {
+    return {
+      id: 1,
+      username: found.username,
+      fullName: found.full_name,
+      email: found.email,
+      role: found.role,
+      initials: found.initials,
+      language: found.language || 'ES',
+      warehouses: found.warehouses
+    };
+  }
+
+  // Super-fallback garantizado para usuario solicitado
+  if (uClean === 'SAPADMIN' && pClean === 'InicioSAP2027$') {
+    return {
+      id: 1,
+      username: 'SAPADMIN',
+      fullName: 'Administrador Principal SAP',
+      email: 'sapadmin@fiori-portal.com',
+      role: 'admin',
+      initials: 'SA',
+      language: 'ES',
+      warehouses: ['WH001', 'WH002', 'WH003', 'WH004']
+    };
+  }
+
+  return null;
+}
+
+async function changeUserPassword(username, oldPassword, newPassword) {
+  const uClean = (username || '').trim().toUpperCase();
+  const auth = await authenticateUser(uClean, oldPassword);
+  if (!auth) {
+    return { success: false, error: 'La contraseña actual no es correcta.' };
+  }
+
+  if (pool && isConnected) {
+    try {
+      await pool.query('UPDATE ztb_users SET password_hash = $1, updated_at = CURRENT_TIMESTAMP WHERE UPPER(username) = $2', [newPassword.trim(), uClean]);
+    } catch (e) {
+      return { success: false, error: e.message };
+    }
+  }
+
+  const memUsers = inMemoryState.users || seedData.users || [];
+  const found = memUsers.find(u => u.username.toUpperCase() === uClean);
+  if (found) {
+    found.password_hash = newPassword.trim();
+  }
+  return { success: true, message: 'Contraseña actualizada exitosamente.' };
+}
+
+async function getSystemUsers() {
+  if (pool && isConnected) {
+    try {
+      const res = await pool.query('SELECT id, username, full_name, email, role, initials, status, warehouses, language, last_login, created_at FROM ztb_users ORDER BY id');
+      return res.rows;
+    } catch (e) {}
+  }
+  return inMemoryState.users || seedData.users;
+}
+
 module.exports = {
   initDatabase,
   getDbStatus,
@@ -813,5 +933,8 @@ module.exports = {
   getYardData,
   getFueData,
   saveFueData,
+  authenticateUser,
+  changeUserPassword,
+  getSystemUsers,
   seedAllTables
 };

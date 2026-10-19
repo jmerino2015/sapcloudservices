@@ -10,14 +10,19 @@ CREATE TABLE IF NOT EXISTS ztb_users (
     username VARCHAR(50) UNIQUE NOT NULL,
     password_hash VARCHAR(255) NOT NULL,
     full_name VARCHAR(100) NOT NULL,
-    email VARCHAR(100) UNIQUE NOT NULL,
-    role VARCHAR(50) DEFAULT 'operator',
-    initials VARCHAR(4) DEFAULT 'OP',
+    email VARCHAR(100),
+    role VARCHAR(50) DEFAULT 'admin',
+    initials VARCHAR(4) DEFAULT 'SA',
     status VARCHAR(20) DEFAULT 'ACTIVE',
-    warehouses TEXT[] DEFAULT ARRAY['WH001'],
+    warehouses TEXT[] DEFAULT ARRAY['WH001', 'WH002', 'WH003', 'WH004'],
+    language VARCHAR(10) DEFAULT 'ES',
+    last_login TIMESTAMP WITH TIME ZONE,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
+
+ALTER TABLE ztb_users ADD COLUMN IF NOT EXISTS language VARCHAR(10) DEFAULT 'ES';
+ALTER TABLE ztb_users ADD COLUMN IF NOT EXISTS last_login TIMESTAMP WITH TIME ZONE;
 
 -- 2. Tabla de Licenciamiento y Usuarios FUE (Control FUE SAP S/4HANA)
 CREATE TABLE IF NOT EXISTS ztb_fue_users (

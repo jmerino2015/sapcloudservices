@@ -583,7 +583,50 @@ const PortalApp = {
   },
 
   showUserMenu() {
-    this.showToast('👤 Usuario Conectado: Donna Moore (Incentives Manager & Consultant) — SAP S/4HANA Cloud');
+    const popover = document.getElementById('sapUserPopover');
+    if (!popover) {
+      this.showToast('👤 Usuario Conectado: SAPADMIN — SAP S/4HANA Cloud');
+      return;
+    }
+    
+    if (popover.style.display === 'block') {
+      popover.style.display = 'none';
+      return;
+    }
+
+    try {
+      const stored = sessionStorage.getItem('sap_user');
+      if (stored) {
+        const u = JSON.parse(stored);
+        if (u.username && document.getElementById('popoverUsername')) document.getElementById('popoverUsername').textContent = u.username;
+        if (u.fullName && document.getElementById('popoverFullName')) document.getElementById('popoverFullName').textContent = u.fullName;
+        if (u.initials && document.getElementById('popoverInitials')) document.getElementById('popoverInitials').textContent = u.initials;
+        if (u.role && document.getElementById('popoverRole')) document.getElementById('popoverRole').textContent = `Rol: ${u.role.toUpperCase()} (Clean Core)`;
+      }
+    } catch(e) {}
+
+    popover.style.display = 'block';
+
+    setTimeout(() => {
+      const closeHandler = (e) => {
+        if (!popover.contains(e.target) && !e.target.closest('.shell-avatar-wrap')) {
+          popover.style.display = 'none';
+          document.removeEventListener('click', closeHandler);
+        }
+      };
+      document.addEventListener('click', closeHandler);
+    }, 10);
+  },
+
+  closeUserMenu() {
+    const popover = document.getElementById('sapUserPopover');
+    if (popover) popover.style.display = 'none';
+  },
+
+  logout() {
+    sessionStorage.clear();
+    try { localStorage.removeItem('sap_user'); } catch(e) {}
+    window.location.replace('/login.html');
   },
 
   toggleSpaceMenu() {

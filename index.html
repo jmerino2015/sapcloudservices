@@ -15,6 +15,18 @@
   <!-- Standardized SAP Fiori Styles & 72 Typography -->
   <link rel="stylesheet" href="css/portal-styles.css" />
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect fill='%230854A0' rx='10' width='100' height='100'/><text x='50' y='68' font-size='50' text-anchor='middle' fill='white' font-family='Arial' font-weight='bold'>SAP</text></svg>" />
+
+  <!-- Authentication Guard (Redirect to Logon if not authenticated) -->
+  <script>
+    (function() {
+      try {
+        var user = sessionStorage.getItem('sap_user');
+        if (!user) {
+          window.location.replace('/login.html');
+        }
+      } catch(e) {}
+    })();
+  </script>
 </head>
 <body>
 
@@ -230,6 +242,26 @@
 
   <!-- Floating Toast Notification -->
   <div class="fiori-toast" id="fioriToast"></div>
+
+  <!-- User Profile Popover Menu -->
+  <div class="sap-user-popover" id="sapUserPopover" style="display:none;" onclick="event.stopPropagation()">
+    <div class="user-popover-header">
+      <div class="user-avatar-badge" id="popoverInitials">SA</div>
+      <div>
+        <div class="user-popover-name" id="popoverFullName">Administrador Principal SAP</div>
+        <div class="user-popover-user" id="popoverUsername">SAPADMIN</div>
+        <div class="user-popover-role" id="popoverRole">Administrador SAP S/4HANA Clean Core</div>
+      </div>
+    </div>
+    <div class="user-popover-body">
+      <button class="user-popover-item" onclick="PortalApp.showDbStatusModal(); PortalApp.closeUserMenu();">
+        <i class="fas fa-database" style="color:#0a6ed1;"></i> Estado Base de Datos Supabase
+      </button>
+      <button class="user-popover-item" onclick="PortalApp.logout()">
+        <i class="fas fa-sign-out-alt" style="color:#bb0000;"></i> <strong style="color:#bb0000;">Cerrar Sesión (Log Off)</strong>
+      </button>
+    </div>
+  </div>
 
   <!-- Scripts -->
   <script src="js/apps-config.js"></script>

@@ -67,39 +67,50 @@ const server = http.createServer(async (req, res) => {
 
   // Handle API Endpoints for Auth
   if (reqUrl === '/api/auth/login' && req.method === 'POST') {
-    let body = '';
-    req.on('data', chunk => { body += chunk; });
-    req.on('end', () => {
-      res.writeHead(200, {
-        'Content-Type': 'application/json; charset=utf-8',
-        'Access-Control-Allow-Origin': '*'
-      });
-      try {
-        const { username, password } = JSON.parse(body || '{}');
-        const uLower = (username || '').toLowerCase();
-        if ((uLower === 'admin' || uLower === 'admin@jmholding.org' || uLower === 'admin@fiori-portal.com') &&
-            (password === 'admin' || password === 'Admin1234!')) {
-          return res.end(JSON.stringify({
-            token: 'mock-jwt-token-admin-wm',
-            user: {
-              id: 1,
-              username: 'admin',
-              name: 'Administrador SAP WM',
-              email: 'admin@fiori-portal.com',
-              role: 'admin',
-              initials: 'AD',
-              warehouses: ['WH001', 'WH002']
-            }
-          }));
-        }
-        res.statusCode = 401;
-        return res.end(JSON.stringify({ error: 'Credenciales inválidas' }));
-      } catch (e) {
-        res.statusCode = 400;
-        return res.end(JSON.stringify({ error: 'Formato JSON inválido' }));
-      }
+    const body = await readJsonBody(req);
+    res.writeHead(200, {
+      'Content-Type': 'application/json; charset=utf-8',
+      'Access-Control-Allow-Origin': '*'
     });
-    return;
+    try {
+      const { username, password, language } = body || {};
+      const user = await db.authenticateUser(username, password);
+      if (user) {
+        if (language) user.language = language;
+        return res.end(JSON.stringify({
+          success: true,
+          token: `sap-jwt-${Buffer.from(user.username + ':' + Date.now()).toString('base64')}`,
+          user
+        }));
+      }
+      res.statusCode = 401;
+      return res.end(JSON.stringify({
+        success: false,
+        error: 'Logon failed. Check user and password (SAP S/4HANA Clean Core)'
+      }));
+    } catch (e) {
+      res.statusCode = 500;
+      return res.end(JSON.stringify({ success: false, error: e.message }));
+    }
+  }
+
+  if (reqUrl === '/api/auth/change-password' && req.method === 'POST') {
+    const body = await readJsonBody(req);
+    res.writeHead(200, {
+      'Content-Type': 'application/json; charset=utf-8',
+      'Access-Control-Allow-Origin': '*'
+    });
+    try {
+      const { username, oldPassword, newPassword } = body || {};
+      const result = await db.changeUserPassword(username, oldPassword, newPassword);
+      if (!result.success) {
+        res.statusCode = 400;
+      }
+      return res.end(JSON.stringify(result));
+    } catch (e) {
+      res.statusCode = 500;
+      return res.end(JSON.stringify({ success: false, error: e.message }));
+    }
   }
 
   if (reqUrl === '/api/auth/me' && req.method === 'GET') {
@@ -109,12 +120,12 @@ const server = http.createServer(async (req, res) => {
     });
     return res.end(JSON.stringify({
       id: 1,
-      username: 'admin',
-      name: 'Administrador SAP WM',
-      email: 'admin@fiori-portal.com',
+      username: 'SAPADMIN',
+      name: 'Administrador Principal SAP',
+      email: 'sapadmin@fiori-portal.com',
       role: 'admin',
-      initials: 'AD',
-      warehouses: ['WH001', 'WH002']
+      initials: 'SA',
+      warehouses: ['WH001', 'WH002', 'WH003', 'WH004']
     }));
   }
 
@@ -406,7 +417,9 @@ const server = http.createServer(async (req, res) => {
     return res.end(JSON.stringify({ success: true, data: [] }));
   }
 
-  if (reqUrl === '/' || reqUrl === '') {
+  if (reqUrl === '/' || reqUrl === '' || reqUrl === '/login' || reqUrl === '/logon') {
+    reqUrl = '/login.html';
+  } else if (reqUrl === '/portal' || reqUrl === '/home' || reqUrl === '/launchpad' || reqUrl.includes('FioriLaunchpad.html')) {
     reqUrl = '/index.html';
   }
 

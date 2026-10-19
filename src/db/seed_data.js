@@ -5,9 +5,10 @@
 
 module.exports = {
   users: [
-    { username: 'admin', password_hash: 'admin', full_name: 'Administrador SAP WM', email: 'admin@fiori-portal.com', role: 'admin', initials: 'AD', status: 'ACTIVE', warehouses: ['WH001', 'WH002', 'WH003', 'WH004'] },
-    { username: 'operator1', password_hash: 'operator1', full_name: 'Operador Zebra RF 01', email: 'rf1@fiori-portal.com', role: 'operator', initials: 'RF', status: 'ACTIVE', warehouses: ['WH001'] },
-    { username: 'supervisor', password_hash: 'super123', full_name: 'Supervisor de Patio y Despacho', email: 'super@fiori-portal.com', role: 'supervisor', initials: 'SP', status: 'ACTIVE', warehouses: ['WH001', 'WH002'] }
+    { username: 'SAPADMIN', password_hash: 'InicioSAP2027$', full_name: 'Administrador Principal SAP', email: 'sapadmin@fiori-portal.com', role: 'admin', initials: 'SA', status: 'ACTIVE', warehouses: ['WH001', 'WH002', 'WH003', 'WH004'], language: 'ES' },
+    { username: 'admin', password_hash: 'InicioSAP2027$', full_name: 'Administrador SAP WM', email: 'admin@fiori-portal.com', role: 'admin', initials: 'AD', status: 'ACTIVE', warehouses: ['WH001', 'WH002', 'WH003', 'WH004'], language: 'ES' },
+    { username: 'operator1', password_hash: 'operator1', full_name: 'Operador Zebra RF 01', email: 'rf1@fiori-portal.com', role: 'operator', initials: 'RF', status: 'ACTIVE', warehouses: ['WH001'], language: 'ES' },
+    { username: 'supervisor', password_hash: 'super123', full_name: 'Supervisor de Patio y Despacho', email: 'super@fiori-portal.com', role: 'supervisor', initials: 'SP', status: 'ACTIVE', warehouses: ['WH001', 'WH002'], language: 'ES' }
   ],
 
   warehouses: [
