@@ -18,34 +18,27 @@
     <!-- SAPUI5 Bootstrap -->
     <script
         id="sap-ui-bootstrap"
-        src="https://sapui5.hana.ondemand.com/resources/sap-ui-core.js"
+        src="https://ui5.sap.com/resources/sap-ui-core.js"
         data-sap-ui-theme="sap_horizon"
         data-sap-ui-libs="sap.m,sap.f,sap.ui.layout,sap.suite.ui.microchart,sap.tnt"
-        data-sap-ui-compat-version="edge"
+        data-sap-ui-compatVersion="edge"
         data-sap-ui-async="true"
-        data-sap-ui-frame-options="trusted"
-        data-sap-ui-resource-roots='{
+        data-sap-ui-frameOptions="allow"
+        data-sap-ui-onInit="module:sap/ui/core/ComponentSupport"
+        data-sap-ui-resourceroots='{
             "com.antigravity.indicadoresAlmacenes": "./"
         }'
     ></script>
-
-    <script>
-        sap.ui.getCore().attachInit(function() {
-            sap.ui.require([
-                "sap/ui/core/ComponentContainer"
-            ], function(ComponentContainer) {
-                new ComponentContainer({
-                    name: "com.antigravity.indicadoresAlmacenes",
-                    settings: { id: "indicadoresAlmacenes" },
-                    async: true,
-                    height: "100%",
-                    autoPrefixId: true
-                }).placeAt("content");
-            });
-        });
-    </script>
 </head>
 <body class="sapUiBody sapUiSizeCompact" id="content">
+    <div
+        data-sap-ui-component
+        data-name="com.antigravity.indicadoresAlmacenes"
+        data-id="container"
+        data-settings='{"id": "indicadoresAlmacenes"}'
+        data-handle-validation="true"
+        style="height: 100%;"
+    ></div>
 
     <!-- Sincronización de Tema Fiori Horizon con Launchpad / Shell Padre -->
     <script>

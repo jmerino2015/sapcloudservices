@@ -36,7 +36,7 @@
 
                 <!-- Logo Oficial SAP -->
                 <HBox alignItems="Center" class="hideOnMobile sapUiTinyMarginEnd">
-                    <div class="sap-logo-badge" style="background:#0a6ed1; color:#ffffff; font-weight:700; font-size:12px; padding:2px 6px; border-radius:3px; letter-spacing:0.5px;">SAP</div>
+                    <FormattedText htmlText="&lt;span class='sap-logo-badge' style='background:#0a6ed1; color:#ffffff; font-weight:700; font-size:12px; padding:2px 6px; border-radius:3px; letter-spacing:0.5px;'&gt;SAP&lt;/span&gt;" />
                 </HBox>
 
                 <!-- Título de la Aplicación -->
@@ -177,10 +177,11 @@
                     <!-- Sub-barra minimalista Horizon: Título de Sección + SegmentedButton -->
                     <Toolbar class="wmsSubHeaderToolbar sapUiSmallPaddingBeginEnd">
                         <Title id="viewSectionTitle" text="{i18n>option1Title}" level="H3" class="wmsSectionTitle" />
-                        <Badge
+                        <ObjectStatus
                             id="badgeCentroSap"
                             text="Centro SAP: {wms>/currentKpi/CentroSap} | Alm: {wms>/currentKpi/AlmacenSap}"
                             state="Information"
+                            inverted="true"
                             class="sapUiSmallMarginBegin" />
                         <ToolbarSpacer />
 

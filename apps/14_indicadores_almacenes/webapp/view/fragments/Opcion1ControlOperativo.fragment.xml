@@ -3,6 +3,7 @@
     xmlns:core="sap.ui.core"
     xmlns:layout="sap.ui.layout"
     xmlns:f="sap.f"
+    xmlns:card="sap.f.cards"
     xmlns:micro="sap.suite.ui.microchart">
 
     <VBox class="sapUiNoContentPadding sapUiSmallMarginBottom">
@@ -23,7 +24,7 @@
             <!-- KPI 1 (Naranja #e06a3b): Tareas Pendientes / OTs Abiertas -->
             <f:Card class="kpiCardTile kpi-card">
                 <f:header>
-                    <f:cards.Header
+                    <card:Header
                         title="{i18n>kpiOpenOt}"
                         subtitle="LT23 / En Proceso"
                         iconSrc="sap-icon://workflow-tasks"
@@ -49,7 +50,7 @@
             <!-- KPI 2 (Dark Slate #1e293b): Total Base / Volumen Bins Totales -->
             <f:Card class="kpiCardTile kpi-card">
                 <f:header>
-                    <f:cards.Header
+                    <card:Header
                         title="{i18n>kpiTotalPositions}"
                         subtitle="LX03 / Base Instalada"
                         iconSrc="sap-icon://inventory"
@@ -74,7 +75,7 @@
             <!-- KPI 3 (Verde #107e3e): Cumplimiento / Ocupabilidad Eficiente % -->
             <f:Card class="kpiCardTile kpi-card">
                 <f:header>
-                    <f:cards.Header
+                    <card:Header
                         title="{i18n>kpiOccupancy}"
                         subtitle="Nivel de Ocupación"
                         iconSrc="sap-icon://gauge-chart"
@@ -99,7 +100,7 @@
             <!-- KPI 4 (Naranja #e06a3b): Alertas / Unidades Despacho Pendientes -->
             <f:Card class="kpiCardTile kpi-card">
                 <f:header>
-                    <f:cards.Header
+                    <card:Header
                         title="{i18n>kpiDispatchUnits}"
                         subtitle="VL06F &amp; Drivin"
                         iconSrc="sap-icon://shipping-status"
@@ -204,9 +205,10 @@
                         <core:Icon src="sap-icon://workflow-tasks" />
                         <Title text="{i18n>secPendingOt}" level="H3" />
                         <ToolbarSpacer />
-                        <Badge
+                        <ObjectStatus
                             text="Total OTs: {wms>/currentKpi/TotalOpenOt}"
-                            state="Warning" />
+                            state="Warning"
+                            inverted="true" />
                     </Toolbar>
                 </headerToolbar>
                 <VBox class="sapUiSmallMargin">
