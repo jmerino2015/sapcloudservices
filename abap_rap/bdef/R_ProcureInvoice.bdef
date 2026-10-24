@@ -1,0 +1,68 @@
+managed implementation in class zbp_r_procure_invoice unique;
+strict ( 2 );
+with draft;
+
+define behavior for R_ProcureInvoice alias Invoice
+persistent table ztb_procinv
+draft table ztb_procinv_d
+lock master
+total etag LastChangedAt
+authorization master ( instance )
+etag master LocalLastChangedAt
+{
+  create;
+  update;
+  delete;
+
+  field ( numbering : managed, readonly ) InvoiceUUID;
+  field ( readonly ) InvoiceID, VarianceAmount, VariancePercentage, MatchStatus, PaymentStatus,
+                     CreatedBy, CreatedAt, LastChangedBy, LastChangedAt, LocalLastChangedAt;
+  field ( mandatory ) SupplierInvoiceNumber, SupplierTaxID, SupplierName, SapPoNumber, SapGrNumber,
+                      PoAmount, GrAmount, InvoiceAmount, CurrencyCode, DueDate;
+
+  // Acciones de 3-Way Matching y Tesorería
+  action ( features : instance ) execute3WayMatch result [1] $self;
+  action ( features : instance ) releasePaymentBlock parameter ZA_ProcurePaymentRelease result [1] $self;
+
+  // Determinaciones y Validaciones
+  determination calculateInvoiceVariances on modify { field InvoiceAmount, PoAmount, GrAmount; }
+  determination setInitialInvoiceData on modify { create; }
+  validation validateMandatory on save { field SupplierInvoiceNumber, SupplierTaxID, SapPoNumber; create; update; }
+  validation validateTolerances on save { field VariancePercentage; create; update; }
+
+  // Draft
+  draft action Edit;
+  draft action Activate optimized;
+  draft action Discard;
+  draft action Resume;
+  draft determine action Prepare {
+    validation validateMandatory;
+    validation validateTolerances;
+  }
+
+  mapping for ztb_procinv
+  {
+    InvoiceUUID           = invoice_uuid;
+    InvoiceID             = invoice_id;
+    SupplierInvoiceNumber = supplier_invoice_number;
+    SupplierTaxID         = supplier_tax_id;
+    SupplierName          = supplier_name;
+    SapPoNumber           = sap_po_number;
+    SapGrNumber           = sap_gr_number;
+    PoAmount              = po_amount;
+    GrAmount              = gr_amount;
+    InvoiceAmount         = invoice_amount;
+    VarianceAmount        = variance_amount;
+    VariancePercentage    = variance_percentage;
+    CurrencyCode          = currency_code;
+    MatchStatus           = match_status;
+    PaymentStatus         = payment_status;
+    PaymentBlockReason    = payment_block_reason;
+    DueDate               = due_date;
+    CreatedBy             = created_by;
+    CreatedAt             = created_at;
+    LastChangedBy         = last_changed_by;
+    LastChangedAt         = last_changed_at;
+    LocalLastChangedAt    = local_last_changed_at;
+  }
+}

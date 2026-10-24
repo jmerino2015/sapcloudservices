@@ -1,0 +1,7 @@
+@EndUserText.label: 'Procure Core - Source-to-Settle Service Definition'
+define service SD_PROCURE_CORE {
+  expose C_ProcureEvent       as ProcureEvent;
+  expose C_ProcureRequisition as ProcureRequisition;
+  expose C_ProcureInvoice     as ProcureInvoice;
+  expose I_Currency           as Currency;
+}

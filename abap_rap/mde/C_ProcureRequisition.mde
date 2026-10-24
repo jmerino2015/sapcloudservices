@@ -1,0 +1,83 @@
+@Metadata.layer: #CUSTOMER
+@UI: {
+  headerInfo: {
+    typeName: 'Requisición de Compra',
+    typeNamePlural: 'Requisiciones Guided Buying',
+    title: { type: #STANDARD, value: 'Description' },
+    description: { value: 'RequisitionID' }
+  }
+}
+annotate view C_ProcureRequisition with
+{
+  @UI.facet: [
+    { id: 'KPIRequisitionStrip',
+      purpose: #HEADER,
+      type: #DATAPOINT_REFERENCE,
+      targetQualifier: 'PRTotalAmountDP',
+      position: 10 },
+    { id: 'GeneralPRInfo',
+      type: #COLLECTION,
+      label: 'Datos de Requisición',
+      position: 10 },
+    { id: 'PRBasicDetails',
+      parentId: 'GeneralPRInfo',
+      type: #IDENTIFICATION_REFERENCE,
+      label: 'Detalles de Solicitud',
+      position: 10 },
+    { id: 'PRLogistics',
+      parentId: 'GeneralPRInfo',
+      type: #FIELDGROUP_REFERENCE,
+      label: 'Imputación Contable & SAP PO',
+      targetQualifier: 'LogisticsGroup',
+      position: 20 }
+  ]
+
+  // KPI 1: Naranja (#e06a3b) - Requisiciones Pendientes de Aprobación
+  @UI.dataPoint: {
+    qualifier: 'RequisitionStatusDP',
+    title: 'Estado Requisición',
+    criticality: 'StatusCriticality'
+  }
+  @UI.lineItem: [ { position: 10, label: 'Número PR', importance: #HIGH } ]
+  @UI.identification: [ { position: 10, label: 'Número PR' } ]
+  @UI.selectionField: [ { position: 10 } ]
+  RequisitionID;
+
+  @UI.lineItem: [ { position: 20, label: 'Descripción', importance: #HIGH } ]
+  @UI.identification: [ { position: 20, label: 'Descripción del Pedido' } ]
+  Description;
+
+  @UI.lineItem: [ { position: 30, label: 'Solicitante' } ]
+  @UI.identification: [ { position: 30, label: 'Usuario Solicitante' } ]
+  @UI.selectionField: [ { position: 20 } ]
+  RequesterName;
+
+  @UI.lineItem: [ { position: 40, label: 'Estado', criticality: 'StatusCriticality' } ]
+  @UI.identification: [ { position: 40, label: 'Estado del Flujo' } ]
+  @UI.selectionField: [ { position: 30 } ]
+  Status;
+
+  // KPI 2: Slate (#1e293b) - Gasto Requisitado Total
+  @UI.dataPoint: {
+    qualifier: 'PRTotalAmountDP',
+    title: 'Monto Total Solicitado',
+    criticalityCalculation: {
+      improvementDirection: #NEUTRAL
+    }
+  }
+  @UI.lineItem: [ { position: 50, label: 'Monto Total', importance: #HIGH } ]
+  @UI.identification: [ { position: 50, label: 'Importe Total' } ]
+  TotalAmount;
+
+  @UI.lineItem: [ { position: 60, label: 'Sociedad' } ]
+  @UI.fieldGroup: [ { qualifier: 'LogisticsGroup', position: 10, label: 'Company Code' } ]
+  CompanyCode;
+
+  @UI.lineItem: [ { position: 70, label: 'Centro' } ]
+  @UI.fieldGroup: [ { qualifier: 'LogisticsGroup', position: 20, label: 'Plant' } ]
+  Plant;
+
+  @UI.lineItem: [ { position: 80, label: 'Pedido SAP MM' } ]
+  @UI.fieldGroup: [ { qualifier: 'LogisticsGroup', position: 30, label: 'SAP PO Number' } ]
+  SAPPoNumber;
+}

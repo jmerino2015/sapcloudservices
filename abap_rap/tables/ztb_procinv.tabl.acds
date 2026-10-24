@@ -1,0 +1,41 @@
+@EndUserText.label : 'ProcureCore: Smart Invoicing & 3-Way Matching'
+@AbapCatalog.enhancement.category : #NOT_EXTENSIBLE
+@AbapCatalog.tableCategory : #TRANSPARENT
+@AbapCatalog.deliveryClass : #A
+@AbapCatalog.dataMaintenance : #RESTRICTED
+define table ztb_procinv {
+  key mandt               : abap.clnt not null;
+  key invoice_uuid        : sysuuid_x16 not null;
+  invoice_id              : abap.char(20) not null;
+  supplier_invoice_number : abap.char(50) not null;
+  supplier_tax_id         : abap.char(30) not null;
+  supplier_name           : abap.char(150) not null;
+  sap_po_number           : abap.char(20) not null;
+  sap_gr_number           : abap.char(20) not null;
+  @Semantics.amount.currencyCode : 'ztb_procinv.currency_code'
+  po_amount               : abap.curr(15,2);
+  @Semantics.amount.currencyCode : 'ztb_procinv.currency_code'
+  gr_amount               : abap.curr(15,2);
+  @Semantics.amount.currencyCode : 'ztb_procinv.currency_code'
+  invoice_amount          : abap.curr(15,2);
+  @Semantics.amount.currencyCode : 'ztb_procinv.currency_code'
+  variance_amount         : abap.curr(15,2);
+  variance_percentage     : abap.dec(5,2);
+  currency_code           : abap.cuky(5);
+  match_status            : abap.char(30) not null; // PENDING, MATCHED, DISCREPANCY_PRICE, DISCREPANCY_QTY, REJECTED
+  payment_status          : abap.char(20) not null; // BLOCKED, SCHEDULED, PAID
+  payment_block_reason    : abap.char(200);
+  due_date                : abap.dats;
+  
+  // Auditoría & Concurrencia Clean Core
+  @Semantics.user.createdBy : true
+  created_by              : abap.char(50);
+  @Semantics.systemDateTime.createdAt : true
+  created_at              : timestampl;
+  @Semantics.user.lastChangedBy : true
+  last_changed_by         : abap.char(50);
+  @Semantics.systemDateTime.lastChangedAt : true
+  last_changed_at         : timestampl;
+  @Semantics.systemDateTime.localInstanceLastChangedAt : true
+  local_last_changed_at   : timestampl;
+}

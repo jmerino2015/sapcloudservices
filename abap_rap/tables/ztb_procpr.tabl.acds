@@ -1,0 +1,37 @@
+@EndUserText.label : 'ProcureCore: Guided Buying & Requisitions'
+@AbapCatalog.enhancement.category : #NOT_EXTENSIBLE
+@AbapCatalog.tableCategory : #TRANSPARENT
+@AbapCatalog.deliveryClass : #A
+@AbapCatalog.dataMaintenance : #RESTRICTED
+define table ztb_procpr {
+  key mandt               : abap.clnt not null;
+  key requisition_uuid    : sysuuid_x16 not null;
+  requisition_id          : abap.char(20) not null;
+  description             : abap.char(200) not null;
+  company_code            : abap.char(10);
+  plant                   : abap.char(10);
+  purchasing_org          : abap.char(10);
+  purchasing_group        : abap.char(10);
+  requester_name          : abap.char(100) not null;
+  department              : abap.char(80);
+  @Semantics.amount.currencyCode : 'ztb_procpr.currency_code'
+  total_amount            : abap.curr(15,2);
+  currency_code           : abap.cuky(5);
+  status                  : abap.char(20) not null; // DRAFT, PENDING_APPROVAL, APPROVED, REJECTED, PO_CREATED
+  approval_level          : abap.int2;
+  sap_po_number           : abap.char(20);
+  item_count              : abap.int4;
+  items_json              : abap.string(0);
+  
+  // Auditoría & Concurrencia Clean Core
+  @Semantics.user.createdBy : true
+  created_by              : abap.char(50);
+  @Semantics.systemDateTime.createdAt : true
+  created_at              : timestampl;
+  @Semantics.user.lastChangedBy : true
+  last_changed_by         : abap.char(50);
+  @Semantics.systemDateTime.lastChangedAt : true
+  last_changed_at         : timestampl;
+  @Semantics.systemDateTime.localInstanceLastChangedAt : true
+  local_last_changed_at   : timestampl;
+}

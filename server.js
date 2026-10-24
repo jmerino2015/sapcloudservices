@@ -188,7 +188,7 @@ const server = http.createServer(async (req, res) => {
       }));
     }
 
-    if (reqUrl.includes('/kpis')) {
+    if (reqUrl === '/api/kpis' || reqUrl === '/api/wm/kpis') {
       const stockList = await db.getStock();
       const toList = await db.getTransferOrders();
       const grList = await db.getGoodsReceipts();
@@ -412,6 +412,103 @@ const server = http.createServer(async (req, res) => {
           "OneDrive / SharePoint"
         ]
       }));
+    }
+
+    // Endpoints para App 16 - Procure Core (SAP Ariba Clone / Source-to-Settle)
+    if (reqUrl.startsWith('/api/procure-core')) {
+      if (reqUrl === '/api/procure-core/kpis') {
+        const kpis = await db.getProcureCoreKpis();
+        return res.end(JSON.stringify({ success: true, data: kpis }));
+      }
+
+      if (reqUrl === '/api/procure-core/events') {
+        if (req.method === 'POST') {
+          const body = await readJsonBody(req);
+          const result = await db.createProcureEvent(body);
+          return res.end(JSON.stringify(result));
+        }
+        const events = await db.getProcureEvents();
+        return res.end(JSON.stringify({ success: true, total: events.length, data: events }));
+      }
+
+      if (reqUrl.startsWith('/api/procure-core/events/') && req.method === 'POST') {
+        const parts = reqUrl.split('/');
+        const action = parts[parts.length - 1];
+        const eventId = parts[parts.length - 2];
+        const body = await readJsonBody(req);
+        if (action === 'publish') {
+          const result = await db.publishProcureEvent(eventId);
+          return res.end(JSON.stringify(result));
+        } else if (action === 'award') {
+          const result = await db.awardProcureEvent(eventId, body.supplierName || 'Proveedor Adjudicado');
+          return res.end(JSON.stringify(result));
+        }
+      }
+
+      if (reqUrl === '/api/procure-core/requisitions') {
+        if (req.method === 'POST') {
+          const body = await readJsonBody(req);
+          const result = await db.createProcureRequisition(body);
+          return res.end(JSON.stringify(result));
+        }
+        const reqs = await db.getProcureRequisitions();
+        return res.end(JSON.stringify({ success: true, total: reqs.length, data: reqs }));
+      }
+
+      if (reqUrl.startsWith('/api/procure-core/requisitions/') && req.method === 'POST') {
+        const parts = reqUrl.split('/');
+        const action = parts[parts.length - 1];
+        const prId = parts[parts.length - 2];
+        if (action === 'submit') {
+          const result = await db.submitProcureRequisition(prId);
+          return res.end(JSON.stringify(result));
+        } else if (action === 'approve') {
+          const result = await db.approveProcureRequisition(prId);
+          return res.end(JSON.stringify(result));
+        } else if (action === 'create-po') {
+          const result = await db.createSAPPOFromPR(prId);
+          return res.end(JSON.stringify(result));
+        }
+      }
+
+      if (reqUrl === '/api/procure-core/invoices') {
+        if (req.method === 'POST') {
+          const body = await readJsonBody(req);
+          const result = await db.createProcureInvoice(body);
+          return res.end(JSON.stringify(result));
+        }
+        const invoices = await db.getProcureInvoices();
+        return res.end(JSON.stringify({ success: true, total: invoices.length, data: invoices }));
+      }
+
+      if (reqUrl.startsWith('/api/procure-core/invoices/') && req.method === 'POST') {
+        const parts = reqUrl.split('/');
+        const action = parts[parts.length - 1];
+        const invId = parts[parts.length - 2];
+        const body = await readJsonBody(req);
+        if (action === 'match') {
+          const result = await db.execute3WayMatch(invId);
+          return res.end(JSON.stringify(result));
+        } else if (action === 'release-block') {
+          const result = await db.releaseInvoicePaymentBlock(invId, body.justification);
+          return res.end(JSON.stringify(result));
+        }
+      }
+
+      if (reqUrl === '/api/procure-core/contracts') {
+        if (req.method === 'POST') {
+          const body = await readJsonBody(req);
+          const result = await db.createProcureContract(body);
+          return res.end(JSON.stringify(result));
+        }
+        const contracts = await db.getProcureContracts();
+        return res.end(JSON.stringify({ success: true, total: contracts.length, data: contracts }));
+      }
+
+      if (reqUrl === '/api/procure-core/suppliers') {
+        const suppliers = await db.getProcureSuppliers();
+        return res.end(JSON.stringify({ success: true, total: suppliers.length, data: suppliers }));
+      }
     }
 
     return res.end(JSON.stringify({ success: true, data: [] }));

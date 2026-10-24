@@ -1,0 +1,86 @@
+@Metadata.layer: #CUSTOMER
+@UI: {
+  headerInfo: {
+    typeName: 'Factura Smart Invoice',
+    typeNamePlural: 'Facturas & 3-Way Matching',
+    title: { type: #STANDARD, value: 'SupplierInvoiceNumber' },
+    description: { value: 'InvoiceID' }
+  }
+}
+annotate view C_ProcureInvoice with
+{
+  @UI.facet: [
+    { id: 'KPIInvoiceStrip',
+      purpose: #HEADER,
+      type: #DATAPOINT_REFERENCE,
+      targetQualifier: 'MatchingStatusDP',
+      position: 10 },
+    { id: 'GeneralInvoiceInfo',
+      type: #COLLECTION,
+      label: 'Datos de Facturación & Conciliación',
+      position: 10 },
+    { id: 'InvoiceBasicDetails',
+      parentId: 'GeneralInvoiceInfo',
+      type: #IDENTIFICATION_REFERENCE,
+      label: 'Datos de Cabecera Factura',
+      position: 10 },
+    { id: 'MatchingThreeWayDetails',
+      parentId: 'GeneralInvoiceInfo',
+      type: #FIELDGROUP_REFERENCE,
+      label: 'Auditoría 3-Way Match & Pagos',
+      targetQualifier: 'MatchingAuditGroup',
+      position: 20 }
+  ]
+
+  @UI.lineItem: [ { position: 10, label: 'ID Factura', importance: #HIGH } ]
+  @UI.identification: [ { position: 10, label: 'ID Factura Interno' } ]
+  InvoiceID;
+
+  @UI.lineItem: [ { position: 20, label: 'Factura Proveedor', importance: #HIGH } ]
+  @UI.identification: [ { position: 20, label: 'Folio Factura Proveedor' } ]
+  @UI.selectionField: [ { position: 10 } ]
+  SupplierInvoiceNumber;
+
+  @UI.lineItem: [ { position: 30, label: 'RUC / Tax ID' } ]
+  @UI.identification: [ { position: 30, label: 'Identificador Fiscal' } ]
+  SupplierTaxID;
+
+  @UI.lineItem: [ { position: 40, label: 'Proveedor' } ]
+  @UI.identification: [ { position: 40, label: 'Razón Social Proveedor' } ]
+  @UI.selectionField: [ { position: 20 } ]
+  SupplierName;
+
+  @UI.lineItem: [ { position: 50, label: 'Pedido (PO)' } ]
+  @UI.identification: [ { position: 50, label: 'Número PO Vinculado' } ]
+  @UI.selectionField: [ { position: 30 } ]
+  SapPoNumber;
+
+  @UI.lineItem: [ { position: 60, label: 'Recepción (GR)' } ]
+  @UI.identification: [ { position: 60, label: 'Nota de Entrada MIGO' } ]
+  SapGrNumber;
+
+  // KPI 3: Verde (#107e3e) - Coincidencia 3-Way Match OK / KPI 4: Naranja (#e06a3b) Discrepancia
+  @UI.dataPoint: {
+    qualifier: 'MatchingStatusDP',
+    title: 'Resultado 3-Way Match',
+    criticality: 'MatchCriticality'
+  }
+  @UI.lineItem: [ { position: 70, label: 'Estado Conciliación', criticality: 'MatchCriticality', importance: #HIGH } ]
+  @UI.identification: [ { position: 70, label: 'Estado 3-Way Match' } ]
+  @UI.selectionField: [ { position: 40 } ]
+  MatchStatus;
+
+  // KPI 2: Slate (#1e293b) - Importe Bruto Factura
+  @UI.lineItem: [ { position: 80, label: 'Monto Factura', importance: #HIGH } ]
+  @UI.identification: [ { position: 80, label: 'Total Facturado' } ]
+  InvoiceAmount;
+
+  // KPI 4: Naranja (#e06a3b) - Discrepancia Detectada
+  @UI.lineItem: [ { position: 90, label: 'Discrepancia Variación', criticality: 'MatchCriticality' } ]
+  @UI.fieldGroup: [ { qualifier: 'MatchingAuditGroup', position: 10, label: 'Variación Monto' } ]
+  VarianceAmount;
+
+  @UI.lineItem: [ { position: 100, label: 'Estado de Pago', criticality: 'PaymentCriticality' } ]
+  @UI.fieldGroup: [ { qualifier: 'MatchingAuditGroup', position: 20, label: 'Estado de Pago' } ]
+  PaymentStatus;
+}

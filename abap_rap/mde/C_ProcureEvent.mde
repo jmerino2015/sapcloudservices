@@ -1,0 +1,92 @@
+@Metadata.layer: #CUSTOMER
+@UI: {
+  headerInfo: {
+    typeName: 'Evento de Sourcing',
+    typeNamePlural: 'Eventos de Sourcing & RFX',
+    title: { type: #STANDARD, value: 'Title' },
+    description: { value: 'EventID' }
+  }
+}
+annotate view C_ProcureEvent with
+{
+  @UI.facet: [
+    { id: 'KPIHeaderStrip',
+      purpose: #HEADER,
+      type: #DATAPOINT_REFERENCE,
+      targetQualifier: 'EventSavingsDP',
+      position: 10 },
+    { id: 'GeneralEventInfo',
+      type: #COLLECTION,
+      label: 'Detalles del Evento RFX',
+      position: 10 },
+    { id: 'EventBasicData',
+      parentId: 'GeneralEventInfo',
+      type: #IDENTIFICATION_REFERENCE,
+      label: 'Datos Generales',
+      position: 10 },
+    { id: 'FinancialMetrics',
+      parentId: 'GeneralEventInfo',
+      type: #FIELDGROUP_REFERENCE,
+      label: 'Valores Financieros y Subasta',
+      targetQualifier: 'FinancialGroup',
+      position: 20 }
+  ]
+
+  // KPI 1: Naranja (#e06a3b) - Eventos Abiertos / Acción Requerida
+  @UI.dataPoint: {
+    qualifier: 'OpenEventsDP',
+    title: 'Estado del Evento',
+    criticality: 'StatusCriticality'
+  }
+  @UI.lineItem: [ { position: 10, label: 'ID Evento', importance: #HIGH } ]
+  @UI.identification: [ { position: 10, label: 'ID Evento' } ]
+  @UI.selectionField: [ { position: 10 } ]
+  EventID;
+
+  @UI.lineItem: [ { position: 20, label: 'Título Evento', importance: #HIGH } ]
+  @UI.identification: [ { position: 20, label: 'Título' } ]
+  Title;
+
+  @UI.lineItem: [ { position: 30, label: 'Tipo Evento' } ]
+  @UI.identification: [ { position: 30, label: 'Tipo Evento (RFI/RFP/Subasta)' } ]
+  @UI.selectionField: [ { position: 20 } ]
+  EventType;
+
+  @UI.lineItem: [ { position: 40, label: 'Categoría' } ]
+  @UI.identification: [ { position: 40, label: 'Categoría de Compra' } ]
+  Category;
+
+  @UI.lineItem: [ { position: 50, label: 'Estado', criticality: 'StatusCriticality' } ]
+  @UI.identification: [ { position: 50, label: 'Estado' } ]
+  @UI.selectionField: [ { position: 30 } ]
+  Status;
+
+  // KPI 2: Slate (#1e293b) - Base Total Gasto Licitado
+  @UI.lineItem: [ { position: 60, label: 'Gasto Presupuestado' } ]
+  @UI.fieldGroup: [ { qualifier: 'FinancialGroup', position: 10, label: 'Presupuesto Base' } ]
+  TargetSpend;
+
+  @UI.lineItem: [ { position: 70, label: 'Mejor Oferta' } ]
+  @UI.fieldGroup: [ { qualifier: 'FinancialGroup', position: 20, label: 'Oferta Más Baja' } ]
+  LowestBidAmount;
+
+  // KPI 3: Verde (#107e3e) - Ahorro Proyectado Negociado
+  @UI.dataPoint: {
+    qualifier: 'EventSavingsDP',
+    title: 'Ahorro Proyectado',
+    criticalityCalculation: {
+      improvementDirection: #MAXIMIZE
+    }
+  }
+  @UI.lineItem: [ { position: 80, label: 'Ahorro Estimado', importance: #HIGH } ]
+  @UI.fieldGroup: [ { qualifier: 'FinancialGroup', position: 30, label: 'Ahorro Proyectado' } ]
+  ProjectedSavings;
+
+  @UI.lineItem: [ { position: 90, label: 'Ofertas Recibidas' } ]
+  @UI.fieldGroup: [ { qualifier: 'FinancialGroup', position: 40, label: 'Concurrencia Proveedores' } ]
+  BidsCount;
+
+  @UI.lineItem: [ { position: 100, label: 'Fecha Límite' } ]
+  @UI.identification: [ { position: 60, label: 'Cierre de Ofertas' } ]
+  ClosingDate;
+}

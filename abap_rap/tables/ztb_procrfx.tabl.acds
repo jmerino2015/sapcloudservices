@@ -1,0 +1,38 @@
+@EndUserText.label : 'ProcureCore: RFX & Sourcing Events'
+@AbapCatalog.enhancement.category : #NOT_EXTENSIBLE
+@AbapCatalog.tableCategory : #TRANSPARENT
+@AbapCatalog.deliveryClass : #A
+@AbapCatalog.dataMaintenance : #RESTRICTED
+define table ztb_procrfx {
+  key mandt               : abap.clnt not null;
+  key event_uuid          : sysuuid_x16 not null;
+  event_id                : abap.char(20) not null;
+  title                   : abap.char(150) not null;
+  event_type              : abap.char(20) not null; // RFP, RFQ, REVERSE_AUCTION
+  category                : abap.char(60) not null;
+  @Semantics.amount.currencyCode : 'ztb_procrfx.currency_code'
+  target_spend            : abap.curr(15,2);
+  @Semantics.amount.currencyCode : 'ztb_procrfx.currency_code'
+  lowest_bid_amount       : abap.curr(15,2);
+  @Semantics.amount.currencyCode : 'ztb_procrfx.currency_code'
+  projected_savings       : abap.curr(15,2);
+  savings_percentage      : abap.dec(5,2);
+  currency_code           : abap.cuky(5);
+  status                  : abap.char(20) not null; // DRAFT, PUBLISHED, ACTIVE, AWARDED, CLOSED
+  supplier_count          : abap.int4;
+  bids_count              : abap.int4;
+  closing_date            : abap.dats;
+  awarded_supplier        : abap.char(120);
+  
+  // Auditoría & Concurrencia Clean Core
+  @Semantics.user.createdBy : true
+  created_by              : abap.char(50);
+  @Semantics.systemDateTime.createdAt : true
+  created_at              : timestampl;
+  @Semantics.user.lastChangedBy : true
+  last_changed_by         : abap.char(50);
+  @Semantics.systemDateTime.lastChangedAt : true
+  last_changed_at         : timestampl;
+  @Semantics.systemDateTime.localInstanceLastChangedAt : true
+  local_last_changed_at   : timestampl;
+}

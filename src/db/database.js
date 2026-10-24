@@ -22,6 +22,7 @@ try {
 const fs = require('fs');
 const path = require('path');
 const seedData = require('./seed_data');
+const procureCoreService = require('./procure_core_service');
 const SAPMockData = require('../../apps/02_control_fue/webapp/model/sapMockData');
 
 let pool = null;
@@ -140,6 +141,10 @@ async function autoMigrateAndSeed() {
     console.log('[DB] 📥 Sincronizando registros demo enriquecidos en tablas...');
     await seedAllTables();
     console.log('[DB] ✨ Registros demo sincronizados exitosamente.');
+
+    // Sincronizar tablas y datos de Procure Core
+    procureCoreService.initService(pool, () => isConnected);
+    await procureCoreService.autoMigrateAndSeedProcureCore();
 
     // Actualizar conteos de tablas
     await refreshTableCounts();
@@ -936,5 +941,23 @@ module.exports = {
   authenticateUser,
   changeUserPassword,
   getSystemUsers,
-  seedAllTables
+  seedAllTables,
+  // Procure Core API Methods
+  getProcureCoreKpis: procureCoreService.getProcureCoreKpis,
+  getProcureEvents: procureCoreService.getProcureEvents,
+  publishProcureEvent: procureCoreService.publishProcureEvent,
+  awardProcureEvent: procureCoreService.awardProcureEvent,
+  createProcureEvent: procureCoreService.createProcureEvent,
+  getProcureRequisitions: procureCoreService.getProcureRequisitions,
+  submitProcureRequisition: procureCoreService.submitProcureRequisition,
+  approveProcureRequisition: procureCoreService.approveProcureRequisition,
+  createSAPPOFromPR: procureCoreService.createSAPPOFromPR,
+  createProcureRequisition: procureCoreService.createProcureRequisition,
+  getProcureInvoices: procureCoreService.getProcureInvoices,
+  execute3WayMatch: procureCoreService.execute3WayMatch,
+  releaseInvoicePaymentBlock: procureCoreService.releaseInvoicePaymentBlock,
+  createProcureInvoice: procureCoreService.createProcureInvoice,
+  getProcureContracts: procureCoreService.getProcureContracts,
+  createProcureContract: procureCoreService.createProcureContract,
+  getProcureSuppliers: procureCoreService.getProcureSuppliers
 };

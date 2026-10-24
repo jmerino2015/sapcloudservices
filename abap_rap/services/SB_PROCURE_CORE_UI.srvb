@@ -1,0 +1,9 @@
+{
+  "serviceBindingName": "SB_PROCURE_CORE_UI",
+  "serviceDefinitionName": "SD_PROCURE_CORE",
+  "bindingType": "OData V4 - UI",
+  "version": "0001",
+  "package": "Z_PROCURE_CORE_CLEAN_CORE",
+  "serviceUrl": "/sap/opu/odata4/sap/zui_procure_core_o4/srvd/sap/sd_procure_core/0001/",
+  "status": "PUBLISHED"
+}

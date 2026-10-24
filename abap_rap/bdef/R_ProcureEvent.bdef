@@ -1,0 +1,68 @@
+managed implementation in class zbp_r_procure_event unique;
+strict ( 2 );
+with draft;
+
+define behavior for R_ProcureEvent alias Event
+persistent table ztb_procrfx
+draft table ztb_procrfx_d
+lock master
+total etag LastChangedAt
+authorization master ( instance )
+etag master LocalLastChangedAt
+{
+  create;
+  update;
+  delete;
+
+  field ( numbering : managed, readonly ) EventUUID;
+  field ( readonly ) EventID, ProjectedSavings, SavingsPercentage, Status, AwardedSupplier,
+                     CreatedBy, CreatedAt, LastChangedBy, LastChangedAt, LocalLastChangedAt;
+  field ( mandatory ) Title, EventType, Category, TargetSpend, CurrencyCode, ClosingDate;
+
+  // Acciones Transaccionales de Negocio
+  action ( features : instance ) publishEvent result [1] $self;
+  action ( features : instance ) awardEvent parameter ZA_ProcureAwardSupplier result [1] $self;
+  action ( features : instance ) closeAuction result [1] $self;
+
+  // Determinaciones Reactivas
+  determination calculateProjectedSavings on modify { field TargetSpend, LowestBidAmount; }
+  determination setInitialEventData on modify { create; }
+
+  // Validaciones Tempranas
+  validation validateMandatory on save { field Title, TargetSpend, Category; create; update; }
+  validation validateDates on save { field ClosingDate; create; update; }
+
+  // Operaciones de Ciclo de Vida Draft (Fiori Horizon)
+  draft action Edit;
+  draft action Activate optimized;
+  draft action Discard;
+  draft action Resume;
+  draft determine action Prepare {
+    validation validateMandatory;
+    validation validateDates;
+  }
+
+  mapping for ztb_procrfx
+  {
+    EventUUID          = event_uuid;
+    EventID            = event_id;
+    Title              = title;
+    EventType          = event_type;
+    Category           = category;
+    TargetSpend        = target_spend;
+    LowestBidAmount    = lowest_bid_amount;
+    ProjectedSavings   = projected_savings;
+    SavingsPercentage  = savings_percentage;
+    CurrencyCode       = currency_code;
+    Status             = status;
+    SupplierCount      = supplier_count;
+    BidsCount          = bids_count;
+    ClosingDate        = closing_date;
+    AwardedSupplier    = awarded_supplier;
+    CreatedBy          = created_by;
+    CreatedAt          = created_at;
+    LastChangedBy      = last_changed_by;
+    LastChangedAt      = last_changed_at;
+    LocalLastChangedAt = local_last_changed_at;
+  }
+}

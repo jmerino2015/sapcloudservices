@@ -1,0 +1,64 @@
+managed implementation in class zbp_r_procure_requisition unique;
+strict ( 2 );
+with draft;
+
+define behavior for R_ProcureRequisition alias Requisition
+persistent table ztb_procpr
+draft table ztb_procpr_d
+lock master
+total etag LastChangedAt
+authorization master ( instance )
+etag master LocalLastChangedAt
+{
+  create;
+  update;
+  delete;
+
+  field ( numbering : managed, readonly ) RequisitionUUID;
+  field ( readonly ) RequisitionID, Status, SapPoNumber,
+                     CreatedBy, CreatedAt, LastChangedBy, LastChangedAt, LocalLastChangedAt;
+  field ( mandatory ) Description, CompanyCode, Plant, RequesterName, TotalAmount, CurrencyCode;
+
+  // Acciones Transaccionales de Negocio
+  action ( features : instance ) submitForApproval result [1] $self;
+  action ( features : instance ) approve result [1] $self;
+  action ( features : instance ) createSAPPO result [1] $self;
+
+  // Determinaciones y Validaciones
+  determination setInitialRequisitionData on modify { create; }
+  validation validateMandatory on save { field Description, RequesterName, TotalAmount; create; update; }
+
+  // Operaciones Draft
+  draft action Edit;
+  draft action Activate optimized;
+  draft action Discard;
+  draft action Resume;
+  draft determine action Prepare {
+    validation validateMandatory;
+  }
+
+  mapping for ztb_procpr
+  {
+    RequisitionUUID    = requisition_uuid;
+    RequisitionID      = requisition_id;
+    Description        = description;
+    CompanyCode        = company_code;
+    Plant              = plant;
+    PurchasingOrg      = purchasing_org;
+    PurchasingGroup    = purchasing_group;
+    RequesterName      = requester_name;
+    Department         = department;
+    TotalAmount        = total_amount;
+    CurrencyCode       = currency_code;
+    Status             = status;
+    ApprovalLevel      = approval_level;
+    SapPoNumber        = sap_po_number;
+    ItemCount          = item_count;
+    ItemsJson          = items_json;
+    CreatedBy          = created_by;
+    CreatedAt          = created_at;
+    LastChangedBy      = last_changed_by;
+    LastChangedAt      = last_changed_at;
+    LocalLastChangedAt = local_last_changed_at;
+  }
+}

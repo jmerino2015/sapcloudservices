@@ -319,6 +319,30 @@ window.SAP_APPS_CONFIG = [
     },
     tags: ["Transporte", "TM", "Gestión de Transporte TM", "Flota", "Camiones", "Rutas", "Despacho", "S/4HANA", "Logística"],
     status: "Active"
+  },
+  {
+    id: "16",
+    code: "PC01",
+    folder: "16_procure_core",
+    title: "Procure Core",
+    subtitle: "Suite Source-to-Settle & Ariba Clone",
+    description: "Plataforma empresarial Source-to-Settle completa (SAP Ariba Clone): Gestión de Licitaciones RFX, Subastas Inversas en vivo, Guided Buying estilo Amazon con catálogo interactivo, Contratos marco, Smart Invoicing con 3-Way Match automatizado y evaluación 360° de proveedores SLP.",
+    category: "finanzas",
+    categoryLabel: "Finanzas & Proveedores",
+    sapIcon: "sap-icon://cart-4",
+    faIcon: "cart-shopping",
+    iconBg: "linear-gradient(135deg, #0a6ed1, #004b96)",
+    badge: "Ariba S2S / S/4HANA",
+    badgeType: "primary",
+    sapModule: "MM/ARIBA",
+    path: "apps/16_procure_core/index.html",
+    kpi: {
+      value: "96.4%",
+      label: "3-Way Match OK",
+      trend: "up"
+    },
+    tags: ["Procure Core", "Ariba", "Compras", "Sourcing", "RFX", "Subastas", "Guided Buying", "3-Way Match", "SLP", "Clean Core", "OData V4"],
+    status: "Active"
   }
 ];
 
