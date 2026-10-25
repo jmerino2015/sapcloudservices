@@ -55,6 +55,11 @@ function readJsonBody(req) {
 const server = http.createServer(async (req, res) => {
   let reqUrl = decodeURIComponent(req.url.split('?')[0]);
 
+  // Sales Core API routing
+  if (await require('./src/db/sales_core_routes')(req, res, reqUrl, db)) {
+    return;
+  }
+
   // Handle API Database Status Endpoint
   if (reqUrl === '/api/db/status' && req.method === 'GET') {
     res.writeHead(200, {

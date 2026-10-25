@@ -23,6 +23,7 @@ const fs = require('fs');
 const path = require('path');
 const seedData = require('./seed_data');
 const procureCoreService = require('./procure_core_service');
+const salesCoreService = require('./sales_core_service');
 const SAPMockData = require('../../apps/02_control_fue/webapp/model/sapMockData');
 
 let pool = null;
@@ -145,6 +146,10 @@ async function autoMigrateAndSeed() {
     // Sincronizar tablas y datos de Procure Core
     procureCoreService.initService(pool, () => isConnected);
     await procureCoreService.autoMigrateAndSeedProcureCore();
+
+    // Sincronizar tablas y datos de Sales Core (C4C)
+    salesCoreService.initService(pool, () => isConnected);
+    await salesCoreService.autoMigrateAndSeedSalesCore();
 
     // Actualizar conteos de tablas
     await refreshTableCounts();
@@ -959,5 +964,15 @@ module.exports = {
   createProcureInvoice: procureCoreService.createProcureInvoice,
   getProcureContracts: procureCoreService.getProcureContracts,
   createProcureContract: procureCoreService.createProcureContract,
-  getProcureSuppliers: procureCoreService.getProcureSuppliers
+  getProcureSuppliers: procureCoreService.getProcureSuppliers,
+  // Sales Core (CRM / C4C) API Methods
+  getSalesCoreKpis: salesCoreService.getSalesCoreKpis,
+  getAccounts: salesCoreService.getAccounts,
+  createAccount: salesCoreService.createAccount,
+  getContacts: salesCoreService.getContacts,
+  createContact: salesCoreService.createContact,
+  getLeads: salesCoreService.getLeads,
+  createLead: salesCoreService.createLead,
+  getOpportunities: salesCoreService.getOpportunities,
+  createOpportunity: salesCoreService.createOpportunity
 };
