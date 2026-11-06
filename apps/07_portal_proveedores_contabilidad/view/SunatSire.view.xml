@@ -1,0 +1,153 @@
+<mvc:View
+    controllerName="com.antigravity.portalProveedoresContabilidad.controller.SunatSire"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core"
+    xmlns:f="sap.ui.layout.form">
+
+    <Page id="sunatSirePage" showHeader="false">
+        <content>
+            <VBox class="sapUiMediumMargin">
+
+                <!-- Encabezado de Página -->
+                <HBox justifyContent="SpaceBetween" alignItems="Center" class="sapUiSmallMarginBottom">
+                    <VBox>
+                        <Title text="Verificación Fiscal SUNAT / SIRE (RCE)" level="H2" />
+                        <Text text="Módulo de conciliación automática con la plataforma SIRE de SUNAT, padrón RUC y validación XML UBL 2.1" style="color:#64748b;" />
+                    </VBox>
+                    <HBox>
+                        <Button text="Consultar Padrón RUC" icon="sap-icon://official-service" press=".onCheckRucPadron" class="sapUiTinyMarginEnd" />
+                        <Button text="Sincronizar Ticket SIRE" icon="sap-icon://refresh" type="Emphasized" press=".onSyncSireTicket" />
+                    </HBox>
+                </HBox>
+
+                <!-- FRANJA DE TARJETAS INFORMATIVAS SIRE -->
+                <HBox wrap="Wrap" justifyContent="SpaceBetween" class="sapUiSmallMarginBottom">
+                    <GenericTile
+                        header="Propuesta SIRE Noviembre 2026"
+                        subheader="Total Comprobantes en RCE"
+                        class="sapUiTinyMarginEnd sapUiTinyMarginBottom"
+                        press=".onTilePress">
+                        <TileContent unit="Docs" footer="Sincronizado hoy 08:30">
+                            <NumericContent value="28" valueColor="Neutral" icon="sap-icon://customer-financial-fact-sheet" />
+                        </TileContent>
+                    </GenericTile>
+
+                    <GenericTile
+                        header="Comprobantes Conformes"
+                        subheader="Validados sin Discrepancia"
+                        class="sapUiTinyMarginEnd sapUiTinyMarginBottom"
+                        press=".onTilePress">
+                        <TileContent unit="96.4%" footer="Listos para aceptar">
+                            <NumericContent value="27" valueColor="Good" icon="sap-icon://accept" />
+                        </TileContent>
+                    </GenericTile>
+
+                    <GenericTile
+                        header="Observados SUNAT SIRE"
+                        subheader="Diferencia de Impuesto o RUC"
+                        class="sapUiTinyMarginEnd sapUiTinyMarginBottom"
+                        press=".onTilePress">
+                        <TileContent unit="Alertas" footer="Acción requerida">
+                            <NumericContent value="1" valueColor="Critical" icon="sap-icon://alert" />
+                        </TileContent>
+                    </GenericTile>
+
+                    <GenericTile
+                        header="Ticket Activo SUNAT"
+                        subheader="API Facturación Electrónica"
+                        class="sapUiTinyMarginBottom"
+                        press=".onTilePress">
+                        <TileContent unit="En Línea" footer="Respuesta: 215 ms">
+                            <NumericContent value="OK" valueColor="Good" icon="sap-icon://connected" />
+                        </TileContent>
+                    </GenericTile>
+                </HBox>
+
+                <!-- PESTAÑAS: PROPUESTA RCE VS VALIDADOR XML -->
+                <IconTabBar class="sapUiSmallMarginTop">
+                    <items>
+                        <!-- PESTAÑA 1: PROPUESTA RCE SUNAT -->
+                        <IconTabFilter icon="sap-icon://table-view" text="Propuesta Registro de Compras (RCE)">
+                            <VBox class="sapUiSmallMargin">
+                                
+                                <OverflowToolbar class="sapUiSmallMarginBottom">
+                                    <Title text="Comprobantes en Propuesta SIRE ({= ${app>/sireProposals}.length })" level="H3" />
+                                    <ToolbarSpacer />
+                                    <SearchField id="searchSire" placeholder="Buscar RUC o Serie..." width="14rem" liveChange=".onFilterSire" />
+                                    <Button text="Aceptar Propuesta SUNAT" icon="sap-icon://accept" type="Emphasized" press=".onAcceptSireProposal" />
+                                    <Button text="Descargar Reporte TXT / CSV" icon="sap-icon://download" press=".onDownloadSireReport" />
+                                </OverflowToolbar>
+
+                                <Table id="tableSire" items="{app>/sireProposals}" growing="true">
+                                    <columns>
+                                        <Column width="7rem"><Text text="Periodo" /></Column>
+                                        <Column width="9rem"><Text text="RUC Emisor" /></Column>
+                                        <Column minScreenWidth="Tablet" demandPopin="true"><Text text="Razón Social" /></Column>
+                                        <Column width="8rem"><Text text="Tipo" /></Column>
+                                        <Column width="10rem"><Text text="Comprobante" /></Column>
+                                        <Column width="8rem"><Text text="Fecha Emisión" /></Column>
+                                        <Column hAlign="End"><Text text="Monto Gravado" /></Column>
+                                        <Column hAlign="End"><Text text="IGV (18%)" /></Column>
+                                        <Column hAlign="End"><Text text="Total" /></Column>
+                                        <Column width="7rem"><Text text="Estado RUC" /></Column>
+                                        <Column width="10rem"><Text text="Veredicto SIRE" /></Column>
+                                    </columns>
+                                    <items>
+                                        <ColumnListItem>
+                                            <cells>
+                                                <Text text="{app>periodo}" />
+                                                <Text text="{app>rucEmisor}" />
+                                                <Text text="{app>razonSocial}" />
+                                                <Text text="{app>tipoComprobante}" />
+                                                <Text text="{app>serieNumero}" bold="true" />
+                                                <Text text="{app>fechaEmision}" />
+                                                <ObjectNumber number="{app>montoGravado}" unit="{app>moneda}" />
+                                                <ObjectNumber number="{app>igv}" unit="{app>moneda}" />
+                                                <ObjectNumber number="{app>total}" unit="{app>moneda}" state="Information" bold="true" />
+                                                <ObjectStatus text="{app>estadoRuc}" state="Success" />
+                                                <ObjectStatus
+                                                    text="{app>estadoPropuesta}"
+                                                    state="{= ${app>estadoPropuesta} === 'CONFORME SIRE' ? 'Success' : 'Warning' }"
+                                                    icon="{= ${app>estadoPropuesta} === 'CONFORME SIRE' ? 'sap-icon://sys-enter-2' : 'sap-icon://alert' }" />
+                                            </cells>
+                                        </ColumnListItem>
+                                    </items>
+                                </Table>
+                            </VBox>
+                        </IconTabFilter>
+
+                        <!-- PESTAÑA 2: VALIDADOR DE XML UBL 2.1 Y FIRMA -->
+                        <IconTabFilter icon="sap-icon://attachment-e-pub" text="Validador en Vivo de XML UBL 2.1">
+                            <VBox class="sapUiSmallMargin">
+                                <MessageStrip
+                                    text="Inspección sintáctica de comprobantes XML emitidos bajo estándar SUNAT UBL 2.1. Verifica DigestValue, Certificado Digital, RUC del Emisor y estructura de impuestos."
+                                    type="Information"
+                                    showIcon="true"
+                                    class="sapUiSmallMarginBottom" />
+
+                                <f:SimpleForm
+                                    editable="true"
+                                    layout="ResponsiveGridLayout"
+                                    labelSpanXL="3" labelSpanL="3" labelSpanM="3" labelSpanS="12">
+                                    <f:content>
+                                        <Label text="Pega aquí el XML para análisis:" />
+                                        <TextArea
+                                            id="txtXmlToValidate"
+                                            rows="8"
+                                            placeholder="&lt;?xml version='1.0' encoding='UTF-8'?&gt;&#10;&lt;Invoice xmlns='urn:oasis:names:specification:ubl:schema:xsd:Invoice-2'&gt;...&lt;/Invoice&gt;" />
+                                    </f:content>
+                                </f:SimpleForm>
+
+                                <HBox justifyContent="End" class="sapUiSmallMarginTop">
+                                    <Button text="Validar Estructura XML" icon="sap-icon://validate" type="Emphasized" press=".onValidateXmlDirect" />
+                                </HBox>
+                            </VBox>
+                        </IconTabFilter>
+                    </items>
+                </IconTabBar>
+
+            </VBox>
+        </content>
+    </Page>
+</mvc:View>

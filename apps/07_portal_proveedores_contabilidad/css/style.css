@@ -1,0 +1,238 @@
+/* ==========================================================================
+   SAP FIORI HORIZON — ACCOUNTS PAYABLE & 3-WAY MATCHING
+   ========================================================================== */
+
+:root {
+  --sapShellBg: #1d2d3e;
+  --sapSideNavBg: #ffffff;
+  --sapBorderLight: #eaedf1;
+  --sapBrandBlue: #0a6ed1;
+  --sapTextSlate: #1e293b;
+  --sapSlateGray: #475569;
+  --sapKpiOrange: #e06a3b;
+  --sapKpiGreen: #107e3e;
+  --sapKpiSlate: #1e293b;
+}
+
+/* Ocultar cabecera propia cuando corre en iframe modal */
+body.in-iframe .portalAccountingHeader,
+body.in-iframe #appToolHeader {
+  display: none !important;
+}
+
+/* 1. SHELL BAR CORPORATIVO */
+.portalAccountingHeader {
+  background-color: var(--sapShellBg) !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+  color: #ffffff !important;
+  height: 44px !important;
+}
+
+.portalAccountingHeader .sapMBtnTransparent {
+  color: #ffffff !important;
+}
+
+.portalShellHomeBtn {
+  color: #ffffff !important;
+  font-weight: 600 !important;
+}
+
+.portalShellTitle {
+  color: #ffffff !important;
+  font-size: 13.5px !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.3px !important;
+}
+
+/* 2. ESTÁNDAR DE BARRA LATERAL IZQUIERDA (sap.tnt.SideNavigation) */
+.accountingSideNav {
+  width: 230px !important;
+  background-color: #ffffff !important;
+  border-right: 1px solid var(--sapBorderLight) !important;
+}
+
+.accountingSideNav .sapTntNavList {
+  background-color: #ffffff !important;
+  padding: 8px 6px !important;
+}
+
+.accountingSideNav .sapTntNavLIIcon {
+  color: var(--sapSlateGray) !important;
+  font-size: 15px !important;
+}
+
+.accountingSideNav .sapTntNavLIText {
+  font-size: 13px !important;
+  font-weight: 500 !important;
+  color: var(--sapTextSlate) !important;
+}
+
+/* Elemento Activo: Recuadro Azul Horizon */
+.accountingSideNav .sapTntNavLISelected,
+.accountingSideNav .sapTntNavLI.sapTntNavLISelected {
+  border: 1.5px solid var(--sapBrandBlue) !important;
+  border-radius: 6px !important;
+  background-color: #ffffff !important;
+  box-shadow: 0 1px 3px rgba(10, 110, 209, 0.08) !important;
+}
+
+.accountingSideNav .sapTntNavLISelected .sapTntNavLIText,
+.accountingSideNav .sapTntNavLISelected .sapTntNavLIIcon {
+  color: var(--sapBrandBlue) !important;
+  font-weight: 600 !important;
+}
+
+/* Pie fijo inferior para Administración */
+.accountingSideNavFooter {
+  border-top: 1px solid var(--sapBorderLight) !important;
+  padding: 6px 8px !important;
+  background-color: #ffffff !important;
+}
+
+/* 3. FRANJA SUPERIOR DE 4 TARJETAS KPI (CROMÁTICA UNIFICADA) */
+.kpiStripGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.kpiCardHorizon {
+  background: #ffffff !important;
+  border: 1px solid var(--sapBorderLight) !important;
+  border-radius: 12px !important;
+  padding: 16px 18px !important;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.03) !important;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.kpiCardHorizon:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+}
+
+.kpiCardTitle {
+  font-size: 12.5px;
+  font-weight: 700;
+  color: var(--sapTextSlate);
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+
+.kpiValueOrange {
+  color: var(--sapKpiOrange) !important;
+  font-size: 28px !important;
+  font-weight: 800 !important;
+  line-height: 1.2;
+}
+
+.kpiValueSlate {
+  color: var(--sapKpiSlate) !important;
+  font-size: 28px !important;
+  font-weight: 800 !important;
+  line-height: 1.2;
+}
+
+.kpiValueGreen {
+  color: var(--sapKpiGreen) !important;
+  font-size: 28px !important;
+  font-weight: 800 !important;
+  line-height: 1.2;
+}
+
+.kpiSubLabel {
+  font-size: 11.5px;
+  color: var(--sapSlateGray);
+  margin-top: 4px;
+}
+
+/* 4. BADGES DE 3-WAY MATCHING */
+.badgeMatchSuccess {
+  background-color: #eaf5ea !important;
+  color: #107e3e !important;
+  border: 1px solid #b7ebb7 !important;
+  padding: 2px 8px !important;
+  border-radius: 4px !important;
+  font-weight: 600 !important;
+  font-size: 11px !important;
+}
+
+.badgeMatchPriceAlert {
+  background-color: #fef3e6 !important;
+  color: #d97706 !important;
+  border: 1px solid #fed7aa !important;
+  padding: 2px 8px !important;
+  border-radius: 4px !important;
+  font-weight: 600 !important;
+  font-size: 11px !important;
+}
+
+.badgeMatchQtyAlert {
+  background-color: #fde8e8 !important;
+  color: #bb0000 !important;
+  border: 1px solid #fecaca !important;
+  padding: 2px 8px !important;
+  border-radius: 4px !important;
+  font-weight: 600 !important;
+  font-size: 11px !important;
+}
+
+/* 5. VISOR DE PDF Y XML UBL 2.1 */
+.xmlCodeViewer {
+  background-color: #f8fafc;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  padding: 12px;
+  font-family: 'Consolas', 'Courier New', monospace;
+  font-size: 12px;
+  line-height: 1.45;
+  color: #0f172a;
+  max-height: 380px;
+  overflow-y: auto;
+}
+
+.pdfPreviewBox {
+  background: #ffffff;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+}
+
+.pdfReceivedStamp {
+  border: 2px dashed #107e3e;
+  color: #107e3e;
+  padding: 6px 12px;
+  font-weight: 700;
+  font-size: 12px;
+  text-align: center;
+  border-radius: 4px;
+  display: inline-block;
+  transform: rotate(-3deg);
+}
+
+/* 6. SIDE PANEL SAP JOULE AI */
+.jouleSidebarPanel {
+  background: #ffffff;
+  border-left: 1px solid var(--sapBorderLight);
+  height: 100%;
+}
+
+.jouleBotBubble {
+  background: #f1f5f9;
+  border-radius: 12px;
+  padding: 10px 14px;
+  font-size: 12.5px;
+  color: #1e293b;
+  border: 1px solid #e2e8f0;
+}
+
+.jouleUserBubble {
+  background: #e0f2fe;
+  border-radius: 12px;
+  padding: 10px 14px;
+  font-size: 12.5px;
+  color: #0369a1;
+  border: 1px solid #bae6fd;
+}

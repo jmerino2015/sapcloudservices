@@ -1,0 +1,159 @@
+{
+  "_version": "1.58.0",
+  "sap.app": {
+    "id": "com.antigravity.portalProveedoresContabilidad",
+    "type": "application",
+    "i18n": "i18n/i18n.properties",
+    "title": "{{appTitle}}",
+    "description": "{{appDescription}}",
+    "applicationVersion": {
+      "version": "1.0.0"
+    },
+    "dataSources": {
+      "mainService": {
+        "uri": "/sap/opu/odata4/sap/zui_c_supplierinvoice_o4/srvd/sap/zui_c_supplierinvoice_o4_ui/0001/",
+        "type": "OData",
+        "settings": {
+          "odataVersion": "4.0"
+        }
+      }
+    }
+  },
+  "sap.ui": {
+    "technology": "UI5",
+    "icons": {
+      "icon": "sap-icon://customer-financial-fact-sheet"
+    },
+    "deviceTypes": {
+      "desktop": true,
+      "tablet": true,
+      "phone": true
+    },
+    "fullWidth": true
+  },
+  "sap.ui5": {
+    "flexEnabled": true,
+    "rootView": {
+      "viewName": "com.antigravity.portalProveedoresContabilidad.view.App",
+      "type": "XML",
+      "async": true,
+      "id": "app"
+    },
+    "dependencies": {
+      "minUI5Version": "1.108.0",
+      "libs": {
+        "sap.m": {},
+        "sap.f": {},
+        "sap.ui.core": {},
+        "sap.ui.layout": {},
+        "sap.ui.unified": {},
+        "sap.uxap": {},
+        "sap.tnt": {}
+      }
+    },
+    "contentDensities": {
+      "compact": true,
+      "cozy": true
+    },
+    "models": {
+      "i18n": {
+        "type": "sap.ui.model.resource.ResourceModel",
+        "settings": {
+          "bundleName": "com.antigravity.portalProveedoresContabilidad.i18n.i18n"
+        }
+      }
+    },
+    "resources": {
+      "css": [
+        {
+          "uri": "css/style.css"
+        }
+      ]
+    },
+    "routing": {
+      "config": {
+        "routerClass": "sap.m.routing.Router",
+        "viewType": "XML",
+        "viewPath": "com.antigravity.portalProveedoresContabilidad.view",
+        "controlId": "appNav",
+        "controlAggregation": "pages",
+        "async": true,
+        "transition": "slide"
+      },
+      "routes": [
+        {
+          "name": "dashboard",
+          "pattern": "",
+          "target": ["dashboard"]
+        },
+        {
+          "name": "invoicesMatch",
+          "pattern": "invoices-match",
+          "target": ["invoicesMatch"]
+        },
+        {
+          "name": "sunatSire",
+          "pattern": "sunat-sire",
+          "target": ["sunatSire"]
+        },
+        {
+          "name": "sapPosting",
+          "pattern": "sap-posting",
+          "target": ["sapPosting"]
+        },
+        {
+          "name": "paymentsAudit",
+          "pattern": "payments-audit",
+          "target": ["paymentsAudit"]
+        },
+        {
+          "name": "creditNotes",
+          "pattern": "credit-notes",
+          "target": ["creditNotes"]
+        },
+        {
+          "name": "settings",
+          "pattern": "settings",
+          "target": ["settings"]
+        }
+      ],
+      "targets": {
+        "dashboard": {
+          "viewName": "Dashboard",
+          "viewId": "dashboard",
+          "viewLevel": 1
+        },
+        "invoicesMatch": {
+          "viewName": "InvoicesMatch",
+          "viewId": "invoicesMatch",
+          "viewLevel": 2
+        },
+        "sunatSire": {
+          "viewName": "SunatSire",
+          "viewId": "sunatSire",
+          "viewLevel": 2
+        },
+        "sapPosting": {
+          "viewName": "SapPosting",
+          "viewId": "sapPosting",
+          "viewLevel": 2
+        },
+        "paymentsAudit": {
+          "viewName": "PaymentsAudit",
+          "viewId": "paymentsAudit",
+          "viewLevel": 2
+        },
+        "creditNotes": {
+          "viewName": "CreditNotes",
+          "viewId": "creditNotes",
+          "viewLevel": 2
+        },
+        "settings": {
+          "viewName": "Settings",
+          "viewId": "settings",
+          "viewLevel": 2
+        }
+      }
+    }
+  }
+}

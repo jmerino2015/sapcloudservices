@@ -174,6 +174,30 @@ window.SAP_APPS_CONFIG = [
     status: "Active"
   },
   {
+    id: "07_contabilidad",
+    code: "07C",
+    folder: "07_portal_proveedores_contabilidad",
+    title: "Portal Proveedores Contabilidad",
+    subtitle: "Cuentas por Pagar & 3-Way Match",
+    description: "Consola contable y financiera: revisión de facturas XML/PDF, conciliación 3-Way Match (OC/MIGO), validación SUNAT SIRE y contabilización en SAP (MIRO/FB60).",
+    category: "finanzas",
+    categoryLabel: "Finanzas & Proveedores",
+    sapIcon: "sap-icon://customer-financial-fact-sheet",
+    faIcon: "file-invoice-dollar",
+    iconBg: "linear-gradient(135deg, #0284c7, #0369a1)",
+    badge: "SAP FI-AP / MIRO",
+    badgeType: "primary",
+    sapModule: "FI-AP",
+    path: "apps/07_portal_proveedores_contabilidad/index.html",
+    kpi: {
+      value: "14 / 28",
+      label: "Facturas Pendientes",
+      trend: "neutral"
+    },
+    tags: ["Contabilidad", "Finanzas", "Proveedores", "Facturas", "3-Way Match", "MIRO", "SUNAT", "SIRE", "Cuentas por Pagar", "Detracciones"],
+    status: "Active"
+  },
+  {
     id: "08",
     code: "08",
     folder: "08_entregas_a_rendir",

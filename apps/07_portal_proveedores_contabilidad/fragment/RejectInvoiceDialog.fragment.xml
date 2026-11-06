@@ -1,0 +1,55 @@
+<core:FragmentDefinition
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core">
+
+    <Dialog
+        id="rejectDialog"
+        title="Rechazo Motivado de Factura {reject>/comprobante}"
+        type="Message"
+        state="Error"
+        contentWidth="520px">
+        
+        <content>
+            <VBox class="sapUiSmallMargin">
+                <Text text="Por favor especifique la causal fiscal o comercial del rechazo. Se enviará una notificación formal al proveedor con el sustento:" class="sapUiSmallMarginBottom" />
+
+                <Label text="Motivo Específico de Rechazo:*" />
+                <Select id="selectRejectCausal" selectedKey="DISCREPANCY_PRICE" width="100%" class="sapUiSmallMarginBottom">
+                    <core:Item key="DISCREPANCY_PRICE" text="Discrepancia en Precio respecto a Orden de Compra" />
+                    <core:Item key="DISCREPANCY_QTY" text="Cantidad facturada excede la recepción en MIGO" />
+                    <core:Item key="XML_UBL_ERROR" text="XML UBL 2.1 no cumple firma electrónica o digest SUNAT" />
+                    <core:Item key="NO_STAMP" text="PDF adjunto no posee sello de recepción de almacén" />
+                    <core:Item key="SUNAT_INVALID" text="Proveedor no figura como Habido / Activo en SIRE" />
+                    <core:Item key="OTHER" text="Otro motivo comercial (especificar)" />
+                </Select>
+
+                <Label text="Detalle de Observación / Glosa:* " />
+                <TextArea
+                    id="txtRejectDetail"
+                    rows="4"
+                    width="100%"
+                    placeholder="Ingrese el detalle técnico para que el proveedor pueda corregir y reingresar..." />
+
+                <CheckBox
+                    id="chkNotifySupplier"
+                    text="Notificar automáticamente vía correo electrónico al emisor"
+                    selected="true"
+                    class="sapUiTinyMarginTop" />
+            </VBox>
+        </content>
+
+        <beginButton>
+            <Button
+                text="Confirmar Rechazo"
+                type="Reject"
+                icon="sap-icon://decline"
+                press=".onConfirmReject" />
+        </beginButton>
+        <endButton>
+            <Button
+                text="Cancelar"
+                press=".onCloseRejectDialog" />
+        </endButton>
+    </Dialog>
+
+</core:FragmentDefinition>

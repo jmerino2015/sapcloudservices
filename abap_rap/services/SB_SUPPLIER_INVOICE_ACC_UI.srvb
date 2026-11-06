@@ -1,0 +1,7 @@
+{
+  "bindingType": "OData V4 - UI",
+  "serviceDefinition": "SD_SUPPLIER_INVOICE_ACC",
+  "version": "0001",
+  "published": true,
+  "serviceName": "ZUI_SUPPLIER_INVOICE_ACC_O4_UI"
+}

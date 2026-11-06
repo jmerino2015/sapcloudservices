@@ -1,0 +1,65 @@
+<mvc:View
+    controllerName="com.antigravity.portalProveedoresContabilidad.controller.CreditNotes"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core"
+    xmlns:f="sap.ui.layout.form">
+
+    <Page id="creditNotesPage" showHeader="false">
+        <content>
+            <VBox class="sapUiMediumMargin">
+
+                <!-- Encabezado de Página -->
+                <HBox justifyContent="SpaceBetween" alignItems="Center" class="sapUiSmallMarginBottom">
+                    <VBox>
+                        <Title text="Notas de Crédito &amp; Ajustes Comerciales (Tipo 07 SUNAT)" level="H2" />
+                        <Text text="Registro, compensación y aplicación contable de notas de crédito electrónicas vinculadas a facturas de compra" style="color:#64748b;" />
+                    </VBox>
+                    <Button text="Registrar Nueva Nota de Crédito" icon="sap-icon://add" type="Emphasized" press=".onOpenNewNcDialog" />
+                </HBox>
+
+                <!-- TABLA DE NOTAS DE CRÉDITO -->
+                <Panel headerText="Relación de Notas de Crédito Electrónicas ({= ${app>/creditNotes}.length })">
+                    <Table id="tableNC" items="{app>/creditNotes}">
+                        <headerToolbar>
+                            <OverflowToolbar>
+                                <SearchField id="searchNC" placeholder="Buscar por NC, factura o proveedor..." width="16rem" liveChange=".onFilterNC" />
+                                <ToolbarSpacer />
+                                <Button text="Aplicar Compensación en SAP" icon="sap-icon://accept" type="Emphasized" press=".onApplyNcCompensation" />
+                                <Button text="Exportar" icon="sap-icon://excel-attachment" press=".onExportExcel" />
+                            </OverflowToolbar>
+                        </headerToolbar>
+                        <columns>
+                            <Column width="9rem"><Text text="Nota Crédito" /></Column>
+                            <Column width="9rem"><Text text="Factura Afecta" /></Column>
+                            <Column minScreenWidth="Tablet" demandPopin="true"><Text text="Proveedor" /></Column>
+                            <Column minScreenWidth="Desktop" demandPopin="true"><Text text="Tipo de Nota SUNAT" /></Column>
+                            <Column width="8rem"><Text text="Fecha Emisión" /></Column>
+                            <Column hAlign="End" width="8rem"><Text text="Importe Total" /></Column>
+                            <Column width="8rem"><Text text="Doc. Comp." /></Column>
+                            <Column width="9rem"><Text text="Estado" /></Column>
+                        </columns>
+                        <items>
+                            <ColumnListItem>
+                                <cells>
+                                    <Text text="{app>comprobanteNC}" bold="true" />
+                                    <Text text="{app>facturaAfecta}" />
+                                    <Text text="{app>proveedor}" />
+                                    <Text text="{app>tipoNota}" />
+                                    <Text text="{app>fechaEmision}" />
+                                    <ObjectNumber number="{app>importe}" unit="{app>moneda}" state="Error" bold="true" />
+                                    <Text text="{app>docCompensacion}" />
+                                    <ObjectStatus
+                                        text="{= ${app>estado} === 'APLICADA' ? 'APLICADA EN SAP' : 'PENDIENTE' }"
+                                        state="{= ${app>estado} === 'APLICADA' ? 'Success' : 'Warning' }"
+                                        icon="{= ${app>estado} === 'APLICADA' ? 'sap-icon://sys-enter-2' : 'sap-icon://alert' }" />
+                                </cells>
+                            </ColumnListItem>
+                        </items>
+                    </Table>
+                </Panel>
+
+            </VBox>
+        </content>
+    </Page>
+</mvc:View>

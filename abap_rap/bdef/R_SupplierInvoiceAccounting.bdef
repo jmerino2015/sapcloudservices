@@ -1,0 +1,143 @@
+managed implementation in class zbp_r_supplierinvoiceacc unique;
+strict ( 2 );
+with draft;
+
+define behavior for R_SupplierInvoiceAccounting alias SupplierInvoice
+persistent table ztb_supp_inv_acc
+draft table ztb_supp_inva_d
+lock master
+total etag LastChangedAt
+authorization master ( instance )
+etag master LocalLastChangedAt
+{
+  create;
+  update;
+  delete;
+  association _Items { create; with draft; }
+
+  field ( numbering : managed, readonly ) InvoiceUUID;
+  field ( readonly )
+    CreatedBy,
+    CreatedAt,
+    LastChangedBy,
+    LastChangedAt,
+    LocalLastChangedAt,
+    SAPDocMM,
+    SAPDocFI,
+    FiscalYear,
+    PostingDate,
+    NetPayableAmount,
+    ThreeWayMatchStatus,
+    MatchVarianceAmount,
+    SunatStatus;
+
+  field ( mandatory : create )
+    SupplierRUC,
+    SupplierName,
+    InvoiceNumber,
+    PurchaseOrder,
+    GrossAmount,
+    CurrencyCode,
+    DueDate;
+
+  action ( features : instance ) postToSAPFI result [1] $self;
+  action ( features : instance ) verifySunat result [1] $self;
+  action ( features : instance ) executeThreeWayMatch result [1] $self;
+  action ( features : instance ) rechazarFactura result [1] $self;
+
+  determination calculateNetPayable on modify { field GrossAmount, TaxAmount, DetractionAmount, RetentionAmount; }
+  determination setDefaultStatus on modify { create; }
+
+  validation validateSupplierRUC on save { field SupplierRUC; create; update; }
+  validation validateInvoiceNumber on save { field InvoiceNumber; create; update; }
+
+  draft action Edit;
+  draft action Activate optimized;
+  draft action Discard;
+  draft action Resume;
+  draft determine action Prepare {
+    validation validateSupplierRUC;
+    validation validateInvoiceNumber;
+    determination calculateNetPayable;
+  }
+
+  mapping for ztb_supp_inv_acc
+  {
+    InvoiceUUID          = invoice_uuid;
+    InvoiceNumber        = invoice_number;
+    SupplierRUC          = supplier_ruc;
+    SupplierName         = supplier_name;
+    PurchaseOrder        = purchase_order;
+    EntrySheetMIGO       = entry_sheet_migo;
+    GrossAmount          = gross_amount;
+    CurrencyCode         = currency_code;
+    TaxAmount            = tax_amount;
+    DetractionAmount     = detraction_amount;
+    RetentionAmount      = retention_amount;
+    NetPayableAmount     = net_payable_amount;
+    FiscalStatus         = fiscal_status;
+    SAPDocMM             = sap_doc_mm;
+    SAPDocFI             = sap_doc_fi;
+    FiscalYear           = fiscal_year;
+    PostingDate          = posting_date;
+    DueDate              = due_date;
+    ReceiptStampDetected = receipt_stamp_detected;
+    SunatStatus          = sunat_status;
+    ThreeWayMatchStatus  = three_way_match_status;
+    MatchVarianceAmount  = match_variance_amount;
+    ObservationNotes     = observation_notes;
+    CreatedBy            = created_by;
+    CreatedAt            = created_at;
+    LastChangedBy        = last_changed_by;
+    LastChangedAt        = last_changed_at;
+    LocalLastChangedAt   = local_last_changed_at;
+  }
+}
+
+define behavior for R_SupplierInvoiceItemAccounting alias Item
+persistent table ztb_supp_inv_itm
+draft table ztb_supp_invi_d
+lock dependent by _SupplierInvoice
+authorization dependent by _SupplierInvoice
+etag master LocalLastChangedAt
+{
+  update;
+  delete;
+  association _SupplierInvoice { with draft; }
+
+  field ( numbering : managed, readonly ) ItemUUID;
+  field ( readonly ) InvoiceUUID, LocalLastChangedAt, NetAmount, TaxAmount;
+  field ( mandatory : create )
+    ItemPosition,
+    MaterialCode,
+    MaterialDescription,
+    Quantity,
+    UnitOfMeasure,
+    UnitPrice,
+    CurrencyCode,
+    GLAccount;
+
+  mapping for ztb_supp_inv_itm
+  {
+    ItemUUID            = item_uuid;
+    InvoiceUUID         = invoice_uuid;
+    ItemPosition        = item_position;
+    MaterialCode        = material_code;
+    MaterialDescription = material_description;
+    Quantity            = quantity;
+    UnitOfMeasure       = unit_of_measure;
+    UnitPrice           = unit_price;
+    NetAmount           = net_amount;
+    TaxAmount           = tax_amount;
+    CurrencyCode        = currency_code;
+    GLAccount           = gl_account;
+    CostCenter          = cost_center;
+    POItemReference     = po_item_reference;
+    MIGOItemReference   = migo_item_reference;
+    CreatedBy           = created_by;
+    CreatedAt           = created_at;
+    LastChangedBy       = last_changed_by;
+    LastChangedAt       = last_changed_at;
+    LocalLastChangedAt  = local_last_changed_at;
+  }
+}

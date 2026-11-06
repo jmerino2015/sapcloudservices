@@ -1,0 +1,6 @@
+@EndUserText.label: 'Service Definition Contabilidad Facturas Proveedor'
+define service SD_SUPPLIER_INVOICE_ACC {
+  expose C_SupplierInvoiceAccounting     as SupplierInvoice;
+  expose C_SupplierInvoiceItemAccounting as InvoiceItem;
+  expose I_Currency                      as Currency;
+}

@@ -1,0 +1,78 @@
+<mvc:View
+    controllerName="com.antigravity.portalProveedoresContabilidad.controller.Dashboard"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core"
+    xmlns:f="sap.ui.layout.form">
+
+    <Page id="dashboardPage" showHeader="false">
+        <content>
+            <VBox class="sapUiMediumMargin">
+
+                <!-- Título Superior -->
+                <HBox justifyContent="SpaceBetween" alignItems="Center" class="sapUiSmallMarginBottom">
+                    <VBox>
+                        <Title text="Consola Ejecutiva — Cuentas por Pagar &amp; 3-Way Matching" level="H2" />
+                        <Text text="Monitoreo en tiempo real de facturas pre-registradas, validaciones tributarias SUNAT y enlaces MM-FI" style="color:#64748b;" />
+                    </VBox>
+                    <Button text="Ir a Facturas &amp; Conciliación" icon="sap-icon://process" type="Emphasized" press=".onNavToInvoices" />
+                </HBox>
+
+                <!-- =======================================================
+                     FRANJA SUPERIOR DE 4 TARJETAS KPI (ESTÁNDAR HORIZON)
+                     ======================================================= -->
+                <div class="kpiStripGrid">
+                    <!-- KPI 1: Naranja / Coral (#e06a3b) -->
+                    <div class="kpiCardHorizon" onclick="window._navToInvoices &amp;&amp; window._navToInvoices()">
+                        <span class="kpiCardTitle">Facturas Pendientes</span>
+                        <div class="kpiValueOrange">14 / 28</div>
+                        <div class="kpiSubLabel">Revisión Contable &amp; MIRO Pendiente</div>
+                    </div>
+
+                    <!-- KPI 2: Dark Slate (#1e293b) -->
+                    <div class="kpiCardHorizon" onclick="window._navToInvoices &amp;&amp; window._navToInvoices()">
+                        <span class="kpiCardTitle">Importe Total Periodo</span>
+                        <div class="kpiValueSlate">$486,250.00</div>
+                        <div class="kpiSubLabel">Cartera Total USD — Ejercicio 2026</div>
+                    </div>
+
+                    <!-- KPI 3: Verde (#107e3e) -->
+                    <div class="kpiCardHorizon" onclick="window._navToInvoices &amp;&amp; window._navToInvoices()">
+                        <span class="kpiCardTitle">Eficiencia 3-Way Match</span>
+                        <div class="kpiValueGreen">96.4%</div>
+                        <div class="kpiSubLabel">Conciliación Automática PO vs MIGO</div>
+                    </div>
+
+                    <!-- KPI 4: Naranja / Coral (#e06a3b) -->
+                    <div class="kpiCardHorizon" onclick="window._navToInvoices &amp;&amp; window._navToInvoices()">
+                        <span class="kpiCardTitle">Facturas Observadas</span>
+                        <div class="kpiValueOrange">3 Alertas</div>
+                        <div class="kpiSubLabel">Discrepancias Tolerancia ±2%</div>
+                    </div>
+                </div>
+
+                <!-- Paneles Informativos y Métricas de Detracción -->
+                <Panel headerText="Resumen de Retenciones y Detracciones Banco de la Nación" class="sapUiSmallMarginBottom">
+                    <HBox wrap="Wrap" justifyContent="SpaceAround" alignItems="Center">
+                        <VBox alignItems="Center" class="sapUiSmallMargin">
+                            <Text text="Monto Total Detracciones" style="font-weight:600; color:#64748b;" />
+                            <Title text="S/ 48,920.00 PEN" level="H3" class="sapUiTinyMarginTop" />
+                            <Text text="Cuentas Banco de la Nación Depuradas" style="font-size:11px; color:#107e3e;" />
+                        </VBox>
+                        <VBox alignItems="Center" class="sapUiSmallMargin">
+                            <Text text="Retención IGV 3% Aplicable" style="font-weight:600; color:#64748b;" />
+                            <Title text="$ 14,587.50 USD" level="H3" class="sapUiTinyMarginTop" />
+                            <Text text="Certificados de Retención Emitidos" style="font-size:11px; color:#0a6ed1;" />
+                        </VBox>
+                        <VBox alignItems="Center" class="sapUiSmallMargin">
+                            <Text text="Facturas Aprobadas SUNAT SIRE" style="font-weight:600; color:#64748b;" />
+                            <Title text="25 de 28" level="H3" class="sapUiTinyMarginTop" />
+                            <Text text="89.3% Validadas en Padrón SUNAT" style="font-size:11px; color:#107e3e;" />
+                        </VBox>
+                    </HBox>
+                </Panel>
+
+            </VBox>
+        </content>
+    </Page>
+</mvc:View>

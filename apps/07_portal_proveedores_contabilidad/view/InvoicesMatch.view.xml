@@ -1,0 +1,129 @@
+<mvc:View
+    controllerName="com.antigravity.portalProveedoresContabilidad.controller.InvoicesMatch"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core"
+    xmlns:f="sap.ui.layout.form">
+
+    <Page id="invoicesMatchPage" showHeader="false">
+        <content>
+            <VBox class="sapUiMediumMargin">
+
+                <!-- Encabezado de Página -->
+                <HBox justifyContent="SpaceBetween" alignItems="Center" class="sapUiSmallMarginBottom">
+                    <VBox>
+                        <Title text="Facturas Pre-Registradas &amp; 3-Way Matching" level="H2" />
+                        <Text text="Bandeja de contabilización MM-FI, verificación física de guías MIGO y validación SUNAT SIRE" style="color:#64748b;" />
+                    </VBox>
+                </HBox>
+
+                <!-- PANEL DE FILTROS AVANZADOS -->
+                <Panel expandable="true" expanded="true" headerText="Filtros de Búsqueda Avanzada" class="sapUiSmallMarginBottom">
+                    <HBox wrap="Wrap" alignItems="End" justifyContent="SpaceBetween">
+                        <VBox class="sapUiSmallMarginEnd sapUiTinyMarginBottom">
+                            <Label text="RUC Proveedor:" />
+                            <Input id="filterRuc" placeholder="Ej: 20517426726" width="11rem" liveChange=".onFilterSearch" />
+                        </VBox>
+
+                        <VBox class="sapUiSmallMarginEnd sapUiTinyMarginBottom">
+                            <Label text="Razón Social:" />
+                            <Input id="filterRazonSocial" placeholder="Ej: SERVICIOS..." width="13rem" liveChange=".onFilterSearch" />
+                        </VBox>
+
+                        <VBox class="sapUiSmallMarginEnd sapUiTinyMarginBottom">
+                            <Label text="Estado Contable:" />
+                            <Select id="filterStatus" selectedKey="ALL" change=".onFilterSearch" width="12rem">
+                                <core:Item key="ALL" text="Todos los Estados" />
+                                <core:Item key="PRE_REGISTRADO" text="Pre-Registrado" />
+                                <core:Item key="CONTABILIZADO" text="Contabilizado en SAP" />
+                                <core:Item key="RECHAZADO" text="Rechazado" />
+                            </Select>
+                        </VBox>
+
+                        <VBox class="sapUiSmallMarginEnd sapUiTinyMarginBottom">
+                            <Label text="Estado 3-Way Match:" />
+                            <Select id="filterMatch" selectedKey="ALL" change=".onFilterSearch" width="13rem">
+                                <core:Item key="ALL" text="Todos" />
+                                <core:Item key="MATCHED" text="Conforme (Matched)" />
+                                <core:Item key="DISCREPANCY_PRICE" text="Discrepancia en Precio" />
+                                <core:Item key="DISCREPANCY_QTY" text="Discrepancia en Cantidad" />
+                            </Select>
+                        </VBox>
+
+                        <HBox class="sapUiTinyMarginBottom">
+                            <Button text="Buscar" icon="sap-icon://search" type="Emphasized" press=".onFilterSearch" class="sapUiTinyMarginEnd" />
+                            <Button text="Limpiar" icon="sap-icon://refresh" type="Transparent" press=".onFilterReset" />
+                        </HBox>
+                    </HBox>
+                </Panel>
+
+                <!-- TABLA TRANSACCIONAL DE FACTURAS -->
+                <Table
+                    id="tableInvoices"
+                    mode="SingleSelectLeft"
+                    items="{app>/accountingInvoices}"
+                    growing="true"
+                    growingThreshold="15"
+                    class="sapUiResponsiveMargin">
+                    
+                    <headerToolbar>
+                        <OverflowToolbar>
+                            <Title text="Comprobantes Pre-Registrados ({= ${app>/accountingInvoices}.length })" level="H3" />
+                            <ToolbarSpacer />
+                            <Button text="Revisión 3-Way Match &amp; Contabilizar" icon="sap-icon://accept" type="Emphasized" press=".onOpenReviewDialog" />
+                            <Button text="Validar SUNAT SIRE" icon="sap-icon://official-service" press=".onValidateSunatSire" />
+                            <Button text="Rechazar Factura" icon="sap-icon://decline" type="Reject" press=".onOpenRejectDialog" />
+                            <Button text="Exportar" icon="sap-icon://excel-attachment" press=".onExportExcel" />
+                        </OverflowToolbar>
+                    </headerToolbar>
+
+                    <columns>
+                        <Column width="9rem"><Text text="RUC" /></Column>
+                        <Column minScreenWidth="Tablet" demandPopin="true"><Text text="Razón Social" /></Column>
+                        <Column><Text text="Comprobante" /></Column>
+                        <Column minScreenWidth="Tablet" demandPopin="true"><Text text="Pedido (PO)" /></Column>
+                        <Column minScreenWidth="Desktop" demandPopin="true"><Text text="Entrada MIGO" /></Column>
+                        <Column hAlign="End"><Text text="Importe Total" /></Column>
+                        <Column minScreenWidth="Tablet" demandPopin="true"><Text text="3-Way Match" /></Column>
+                        <Column minScreenWidth="Tablet" demandPopin="true"><Text text="Estado SUNAT" /></Column>
+                        <Column><Text text="Estado SAP" /></Column>
+                        <Column minScreenWidth="Desktop" demandPopin="true"><Text text="Doc MM / FI" /></Column>
+                    </columns>
+
+                    <items>
+                        <ColumnListItem type="Navigation" press=".onOpenReviewDialog">
+                            <cells>
+                                <Text text="{app>ruc}" />
+                                <Text text="{app>razonSocial}" />
+                                <Link text="{app>comprobante}" press=".onOpenReviewDialog" />
+                                <Text text="{app>oc}" />
+                                <Text text="{app>nroGuia}" />
+                                <ObjectNumber number="{app>importe}" unit="{app>moneda}" state="Information" />
+                                
+                                <!-- Estado 3-Way Match -->
+                                <ObjectStatus
+                                    text="{path: 'app>matchStatus', formatter: '.formatter.matchText'}"
+                                    state="{path: 'app>matchStatus', formatter: '.formatter.matchState'}"
+                                    icon="{path: 'app>matchStatus', formatter: '.formatter.matchIcon'}" />
+
+                                <!-- Estado SUNAT SIRE -->
+                                <ObjectStatus
+                                    text="{app>estadoSunat}"
+                                    state="{path: 'app>estadoSunat', formatter: '.formatter.sunatState'}"
+                                    icon="sap-icon://official-service" />
+
+                                <!-- Estado Contable -->
+                                <ObjectStatus
+                                    text="{app>estado}"
+                                    state="{path: 'app>estado', formatter: '.formatter.statusState'}" />
+
+                                <Text text="{= ${app>documentoSAP} ? ${app>documentoSAP} + ' / ' + ${app>documentoFI} : '—' }" />
+                            </cells>
+                        </ColumnListItem>
+                    </items>
+                </Table>
+
+            </VBox>
+        </content>
+    </Page>
+</mvc:View>

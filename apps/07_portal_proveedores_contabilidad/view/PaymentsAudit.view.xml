@@ -1,0 +1,115 @@
+<mvc:View
+    controllerName="com.antigravity.portalProveedoresContabilidad.controller.PaymentsAudit"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core">
+
+    <Page id="paymentsAuditPage" showHeader="false">
+        <content>
+            <VBox class="sapUiMediumMargin">
+
+                <!-- Encabezado de Página -->
+                <HBox justifyContent="SpaceBetween" alignItems="Center" class="sapUiSmallMarginBottom">
+                    <VBox>
+                        <Title text="Auditoría de Pagos, Tesorería &amp; Detracciones SPOT" level="H2" />
+                        <Text text="Control de pagos bancarios a proveedores, depósito de detracciones en Banco de la Nación y retenciones aplicadas" style="color:#64748b;" />
+                    </VBox>
+                    <HBox>
+                        <Button text="Generar TXT Banco de la Nación (SPOT)" icon="sap-icon://download" type="Emphasized" press=".onGenerateSpotTxt" class="sapUiTinyMarginEnd" />
+                        <Button text="Programar Lote F110" icon="sap-icon://money-bills" press=".onScheduleF110" />
+                    </HBox>
+                </HBox>
+
+                <!-- FRANJA DE RESUMEN DE TESORERÍA -->
+                <HBox wrap="Wrap" justifyContent="SpaceBetween" class="sapUiSmallMarginBottom">
+                    <GenericTile
+                        header="Total Pagado en el Mes"
+                        subheader="Noviembre 2026"
+                        class="sapUiTinyMarginEnd sapUiTinyMarginBottom"
+                        press=".onTilePress">
+                        <TileContent unit="USD" footer="Telecrédito BCP / BBVA">
+                            <NumericContent value="26.3" scale="K" valueColor="Good" icon="sap-icon://paid" />
+                        </TileContent>
+                    </GenericTile>
+
+                    <GenericTile
+                        header="Detracciones Depositadas"
+                        subheader="Cuenta Banco de la Nación"
+                        class="sapUiTinyMarginEnd sapUiTinyMarginBottom"
+                        press=".onTilePress">
+                        <TileContent unit="PEN" footer="100% al día con SUNAT">
+                            <NumericContent value="48.9" scale="K" valueColor="Good" icon="sap-icon://official-service" />
+                        </TileContent>
+                    </GenericTile>
+
+                    <GenericTile
+                        header="Pagos Programados"
+                        subheader="Vencimiento Próxima Semana"
+                        class="sapUiTinyMarginEnd sapUiTinyMarginBottom"
+                        press=".onTilePress">
+                        <TileContent unit="USD" footer="Lote W45 listo">
+                            <NumericContent value="14.5" scale="K" valueColor="Critical" icon="sap-icon://future" />
+                        </TileContent>
+                    </GenericTile>
+
+                    <GenericTile
+                        header="Constancias SPOT Emitidas"
+                        subheader="Descargables por el Proveedor"
+                        class="sapUiTinyMarginBottom"
+                        press=".onTilePress">
+                        <TileContent unit="Docs" footer="Auditoría conforme">
+                            <NumericContent value="24" valueColor="Neutral" icon="sap-icon://attachment" />
+                        </TileContent>
+                    </GenericTile>
+                </HBox>
+
+                <!-- TABLA DE AUDITORÍA DE PAGOS -->
+                <Panel headerText="Registro Histórico de Pagos y Compensaciones ({= ${app>/payments}.length })">
+                    <Table items="{app>/payments}" growing="true">
+                        <headerToolbar>
+                            <OverflowToolbar>
+                                <SearchField id="searchPayment" placeholder="Buscar proveedor o comprobante..." width="16rem" liveChange=".onFilterPayment" />
+                                <ToolbarSpacer />
+                                <Button text="Exportar a Excel" icon="sap-icon://excel-attachment" press=".onExportExcel" />
+                            </OverflowToolbar>
+                        </headerToolbar>
+                        <columns>
+                            <Column width="8rem"><Text text="Lote Pago" /></Column>
+                            <Column minScreenWidth="Tablet" demandPopin="true"><Text text="Proveedor" /></Column>
+                            <Column width="9rem"><Text text="Factura" /></Column>
+                            <Column hAlign="End" width="8rem"><Text text="Bruto" /></Column>
+                            <Column hAlign="End" width="7rem"><Text text="Detracción" /></Column>
+                            <Column hAlign="End" width="7rem"><Text text="Retención" /></Column>
+                            <Column hAlign="End" width="8rem"><Text text="Neto Pagado" /></Column>
+                            <Column minScreenWidth="Desktop" demandPopin="true"><Text text="Banco &amp; Cuenta" /></Column>
+                            <Column width="9rem"><Text text="Nro. Operación" /></Column>
+                            <Column width="8rem"><Text text="Constancia SPOT" /></Column>
+                            <Column width="8rem"><Text text="Estado" /></Column>
+                        </columns>
+                        <items>
+                            <ColumnListItem>
+                                <cells>
+                                    <Text text="{app>lote}" />
+                                    <Text text="{app>proveedor}" bold="true" />
+                                    <Text text="{app>comprobante}" />
+                                    <ObjectNumber number="{app>montoBruto}" unit="{app>moneda}" />
+                                    <ObjectNumber number="{app>detraccion}" unit="{app>moneda}" state="Warning" />
+                                    <ObjectNumber number="{app>retencion}" unit="{app>moneda}" state="Warning" />
+                                    <ObjectNumber number="{app>montoNeto}" unit="{app>moneda}" state="Success" bold="true" />
+                                    <Text text="{app>banco} — {app>cuentaAbono}" />
+                                    <Text text="{app>nroOperacion}" />
+                                    <Link text="{app>constanciaSpot}" press=".onViewSpotCertificate" />
+                                    <ObjectStatus
+                                        text="{app>estadoPago}"
+                                        state="{= ${app>estadoPago} === 'PAGADO' ? 'Success' : 'Warning' }"
+                                        icon="{= ${app>estadoPago} === 'PAGADO' ? 'sap-icon://accept' : 'sap-icon://pending' }" />
+                                </cells>
+                            </ColumnListItem>
+                        </items>
+                    </Table>
+                </Panel>
+
+            </VBox>
+        </content>
+    </Page>
+</mvc:View>

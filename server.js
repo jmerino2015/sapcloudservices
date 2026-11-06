@@ -516,6 +516,16 @@ const server = http.createServer(async (req, res) => {
       }
     }
 
+    if (reqUrl.startsWith('/api/supplier-invoices-acc')) {
+      const mockFile = path.join(__dirname, 'apps', '07_portal_proveedores_contabilidad', 'model', 'mockData.json');
+      try {
+        const raw = fs.readFileSync(mockFile, 'utf8');
+        return res.end(JSON.stringify({ success: true, data: JSON.parse(raw) }));
+      } catch (e) {
+        return res.end(JSON.stringify({ success: false, error: e.message }));
+      }
+    }
+
     return res.end(JSON.stringify({ success: true, data: [] }));
   }
 
@@ -586,13 +596,14 @@ server.listen(PORT, HOST, async () => {
   await db.initDatabase();
 
   console.log(`-----------------------------------------------------------------`);
-  console.log(`  📦 Módulos Fiori Activos (10 Servicios Integrados):`);
+  console.log(`  📦 Módulos Fiori Activos (11 Servicios Integrados):`);
   console.log(`     [00] Dashboard Planeamiento & C4C`);
   console.log(`     [01] Gestión de Requerimientos SolMan 7.2`);
   console.log(`     [02] Control de FUE y Usuarios — Gestión de Roles y Perfiles`);
   console.log(`     [04] Dashboard Incidentes (SAP Joule AI)`);
   console.log(`     [05] SAP WMS - SRM FIORI (Warehouse Management)`);
   console.log(`     [07] Portal de Proveedores SAP (OCR & Notas de Crédito)`);
+  console.log(`     [07C] Portal Proveedores Contabilidad (Cuentas por Pagar & 3-Way Match)`);
   console.log(`     [08] Entregas a Rendir & Viáticos (Cajas Chicas)`);
   console.log(`     [11] Gestión de Tipo de Cambio (TCURR / SUNAT)`);
   console.log(`     [12] CRM Portal de Clientes (C4C / Experience Cloud)`);

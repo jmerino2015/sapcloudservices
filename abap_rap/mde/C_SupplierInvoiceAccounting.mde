@@ -1,0 +1,183 @@
+@Metadata.layer: #CUSTOMER
+@UI: {
+  headerInfo: {
+    typeName: 'Factura de Proveedor',
+    typeNamePlural: 'Facturas de Proveedores',
+    title: { type: #STANDARD, value: 'InvoiceNumber' },
+    description: { type: #STANDARD, value: 'SupplierName' }
+  }
+}
+annotate view C_SupplierInvoiceAccounting with
+{
+  @UI.facet: [
+    { id: 'HeaderPendingKpi',
+      type: #DATAPOINT_REFERENCE,
+      purpose: #HEADER,
+      position: 10,
+      targetQualifier: 'KpiPendingPosting' },
+
+    { id: 'HeaderSpendKpi',
+      type: #DATAPOINT_REFERENCE,
+      purpose: #HEADER,
+      position: 20,
+      targetQualifier: 'KpiTotalSpend' },
+
+    { id: 'HeaderMatchKpi',
+      type: #DATAPOINT_REFERENCE,
+      purpose: #HEADER,
+      position: 30,
+      targetQualifier: 'KpiThreeWayEfficiency' },
+
+    { id: 'HeaderObservedKpi',
+      type: #DATAPOINT_REFERENCE,
+      purpose: #HEADER,
+      position: 40,
+      targetQualifier: 'KpiObservedInvoices' },
+
+    { id: 'GeneralCollection',
+      type: #COLLECTION,
+      label: 'Información General & Proveedor',
+      position: 10 },
+    { id: 'GeneralDataGroup',
+      parentId: 'GeneralCollection',
+      type: #IDENTIFICATION_REFERENCE,
+      label: 'Datos de Factura y Proveedor',
+      position: 10 },
+    { id: 'ThreeWayMatchingGroup',
+      parentId: 'GeneralCollection',
+      type: #FIELDGROUP_REFERENCE,
+      label: 'Conciliación 3-Way Match (OC / MIGO / Factura)',
+      targetQualifier: 'ThreeWayMatchData',
+      position: 20 },
+
+    { id: 'FiscalCollection',
+      type: #COLLECTION,
+      label: 'Tributario & Contabilización SAP',
+      position: 20 },
+    { id: 'FiscalParametersGroup',
+      parentId: 'FiscalCollection',
+      type: #FIELDGROUP_REFERENCE,
+      label: 'Retenciones, Detracciones & SUNAT',
+      targetQualifier: 'FiscalData',
+      position: 10 },
+    { id: 'SAPDocumentsGroup',
+      parentId: 'FiscalCollection',
+      type: #FIELDGROUP_REFERENCE,
+      label: 'Documentos Contabilizados en SAP FI/CO/MM',
+      targetQualifier: 'SAPIntegrationData',
+      position: 20 },
+
+    { id: 'LineItemsFacet',
+      type: #LINEITEM_REFERENCE,
+      label: 'Posiciones y Cuentas Contables (G/L)',
+      position: 30,
+      targetElement: '_Items' }
+  ]
+
+  @UI.dataPoint: {
+    qualifier: 'KpiPendingPosting',
+    title: 'Pendientes Contabilizar',
+    description: 'Estado PRE_REGISTRADO',
+    criticality: 'FiscalStatusCriticality',
+    criticalityCalculation: { improvementDirection: #MINIMIZE }
+  }
+  @UI.selectionField: [ { position: 10 } ]
+  @UI.lineItem: [
+    { position: 10, importance: #HIGH, label: 'N° Factura' },
+    { type: #FOR_ACTION, dataAction: 'postToSAPFI', label: 'Contabilizar en SAP FI', position: 10 },
+    { type: #FOR_ACTION, dataAction: 'verifySunat', label: 'Validar SUNAT SIRE', position: 20 },
+    { type: #FOR_ACTION, dataAction: 'executeThreeWayMatch', label: 'Re-ejecutar 3-Way Match', position: 30 }
+  ]
+  @UI.identification: [ { position: 10, label: 'N° Factura Proveedor' } ]
+  InvoiceNumber;
+
+  @UI.dataPoint: {
+    qualifier: 'KpiTotalSpend',
+    title: 'Importe Total Periodo',
+    description: 'Volumen devengado',
+    criticalityCalculation: { improvementDirection: #NEUTRAL }
+  }
+  @UI.lineItem: [ { position: 40, importance: #HIGH, label: 'Importe Bruto' } ]
+  @UI.identification: [ { position: 40, label: 'Importe Total Bruto' } ]
+  GrossAmount;
+
+  @UI.dataPoint: {
+    qualifier: 'KpiThreeWayEfficiency',
+    title: 'Eficiencia 3-Way Match',
+    description: 'Facturas Conciliadas sin Desvío',
+    criticality: 'ThreeWayMatchCriticality',
+    criticalityCalculation: { improvementDirection: #MAXIMIZE }
+  }
+  @UI.lineItem: [ { position: 60, importance: #HIGH, label: '3-Way Match', criticality: 'ThreeWayMatchCriticality' } ]
+  @UI.fieldGroup: [ { qualifier: 'ThreeWayMatchData', position: 10, label: 'Estado Conciliación' } ]
+  @UI.selectionField: [ { position: 30 } ]
+  ThreeWayMatchStatus;
+
+  @UI.dataPoint: {
+    qualifier: 'KpiObservedInvoices',
+    title: 'Facturas Observadas',
+    description: 'Discrepancia en Precio / Cantidad / SUNAT',
+    criticality: 'FiscalStatusCriticality',
+    criticalityCalculation: { improvementDirection: #MINIMIZE }
+  }
+  @UI.lineItem: [ { position: 70, importance: #HIGH, label: 'Estado Fiscal', criticality: 'FiscalStatusCriticality' } ]
+  @UI.identification: [ { position: 70, label: 'Estado Fiscal / Contable' } ]
+  @UI.selectionField: [ { position: 20 } ]
+  FiscalStatus;
+
+  @UI.lineItem: [ { position: 20, importance: #HIGH, label: 'RUC Proveedor' } ]
+  @UI.identification: [ { position: 20, label: 'RUC Proveedor' } ]
+  @UI.selectionField: [ { position: 40 } ]
+  SupplierRUC;
+
+  @UI.lineItem: [ { position: 30, importance: #HIGH, label: 'Razón Social' } ]
+  @UI.identification: [ { position: 30, label: 'Razón Social Proveedor' } ]
+  SupplierName;
+
+  @UI.lineItem: [ { position: 50, label: 'Orden de Compra' } ]
+  @UI.fieldGroup: [ { qualifier: 'ThreeWayMatchData', position: 20, label: 'Pedido de Compra SAP (PO)' } ]
+  @UI.selectionField: [ { position: 50 } ]
+  PurchaseOrder;
+
+  @UI.fieldGroup: [ { qualifier: 'ThreeWayMatchData', position: 30, label: 'Entrada de Mercancías / HES (MIGO)' } ]
+  EntrySheetMIGO;
+
+  @UI.fieldGroup: [ { qualifier: 'ThreeWayMatchData', position: 40, label: 'Desvío de Conciliación' } ]
+  MatchVarianceAmount;
+
+  @UI.fieldGroup: [ { qualifier: 'FiscalData', position: 10, label: 'Impuesto IGV (18%)' } ]
+  TaxAmount;
+
+  @UI.fieldGroup: [ { qualifier: 'FiscalData', position: 20, label: 'Monto Detracción SPOT' } ]
+  DetractionAmount;
+
+  @UI.fieldGroup: [ { qualifier: 'FiscalData', position: 30, label: 'Monto Retención IGV' } ]
+  RetentionAmount;
+
+  @UI.fieldGroup: [ { qualifier: 'FiscalData', position: 40, label: 'Neto a Pagar' } ]
+  NetPayableAmount;
+
+  @UI.lineItem: [ { position: 80, label: 'Estado SUNAT', criticality: 'SunatStatusCriticality' } ]
+  @UI.fieldGroup: [ { qualifier: 'FiscalData', position: 50, label: 'Validación SUNAT / SIRE' } ]
+  SunatStatus;
+
+  @UI.fieldGroup: [ { qualifier: 'FiscalData', position: 60, label: 'Sello de Recepción Físico/Digital' } ]
+  ReceiptStampDetected;
+
+  @UI.lineItem: [ { position: 90, label: 'Doc. MM' } ]
+  @UI.fieldGroup: [ { qualifier: 'SAPIntegrationData', position: 10, label: 'Documento Logístico SAP MM (MIRO)' } ]
+  SAPDocMM;
+
+  @UI.lineItem: [ { position: 100, label: 'Doc. FI' } ]
+  @UI.fieldGroup: [ { qualifier: 'SAPIntegrationData', position: 20, label: 'Documento Financiero SAP FI (BKPF)' } ]
+  SAPDocFI;
+
+  @UI.fieldGroup: [ { qualifier: 'SAPIntegrationData', position: 30, label: 'Ejercicio Fiscal' } ]
+  FiscalYear;
+
+  @UI.fieldGroup: [ { qualifier: 'SAPIntegrationData', position: 40, label: 'Fecha de Contabilización' } ]
+  PostingDate;
+
+  @UI.fieldGroup: [ { qualifier: 'ThreeWayMatchData', position: 50, label: 'Observaciones de Discrepancia' } ]
+  ObservationNotes;
+}

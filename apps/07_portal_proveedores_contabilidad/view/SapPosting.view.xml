@@ -1,0 +1,138 @@
+<mvc:View
+    controllerName="com.antigravity.portalProveedoresContabilidad.controller.SapPosting"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core"
+    xmlns:f="sap.ui.layout.form">
+
+    <Page id="sapPostingPage" showHeader="false">
+        <content>
+            <VBox class="sapUiMediumMargin">
+
+                <!-- Encabezado de Página -->
+                <HBox justifyContent="SpaceBetween" alignItems="Center" class="sapUiSmallMarginBottom">
+                    <VBox>
+                        <Title text="Contabilización SAP ERP (MIRO / FB60)" level="H2" />
+                        <Text text="Motor de contabilización directa MM/FI bajo arquitectura Clean Core con generación de documentos SAP y asientos de mayor" style="color:#64748b;" />
+                    </VBox>
+                    <HBox>
+                        <Button text="Simular Contabilización (Test Run)" icon="sap-icon://simulate" press=".onSimulatePosting" class="sapUiTinyMarginEnd" />
+                        <Button text="Contabilizar en SAP (Real Run)" icon="sap-icon://accept" type="Emphasized" press=".onExecuteBatchPosting" />
+                    </HBox>
+                </HBox>
+
+                <!-- PARÁMETROS DE CONTABILIZACIÓN -->
+                <Panel headerText="Parámetros Contables del Lote de Entrada" expandable="true" expanded="true" class="sapUiSmallMarginBottom">
+                    <HBox wrap="Wrap" alignItems="Center" justifyContent="SpaceBetween">
+                        <VBox class="sapUiSmallMarginEnd sapUiTinyMarginBottom">
+                            <Label text="Sociedad SAP:" />
+                            <Input value="P202 Superdeporte Plus Perú SAC" editable="false" width="16rem" />
+                        </VBox>
+                        <VBox class="sapUiSmallMarginEnd sapUiTinyMarginBottom">
+                            <Label text="Fecha de Contabilización:" />
+                            <DatePicker id="dpPostingDate" value="06/11/2026" displayFormat="dd/MM/yyyy" width="11rem" />
+                        </VBox>
+                        <VBox class="sapUiSmallMarginEnd sapUiTinyMarginBottom">
+                            <Label text="Clase de Documento:" />
+                            <Select id="selectDocType" selectedKey="RE" width="12rem">
+                                <core:Item key="RE" text="RE - Factura de Mercancías (MIRO)" />
+                                <core:Item key="KR" text="KR - Factura de Gastos/Servicios" />
+                                <core:Item key="KG" text="KG - Abono de Proveedor (Nota Crédito)" />
+                            </Select>
+                        </VBox>
+                        <VBox class="sapUiTinyMarginBottom">
+                            <Label text="Indicador Impuestos:" />
+                            <Select id="selectTaxCode" selectedKey="C1" width="10rem">
+                                <core:Item key="C1" text="C1 - IGV 18% Crédito Fiscal" />
+                                <core:Item key="C0" text="C0 - Operación Inafecta / Exonerada" />
+                            </Select>
+                        </VBox>
+                    </HBox>
+                </Panel>
+
+                <!-- VISTA PREVIA DEL ASIENTO CONTABLE TIPO -->
+                <Panel headerText="Estructura del Asiento Contable Automático (BSEG / ACDOCA)" class="sapUiSmallMarginBottom">
+                    <Table>
+                        <columns>
+                            <Column width="6rem"><Text text="Pos." /></Column>
+                            <Column width="8rem"><Text text="Clave Cont." /></Column>
+                            <Column width="11rem"><Text text="Cuenta Mayor G/L" /></Column>
+                            <Column><Text text="Denominación de Cuenta" /></Column>
+                            <Column width="10rem"><Text text="Centro Costo / Imput." /></Column>
+                            <Column hAlign="End" width="10rem"><Text text="Debe ($)" /></Column>
+                            <Column hAlign="End" width="10rem"><Text text="Haber ($)" /></Column>
+                        </columns>
+                        <items>
+                            <ColumnListItem>
+                                <cells>
+                                    <Text text="001" />
+                                    <ObjectStatus text="40 (Debe)" state="Information" />
+                                    <Text text="60110000" bold="true" />
+                                    <Text text="Mercaderías de Almacén y Telecomunicaciones" />
+                                    <Text text="CC-10020" />
+                                    <Text text="12,288.14" />
+                                    <Text text="—" />
+                                </cells>
+                            </ColumnListItem>
+                            <ColumnListItem>
+                                <cells>
+                                    <Text text="002" />
+                                    <ObjectStatus text="40 (Debe)" state="Information" />
+                                    <Text text="40111000" bold="true" />
+                                    <Text text="Tributos por Pagar — IGV 18% Crédito Fiscal" />
+                                    <Text text="—" />
+                                    <Text text="2,211.86" />
+                                    <Text text="—" />
+                                </cells>
+                            </ColumnListItem>
+                            <ColumnListItem>
+                                <cells>
+                                    <Text text="003" />
+                                    <ObjectStatus text="31 (Haber)" state="Warning" />
+                                    <Text text="42120000" bold="true" />
+                                    <Text text="Proveedores Nacionales — Facturas por Pagar" />
+                                    <Text text="—" />
+                                    <Text text="—" />
+                                    <Text text="14,500.00" />
+                                </cells>
+                            </ColumnListItem>
+                        </items>
+                    </Table>
+                </Panel>
+
+                <!-- LOG DE CONTABILIZACIONES REALIZADAS EN SAP -->
+                <Panel headerText="Historial de Documentos Contabilizados en SAP S/4HANA ({= ${app>/sapPostings}.length })">
+                    <Table items="{app>/sapPostings}">
+                        <columns>
+                            <Column width="9rem"><Text text="Comprobante" /></Column>
+                            <Column minScreenWidth="Tablet" demandPopin="true"><Text text="Proveedor" /></Column>
+                            <Column width="8rem"><Text text="Doc. SAP MM" /></Column>
+                            <Column width="8rem"><Text text="Doc. SAP FI" /></Column>
+                            <Column width="6rem"><Text text="Ejercicio" /></Column>
+                            <Column width="8rem"><Text text="Fecha Contable" /></Column>
+                            <Column hAlign="End" width="9rem"><Text text="Monto Total" /></Column>
+                            <Column width="7rem"><Text text="Clase Doc." /></Column>
+                            <Column width="9rem"><Text text="Estado SAP" /></Column>
+                        </columns>
+                        <items>
+                            <ColumnListItem>
+                                <cells>
+                                    <Text text="{app>comprobante}" bold="true" />
+                                    <Text text="{app>proveedor}" />
+                                    <Link text="{app>docMM}" press=".onViewSapDoc" />
+                                    <Link text="{app>docFI}" press=".onViewSapDoc" />
+                                    <Text text="{app>ejercicio}" />
+                                    <Text text="{app>fechaContable}" />
+                                    <ObjectNumber number="{app>monto}" unit="{app>moneda}" state="Information" />
+                                    <Text text="{app>claseDoc}" />
+                                    <ObjectStatus text="{app>estado}" state="Success" icon="sap-icon://sys-enter-2" />
+                                </cells>
+                            </ColumnListItem>
+                        </items>
+                    </Table>
+                </Panel>
+
+            </VBox>
+        </content>
+    </Page>
+</mvc:View>

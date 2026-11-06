@@ -1,0 +1,53 @@
+@Metadata.layer: #CUSTOMER
+@UI: {
+  headerInfo: {
+    typeName: 'Posición Contable',
+    typeNamePlural: 'Posiciones Contables',
+    title: { type: #STANDARD, value: 'MaterialDescription' }
+  }
+}
+annotate view C_SupplierInvoiceItemAccounting with
+{
+  @UI.facet: [
+    { id: 'ItemDetail',
+      type: #IDENTIFICATION_REFERENCE,
+      label: 'Detalle de Posición e Imputación Contable',
+      position: 10 }
+  ]
+
+  @UI.lineItem: [ { position: 10, label: 'Pos.' } ]
+  @UI.identification: [ { position: 10, label: 'Número de Posición' } ]
+  ItemPosition;
+
+  @UI.lineItem: [ { position: 20, label: 'Material' } ]
+  @UI.identification: [ { position: 20, label: 'Código Material' } ]
+  MaterialCode;
+
+  @UI.lineItem: [ { position: 30, label: 'Descripción' } ]
+  @UI.identification: [ { position: 30, label: 'Descripción Material / Servicio' } ]
+  MaterialDescription;
+
+  @UI.lineItem: [ { position: 40, label: 'Cantidad' } ]
+  @UI.identification: [ { position: 40, label: 'Cantidad Facturada' } ]
+  Quantity;
+
+  @UI.lineItem: [ { position: 50, label: 'Precio Unitario' } ]
+  @UI.identification: [ { position: 50, label: 'Precio Unitario' } ]
+  UnitPrice;
+
+  @UI.lineItem: [ { position: 60, label: 'Monto Neto' } ]
+  @UI.identification: [ { position: 60, label: 'Monto Neto' } ]
+  NetAmount;
+
+  @UI.lineItem: [ { position: 70, label: 'Cuenta Contable (G/L)' } ]
+  @UI.identification: [ { position: 70, label: 'Cuenta Mayor (G/L Account)' } ]
+  GLAccount;
+
+  @UI.lineItem: [ { position: 80, label: 'Centro de Costo' } ]
+  @UI.identification: [ { position: 80, label: 'Centro de Costo (Cost Center)' } ]
+  CostCenter;
+
+  @UI.lineItem: [ { position: 90, label: 'Pos. Pedido (PO)' } ]
+  @UI.identification: [ { position: 90, label: 'Referencia Posición Pedido' } ]
+  POItemReference;
+}

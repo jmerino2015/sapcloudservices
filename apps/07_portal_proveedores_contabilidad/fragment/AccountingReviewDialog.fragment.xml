@@ -1,0 +1,166 @@
+<core:FragmentDefinition
+    xmlns="sap.m"
+    xmlns:f="sap.ui.layout.form"
+    xmlns:core="sap.ui.core">
+
+    <Dialog
+        id="reviewDialog"
+        title="Revisión Contable &amp; 3-Way Match — Factura {review>/comprobante}"
+        contentWidth="1050px"
+        resizable="true"
+        draggable="true">
+        
+        <content>
+            <VBox class="sapUiSmallMargin">
+
+                <!-- DATOS DE CABECERA FISCAL -->
+                <f:SimpleForm
+                    editable="true"
+                    layout="ResponsiveGridLayout"
+                    labelSpanXL="4" labelSpanL="4" labelSpanM="4" labelSpanS="12"
+                    columnsXL="2" columnsL="2" columnsM="2">
+                    <f:content>
+                        <core:Title text="Datos del Comprobante" />
+
+                        <Label text="RUC &amp; Proveedor:" />
+                        <Text text="{review>/ruc} — {review>/razonSocial}" />
+
+                        <Label text="Nro. Comprobante:" />
+                        <Input value="{review>/comprobante}" editable="false" />
+
+                        <Label text="Fecha Emisión:" />
+                        <Input value="{review>/fechaEmision}" editable="false" />
+
+                        <Label text="Fecha Contabilización:*" />
+                        <DatePicker value="{review>/fechaContabilizacion}" displayFormat="dd/MM/yyyy" valueFormat="dd/MM/yyyy" />
+
+                        <Label text="Importe + IGV:" />
+                        <HBox alignItems="Center">
+                            <Input value="{review>/importe}" editable="false" width="10rem" class="sapUiTinyMarginEnd" />
+                            <Text text="{review>/moneda}" bold="true" />
+                        </HBox>
+
+                        <core:Title text="Parámetros Contables &amp; Detracciones" />
+
+                        <Label text="Detracción Banco Nación:" />
+                        <Select selectedKey="{review>/detraccion}" width="100%">
+                            <core:Item key="NONE" text="Sin Detracción" />
+                            <core:Item key="04" text="04 - 04% Recursos Hidrobiológicos" />
+                            <core:Item key="09" text="09 - 10% Servicios Empresariales" />
+                            <core:Item key="20" text="20 - 12% Mantenimiento y Reparación" />
+                        </Select>
+
+                        <Label text="Retención IGV 3%:" />
+                        <Select selectedKey="{review>/retencion}" width="100%">
+                            <core:Item key="NONE" text="Sin Retención" />
+                            <core:Item key="RET3" text="03% - Retención de IGV" />
+                        </Select>
+
+                        <Label text="Cuenta G/L / CECO:" />
+                        <HBox>
+                            <Input value="60110000 - Compras Mercadería" editable="false" width="14rem" class="sapUiTinyMarginEnd" />
+                            <Input value="CC-10020" editable="false" width="8rem" />
+                        </HBox>
+                    </f:content>
+                </f:SimpleForm>
+
+                <!-- ICON TAB BAR: 3-WAY MATCH, PDF Y XML -->
+                <IconTabBar class="sapUiSmallMarginTop">
+                    <items>
+                        <!-- PESTAÑA 1: COMPARATIVA 3-WAY MATCHING -->
+                        <IconTabFilter icon="sap-icon://compare" text="Comparativa 3-Way Match">
+                            <VBox class="sapUiSmallMargin">
+                                <MessageStrip
+                                    text="Conciliación automática: Tolerancia comercial SAP S/4HANA Clean Core configurada al ±2.0% en precio y 100% en cantidad física recepcionada."
+                                    type="Information"
+                                    showIcon="true"
+                                    class="sapUiSmallMarginBottom" />
+
+                                <Table items="{review>/items}">
+                                    <columns>
+                                        <Column><Text text="Pos. OC" /></Column>
+                                        <Column><Text text="Orden Compra (PO)" /></Column>
+                                        <Column><Text text="Entrada MIGO" /></Column>
+                                        <Column hAlign="End"><Text text="Cant. Pedida" /></Column>
+                                        <Column hAlign="End"><Text text="Cant. MIGO" /></Column>
+                                        <Column hAlign="End"><Text text="Cant. Factura" /></Column>
+                                        <Column hAlign="End"><Text text="Varianza $" /></Column>
+                                        <Column><Text text="Veredicto" /></Column>
+                                    </columns>
+                                    <items>
+                                        <ColumnListItem>
+                                            <cells>
+                                                <Text text="{review>posOC}" />
+                                                <Text text="{review>/oc}" />
+                                                <Text text="{review>/nroGuia}" />
+                                                <Text text="{review>cantSolicitada}" />
+                                                <Text text="{review>cantEntregada}" />
+                                                <Text text="{review>cantFacturada}" />
+                                                <ObjectNumber number="{review>varianza}" unit="{review>/moneda}" state="{= ${review>varianza} > 0 ? 'Warning' : 'Success' }" />
+                                                <ObjectStatus
+                                                    text="{= ${review>varianza} === 0 ? 'MATCH OK' : 'VARIACIÓN ±2%' }"
+                                                    state="{= ${review>varianza} === 0 ? 'Success' : 'Warning' }" />
+                                            </cells>
+                                        </ColumnListItem>
+                                    </items>
+                                </Table>
+                            </VBox>
+                        </IconTabFilter>
+
+                        <!-- PESTAÑA 2: VISOR PDF CON SELLO DE RECEPCIÓN -->
+                        <IconTabFilter icon="sap-icon://pdf-attachment" text="Visor PDF con Sello">
+                            <VBox class="sapUiSmallMargin pdfPreviewBox">
+                                <HBox justifyContent="SpaceBetween" alignItems="Center" class="sapUiSmallMarginBottom">
+                                    <VBox>
+                                        <Title text="Factura Electrónica — {review>/comprobante}.pdf" level="H4" />
+                                        <Text text="Emitida a: Superdeporte Plus Perú SAC (RUC: 20512839121)" />
+                                    </VBox>
+                                    <div class="pdfReceivedStamp">
+                                        ✓ CONFORME ALMACÉN<br/>
+                                        GUÍA MIGO {review>/nroGuia}
+                                    </div>
+                                </HBox>
+                                <FormattedText htmlText="&lt;div style='padding:15px; border:1px solid #e2e8f0; background:#f8fafc; border-radius:6px;'&gt;&lt;p&gt;&lt;strong&gt;Proveedor:&lt;/strong&gt; {review>/razonSocial}&lt;/p&gt;&lt;p&gt;&lt;strong&gt;RUC:&lt;/strong&gt; {review>/ruc}&lt;/p&gt;&lt;p&gt;&lt;strong&gt;Subtotal:&lt;/strong&gt; $ 12,288.14 USD | &lt;strong&gt;IGV (18%):&lt;/strong&gt; $ 2,211.86 USD | &lt;strong&gt;Total Facturado:&lt;/strong&gt; {review>/moneda} {review>/importe}&lt;/p&gt;&lt;/div&gt;" />
+                            </VBox>
+                        </IconTabFilter>
+
+                        <!-- PESTAÑA 3: VISOR XML UBL 2.1 PARSEADO -->
+                        <IconTabFilter icon="sap-icon://attachment-e-pub" text="XML Estándar UBL 2.1">
+                            <VBox class="sapUiSmallMargin">
+                                <TextArea
+                                    value="{review>/xmlPreview}"
+                                    editable="false"
+                                    rows="12"
+                                    width="100%"
+                                    class="xmlCodeViewer" />
+                            </VBox>
+                        </IconTabFilter>
+                    </items>
+                </IconTabBar>
+
+            </VBox>
+        </content>
+
+        <buttons>
+            <Button
+                text="Contabilizar en SAP (MIRO)"
+                icon="sap-icon://accept"
+                type="Emphasized"
+                press=".onConfirmPostToSAP" />
+            <Button
+                text="Conciliar 3-Way Match"
+                icon="sap-icon://compare"
+                press=".onReconcileMatch" />
+            <Button
+                text="Rechazar Factura"
+                icon="sap-icon://decline"
+                type="Reject"
+                press=".onOpenRejectDialogFromReview" />
+            <Button
+                text="Cerrar"
+                type="Transparent"
+                press=".onCloseReviewDialog" />
+        </buttons>
+    </Dialog>
+
+</core:FragmentDefinition>

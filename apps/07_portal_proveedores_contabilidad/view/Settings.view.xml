@@ -1,0 +1,96 @@
+<mvc:View
+    controllerName="com.antigravity.portalProveedoresContabilidad.controller.Settings"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core"
+    xmlns:f="sap.ui.layout.form">
+
+    <Page id="settingsPage" showHeader="false">
+        <content>
+            <VBox class="sapUiMediumMargin">
+
+                <!-- Encabezado de Página -->
+                <HBox justifyContent="SpaceBetween" alignItems="Center" class="sapUiSmallMarginBottom">
+                    <VBox>
+                        <Title text="Administración &amp; Parámetros Contables del Portal" level="H2" />
+                        <Text text="Configuración de tolerancias comerciales 3-Way Match, cuentas mayores SAP por defecto e integración SIRE SUNAT" style="color:#64748b;" />
+                    </VBox>
+                    <Button text="Guardar Parámetros" icon="sap-icon://save" type="Emphasized" press=".onSaveSettings" />
+                </HBox>
+
+                <!-- FORMULARIO DE TOLERANCIAS 3-WAY MATCH -->
+                <Panel headerText="Políticas de Tolerancia para Conciliación 3-Way Match" class="sapUiSmallMarginBottom">
+                    <f:SimpleForm
+                        editable="true"
+                        layout="ResponsiveGridLayout"
+                        labelSpanXL="4" labelSpanL="4" labelSpanM="4" labelSpanS="12">
+                        <f:content>
+                            <Label text="Tolerancia Comercial en Precio (%):" />
+                            <StepInput value="{app>/settings/priceTolerance}" min="0.0" max="10.0" step="0.5" displayValuePrecision="1" width="10rem" />
+
+                            <Label text="Tolerancia en Cantidad Física MIGO (%):" />
+                            <StepInput value="{app>/settings/qtyTolerance}" min="0.0" max="5.0" step="0.1" displayValuePrecision="1" width="10rem" />
+
+                            <Label text="Acción ante Desvío Superior a Tolerancia:" />
+                            <Select selectedKey="BLOCK_PAYMENT" width="18rem">
+                                <core:Item key="BLOCK_PAYMENT" text="Bloquear Pago automáticamente en SAP ERP" />
+                                <core:Item key="REJECT_AUTO" text="Rechazar Comprobante de inmediato" />
+                                <core:Item key="NOTIFY_BUYER" text="Enviar Alerta al Comprador SAP MM" />
+                            </Select>
+                        </f:content>
+                    </f:SimpleForm>
+                </Panel>
+
+                <!-- FORMULARIO DE CUENTAS MAYORES SAP G/L -->
+                <Panel headerText="Imputación Contable por Defecto (Plan de Cuentas P202)" class="sapUiSmallMarginBottom">
+                    <f:SimpleForm
+                        editable="true"
+                        layout="ResponsiveGridLayout"
+                        labelSpanXL="4" labelSpanL="4" labelSpanM="4" labelSpanS="12">
+                        <f:content>
+                            <Label text="Cuenta Mayor para Compras Mercadería:" />
+                            <Input value="{app>/settings/defaultGLInventory}" width="16rem" />
+
+                            <Label text="Cuenta Mayor para Servicios &amp; Contratistas:" />
+                            <Input value="{app>/settings/defaultGLServices}" width="16rem" />
+
+                            <Label text="Centro de Costo (CECO) Predeterminado:" />
+                            <Input value="{app>/settings/defaultCECO}" width="16rem" />
+
+                            <Label text="Cuenta Puente Entrada Mercancías (EM/RF):" />
+                            <Input value="42129000 - Facturas por Recibir EM/RF" editable="false" width="16rem" />
+                        </f:content>
+                    </f:SimpleForm>
+                </Panel>
+
+                <!-- FORMULARIO DE CONEXIÓN SIRE SUNAT -->
+                <Panel headerText="Integración API SIRE SUNAT &amp; Clave SOL">
+                    <f:SimpleForm
+                        editable="true"
+                        layout="ResponsiveGridLayout"
+                        labelSpanXL="4" labelSpanL="4" labelSpanM="4" labelSpanS="12">
+                        <f:content>
+                            <Label text="Client ID API SUNAT SIRE:" />
+                            <Input value="{app>/settings/sireClientId}" width="20rem" />
+
+                            <Label text="Ambiente de Conexión:" />
+                            <Select selectedKey="{app>/settings/sireEnv}" width="14rem">
+                                <core:Item key="PRODUCCION" text="Producción SUNAT (En Vivo)" />
+                                <core:Item key="BETA" text="Ambiente de Pruebas / Beta" />
+                            </Select>
+
+                            <Label text="Período Contable Activo:" />
+                            <HBox alignItems="Center">
+                                <Input value="{app>/settings/fiscalYear}" editable="false" width="6rem" class="sapUiTinyMarginEnd" />
+                                <Text text="Mes: " class="sapUiTinyMarginBegin sapUiTinyMarginEnd" />
+                                <Input value="{app>/settings/openPeriod}" editable="false" width="5rem" class="sapUiTinyMarginEnd" />
+                                <ObjectStatus text="ABIERTO" state="Success" />
+                            </HBox>
+                        </f:content>
+                    </f:SimpleForm>
+                </Panel>
+
+            </VBox>
+        </content>
+    </Page>
+</mvc:View>

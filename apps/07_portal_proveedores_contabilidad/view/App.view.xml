@@ -1,0 +1,192 @@
+<mvc:View
+    controllerName="com.antigravity.portalProveedoresContabilidad.controller.App"
+    displayBlock="true"
+    height="100%"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m"
+    xmlns:tnt="sap.tnt"
+    xmlns:core="sap.ui.core">
+
+    <tnt:ToolPage id="toolPage">
+        <!-- CABECERA CORPORATIVA SHELL BAR -->
+        <tnt:header>
+            <tnt:ToolHeader id="appToolHeader" class="portalAccountingHeader">
+                <Button
+                    id="sideNavigationToggleButton"
+                    icon="sap-icon://menu2"
+                    type="Transparent"
+                    press=".onSideNavButtonPress"
+                    tooltip="Colapsar / Expandir Menú Lateral">
+                    <layoutData>
+                        <OverflowToolbarLayoutData priority="NeverOverflow" />
+                    </layoutData>
+                </Button>
+
+                <Button
+                    id="btnHome"
+                    icon="sap-icon://nav-back"
+                    text="Home"
+                    type="Transparent"
+                    press=".onNavToHome"
+                    tooltip="Regresar a Fiori Launchpad Principal"
+                    class="portalShellHomeBtn sapUiTinyMarginEnd" />
+
+                <core:Icon
+                    src="sap-icon://customer-financial-fact-sheet"
+                    size="1.35rem"
+                    color="#4db3ff"
+                    class="sapUiSmallMarginEnd"
+                    press=".onNavToHome" />
+
+                <Title
+                    text="SAP S/4HANA — PORTAL PROVEEDORES (CUENTAS POR PAGAR &amp; 3-WAY MATCH)"
+                    level="H4"
+                    class="portalShellTitle" />
+
+                <ToolbarSpacer />
+
+                <SearchField
+                    id="globalSearchField"
+                    placeholder="Buscar RUC, Factura, Pedido SAP..."
+                    width="16rem"
+                    search=".onGlobalSearch" />
+
+                <ToolbarSpacer />
+
+                <!-- SAP Joule AI Companion -->
+                <Button
+                    id="btnJouleAi"
+                    icon="sap-icon://customer-and-contacts"
+                    type="Transparent"
+                    tooltip="Asistente SAP Joule AI Contable"
+                    press=".onToggleJouleSidebar" />
+
+                <!-- Notificaciones Bell -->
+                <Button
+                    id="btnNotifications"
+                    icon="sap-icon://bell"
+                    type="Transparent"
+                    tooltip="Alertas de Facturas y Discrepancias"
+                    press=".onNotificationsPress" />
+
+                <!-- Avatar Usuario -->
+                <Avatar
+                    id="userAvatar"
+                    initials="DM"
+                    displayShape="Circle"
+                    displaySize="S"
+                    class="sapUiTinyMarginBegin"
+                    tooltip="Donna Moore (Jefe de Cuentas por Pagar)" />
+            </tnt:ToolHeader>
+        </tnt:header>
+
+        <!-- BARRA LATERAL IZQUIERDA SAP.TNT.SIDENAVIGATION (ESTÁNDAR HORIZON) -->
+        <tnt:sideContent>
+            <tnt:SideNavigation id="sideNavigation" selectedKey="dashboard" itemSelect=".onSideItemSelect" class="accountingSideNav">
+                <tnt:NavigationList id="navigationList">
+                    <tnt:NavigationListItem
+                        text="Resumen Contable / Dashboard"
+                        icon="sap-icon://bbyd-dashboard"
+                        key="dashboard" />
+
+                    <tnt:NavigationListItem
+                        text="Facturas Pre-Registradas &amp; 3-Way Match"
+                        icon="sap-icon://customer-financial-fact-sheet"
+                        key="invoicesMatch" />
+
+                    <tnt:NavigationListItem
+                        text="Verificación Fiscal SUNAT / SIRE"
+                        icon="sap-icon://official-service"
+                        key="sunatSire" />
+
+                    <tnt:NavigationListItem
+                        text="Contabilización SAP (MIRO / FB60)"
+                        icon="sap-icon://accounting-document-verification"
+                        key="sapPosting" />
+
+                    <tnt:NavigationListItem
+                        text="Auditoría Pagos &amp; Detracciones"
+                        icon="sap-icon://money-bills"
+                        key="paymentsAudit" />
+
+                    <tnt:NavigationListItem
+                        text="Notas de Crédito &amp; Ajustes"
+                        icon="sap-icon://document-text"
+                        key="creditNotes" />
+                </tnt:NavigationList>
+
+                <!-- Pie fijo inferior anclado para Administración -->
+                <tnt:fixedItem>
+                    <tnt:NavigationList class="accountingSideNavFooter">
+                        <tnt:NavigationListItem
+                            text="Administración / Configuración"
+                            icon="sap-icon://action-settings"
+                            key="settings" />
+                    </tnt:NavigationList>
+                </tnt:fixedItem>
+            </tnt:SideNavigation>
+        </tnt:sideContent>
+
+        <!-- CONTENIDO PRINCIPAL Y ASISTENTE JOULE LATERAL -->
+        <tnt:mainContents>
+            <NavContainer id="appNav" width="100%" height="100%" />
+
+            <!-- SIDE PANEL ASISTENTE SAP JOULE AI -->
+            <VBox id="jouleSidebar" width="390px" visible="false" class="jouleSidebarPanel">
+                <Bar>
+                    <contentLeft>
+                        <core:Icon src="sap-icon://customer-and-contacts" size="1.2rem" color="#0a6ed1" class="sapUiTinyMarginBegin sapUiTinyMarginEnd" />
+                        <Title text="SAP Joule AI Contable" titleStyle="H5" />
+                    </contentLeft>
+                    <contentRight>
+                        <Button icon="sap-icon://refresh" type="Transparent" press=".onClearJouleChat" tooltip="Reiniciar Chat" />
+                        <Button icon="sap-icon://decline" type="Transparent" press=".onToggleJouleSidebar" tooltip="Cerrar Asistente" />
+                    </contentRight>
+                </Bar>
+
+                <VBox height="100%" justifyContent="SpaceBetween" class="sapUiSmallMargin">
+                    <!-- Consultas Rápidas -->
+                    <HBox wrap="Wrap" class="sapUiTinyMarginBottom">
+                        <Button text="Discrepancias 3-Way" type="Transparent" press=".onQuickJouleQuestion" class="sapUiTinyMarginEnd sapUiTinyMarginBottom" />
+                        <Button text="Validar SUNAT SIRE" type="Transparent" press=".onQuickJouleQuestion" class="sapUiTinyMarginEnd sapUiTinyMarginBottom" />
+                        <Button text="Cuentas G/L Sugeridas" type="Transparent" press=".onQuickJouleQuestion" class="sapUiTinyMarginBottom" />
+                    </HBox>
+
+                    <!-- Scroll Mensajes -->
+                    <ScrollContainer height="380px" vertical="true" horizontal="false">
+                        <List items="{jouleModel>/messages}" showSeparators="None">
+                            <CustomListItem>
+                                <HBox class="sapUiTinyMarginBottom" justifyContent="{= ${jouleModel>sender} === 'bot' ? 'Start' : 'End' }">
+                                    <VBox class="{= ${jouleModel>sender} === 'bot' ? 'jouleBotBubble' : 'jouleUserBubble' }" style="max-width: 88%;">
+                                        <FormattedText htmlText="{jouleModel>text}" />
+                                        <Text text="{jouleModel>timestamp}" style="font-size: 10px; color: #64748b;" class="sapUiTinyMarginTop" />
+                                    </VBox>
+                                </HBox>
+                            </CustomListItem>
+                        </List>
+                    </ScrollContainer>
+
+                    <!-- Input Footer -->
+                    <HBox alignItems="Center" width="100%" class="sapUiTinyMarginTop">
+                        <Input
+                            id="jouleInputField"
+                            placeholder="Pregúntale a Joule sobre facturas o MIRO..."
+                            value="{jouleModel>/inputMessage}"
+                            submit=".onSendJouleMessage"
+                            width="100%">
+                            <layoutData>
+                                <FlexItemData growFactor="1" />
+                            </layoutData>
+                        </Input>
+                        <Button
+                            icon="sap-icon://paper-plane"
+                            type="Emphasized"
+                            press=".onSendJouleMessage"
+                            class="sapUiTinyMarginBegin" />
+                    </HBox>
+                </VBox>
+            </VBox>
+        </tnt:mainContents>
+    </tnt:ToolPage>
+
+</mvc:View>
