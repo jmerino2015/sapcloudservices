@@ -115,10 +115,10 @@
                                         <Title text="Factura Electrónica — {review>/comprobante}.pdf" level="H4" />
                                         <Text text="Emitida a: Superdeporte Plus Perú SAC (RUC: 20512839121)" />
                                     </VBox>
-                                    <div class="pdfReceivedStamp">
-                                        ✓ CONFORME ALMACÉN<br/>
-                                        GUÍA MIGO {review>/nroGuia}
-                                    </div>
+                                    <VBox class="pdfReceivedStamp" alignItems="Center">
+                                        <Text text="✓ CONFORME ALMACÉN" class="sapUiTinyMarginBottom" />
+                                        <Text text="GUÍA MIGO {review>/nroGuia}" />
+                                    </VBox>
                                 </HBox>
                                 <FormattedText htmlText="&lt;div style='padding:15px; border:1px solid #e2e8f0; background:#f8fafc; border-radius:6px;'&gt;&lt;p&gt;&lt;strong&gt;Proveedor:&lt;/strong&gt; {review>/razonSocial}&lt;/p&gt;&lt;p&gt;&lt;strong&gt;RUC:&lt;/strong&gt; {review>/ruc}&lt;/p&gt;&lt;p&gt;&lt;strong&gt;Subtotal:&lt;/strong&gt; $ 12,288.14 USD | &lt;strong&gt;IGV (18%):&lt;/strong&gt; $ 2,211.86 USD | &lt;strong&gt;Total Facturado:&lt;/strong&gt; {review>/moneda} {review>/importe}&lt;/p&gt;&lt;/div&gt;" />
                             </VBox>

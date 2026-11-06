@@ -20,38 +20,43 @@
 
                 <!-- =======================================================
                      FRANJA SUPERIOR DE 4 TARJETAS KPI (ESTÁNDAR HORIZON)
+                     Implementado con controles nativos SAPUI5 (VBox / Text)
                      ======================================================= -->
-                <div class="kpiStripGrid">
+                <HBox wrap="Wrap" justifyContent="SpaceBetween" class="sapUiSmallMarginBottom">
                     <!-- KPI 1: Naranja / Coral (#e06a3b) -->
-                    <div class="kpiCardHorizon" onclick="window._navToInvoices &amp;&amp; window._navToInvoices()">
-                        <span class="kpiCardTitle">Facturas Pendientes</span>
-                        <div class="kpiValueOrange">14 / 28</div>
-                        <div class="kpiSubLabel">Revisión Contable &amp; MIRO Pendiente</div>
-                    </div>
+                    <VBox class="kpiCardHorizon sapUiSmallMarginEnd sapUiTinyMarginBottom" width="220px">
+                        <Label text="FACTURAS PENDIENTES" class="kpiCardTitle" />
+                        <Text text="14 / 28" class="kpiValueOrange" />
+                        <Text text="Revisión Contable &amp; MIRO Pendiente" class="kpiSubLabel" />
+                        <Button text="Revisar Facturas" icon="sap-icon://navigation-right-arrow" type="Transparent" press=".onNavToInvoices" class="sapUiTinyMarginTop" />
+                    </VBox>
 
                     <!-- KPI 2: Dark Slate (#1e293b) -->
-                    <div class="kpiCardHorizon" onclick="window._navToInvoices &amp;&amp; window._navToInvoices()">
-                        <span class="kpiCardTitle">Importe Total Periodo</span>
-                        <div class="kpiValueSlate">$486,250.00</div>
-                        <div class="kpiSubLabel">Cartera Total USD — Ejercicio 2026</div>
-                    </div>
+                    <VBox class="kpiCardHorizon sapUiSmallMarginEnd sapUiTinyMarginBottom" width="220px">
+                        <Label text="IMPORTE TOTAL PERIODO" class="kpiCardTitle" />
+                        <Text text="$ 486,250.00" class="kpiValueSlate" />
+                        <Text text="Cartera Total USD — Ejercicio 2026" class="kpiSubLabel" />
+                        <Button text="Ver Cartera" icon="sap-icon://navigation-right-arrow" type="Transparent" press=".onNavToInvoices" class="sapUiTinyMarginTop" />
+                    </VBox>
 
                     <!-- KPI 3: Verde (#107e3e) -->
-                    <div class="kpiCardHorizon" onclick="window._navToInvoices &amp;&amp; window._navToInvoices()">
-                        <span class="kpiCardTitle">Eficiencia 3-Way Match</span>
-                        <div class="kpiValueGreen">96.4%</div>
-                        <div class="kpiSubLabel">Conciliación Automática PO vs MIGO</div>
-                    </div>
+                    <VBox class="kpiCardHorizon sapUiSmallMarginEnd sapUiTinyMarginBottom" width="220px">
+                        <Label text="EFICIENCIA 3-WAY MATCH" class="kpiCardTitle" />
+                        <Text text="96.4%" class="kpiValueGreen" />
+                        <Text text="Conciliación Automática PO vs MIGO" class="kpiSubLabel" />
+                        <Button text="Ver Conciliación" icon="sap-icon://navigation-right-arrow" type="Transparent" press=".onNavToInvoices" class="sapUiTinyMarginTop" />
+                    </VBox>
 
                     <!-- KPI 4: Naranja / Coral (#e06a3b) -->
-                    <div class="kpiCardHorizon" onclick="window._navToInvoices &amp;&amp; window._navToInvoices()">
-                        <span class="kpiCardTitle">Facturas Observadas</span>
-                        <div class="kpiValueOrange">3 Alertas</div>
-                        <div class="kpiSubLabel">Discrepancias Tolerancia ±2%</div>
-                    </div>
-                </div>
+                    <VBox class="kpiCardHorizon sapUiTinyMarginBottom" width="220px">
+                        <Label text="FACTURAS OBSERVADAS" class="kpiCardTitle" />
+                        <Text text="3 Alertas" class="kpiValueOrange" />
+                        <Text text="Discrepancias Tolerancia ±2%" class="kpiSubLabel" />
+                        <Button text="Resolver Alertas" icon="sap-icon://navigation-right-arrow" type="Transparent" press=".onNavToInvoices" class="sapUiTinyMarginTop" />
+                    </VBox>
+                </HBox>
 
-                <!-- Paneles Informativos y Métricas de Detracción -->
+                <!-- PANELES INFORMATIVOS Y MÉTRICAS DE DETRACCIÓN -->
                 <Panel headerText="Resumen de Retenciones y Detracciones Banco de la Nación" class="sapUiSmallMarginBottom">
                     <HBox wrap="Wrap" justifyContent="SpaceAround" alignItems="Center">
                         <VBox alignItems="Center" class="sapUiSmallMargin">
@@ -69,6 +74,16 @@
                             <Title text="25 de 28" level="H3" class="sapUiTinyMarginTop" />
                             <Text text="89.3% Validadas en Padrón SUNAT" style="font-size:11px; color:#107e3e;" />
                         </VBox>
+                    </HBox>
+                </Panel>
+
+                <!-- ACCIONES RÁPIDAS CONTABLES -->
+                <Panel headerText="Accesos Rápidos a Módulos Financieros">
+                    <HBox wrap="Wrap" justifyContent="Start">
+                        <Button text="Facturas Pre-Registradas" icon="sap-icon://customer-financial-fact-sheet" press=".onNavToInvoices" class="sapUiSmallMarginEnd sapUiTinyMarginBottom" />
+                        <Button text="Verificación Fiscal SUNAT / SIRE" icon="sap-icon://official-service" press=".onNavToSunatSire" class="sapUiSmallMarginEnd sapUiTinyMarginBottom" />
+                        <Button text="Contabilización SAP (MIRO)" icon="sap-icon://accounting-document-verification" press=".onNavToSapPosting" class="sapUiSmallMarginEnd sapUiTinyMarginBottom" />
+                        <Button text="Auditoría de Pagos &amp; Detracciones" icon="sap-icon://money-bills" press=".onNavToPaymentsAudit" class="sapUiSmallMarginEnd sapUiTinyMarginBottom" />
                     </HBox>
                 </Panel>
 
