@@ -81,3 +81,22 @@ flowchart LR
 6. **Sincronización Continua Multi-Cloud (GitHub -> Render & Supabase):**
    - Todo cambio en esquemas (`src/db/schema.sql`), datasets semilla (`src/db/seed_data.js`) o lógica de servicios (`src/db/database.js`, `server.js`) debe sincronizarse con la base de datos pública en Supabase (`aws-1-us-west-2.pooler.supabase.com:5432`) y versionarse en GitHub (`main`), disparando el auto-despliegue del contenedor en Render (`https://sapcloudservices.onrender.com`).
 
+---
+
+## 📦 REGISTRO DE MÓDULOS DEL PORTAL (11 APLICACIONES CLEAN CORE)
+
+| ID | Nombre del Módulo | Tipo de Floorplan | Backend / RAP Service | Enfoque Operativo |
+| :--- | :--- | :--- | :--- | :--- |
+| **01** | Entrada de Mercancías | SAPUI5 Freestyle / TNT | `ZUI_MIGO_O4` / `POST /api/gr` | Recepción de pedidos MM con pesaje e inspección |
+| **02** | Salida de Mercancías | SAPUI5 Freestyle / TNT | `ZUI_VL02N_O4` / `POST /api/gi` | Despacho y picking de entregas salientes |
+| **03** | Órdenes de Traslado WM | SAPUI5 Freestyle / TNT | `ZUI_WM_TO_O4` / `/api/transfer-orders` | Reubicación interna en almacén bin-to-bin |
+| **04** | Inventario Físico | SAPUI5 Freestyle / TNT | `ZUI_PHYS_INV_O4` / `/api/inventory-counts`| Conteo cíclico LI01N / diferencias en almacén |
+| **05** | Maestro de Materiales | SAPUI5 Freestyle / TNT | `ZUI_MATERIAL_O4` / `/api/materials` | Catálogo maestro de artículos y stock por almacén |
+| **06** | Torre de Control Logística | Analytics Freestyle | `/api/wh-sede` | Vista 360° de ocupabilidad, sedes y SLAs |
+| **07** | Portal de Proveedores | Fiori Elements / Freestyle | `ZUI_PORTAL_PROV_O4` | Autoservicio externo para registro de facturas y guías |
+| **07C**| **Portal Proveedores Contabilidad** | **SAPUI5 Freestyle Horizon (7 vistas)** | `ZUI_SUPPLIER_INVOICE_ACC_O4` / `/api/accounting/*` | **Back-office FI-AP: 3-Way Matching, SUNAT SIRE y MIRO** |
+| **08** | Maestro de Clientes | SAPUI5 Freestyle / TNT | `ZUI_CUSTOMER_O4` / `/api/customers` | Gestión integral de interlocutores comerciales SD |
+| **09** | Pedidos de Venta | SAPUI5 Freestyle / TNT | `ZUI_SALES_ORDER_O4` / `/api/sales-orders` | Creación y monitoreo de órdenes comerciales VA01 |
+| **10** | Optimización de Licencias FUE | Executive Dashboard | `ZUI_FUE_OPTIMIZATION_O4` / `/api/fue` | Análisis de licencias S/4HANA y perfiles de uso |
+
+

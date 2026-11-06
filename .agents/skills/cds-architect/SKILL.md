@@ -162,9 +162,98 @@ Para soportar despliegues cloud híbridos o prototipado ágil manteniendo cumpli
    * `ztb_inventory_counts` (Inventario Físico LI01N)
    * `ztb_wh_sede` (Torre de Control de Almacenes)
    * `ztb_fue_users` (Optimización FUE)
+   * `ztb_supp_inv_acc` (Facturas Proveedores Contabilidad / Cuentas por Pagar)
+   * `ztb_supp_inv_itm` (Líneas de Detalle / Items Factura Proveedor)
 2. **Campos Semánticos y de Auditoría Requeridos:**
-   * Llaves de negocio unívocas (`sap_code`, `bin_code`, `gr_number`, `gi_number`, `to_number`).
+   * Llaves de negocio unívocas (`sap_code`, `bin_code`, `gr_number`, `gi_number`, `to_number`, `invoice_uuid`, `invoice_num`).
    * Columnas temporales con zona horaria (`created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP`).
    * Tipos JSONB para estructuras anidadas o variantes sin romper la 1ra forma normal de cabeceras (`items JSONB`, `appointments JSONB`).
 3. **Idempotencia de Esquemas:** Todo script DDL (`schema.sql`) debe utilizar cláusulas `CREATE TABLE IF NOT EXISTS` para permitir re-ejecuciones seguras en frío durante el ciclo de vida CI/CD.
+
+---
+
+## 6. Caso de Referencia Clean Core: Modelo VDM Cuentas por Pagar & 3-Way Match
+
+### 6.1. Entidad Raíz Base (`R_SupplierInvoiceAccounting`)
+```sql
+@AccessControl.authorizationCheck: #CHECK
+@EndUserText.label: 'Factura Proveedor Contabilidad & 3-Way Matching'
+define root view entity R_SupplierInvoiceAccounting
+  as select from ztb_supp_inv_acc
+  composition [0..*] of R_SupplierInvoiceItemAccounting as _Items
+  association [0..1] to I_Currency                      as _Currency on $projection.Currency = _Currency.Currency
+{
+  key invoice_uuid          as InvoiceUUID,
+      invoice_number        as InvoiceNumber,
+      supplier_ruc          as SupplierRUC,
+      supplier_name         as SupplierName,
+      po_reference          as POReference,
+      migo_reference        as MIGOReference,
+      issue_date            as IssueDate,
+      due_date              as DueDate,
+      @Semantics.amount.currencyCode: 'Currency'
+      subtotal_amount       as SubtotalAmount,
+      @Semantics.amount.currencyCode: 'Currency'
+      tax_igv_amount        as TaxIGVAmount,
+      @Semantics.amount.currencyCode: 'Currency'
+      total_amount          as TotalAmount,
+      currency              as Currency,
+      sunat_sire_status     as SunatSireStatus,
+      sunat_sire_obs        as SunatSireObs,
+      three_way_match_status as ThreeWayMatchStatus,
+      price_variance_pct    as PriceVariancePct,
+      qty_variance_pct      as QtyVariancePct,
+      accounting_status     as AccountingStatus,
+      sap_fi_document       as SapFIDocument,
+      sap_mm_document       as SapMMDocument,
+      xml_file_name         as XmlFileName,
+      pdf_file_name         as PdfFileName,
+      has_detraction        as HasDetraction,
+      @Semantics.amount.currencyCode: 'Currency'
+      detraction_amount     as DetractionAmount,
+      detraction_constancy  as DetractionConstancy,
+      has_retention         as HasRetention,
+
+      // Auditoría Técnica Clean Core
+      @Semantics.user.createdBy: true
+      created_by            as CreatedBy,
+      @Semantics.systemDateTime.createdAt: true
+      created_at            as CreatedAt,
+      @Semantics.user.lastChangedBy: true
+      last_changed_by       as LastChangedBy,
+      @Semantics.systemDateTime.lastChangedAt: true
+      last_changed_at       as LastChangedAt,
+      @Semantics.systemDateTime.localInstanceLastChangedAt: true
+      local_last_changed_at as LocalLastChangedAt,
+
+      _Items,
+      _Currency
+}
+```
+
+### 6.2. Metadata Extension (`C_SupplierInvoiceAccounting.mde`) con DataPoints KPI
+```sql
+@Metadata.layer: #CUSTOMER
+annotate view C_SupplierInvoiceAccounting with
+{
+  @UI.facet: [
+    { id: 'KpiPending', position: 10, type: #DATAPOINT_REFERENCE, targetQualifier: 'KpiPendingPosting' },
+    { id: 'KpiSpend',   position: 20, type: #DATAPOINT_REFERENCE, targetQualifier: 'KpiTotalSpend' },
+    { id: 'KpiEfficiency', position: 30, type: #DATAPOINT_REFERENCE, targetQualifier: 'KpiThreeWayEfficiency' },
+    { id: 'KpiObserved', position: 40, type: #DATAPOINT_REFERENCE, targetQualifier: 'KpiObservedInvoices' }
+  ]
+
+  @UI.dataPoint: { qualifier: 'KpiPendingPosting', title: 'Facturas Pendientes', criticality: #CRITICAL }
+  TotalAmount;
+
+  @UI.dataPoint: { qualifier: 'KpiTotalSpend', title: 'Gasto Total USD', criticality: #NEUTRAL }
+  SubtotalAmount;
+
+  @UI.dataPoint: { qualifier: 'KpiThreeWayEfficiency', title: 'Efectividad 3-Way Match', criticality: #POSITIVE }
+  ThreeWayMatchStatus;
+
+  @UI.dataPoint: { qualifier: 'KpiObservedInvoices', title: 'Observadas SUNAT/Precio', criticality: #NEGATIVE }
+  SunatSireStatus;
+}
+```
 

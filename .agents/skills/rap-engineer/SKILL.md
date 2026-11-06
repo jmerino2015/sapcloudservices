@@ -177,3 +177,71 @@ Cuando los servicios transaccionales operan en entornos cloud desacoplados (como
 3. **Resiliencia & Failover:**
    - En caso de desconexión temporal de la base de datos externa, el motor conmuta automáticamente al estado en memoria (`inMemoryState`) sin generar errores 500 al frontend Fiori.
 
+---
+
+## 5. Caso de Referencia Clean Core: Lógica Transaccional de Cuentas por Pagar & 3-Way Match
+
+### 5.1. Definición de Comportamiento (`R_SupplierInvoiceAccounting.bdef`)
+```abap
+managed implementation in class zbp_r_supp_inv_acc unique;
+strict ( 2 );
+with draft;
+
+define behavior for R_SupplierInvoiceAccounting alias Factura
+persistent table ztb_supp_inv_acc
+draft table ztb_supp_inva_d
+lock master
+total etag LastChangedAt
+authorization master ( instance )
+etag master LocalLastChangedAt
+{
+  create;
+  update;
+  delete;
+  association _Items { create; with draft; }
+
+  field ( numbering : managed, readonly ) InvoiceUUID;
+  field ( readonly ) CreatedBy, CreatedAt, LastChangedBy, LastChangedAt, LocalLastChangedAt;
+  field ( readonly ) SapFIDocument, SapMMDocument, AccountingStatus;
+
+  // Acciones Transaccionales RAP
+  action ( features : instance ) postToSAPFI result [1] $self;
+  action ( features : instance ) verifySunat result [1] $self;
+  action ( features : instance ) executeThreeWayMatch result [1] $self;
+  action ( features : instance ) rechazarFactura
+    parameter D_RejectInvoiceParams result [1] $self;
+
+  // Determinaciones & Validaciones
+  determination checkThreeWayTolerances on modify { field TotalAmount; }
+  validation validateSunatStatus on save { field SunatSireStatus; }
+
+  draft action Edit;
+  draft action Activate optimized;
+  draft action Discard;
+  draft action Resume;
+  draft determine action Prepare {
+    validation validateSunatStatus;
+  }
+}
+```
+
+### 5.2. Métodos del Behavior Pool (`LCL_HANDLER`)
+* **`postToSAPFI`:** Simula la transacción MIRO / FB60. Asigna número de documento SAP FI (ej. `5105621441`) y SAP MM (`2100000028`), actualizando `AccountingStatus = 'CONTABILIZADO'`.
+* **`verifySunat`:** Invoca el servicio de consulta de comprobantes SUNAT SIRE. Si el XML UBL 2.1 y la firma digital son válidos, fija `SunatSireStatus = 'ACEPTADO SIRE'`.
+* **`executeThreeWayMatch`:** Compara automáticamente los 3 documentos:
+  $$\text{Varianza de Precio} = \frac{|\text{Monto Factura} - \text{Monto PO}|}{\text{Monto PO}} \times 100$$
+  $$\text{Varianza de Cantidad} = \frac{|\text{Cantidad Facturada} - \text{Cantidad MIGO}|}{\text{Cantidad MIGO}} \times 100$$
+  Si ambas varianzas están dentro de la tolerancia (ej. $\le 2\%$), marca `ThreeWayMatchStatus = 'MATCHED'`. Si superan la tolerancia, marca `'VARIATION_OBSERVED'`.
+* **`rechazarFactura`:** Registra el motivo de rechazo formal, cambia `AccountingStatus = 'RECHAZADO'` y notifica al buzón del proveedor.
+
+### 5.3. Exposición OData V4
+* **Service Definition:** `SD_SUPPLIER_INVOICE_ACC`
+* **Service Binding:** `SB_SUPPLIER_INVOICE_ACC_UI` (OData V4 - UI)
+* **Endpoints REST Cloud Equivalentes:**
+  - `GET /api/accounting/invoices`: Listado con filtros por RUC, estado contable y estado 3-Way Match.
+  - `POST /api/accounting/invoices/:id/post`: Ejecución de contabilización MIRO.
+  - `POST /api/accounting/invoices/:id/verify-sunat`: Validación con SUNAT SIRE.
+  - `POST /api/accounting/invoices/:id/reject`: Rechazo con motivo.
+  - `GET /api/accounting/summary`: Agregación de KPIs para la consola ejecutiva.
+
+

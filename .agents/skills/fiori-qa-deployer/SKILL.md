@@ -98,6 +98,74 @@ CLASS ltcl_orden_unit IMPLEMENTATION.
   ENDMETHOD.
 
 ENDCLASS.
+
+CLASS ltcl_supplier_invoice_unit DEFINITION FINAL FOR TESTING
+  DURATION SHORT
+  RISK LEVEL HARMLESS.
+
+  PRIVATE SECTION.
+    CLASS-DATA:
+      environment TYPE REF TO if_caching_test_environment.
+
+    CLASS-METHODS:
+      class_setup,
+      class_teardown.
+
+    METHODS:
+      test_three_way_match_tolerance FOR TESTING,
+      test_post_to_sap_fi FOR TESTING,
+      test_reject_invoice FOR TESTING.
+ENDCLASS.
+
+CLASS ltcl_supplier_invoice_unit IMPLEMENTATION.
+
+  METHOD class_setup.
+    cl_cds_test_environment=>create(
+      i_for_entities = VALUE #( ( entity_name = 'R_SUPPLIERINVOICEACCOUNTING' )
+                                ( entity_name = 'R_SUPPLIERINVOICEITEMACCOUNTING' ) ) ).
+  ENDMETHOD.
+
+  METHOD class_teardown.
+    cl_cds_test_environment=>destroy_all( ).
+  ENDMETHOD.
+
+  METHOD test_three_way_match_tolerance.
+    " Simular factura con varianza de precio de 1.5% (dentro de tolerancia +/-2%)
+    MODIFY ENTITIES OF R_SupplierInvoiceAccounting
+      ENTITY Factura
+        EXECUTE executeThreeWayMatch
+        FROM VALUE #( ( %cid_ref = 'CID_INV_01' ) )
+      RESULT DATA(matched_results)
+      FAILED DATA(failed).
+
+    cl_abap_unit_assert=>assert_initial( failed-factura ).
+  ENDMETHOD.
+
+  METHOD test_post_to_sap_fi.
+    " Simular contabilizacion MIRO generando doc SAP FI y MM
+    MODIFY ENTITIES OF R_SupplierInvoiceAccounting
+      ENTITY Factura
+        EXECUTE postToSAPFI
+        FROM VALUE #( ( %cid_ref = 'CID_INV_01' ) )
+      RESULT DATA(post_results)
+      FAILED DATA(failed).
+
+    cl_abap_unit_assert=>assert_initial( failed-factura ).
+  ENDMETHOD.
+
+  METHOD test_reject_invoice.
+    " Simular rechazo motivado
+    MODIFY ENTITIES OF R_SupplierInvoiceAccounting
+      ENTITY Factura
+        EXECUTE rechazarFactura
+        FROM VALUE #( ( %cid_ref = 'CID_INV_01'
+                        %param   = VALUE #( motivo = 'Discrepancia en Precio' ) ) )
+      FAILED DATA(failed).
+
+    cl_abap_unit_assert=>assert_initial( failed-factura ).
+  ENDMETHOD.
+
+ENDCLASS.
 ```
 
 ---
@@ -114,6 +182,12 @@ Para el pase a producción, documentar y registrar los siguientes parámetros en
 | **SAPUI5 Component ID** | `com.empresa.gestionordenes` | ID declarado en el `manifest.json`. |
 | **Business Catalog** | `SAP_BR_OPERACIONES_BC` | Catálogo de negocio donde se publica el Tile. |
 | **Business Role (PFCG)** | `Z_BR_OPERACIONES_MGR` | Rol de autorizaciones asignado al usuario final. |
+| **Semantic Object (AP)** | `SupplierInvoiceAccounting` | Portal Proveedores Contabilidad — FI-AP & 3-Way Match. |
+| **Action (AP)** | `manage` | Gestión y contabilización de comprobantes de pago. |
+| **Application Type (AP)** | `SAPUI5 Fiori App` | Floorplan Freestyle modular con 7 vistas y barra SideNav Horizon. |
+| **SAPUI5 Component ID (AP)**| `com.empresa.portalproveedorescontabilidad` | ID raíz de la aplicación de contabilidad. |
+| **Business Catalog (AP)** | `SAP_BR_AP_ACCOUNTANT_BC` | Catálogo de Especialista en Cuentas por Pagar. |
+| **Business Role (AP)** | `Z_BR_AP_ACCOUNTANT` | Rol de autorizaciones PFCG para equipo contable. |
 
 ---
 
@@ -128,7 +202,7 @@ sap.ui.define([
 ], function (Opa5, opaTest) {
   "use strict";
 
-  QUnit.module("Navegación Fiori Horizon");
+  QUnit.module("Navegación Fiori Horizon & 3-Way Match");
 
   opaTest("Debe alternar entre vistas desde la barra lateral SideNavigation", function (Given, When, Then) {
     Given.iStartMyApp();
@@ -136,12 +210,19 @@ sap.ui.define([
     When.onTheSidebar.iClickNavItem("dashboard");
     Then.onTheDashboard.iShouldSeeTheKpiStripWithFourCards();
 
-    When.onTheSidebar.iClickNavItem("orderlist");
-    Then.onTheOrderList.iShouldSeeTheTable();
+    When.onTheSidebar.iClickNavItem("invoicesMatch");
+    Then.onTheInvoicesMatch.iShouldSeeTheTable();
+
+    When.onTheInvoicesMatch.iClickReviewButton();
+    Then.onTheReviewDialog.iShouldSeeSplitPdfAndXmlViewer();
+
+    When.onTheSidebar.iClickNavItem("sunatSire");
+    Then.onTheSunatSire.iShouldSeeSireStatusTable();
 
     Given.iTeardownMyApp();
   });
 });
+
 ```
 
 ---

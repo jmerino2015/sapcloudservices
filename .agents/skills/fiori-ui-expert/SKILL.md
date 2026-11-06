@@ -224,3 +224,52 @@ if (window.self !== window.top) {
 3. **Manejo de Respuestas Enriquecidas:**
    - La API pública retorna colecciones estándar `{ success: true, total: N, data: [...] }`. Los controladores de vistas deben vincular `data` directamente a tablas (`sap.m.Table` o `sap.ui.table.Table`) y utilizar `total` en los contadores de pestaña (`sap.m.IconTabFilter` count).
 
+---
+
+## 7. Regla Crítica de Parseo en SAPUI5 XMLViews (Prohibición de Raw HTML)
+
+> [!CAUTION]
+> **PROHIBICIÓN ESTRICTA DE RAW HTML EN VISTAS Y FRAGMENTOS SAPUI5:**
+> Nunca colocar etiquetas HTML crudas (`<div>`, `<span>`, `<p>`, `<a>`, `<table>`) dentro de un `<mvc:View>` o `<core:FragmentDefinition>` a menos que se declare explícitamente el namespace de XHTML (`xmlns:xhtml="http://www.w3.org/1999/xhtml"` y `<xhtml:div>`).
+> 
+> Si se escribe `<div>` con el namespace por defecto `xmlns="sap.m"`, el cargador de módulos de SAPUI5 intentará resolver `sap/m/div.js`, lo que provocará un error fatal en tiempo de ejecución:
+> ```
+> Error: failed to load 'sap/m/div.js' from ... /sap/m/div.js: 404 Not Found
+> ```
+> 
+> **Solución Estándar:**
+> - Reemplazar `<div class="...">` por `<VBox class="...">` o `<HBox class="...">`.
+> - Reemplazar `<span class="...">Texto</span>` por `<Text class="..." text="Texto"/>` o `<Label class="..." text="Texto"/>`.
+> - Si se requiere inyectar HTML complejo no estructurado, utilizar el control nativo `<core:HTML content="&lt;div&gt;...&lt;/div&gt;"/>`.
+
+---
+
+## 8. Caso de Referencia: Portal Proveedores Contabilidad & 3-Way Match (`apps/07_portal_proveedores_contabilidad`)
+
+Esta sub-aplicación implementa el estándar completo Fiori Horizon para back-office financiero:
+
+### 8.1. Matriz de 7 Vistas Modulares & Enrutamiento
+1. **`Dashboard` (`view/Dashboard.view.xml`):**
+   - Franja superior de 4 KPIs Fiori Horizon con controles `sap.m.HBox` / `sap.m.VBox` puros:
+     * KPI 1 (Naranja `#e06a3b`): Facturas pendientes de contabilización.
+     * KPI 2 (Slate `#1e293b`): Gasto total procesado en USD.
+     * KPI 3 (Verde `#107e3e`): Efectividad 3-Way Match (% de coincidencia automática).
+     * KPI 4 (Naranja `#e06a3b`): Comprobantes observados SUNAT / desvíos de precio.
+   - Gráficos de comparativa mensual de gasto y distribución de estados en tarjeta Horizon.
+2. **`InvoicesMatch` (`view/InvoicesMatch.view.xml`):**
+   - Bandeja operativa 3-Way Match (Factura vs PO vs MIGO).
+   - Filtros avanzados desplegables por RUC, razón social, estado contable y estado 3-Way Match.
+   - Acciones de cabecera: `Revisión 3-Way Match & Contabilizar`, `Validar SUNAT SIRE`, `Rechazar Factura`, `Exportar Excel`.
+3. **`SunatSire` (`view/SunatSire.view.xml`):** Auditoría fiscal de validez electrónica (CPE, firma digital y estado en padrón SIRE).
+4. **`SapPosting` (`view/SapPosting.view.xml`):** Auditoría de documentos contabilizados en SAP MM (MIRO) y SAP FI (FB60) con trazabilidad a pedidos y recepciones.
+5. **`PaymentsAudit` (`view/PaymentsAudit.view.xml`):** Monitoreo de calendario de pagos, constancias de depósito de detracción SPOT (Banco de la Nación) y retenciones IGV.
+6. **`CreditNotes` (`view/CreditNotes.view.xml`):** Gestión y conciliación de Notas de Crédito (tipo 07) y Débito (tipo 08).
+7. **`Settings` (`view/Settings.view.xml`):** Parámetros de tolerancia 3-Way Match (±2% en precio, ±0% en cantidad), cuentas de mayor por defecto y límites de aprobación.
+
+### 8.2. Diálogos Modales de Negocio (Fragments)
+* **`AccountingReviewDialog.fragment.xml`:**
+  - Diálogo a pantalla dividida (Split Panel) que muestra simultáneamente la carátula formal con sello de recepción contable (`RECEIVED`), los datos del pedido SAP PO, la recepción MIGO, la matriz de items comparada con tolerancias y el visor de sintaxis XML UBL 2.1.
+* **`RejectInvoiceDialog.fragment.xml`:**
+  - Diálogo con selector de motivo estandarizado (Discrepancia en Precio, Error de RUC, Falta de Guía MIGO, Observación SUNAT SIRE) y campo de texto libre para notificación automática al proveedor.
+
+
