@@ -367,6 +367,33 @@ window.SAP_APPS_CONFIG = [
     },
     tags: ["Procure Core", "Ariba", "Compras", "Sourcing", "RFX", "Subastas", "Guided Buying", "3-Way Match", "SLP", "Clean Core", "OData V4"],
     status: "Active"
+  },
+  {
+    id: "17",
+    code: "WMS3D",
+    folder: "17_mapa_almacen_3d",
+    title: "Mapa 3D de Almacén",
+    subtitle: "Gemelo Digital 3D & Semáforo de Vencimiento",
+    description: "Gemelo digital interactivo 3D del centro de distribución: visualización de 1.200 nichos y 2.400 paletas en tiempo real, semáforo dinámico de vencimiento de lotes, pasillos A-J, zona de stage (12m), muelles de recepción/despacho, asistente Joule AI y carga directa de inventarios Excel.",
+    category: "operaciones",
+    categoryLabel: "Operaciones & Almacén",
+    sapIcon: "sap-icon://dimension",
+    faIcon: "cubes",
+    iconBg: "linear-gradient(135deg, #0070f2, #0056b3)",
+    badge: "SAP WMS 3D / S/4HANA",
+    badgeType: "primary",
+    sapModule: "WMS-3D",
+    tileType: "media",
+    bannerImg: "img/almacen-logistica-opt.jpg",
+    badgeText: "SAP WMS 3D / S/4HANA",
+    path: "apps/17_mapa_almacen_3d/index.html",
+    kpi: {
+      value: "1,200",
+      label: "Nichos 3D Activos",
+      trend: "up"
+    },
+    tags: ["Mapa 3D", "Almacén", "Gemelo Digital", "WMS", "Three.js", "Vencimiento", "Lotes", "Semáforo", "Stock", "Paletas", "Joule AI"],
+    status: "Active"
   }
 ];
 

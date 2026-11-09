@@ -1,0 +1,26 @@
+{
+  "name": "sap-wms-mapa-almacen-3d",
+  "version": "1.0.0",
+  "description": "SAP WMS - Mapa 3D de Almacén desplegado en SAP Fiori Horizon con Joule AI",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "keywords": [
+    "sap",
+    "fiori",
+    "wms",
+    "warehouse",
+    "threejs",
+    "digital-twin",
+    "joule"
+  ],
+  "author": "Droid Consulting S.A.C.",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.21.2",
+    "three": "^0.174.0",
+    "xlsx": "^0.18.5"
+  }
+}

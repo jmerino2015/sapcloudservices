@@ -1,0 +1,1037 @@
+/* ==========================================================================
+   SAP Fiori Horizon - Gemelo Digital 3D de Almacén (WMS)
+   Estilos inspirados en SAP Fiori Horizon (Morning & Evening Horizon)
+   ========================================================================== */
+
+:root {
+  /* SAP Morning Horizon (Light Theme) */
+  --sap-bg-color: #f5f6f8;
+  --sap-shell-bg: #ffffff;
+  --sap-card-bg: #ffffff;
+  --sap-text-primary: #1d2d3e;
+  --sap-text-secondary: #556b82;
+  --sap-border-color: #d9e1e8;
+  --sap-highlight: #0070f2;
+  --sap-highlight-hover: #0056b3;
+  --sap-accent: #0f828f;
+  --sap-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+  --sap-card-shadow: 0 1px 6px rgba(0, 0, 0, 0.06);
+  --sap-font-family: "72", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  
+  /* Semáforo de Almacén */
+  --status-vencido: #e53935;
+  --status-critico: #ff5722;
+  --status-por-vencer: #ffb300;
+  --status-vigente: #43a047;
+  --status-sin-fecha: #1e88e5;
+  --status-vacio: #90a4ae;
+
+  /* Joule AI Gradient */
+  --joule-gradient: linear-gradient(135deg, #5D36FF 0%, #A100C2 100%);
+}
+
+[data-theme="dark"], [data-theme="evening"], [data-theme="sap_horizon_dark"] {
+  /* SAP Evening Horizon (Dark Theme) */
+  --sap-bg-color: #12171c;
+  --sap-shell-bg: #182029;
+  --sap-card-bg: #222b36;
+  --sap-text-primary: #f0f4f8;
+  --sap-text-secondary: #9aa8b6;
+  --sap-border-color: #334050;
+  --sap-highlight: #479eff;
+  --sap-highlight-hover: #70b3ff;
+  --sap-accent: #00b4d8;
+  --sap-shadow: 0 4px 18px rgba(0, 0, 0, 0.35);
+  --sap-card-shadow: 0 2px 10px rgba(0, 0, 0, 0.25);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  font-family: var(--sap-font-family);
+  background-color: var(--sap-bg-color);
+  color: var(--sap-text-primary);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ==========================================================================
+   Estructura Principal del Layout
+   ========================================================================== */
+
+/* Cuando la app se ejecuta embebida en el modal del Portal Fiori Launchpad */
+body.in-iframe .sap-shell-bar,
+.sap-shell-bar.portal-embedded-hide {
+  display: none !important;
+}
+
+body.in-iframe #app-container {
+  height: 100vh;
+}
+
+/* Floating Top View Controls Bar (Garantiza acceso a cámaras incluso sin shell bar interna) */
+.floating-views-bar {
+  position: absolute;
+  top: 14px;
+  right: 340px;
+  z-index: 15;
+  display: flex;
+  align-items: center;
+  background-color: var(--sap-card-bg);
+  padding: 4px 6px;
+  border-radius: 8px;
+  border: 1px solid var(--sap-border-color);
+  box-shadow: var(--sap-shadow);
+  gap: 4px;
+}
+
+#app-container {
+  display: flex;
+  flex-direction: column;
+  width: 100vw;
+  height: 100vh;
+  position: relative;
+}
+
+/* ==========================================================================
+   SAP Fiori Shell Bar (Encabezado Superior)
+   ========================================================================== */
+
+.sap-shell-bar {
+  height: 52px;
+  background-color: var(--sap-shell-bg);
+  border-bottom: 1px solid var(--sap-border-color);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 20px;
+  z-index: 20;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+}
+
+.shell-left {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.sap-logo {
+  height: 24px;
+  display: flex;
+  align-items: center;
+}
+
+.sap-logo svg {
+  height: 22px;
+  width: auto;
+  fill: var(--sap-highlight);
+}
+
+.shell-title-block {
+  display: flex;
+  flex-direction: column;
+}
+
+.shell-app-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--sap-text-primary);
+  letter-spacing: -0.2px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.shell-app-badge {
+  font-size: 11px;
+  font-weight: 600;
+  padding: 2px 7px;
+  border-radius: 10px;
+  background-color: rgba(0, 112, 242, 0.12);
+  color: var(--sap-highlight);
+  text-transform: uppercase;
+}
+
+.shell-ticker {
+  font-size: 11px;
+  color: var(--sap-text-secondary);
+}
+
+.shell-center-views {
+  display: flex;
+  align-items: center;
+  background-color: var(--sap-bg-color);
+  padding: 3px;
+  border-radius: 8px;
+  border: 1px solid var(--sap-border-color);
+  gap: 2px;
+}
+
+.view-btn {
+  border: none;
+  background: transparent;
+  color: var(--sap-text-secondary);
+  font-size: 12.5px;
+  font-weight: 600;
+  padding: 6px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.view-btn:hover {
+  color: var(--sap-text-primary);
+  background-color: rgba(0, 0, 0, 0.04);
+}
+
+.view-btn.active {
+  background-color: var(--sap-card-bg);
+  color: var(--sap-highlight);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+}
+
+.shell-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.sap-btn-secondary {
+  border: 1px solid var(--sap-border-color);
+  background: var(--sap-card-bg);
+  color: var(--sap-text-primary);
+  font-size: 12px;
+  font-weight: 600;
+  padding: 6px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.sap-btn-secondary:hover {
+  border-color: var(--sap-highlight);
+  color: var(--sap-highlight);
+}
+
+.theme-toggle-btn {
+  background: none;
+  border: 1px solid var(--sap-border-color);
+  color: var(--sap-text-primary);
+  width: 34px;
+  height: 34px;
+  border-radius: 6px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 15px;
+  transition: background-color 0.2s;
+}
+
+.theme-toggle-btn:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+/* ==========================================================================
+   Contenedor Principal (3D Canvas + Panel Lateral)
+   ========================================================================== */
+
+.main-workspace {
+  flex: 1;
+  position: relative;
+  display: flex;
+  overflow: hidden;
+}
+
+#viewport-3d-container {
+  flex: 1;
+  height: 100%;
+  position: relative;
+  outline: none;
+}
+
+#viewport-3d-container canvas {
+  width: 100% !important;
+  height: 100% !important;
+  display: block;
+}
+
+/* Ticker superior superpuesto en el 3D idéntico al video */
+.viewport-header-overlay {
+  position: absolute;
+  top: 14px;
+  left: 20px;
+  z-index: 10;
+  pointer-events: none;
+}
+
+.viewport-headline {
+  font-size: 26px;
+  font-weight: 800;
+  color: var(--sap-text-primary);
+  text-shadow: 0 1px 3px rgba(255, 255, 255, 0.8);
+  letter-spacing: -0.5px;
+}
+
+[data-theme="dark"] .viewport-headline {
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.8);
+}
+
+.viewport-specs {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--sap-text-secondary);
+  margin-top: 3px;
+  text-shadow: 0 1px 2px rgba(255, 255, 255, 0.6);
+}
+
+/* Barra inferior de ayuda de navegación */
+.viewport-footer-hint {
+  position: absolute;
+  bottom: 12px;
+  left: 20px;
+  z-index: 10;
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(8px);
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--sap-text-secondary);
+  border: 1px solid var(--sap-border-color);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  pointer-events: none;
+}
+
+[data-theme="dark"] .viewport-footer-hint {
+  background: rgba(24, 32, 41, 0.85);
+}
+
+/* Selector flotante de pasillos cuando se está en modo 'pasillo' */
+.aisle-navigator-bar {
+  position: absolute;
+  bottom: 14px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10;
+  background: var(--sap-card-bg);
+  border: 1px solid var(--sap-border-color);
+  border-radius: 30px;
+  padding: 5px 12px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  box-shadow: var(--sap-shadow);
+}
+
+.aisle-chip {
+  border: none;
+  background: var(--sap-bg-color);
+  color: var(--sap-text-primary);
+  font-size: 11px;
+  font-weight: 700;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.aisle-chip:hover {
+  background-color: var(--sap-highlight);
+  color: #fff;
+}
+
+.aisle-chip.active {
+  background-color: var(--sap-highlight);
+  color: #fff;
+  box-shadow: 0 2px 6px rgba(0, 112, 242, 0.4);
+}
+
+/* ==========================================================================
+   Panel Lateral Derecho de Control & Filtros (Exacto al Video)
+   ========================================================================== */
+
+.sidebar-controls {
+  width: 320px;
+  background-color: var(--sap-card-bg);
+  border-left: 1px solid var(--sap-border-color);
+  height: 100%;
+  overflow-y: auto;
+  padding: 16px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  z-index: 15;
+  box-shadow: -2px 0 10px rgba(0, 0, 0, 0.03);
+}
+
+.sidebar-controls::-webkit-scrollbar {
+  width: 6px;
+}
+.sidebar-controls::-webkit-scrollbar-thumb {
+  background: var(--sap-border-color);
+  border-radius: 3px;
+}
+
+.sidebar-section-title {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--sap-text-secondary);
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+
+/* Sección Datos */
+.data-box {
+  background: var(--sap-bg-color);
+  border: 1px solid var(--sap-border-color);
+  border-radius: 8px;
+  padding: 12px;
+}
+
+.data-box-text {
+  font-size: 11.5px;
+  color: var(--sap-text-secondary);
+  line-height: 1.4;
+  margin-bottom: 10px;
+}
+
+.data-box-stats {
+  font-size: 12.5px;
+  font-weight: 700;
+  color: var(--sap-text-primary);
+  margin-bottom: 8px;
+}
+
+.occupancy-bar-bg {
+  width: 100%;
+  height: 6px;
+  background: rgba(0, 0, 0, 0.08);
+  border-radius: 3px;
+  overflow: hidden;
+  margin-bottom: 12px;
+}
+
+.occupancy-bar-fill {
+  height: 100%;
+  width: 72%;
+  background: var(--sap-highlight);
+  border-radius: 3px;
+  transition: width 0.4s ease;
+}
+
+.data-buttons-row {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.btn-upload-excel {
+  flex: 1;
+  background-color: var(--sap-highlight);
+  color: #ffffff;
+  border: none;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 7px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  text-align: center;
+}
+
+.btn-upload-excel:hover {
+  background-color: var(--sap-highlight-hover);
+}
+
+.btn-sample-data {
+  background-color: var(--sap-card-bg);
+  border: 1px solid var(--sap-border-color);
+  color: var(--sap-text-primary);
+  font-size: 12px;
+  font-weight: 600;
+  padding: 7px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-sample-data:hover {
+  border-color: var(--sap-highlight);
+  color: var(--sap-highlight);
+}
+
+.link-template {
+  font-size: 11.5px;
+  color: var(--sap-highlight);
+  text-decoration: none;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  cursor: pointer;
+}
+
+.link-template:hover {
+  text-decoration: underline;
+}
+
+/* Sección Estado por Vencimiento (Semáforo) */
+.status-legend-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 12px;
+}
+
+.status-legend-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 4px 8px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.15s;
+  font-size: 12.5px;
+}
+
+.status-legend-item:hover {
+  background-color: var(--sap-bg-color);
+}
+
+.status-legend-item.active {
+  background-color: rgba(0, 112, 242, 0.1);
+  font-weight: 600;
+}
+
+.legend-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.legend-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 2px;
+}
+
+.dot-vencido { background-color: var(--status-vencido); }
+.dot-critico { background-color: var(--status-critico); }
+.dot-por_vencer { background-color: var(--status-por-vencer); }
+.dot-vigente { background-color: var(--status-vigente); }
+.dot-sin_fecha { background-color: var(--status-sin-fecha); }
+.dot-vacio { background-color: var(--status-vacio); }
+
+.legend-count {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--sap-text-secondary);
+}
+
+.alert-actions-row {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+
+.btn-alert-filter {
+  flex: 1;
+  border: 1px solid var(--sap-border-color);
+  background: var(--sap-card-bg);
+  color: var(--sap-text-primary);
+  font-size: 12px;
+  font-weight: 600;
+  padding: 6px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-align: center;
+}
+
+.btn-alert-filter:hover {
+  border-color: var(--sap-highlight);
+}
+
+.btn-alert-filter.active {
+  background-color: var(--sap-highlight);
+  color: #ffffff;
+  border-color: var(--sap-highlight);
+}
+
+/* Inputs de Umbrales de Días */
+.threshold-inputs-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  background: var(--sap-bg-color);
+  padding: 10px;
+  border-radius: 6px;
+  border: 1px solid var(--sap-border-color);
+}
+
+.threshold-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.threshold-label {
+  font-size: 11.5px;
+  color: var(--sap-text-secondary);
+}
+
+.threshold-input {
+  width: 58px;
+  text-align: center;
+  padding: 4px;
+  font-size: 12px;
+  font-weight: 700;
+  border: 1px solid var(--sap-border-color);
+  border-radius: 4px;
+  background: var(--sap-card-bg);
+  color: var(--sap-text-primary);
+}
+
+/* Sección Filtrar (Pasillo / Nivel / Buscar) */
+.filter-dropdown-group {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.filter-field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.filter-field label {
+  font-size: 11px;
+  color: var(--sap-text-secondary);
+  font-weight: 600;
+}
+
+.sap-select {
+  width: 100%;
+  padding: 7px 10px;
+  border-radius: 6px;
+  border: 1px solid var(--sap-border-color);
+  background: var(--sap-card-bg);
+  color: var(--sap-text-primary);
+  font-size: 12.5px;
+  outline: none;
+  cursor: pointer;
+}
+
+.sap-select:focus {
+  border-color: var(--sap-highlight);
+}
+
+.sap-search-input {
+  width: 100%;
+  padding: 8px 12px;
+  border-radius: 6px;
+  border: 1px solid var(--sap-border-color);
+  background: var(--sap-card-bg);
+  color: var(--sap-text-primary);
+  font-size: 12px;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.sap-search-input:focus {
+  border-color: var(--sap-highlight);
+}
+
+/* ==========================================================================
+   Tooltip 3D Flotante (Exacto al Video)
+   "C-01-2 · Harina rubia 10 kg · Vigente"
+   ========================================================================== */
+
+.wms-3d-tooltip {
+  position: fixed;
+  z-index: 100;
+  pointer-events: none;
+  background: rgba(24, 32, 41, 0.92);
+  color: #ffffff;
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 500;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  white-space: nowrap;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.tooltip-id {
+  font-weight: 700;
+  color: #90caf9;
+}
+
+.tooltip-sep {
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.tooltip-status {
+  padding: 1px 6px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.status-vencido { background: var(--status-vencido); color: #fff; }
+.status-critico { background: var(--status-critico); color: #fff; }
+.status-por_vencer { background: var(--status-por-vencer); color: #000; }
+.status-vigente { background: var(--status-vigente); color: #fff; }
+.status-sin_fecha { background: var(--status-sin-fecha); color: #fff; }
+.status-vacio { background: var(--status-vacio); color: #fff; }
+
+/* ==========================================================================
+   Panel de Detalle de Nicho Seleccionado (Drawer Lateral)
+   ========================================================================== */
+
+.niche-detail-drawer {
+  position: absolute;
+  top: 0;
+  right: 320px;
+  width: 340px;
+  height: 100%;
+  background: var(--sap-card-bg);
+  border-left: 1px solid var(--sap-border-color);
+  box-shadow: -4px 0 16px rgba(0, 0, 0, 0.1);
+  z-index: 18;
+  display: flex;
+  flex-direction: column;
+  transform: translateX(100%);
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  overflow-y: auto;
+  padding: 18px;
+}
+
+.niche-detail-drawer.open {
+  transform: translateX(0);
+}
+
+.niche-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--sap-border-color);
+  padding-bottom: 12px;
+  margin-bottom: 16px;
+}
+
+.niche-title-label {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--sap-text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.niche-id-display {
+  font-size: 24px;
+  font-weight: 800;
+  color: var(--sap-text-primary);
+  margin-top: 2px;
+}
+
+.niche-coord-desc {
+  font-size: 12px;
+  color: var(--sap-text-secondary);
+}
+
+.btn-close-drawer {
+  background: none;
+  border: none;
+  font-size: 18px;
+  color: var(--sap-text-secondary);
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 4px;
+}
+
+.btn-close-drawer:hover {
+  color: var(--sap-text-primary);
+  background: var(--sap-bg-color);
+}
+
+.item-card {
+  background: var(--sap-bg-color);
+  border: 1px solid var(--sap-border-color);
+  border-radius: 8px;
+  padding: 12px;
+  margin-bottom: 12px;
+}
+
+.item-card-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--sap-text-primary);
+  margin-bottom: 6px;
+}
+
+.item-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-top: 8px;
+  font-size: 11.5px;
+}
+
+.item-field-label {
+  color: var(--sap-text-secondary);
+  font-size: 10.5px;
+}
+
+.item-field-val {
+  font-weight: 600;
+  color: var(--sap-text-primary);
+}
+
+.item-status-pill {
+  display: inline-block;
+  padding: 3px 8px;
+  border-radius: 12px;
+  font-size: 11px;
+  font-weight: 700;
+  margin-top: 8px;
+}
+
+/* ==========================================================================
+   SAP Joule AI Assistant & Floating FAB
+   ========================================================================== */
+
+.sap-joule-fab {
+  position: fixed;
+  bottom: 24px;
+  right: 340px;
+  z-index: 99;
+  background: var(--joule-gradient);
+  color: #ffffff;
+  border: none;
+  padding: 10px 18px;
+  border-radius: 24px;
+  box-shadow: 0 4px 16px rgba(93, 54, 255, 0.45);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 700;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.sap-joule-fab:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(93, 54, 255, 0.6);
+}
+
+.fab-sparkle {
+  font-size: 16px;
+}
+
+.sap-joule-drawer {
+  position: fixed;
+  bottom: 80px;
+  right: 340px;
+  width: 360px;
+  height: 520px;
+  background: var(--sap-card-bg);
+  border: 1px solid var(--sap-border-color);
+  border-radius: 14px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(20px) scale(0.96);
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.sap-joule-drawer.open {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0) scale(1);
+}
+
+.joule-header {
+  background: var(--joule-gradient);
+  color: #ffffff;
+  padding: 14px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.joule-title-block {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.joule-icon-sparkle {
+  font-size: 20px;
+  animation: pulse-sparkle 2s infinite ease-in-out;
+}
+
+@keyframes pulse-sparkle {
+  0%, 100% { transform: scale(1); opacity: 0.9; }
+  50% { transform: scale(1.15); opacity: 1; }
+}
+
+.joule-brand {
+  font-size: 15px;
+  font-weight: 800;
+  display: block;
+}
+
+.joule-subtitle {
+  font-size: 11px;
+  opacity: 0.85;
+}
+
+.joule-close-btn {
+  background: rgba(255, 255, 255, 0.2);
+  border: none;
+  color: #fff;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.joule-messages {
+  flex: 1;
+  overflow-y: auto;
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.joule-msg {
+  display: flex;
+  gap: 8px;
+  max-width: 90%;
+}
+
+.joule-msg.user {
+  align-self: flex-end;
+  flex-direction: row-reverse;
+}
+
+.joule-msg-avatar {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: var(--joule-gradient);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  flex-shrink: 0;
+}
+
+.joule-msg-bubble {
+  background: var(--sap-bg-color);
+  padding: 10px 12px;
+  border-radius: 10px;
+  font-size: 12.5px;
+  line-height: 1.45;
+  border: 1px solid var(--sap-border-color);
+}
+
+.joule-msg.user .joule-msg-bubble {
+  background: var(--sap-highlight);
+  color: #ffffff;
+  border-color: var(--sap-highlight);
+}
+
+.joule-msg-bubble ul {
+  margin-top: 6px;
+  padding-left: 18px;
+}
+
+.joule-quick-chips {
+  padding: 8px 12px;
+  display: flex;
+  gap: 6px;
+  overflow-x: auto;
+  border-top: 1px solid var(--sap-border-color);
+  background: var(--sap-bg-color);
+}
+
+.joule-chip {
+  background: var(--sap-card-bg);
+  border: 1px solid var(--sap-border-color);
+  color: var(--sap-text-primary);
+  font-size: 11px;
+  font-weight: 600;
+  padding: 5px 10px;
+  border-radius: 14px;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.joule-chip:hover {
+  border-color: #5D36FF;
+  color: #5D36FF;
+}
+
+.joule-input-area {
+  padding: 10px 12px;
+  border-top: 1px solid var(--sap-border-color);
+  display: flex;
+  gap: 8px;
+  background: var(--sap-card-bg);
+}
+
+.joule-input {
+  flex: 1;
+  padding: 8px 12px;
+  border-radius: 20px;
+  border: 1px solid var(--sap-border-color);
+  background: var(--sap-bg-color);
+  color: var(--sap-text-primary);
+  font-size: 12.5px;
+  outline: none;
+}
+
+.joule-send-btn {
+  background: var(--joule-gradient);
+  border: none;
+  color: #fff;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+}

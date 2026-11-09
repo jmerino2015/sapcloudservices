@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SAP WMS - Mapa 3D de Almacén | Fiori Horizon</title>
+  
+  <!-- Estilos Fiori Horizon 3D -->
+  <link rel="stylesheet" href="css/fiori-3d-warehouse.css">
+
+  <!-- Librerías locales para funcionamiento 100% offline -->
+  <script src="assets/three.min.js"></script>
+  <script src="assets/OrbitControls.js"></script>
+  <script src="assets/xlsx.full.min.js"></script>
+</head>
+<body>
+  <div id="app-container">
+    
+    <!-- ======================================================================
+         SAP Fiori Shell Bar Superior
+         ====================================================================== -->
+    <header class="sap-shell-bar">
+      <div class="shell-left">
+        <!-- Logo SAP Oficial en SVG -->
+        <div class="sap-logo" title="SAP Fiori Launchpad">
+          <svg viewBox="0 0 100 50">
+            <path d="M 0 0 L 50 0 L 35 50 L 0 50 Z" fill="#0070f2"/>
+            <path d="M 50 0 L 100 0 L 85 50 L 35 50 Z" fill="#0056b3"/>
+            <text x="50" y="35" font-family="'72', Arial, sans-serif" font-weight="900" font-size="28" fill="#ffffff" text-anchor="middle">SAP</text>
+          </svg>
+        </div>
+
+        <div class="shell-title-block">
+          <div class="shell-app-title">
+            <span>Mapa 3D de Almacén</span>
+            <span class="shell-app-badge">WMS Fiori</span>
+          </div>
+          <span class="shell-ticker" id="shell-specs-ticker">
+            10 pasillos · 26 columnas · 4 niveles · 1.200 nichos · 2.400 paletas · nave 65.4 x 43 m · inck 10.2 m
+          </span>
+        </div>
+      </div>
+
+      <!-- Vistas de Cámara en el Centro (Exactas al Video) -->
+      <nav class="shell-center-views" aria-label="Modos de Cámara">
+        <button class="view-btn active" data-view="general" id="view-btn-general">
+          <span>🌐</span> General
+        </button>
+        <button class="view-btn" data-view="planta" id="view-btn-planta">
+          <span>📐</span> Planta
+        </button>
+        <button class="view-btn" data-view="stage" id="view-btn-stage">
+          <span>🚪</span> Stage y puertas
+        </button>
+        <button class="view-btn" data-view="pasillo" id="view-btn-pasillo">
+          <span>🚶</span> Entrar al pasillo
+        </button>
+      </nav>
+
+      <!-- Acciones de Encabezado Derecho -->
+      <div class="shell-right">
+        <!-- Vistas de Cámara integradas si el shell superior está oculto en iframe o presente -->
+        <button class="sap-btn-secondary" id="btn-sample-data-top" title="Restaurar datos demo">
+          <span>🔄</span> Datos de Ejemplo
+        </button>
+        <button class="theme-toggle-btn" id="btn-theme-toggle" title="Cambiar tema (Morning / Evening Horizon)">
+          ☀️
+        </button>
+      </div>
+    </header>
+
+    <!-- Floating Top View Controls Bar (visible siempre, especialmente dentro del iframe del Launchpad) -->
+    <div class="floating-views-bar" id="floating-views-bar">
+      <button class="view-btn active" data-view="general">
+        <span>🌐</span> General
+      </button>
+      <button class="view-btn" data-view="planta">
+        <span>📐</span> Planta
+      </button>
+      <button class="view-btn" data-view="stage">
+        <span>🚪</span> Stage y puertas
+      </button>
+      <button class="view-btn" data-view="pasillo">
+        <span>🚶</span> Entrar al pasillo
+      </button>
+    </div>
+
+    <!-- ======================================================================
+         Espacio de Trabajo Principal (Visor 3D WebGL + Controles Laterales)
+         ====================================================================== -->
+    <main class="main-workspace">
+      
+      <!-- Contenedor del Canvas Three.js -->
+      <div id="viewport-3d-container">
+        
+        <!-- Ticker de Especificaciones idéntico al del Video -->
+        <div class="viewport-header-overlay">
+          <h1 class="viewport-headline">MAPA 3D DE ALMACÉN</h1>
+          <p class="viewport-specs">10 pasillos · 26 columnas · 4 niveles · 1.200 nichos · 2.400 paletas · nave 65.4 x 43 m · inck 10.2 m</p>
+        </div>
+
+        <!-- Ayuda flotante inferior de navegación -->
+        <div class="viewport-footer-hint">
+          Arrastra para girar · rueda para acercar · clic en un nicho
+        </div>
+
+        <!-- Selector Rápido de Pasillo A-J (Activo en modo 'Entrar al pasillo') -->
+        <div class="aisle-navigator-bar" id="aisle-navigator-bar" style="display: none;">
+          <span style="font-size:11px; font-weight:700; color:var(--sap-text-secondary); margin-right:4px;">PASILLO:</span>
+          <button class="aisle-chip" data-aisle="A">A</button>
+          <button class="aisle-chip" data-aisle="B">B</button>
+          <button class="aisle-chip" data-aisle="C">C</button>
+          <button class="aisle-chip" data-aisle="D">D</button>
+          <button class="aisle-chip" data-aisle="E">E</button>
+          <button class="aisle-chip active" data-aisle="F">F</button>
+          <button class="aisle-chip" data-aisle="G">G</button>
+          <button class="aisle-chip" data-aisle="H">H</button>
+          <button class="aisle-chip" data-aisle="I">I</button>
+          <button class="aisle-chip" data-aisle="J">J</button>
+        </div>
+
+      </div>
+
+      <!-- ======================================================================
+           Panel Lateral Derecho de Control y Filtros (Exacto al Video)
+           ====================================================================== -->
+      <aside class="sidebar-controls" aria-label="Controles del Almacén">
+        
+        <!-- SECCIÓN: DATOS -->
+        <section class="sidebar-section">
+          <div class="sidebar-section-title">DATOS</div>
+          <div class="data-box">
+            <div class="data-box-text">
+              Mostrando datos de ejemplo. Carga tu Excel para reemplazarlos.
+            </div>
+            
+            <div class="data-box-stats" id="occupancy-summary-text">
+              867 de 1.200 nichos ocupados (72%)
+            </div>
+
+            <div class="occupancy-bar-bg">
+              <div class="occupancy-bar-fill" id="occupancy-bar-fill" style="width: 72%;"></div>
+            </div>
+
+            <div class="data-buttons-row">
+              <button class="btn-upload-excel" id="btn-upload-excel">
+                <span>📁</span> Cargar Excel
+              </button>
+              <button class="btn-sample-data" id="btn-sample-data">
+                Datos de ejemplo
+              </button>
+            </div>
+
+            <!-- Input invisible para subir Excel -->
+            <input type="file" id="excel-file-input" accept=".xlsx, .xls, .csv" style="display:none;" />
+
+            <div>
+              <a href="#" class="link-template" id="link-download-template">
+                <span>⬇</span> Formato del Excel
+              </a>
+            </div>
+          </div>
+        </section>
+
+        <!-- SECCIÓN: ESTADO POR VENCIMIENTO -->
+        <section class="sidebar-section">
+          <div class="sidebar-section-title">ESTADO POR VENCIMIENTO</div>
+          
+          <div class="status-legend-list">
+            <!-- Vencido -->
+            <div class="status-legend-item" data-status="vencido">
+              <div class="legend-left">
+                <span class="legend-dot dot-vencido"></span>
+                <span>Vencido</span>
+              </div>
+              <span class="legend-count" id="count-vencido">58</span>
+            </div>
+
+            <!-- Crítico -->
+            <div class="status-legend-item" data-status="critico">
+              <div class="legend-left">
+                <span class="legend-dot dot-critico"></span>
+                <span>Crítico</span>
+              </div>
+              <span class="legend-count" id="count-critico">61</span>
+            </div>
+
+            <!-- Por vencer -->
+            <div class="status-legend-item" data-status="por_vencer">
+              <div class="legend-left">
+                <span class="legend-dot dot-por_vencer"></span>
+                <span>Por vencer</span>
+              </div>
+              <span class="legend-count" id="count-por_vencer">117</span>
+            </div>
+
+            <!-- Vigente -->
+            <div class="status-legend-item" data-status="vigente">
+              <div class="legend-left">
+                <span class="legend-dot dot-vigente"></span>
+                <span>Vigente</span>
+              </div>
+              <span class="legend-count" id="count-vigente">513</span>
+            </div>
+
+            <!-- Sin fecha -->
+            <div class="status-legend-item" data-status="sin_fecha">
+              <div class="legend-left">
+                <span class="legend-dot dot-sin_fecha"></span>
+                <span>Sin fecha</span>
+              </div>
+              <span class="legend-count" id="count-sin_fecha">126</span>
+            </div>
+
+            <!-- Vacío -->
+            <div class="status-legend-item" data-status="vacio">
+              <div class="legend-left">
+                <span class="legend-dot dot-vacio"></span>
+                <span>Vacío</span>
+              </div>
+              <span class="legend-count" id="count-vacio">333</span>
+            </div>
+          </div>
+
+          <!-- Botones de Acción de Alertas -->
+          <div class="alert-actions-row">
+            <button class="btn-alert-filter" id="btn-solo-alertas">
+              Solo alertas
+            </button>
+            <button class="btn-alert-filter active" id="btn-ver-todo">
+              Ver todo
+            </button>
+          </div>
+
+          <!-- Configuración de Umbrales de Días -->
+          <div class="threshold-inputs-group">
+            <div class="threshold-row">
+              <span class="threshold-label">Por vencer hasta (días):</span>
+              <input type="number" id="input-threshold-por-vencer" class="threshold-input" value="90" min="1" max="730" />
+            </div>
+            <div class="threshold-row">
+              <span class="threshold-label">Crítico hasta (días):</span>
+              <input type="number" id="input-threshold-critico" class="threshold-input" value="30" min="1" max="180" />
+            </div>
+          </div>
+        </section>
+
+        <!-- SECCIÓN: FILTRAR -->
+        <section class="sidebar-section">
+          <div class="sidebar-section-title">FILTRAR</div>
+          
+          <div class="filter-dropdown-group">
+            <div class="filter-field">
+              <label for="select-filter-pasillo">Pasillo</label>
+              <select id="select-filter-pasillo" class="sap-select">
+                <option value="all">Todos</option>
+                <option value="A">Pasillo A</option>
+                <option value="B">Pasillo B</option>
+                <option value="C">Pasillo C</option>
+                <option value="D">Pasillo D</option>
+                <option value="E">Pasillo E</option>
+                <option value="F">Pasillo F</option>
+                <option value="G">Pasillo G</option>
+                <option value="H">Pasillo H</option>
+                <option value="I">Pasillo I</option>
+                <option value="J">Pasillo J</option>
+              </select>
+            </div>
+
+            <div class="filter-field">
+              <label for="select-filter-nivel">Nivel</label>
+              <select id="select-filter-nivel" class="sap-select">
+                <option value="all">Todos</option>
+                <option value="1">Nivel 1</option>
+                <option value="2">Nivel 2</option>
+                <option value="3">Nivel 3</option>
+                <option value="4">Nivel 4</option>
+              </select>
+            </div>
+
+            <div class="filter-field">
+              <label for="search-input">Buscar producto, SKU, lote o ubicación</label>
+              <input type="text" id="search-input" class="sap-search-input" placeholder="Ej: aceite, SKU-1004, A-12..." />
+            </div>
+          </div>
+        </section>
+
+      </aside>
+
+      <!-- ======================================================================
+           Drawer Desplegable de Detalle de Nicho Seleccionado
+           ====================================================================== -->
+      <div class="niche-detail-drawer" id="niche-detail-drawer">
+        <div class="niche-header">
+          <div>
+            <div class="niche-title-label">NICHO</div>
+            <div class="niche-id-display" id="drawer-niche-id">J-08-5</div>
+            <div class="niche-coord-desc" id="drawer-niche-desc">Pasillo J · columna 8 · nivel 5</div>
+          </div>
+          <button class="btn-close-drawer" id="btn-close-niche-drawer" title="Cerrar detalle">✕</button>
+        </div>
+
+        <div id="drawer-items-list">
+          <!-- Las tarjetas de productos se inyectan dinámicamente -->
+        </div>
+      </div>
+
+    </main>
+
+  </div>
+
+  <!-- Scripts de la Aplicación -->
+  <script src="js/warehouse-data.js"></script>
+  <script src="js/excel-handler.js"></script>
+  <script src="js/warehouse-3d.js"></script>
+  <script src="js/joule-assistant.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

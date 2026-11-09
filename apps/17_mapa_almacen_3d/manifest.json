@@ -1,0 +1,55 @@
+{
+  "_version": "1.32.0",
+  "sap.app": {
+    "id": "corp.droid.wms.mapa3d",
+    "type": "application",
+    "i18n": "i18n/i18n.properties",
+    "applicationVersion": {
+      "version": "1.0.0"
+    },
+    "title": "SAP WMS - Gemelo Digital 3D de Almacén",
+    "description": "Visualización tridimensional de estanterías, semáforo de vencimientos, ocupación y control de inventario",
+    "tags": {
+      "keywords": [
+        "WMS",
+        "Warehouse",
+        "3D",
+        "Digital Twin",
+        "Almacén",
+        "SAP",
+        "Fiori"
+      ]
+    }
+  },
+  "sap.ui": {
+    "technology": "UI5",
+    "deviceTypes": {
+      "desktop": true,
+      "tablet": true,
+      "phone": false
+    },
+    "supportedThemes": [
+      "sap_horizon",
+      "sap_horizon_dark"
+    ]
+  },
+  "sap.ui5": {
+    "rootView": {
+      "viewName": "corp.droid.wms.mapa3d.view.App",
+      "type": "XML",
+      "async": true,
+      "id": "app"
+    },
+    "dependencies": {
+      "minUI5Version": "1.108.0",
+      "libs": {
+        "sap.m": {},
+        "sap.ui.core": {}
+      }
+    },
+    "contentDensities": {
+      "compact": true,
+      "cozy": false
+    }
+  }
+}
