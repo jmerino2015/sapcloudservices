@@ -272,4 +272,81 @@ Esta sub-aplicación implementa el estándar completo Fiori Horizon para back-of
 * **`RejectInvoiceDialog.fragment.xml`:**
   - Diálogo con selector de motivo estandarizado (Discrepancia en Precio, Error de RUC, Falta de Guía MIGO, Observación SUNAT SIRE) y campo de texto libre para notificación automática al proveedor.
 
+---
+
+## 9. Estándar de Tarjetas Multimedia y Banners en el Launchpad (Prevención de Duplicación Visual)
+
+Toda tarjeta ancha de tipo multimedia (`tileType: "media"` o clase `.fiori-wms-media-tile`) debe seguir estas directrices:
+
+### 9.1. Especificaciones de Imagen de Banner
+* **Dimensiones Master:** Exactamente `728x360` píxeles, formato JPEG RGB con compresión Web optimizada (calidad 85-90, peso entre 60KB y 95KB).
+* **Contenedor CSS:**
+  ```css
+  .fiori-wms-media-tile {
+    width: var(--sapTile_WideWidth); /* 352px */
+    min-width: var(--sapTile_WideWidth);
+    height: var(--sapTile_Height);    /* 176px */
+    border-top: 3px solid #0d9488;
+  }
+  .wms-media-banner-wrap {
+    width: 100%;
+    height: 104px;
+    overflow: hidden;
+  }
+  .wms-media-banner-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.3s ease;
+  }
+  .fiori-wms-media-tile:hover .wms-media-banner-img {
+    transform: scale(1.03);
+  }
+  ```
+* **Insignia Funcional (`.wms-media-badge`):** Posicionada en `top: 8px; left: 10px;`, con fondo traslúcido, icono corporativo y texto en mayúsculas sobrias (ej. `SAP WM / S/4HANA`, `SAP TM / S/4HANA`, `SAP WMS 3D / S/4HANA`).
+
+### 9.2. Catálogo Oficial de Banners (Cero Duplicación de Imágenes)
+Para preservar la distinción operativa entre módulos afines en el Launchpad:
+1. `img/wms-banner-opt.jpg`: Automatización de almacenes, racks de almacenamiento y robótica AGV (Módulo `05: SAP WMS - SRM FIORI`).
+2. `img/transporte-terrestre.jpg`: Transporte pesado en carretera y monitoreo de flota (Módulo `15: Gestión de Transporte TM`).
+3. `img/almacen-logistica-opt.jpg`: Centro de distribución panorámico multinivel con estanterías y gavetas de picking (Módulo `17: Mapa 3D de Almacén`).
+4. `img/almacen-forklift-opt.jpg`: Montacargas reach-truck en pasillo de recepción/entrada con nichos 111 y 112 (Módulo de Entrada de Mercancías / Putaway).
+
+---
+
+## 10. Gemelos Digitales 3D e Integración WebGL Three.js en SAP Fiori Horizon (`apps/17_mapa_almacen_3d`)
+
+Esta aplicación representa la vanguardia visual en gemelos digitales para centros de distribución:
+
+### 10.1. Arquitectura de Escena 3D
+* **Motor WebGL:** `Three.js` (r128) con `OrbitControls` empaquetados localmente en `assets/` para operación 100% offline.
+* **Modelo Espacial de Almacén:**
+  - 10 pasillos (`Pasillo A` a `Pasillo J`) con letreros industriales en cabecera de rack.
+  - 26 columnas y 4 niveles por estantería (1.200 nichos volumétricos / 2.400 paletas).
+  - Zona de **Stage de 12 metros** con demarcación de seguridad amarilla.
+  - 3 muelles de Recepción (`R1`, `R2`, `R3`) y 3 muelles de Despacho (`D1`, `D2`, `D3`).
+
+### 10.2. Modos de Cámara Fiori Horizon
+La interfaz proporciona botones de cambio de vista tanto en el Shell Bar como en una barra flotante (`.floating-views-bar`):
+* `General`: Perspectiva isométrica orbital con rotación libre y zoom suave.
+* `Planta`: Vista cenital cenital 2D/3D tipo plano de ingeniería arquitectónica.
+* `Stage y puertas`: Enfoque frontal a muelles de carga, descarga y zona de entrada.
+* `Entrar al pasillo`: Vista en primera persona dentro del pasillo con selector rápido de pasillos A-J.
+
+### 10.3. Semáforo Dinámico de Vencimiento
+Cada paleta/nicho proyecta un material Three.js coloreado según su estado de expiración:
+* 🔴 **Vencido** (`#bb0000`): Lote con fecha de vencimiento superada.
+* 🟠 **Crítico** (`#e06a3b`): Vencimiento $\le$ 30 días.
+* 🟡 **Por Vencer** (`#e28000`): Vencimiento $\le$ 90 días.
+* 🟢 **Vigente** (`#107e3e`): Estado óptimo de rotación.
+* 🔵 **Sin Fecha** (`#0a6ed1`): Repuestos, ferretería y suministros generales.
+* ⚪ **Vacío** (`rgba(255, 255, 255, 0.25)`): Nichos transparentes listos para almacenar paletas de entrada.
+
+### 10.4. Interactividad & Ficha Transaccional
+* **Raycasting:** Detección en tiempo real del puntero (`pointermove`), resaltando el nicho apuntado con borde emisivo azul (`emissive: 0x0070f2`) y mostrando un tooltip Fiori flotante.
+* **Panel de Nicho:** Diálogo lateral deslizante con SKU, lote, fecha de vencimiento, días restantes y botones para disparar acciones RAP: `Bloquear Lote en SAP S/4HANA`, `Crear OT de Traslado` y `Asignar Paleta de Entrada (MIGO)`.
+* **Procesamiento Excel Offline:** Integración con `SheetJS` (`xlsx.full.min.js`) para carga directa de plantillas Excel reales y descarga del layout actual del almacén.
+
+
 

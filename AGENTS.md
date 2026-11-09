@@ -83,7 +83,7 @@ flowchart LR
 
 ---
 
-## 📦 REGISTRO DE MÓDULOS DEL PORTAL (11 APLICACIONES CLEAN CORE)
+## 📦 REGISTRO DE MÓDULOS DEL PORTAL (12 APLICACIONES CLEAN CORE)
 
 | ID | Nombre del Módulo | Tipo de Floorplan | Backend / RAP Service | Enfoque Operativo |
 | :--- | :--- | :--- | :--- | :--- |
@@ -98,5 +98,7 @@ flowchart LR
 | **08** | Maestro de Clientes | SAPUI5 Freestyle / TNT | `ZUI_CUSTOMER_O4` / `/api/customers` | Gestión integral de interlocutores comerciales SD |
 | **09** | Pedidos de Venta | SAPUI5 Freestyle / TNT | `ZUI_SALES_ORDER_O4` / `/api/sales-orders` | Creación y monitoreo de órdenes comerciales VA01 |
 | **10** | Optimización de Licencias FUE | Executive Dashboard | `ZUI_FUE_OPTIMIZATION_O4` / `/api/fue` | Análisis de licencias S/4HANA y perfiles de uso |
+| **17** | **Mapa 3D de Almacén** | **WebGL Three.js / Fiori Horizon** | `ZUI_WMS_3D_O4` / `/api/wms3d/*` | **Gemelo digital 3D: 1.200 nichos, semáforo de vencimiento, muelles y Joule AI** |
+
 
 

@@ -257,3 +257,55 @@ annotate view C_SupplierInvoiceAccounting with
 }
 ```
 
+---
+
+## 7. Caso de Referencia Clean Core: Modelo VDM Gemelo Digital 3D de Almacén (`R_WarehouseNiche3D`)
+
+### 7.1. Entidad Espacial Base (`R_WarehouseNiche3D`)
+Modela las coordenadas volumétricas, ocupación de estanterías y fechas de vencimiento de lotes para el renderizado WebGL 3D:
+
+```sql
+@AccessControl.authorizationCheck: #CHECK
+@EndUserText.label: 'Nicho Volumétrico de Almacén 3D'
+define root view entity R_WarehouseNiche3D
+  as select from ztb_wms_niches_3d
+  association [0..1] to I_Material as _Material on $projection.MaterialID = _Material.Material
+{
+  key niche_uuid        as NicheUUID,
+      niche_code        as NicheCode,        // Ej: 'H-01-3'
+      aisle_id          as AisleID,          // Pasillos 'A' a 'J'
+      column_idx        as ColumnIndex,      // 1 a 26
+      level_idx         as LevelIndex,       // 1 a 4
+      pallet_pos        as PalletPosition,   // 1 o 2 (hasta 2.400 paletas)
+      zone_type         as ZoneType,         // 'RACK', 'STAGE_12M', 'DOCK_RECEPTION', 'DOCK_DISPATCH'
+      dock_id           as DockID,           // 'R1'-'R3', 'D1'-'D3'
+
+      material_id       as MaterialID,
+      material_desc     as MaterialDesc,
+      batch_number      as BatchNumber,
+      
+      @Semantics.quantity.unitOfMeasure: 'BaseUnit'
+      stock_qty         as StockQty,
+      base_unit         as BaseUnit,
+
+      // Semáforo de Vencimiento de Lotes
+      @Semantics.businessDate.at: true
+      expiration_date   as ExpirationDate,
+      days_to_expiry    as DaysToExpiry,
+      traffic_light     as TrafficLightStatus, // 'EXPIRED', 'CRITICAL', 'WARNING', 'ACTIVE', 'NO_EXPIRY', 'EMPTY'
+
+      // Auditoría Técnica Clean Core
+      @Semantics.systemDateTime.localInstanceLastChangedAt: true
+      local_last_changed_at as LocalLastChangedAt,
+
+      _Material
+}
+```
+
+### 7.2. Semántica de DataPoints para Consola 3D
+* **`KpiOccupancy3D` (Verde `#107e3e`):** Porcentaje de ocupación sobre 1.200 nichos / 2.400 paletas.
+* **`KpiExpiredBatches` (Rojo `#bb0000` / Criticality #1):** Nichos con lote vencido expirado.
+* **`KpiCriticalBatches` (Naranja `#e06a3b` / Criticality #2):** Nichos que vencen dentro de los 30 días.
+* **`KpiEmptyNiches` (Slate `#1e293b`):** Nichos transparentes vacíos listos para putaway MIGO.
+
+

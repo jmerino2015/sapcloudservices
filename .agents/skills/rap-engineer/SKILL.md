@@ -244,4 +244,69 @@ etag master LocalLastChangedAt
   - `POST /api/accounting/invoices/:id/reject`: Rechazo con motivo.
   - `GET /api/accounting/summary`: Agregación de KPIs para la consola ejecutiva.
 
+---
+
+## 6. Caso de Referencia Clean Core: Lógica Transaccional de Gemelo Digital 3D de Almacén (`WMS3D`)
+
+### 6.1. Definición de Comportamiento (`R_WarehouseNiche3D.bdef`)
+```abap
+managed implementation in class zbp_r_wms_niche_3d unique;
+strict ( 2 );
+with draft;
+
+define behavior for R_WarehouseNiche3D alias Nicho
+persistent table ztb_wms_niches_3d
+draft table ztb_wms_niche_3d_d
+lock master
+total etag LocalLastChangedAt
+authorization master ( instance )
+etag master LocalLastChangedAt
+{
+  create;
+  update;
+  delete;
+
+  field ( numbering : managed, readonly ) NicheUUID;
+  field ( readonly ) NicheCode, AisleID, ColumnIndex, LevelIndex;
+
+  // Acciones Transaccionales para Gestión 3D
+  action ( features : instance ) blockBatchInSAP result [1] $self;
+  action ( features : instance ) createTransferOrder
+    parameter D_CreateTOParams result [1] $self;
+  action ( features : instance ) assignInboundPallet
+    parameter D_AssignPalletParams result [1] $self;
+
+  // Determinación de Semáforo de Vencimiento
+  determination calculateTrafficLight on modify { field ExpirationDate; }
+
+  draft action Edit;
+  draft action Activate optimized;
+  draft action Discard;
+  draft action Resume;
+  draft determine action Prepare {
+    determination calculateTrafficLight;
+  }
+}
+```
+
+### 6.2. Métodos del Behavior Pool (`LCL_HANDLER`)
+* **`blockBatchInSAP`:** Bloquea inmediatamente el lote vencido en la tabla de stocks SAP (`MCHB-CLABS` a `MCHB-CSPEM`), protegiendo la salida de mercancías o picking.
+* **`createTransferOrder`:** Genera una Orden de Transporte (OT) EML con origen en el nicho seleccionado y destino en zona de cuarentena o muelle de despacho.
+* **`assignInboundPallet`:** Asigna la paleta recibida por MIGO en el nicho vacío seleccionado verificando dimensiones de altura y peso máximo.
+* **`calculateTrafficLight`:** Compara la fecha actual con la fecha de expiración:
+  $$\text{Días Restantes} = \text{ExpirationDate} - \text{CurrentDate}$$
+  - $\le 0$: `'EXPIRED'` (Rojo `#bb0000`).
+  - $1 \dots 30$: `'CRITICAL'` (Naranja `#e06a3b`).
+  - $31 \dots 90$: `'WARNING'` (Amarillo `#e28000`).
+  - $> 90$: `'ACTIVE'` (Verde `#107e3e`).
+  - Sin fecha: `'NO_EXPIRY'` (Azul `#0a6ed1`).
+  - Stock 0: `'EMPTY'` (Gris translúcido).
+
+### 6.3. Endpoints REST Cloud Equivalentes
+- `GET /api/wms3d/niches`: Retorna el mapa completo de los 1.200 nichos con su estado volumétrico y semáforo.
+- `POST /api/wms3d/niches/:id/block`: Bloqueo preventivo de lote.
+- `POST /api/wms3d/niches/:id/transfer`: Creación de OT de traslado.
+- `POST /api/wms3d/upload-excel`: Ingesta masiva y reconciliación de inventarios con SheetJS.
+
+
 

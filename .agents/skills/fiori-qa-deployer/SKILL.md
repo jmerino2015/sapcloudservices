@@ -188,6 +188,12 @@ Para el pase a producción, documentar y registrar los siguientes parámetros en
 | **SAPUI5 Component ID (AP)**| `com.empresa.portalproveedorescontabilidad` | ID raíz de la aplicación de contabilidad. |
 | **Business Catalog (AP)** | `SAP_BR_AP_ACCOUNTANT_BC` | Catálogo de Especialista en Cuentas por Pagar. |
 | **Business Role (AP)** | `Z_BR_AP_ACCOUNTANT` | Rol de autorizaciones PFCG para equipo contable. |
+| **Semantic Object (3D)** | `Warehouse3D` | Mapa 3D de Almacén — Gemelo Digital & Semáforo. |
+| **Action (3D)** | `manage` / `display` | Visualización volumétrica de nichos y control de lotes. |
+| **Application Type (3D)** | `WebGL / HTML5 Fiori App` | Three.js con OrbitControls y controles Horizon. |
+| **SAPUI5 Component ID (3D)**| `com.empresa.mapaalmacen3d` | ID raíz de la aplicación del Gemelo Digital 3D. |
+| **Business Catalog (3D)** | `SAP_BR_WAREHOUSE_MGR_BC` | Catálogo de Jefe de Centro de Distribución y Almacenes. |
+| **Business Role (3D)** | `Z_BR_WAREHOUSE_3D_LEAD` | Rol de autorizaciones PFCG para monitoreo volumétrico. |
 
 ---
 
@@ -273,4 +279,19 @@ Cuando se realicen nuevos desarrollos, modificaciones de tablas o adición de da
 6. **Auditoría Post-Despliegue:**
    - Verificar estado del conector: `GET https://sapcloudservices.onrender.com/api/db/status`
    - Verificar que los nuevos registros aparezcan en los endpoints respectivos (`/api/gr`, `/api/gi`, etc.).
+
+---
+
+## 7. Protocolo de Auditoría y Verificación para Aplicaciones WebGL / 3D en Fiori
+
+Para autorizar el despliegue de componentes 3D intensivos (como `apps/17_mapa_almacen_3d`):
+
+1. **Gestión de Memoria y Ciclo de Vida WebGL:**
+   - Todo objeto de escena `THREE.Mesh`, geometría `THREE.BufferGeometry` y material `THREE.Material` debe liberarse explícitamente (`dispose()`) al cerrar el modal iframe del Launchpad para prevenir fugas de memoria en la GPU.
+2. **Operación 100% Offline (Zero CDN Leakage):**
+   - Librerías core (`Three.js`, `OrbitControls.js`, `SheetJS xlsx.full.min.js`) deben estar empaquetadas en `assets/` local para asegurar compatibilidad en redes bancarias o industriales con cortafuegos estrictos.
+3. **Auditoría Visual de Banners Multimedia (Cero Duplicados):**
+   - Verificar en `js/apps-config.js` que ninguna tarjeta comparta imagen con otra de la misma categoría temática.
+   - Todo banner debe cumplir las dimensiones exactas `728x360` JPEG con compresión $\le 95\text{ KB}$ para mantener tiempos de carga sub-segundo en el Launchpad.
+
 
