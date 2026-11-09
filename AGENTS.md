@@ -1,6 +1,6 @@
 # ECOSYSTEM FIORI & RAP CLEAN CORE — AGENT TEAM & GUIDELINES
 
-Este proyecto cuenta con un equipo especializado de 4 agentes de IA para el ciclo de vida completo de desarrollo de aplicaciones SAP Fiori bajo la arquitectura **ABAP RESTful Application Programming Model (RAP)** y lineamientos estrictos de **Clean Core** (SAP S/4HANA y SAP BTP).
+Este proyecto cuenta con un equipo especializado de 5 agentes de IA para el ciclo de vida completo de desarrollo, gobernanza y comercialización de aplicaciones SAP Fiori bajo la arquitectura **ABAP RESTful Application Programming Model (RAP)** y lineamientos estrictos de **Clean Core** (SAP S/4HANA y SAP BTP).
 
 ---
 
@@ -8,6 +8,7 @@ Este proyecto cuenta con un equipo especializado de 4 agentes de IA para el cicl
 
 | Agente | ID / Invocación | Rol Principal | Enfoque Clean Core & Estándar Fiori Horizon |
 | :--- | :--- | :--- | :--- |
+| **Fiori-Functional-Architect** | `fiori_functional_architect` | Alcance Funcional & Detalle Comercial | FSD / BBP, propuestas técnico-comerciales, ROI, SAP Activate (Gantt), matriz de entregables y generación Word (.docx) / Markdown |
 | **CDS-Architect** | `cds_architect` | Modelador de Datos Semánticos & VDM | CDS View Entities (`R_*`, `I_*`, `C_*`), MDE desacopladas, Push-down HANA, DataPoints para franja analítica KPI |
 | **RAP-Engineer** | `rap_engineer` | Lógica Transaccional & Servicios RAP | BDEF con Draft, Behavior Pools ABAP Cloud, EML, cálculo de KPIs, OData V4 |
 | **Fiori-UI-Expert** | `fiori_ui_expert` | Experiencia de Usuario & Frontend | Fiori Elements, SAPUI5 Freestyle, `sap.tnt.SideNavigation`, franja cromática 4 KPIs, Shell Bar unificado, `manifest.json` |
@@ -19,10 +20,18 @@ Este proyecto cuenta con un equipo especializado de 4 agentes de IA para el cicl
 
 ```mermaid
 flowchart LR
-    A["1. cds_architect<br/>(CDS View Entities + MDE + DataPoints)"] --> B["2. rap_engineer<br/>(BDEF + EML + OData V4 + KPIs)"]
-    B --> C["3. fiori_ui_expert<br/>(SideNavigation + 4 KPIs + Shell + Views)"]
-    C --> D["4. fiori_qa_deployer<br/>(ATC + ABAP Unit + OPA5 + UX Audit)"]
+    F1["0. fiori_functional_architect<br/>(Alcance Funcional FSD / BBP)"] --> A["1. cds_architect<br/>(CDS View Entities + MDE)"]
+    A --> B["2. rap_engineer<br/>(BDEF + EML + OData V4)"]
+    B --> C["3. fiori_ui_expert<br/>(SideNav + 4 KPIs + Views)"]
+    C --> D["4. fiori_qa_deployer<br/>(ATC + Unit + OPA5 + FLP)"]
+    D --> F2["5. fiori_functional_architect<br/>(Propuesta Comercial & Doc .docx)"]
 ```
+
+0. **Paso 0: `fiori_functional_architect` (Definición de Alcance)**
+   - Elabora el Documento de Alcance Funcional (*Functional Specification Document* / *Business Blueprint*).
+   - Mapea los procesos de negocio estándar SAP (P2P, O2C, WMS, TM, FI-AP) y diagramas Mermaid.
+   - Define matrices de roles y perfiles de autorización PFCG.
+   - Realiza el handoff funcional hacia `cds_architect`.
 
 1. **Paso 1: `cds_architect`**
    - Modela la jerarquía VDM: `R_` (Base/Root con persistencia), `I_` (Interface) y `C_` (Consumption/Projection transaccional).
@@ -61,6 +70,14 @@ flowchart LR
    - Diseña pruebas unitarias aisladas (`ABAP Unit` con test doubles) y pruebas de interfaz (`OPA5 / QUnit`).
    - Define el catálogo de negocio, Semantic Objects y Target Mappings para el SAP Fiori Launchpad.
    - Establece la gobernanza de transporte y despliegue a SAP BTP / S/4HANA.
+   - Realiza el handoff de cierre hacia `fiori_functional_architect`.
+
+5. **Paso 5: `fiori_functional_architect` (Cierre Comercial & Entregables)**
+   - Elabora la Propuesta Técnico-Comercial formal para clientes y stakeholders C-Level.
+   - Calcula el ROI, ahorro en horas-hombre y justificación de negocio.
+   - Estructura el cronograma de implementación SAP Activate con diagrama Gantt e hitos de facturación (H1-H5).
+   - Compila la documentación final y genera el archivo corporativo en Word (`.docx`) y Markdown (.md).
+
 
 ---
 
