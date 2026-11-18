@@ -394,33 +394,6 @@ window.SAP_APPS_CONFIG = [
     },
     tags: ["Mapa 3D", "Almacén", "Gemelo Digital", "WMS", "Three.js", "Vencimiento", "Lotes", "Semáforo", "Stock", "Paletas", "Joule AI"],
     status: "Active"
-  },
-  {
-    id: "18",
-    code: "COMEX01",
-    folder: "18_monitor_integracion_rokys",
-    title: "Monitor Grupo Rokys Integracion - Balanza",
-    subtitle: "Integración Balanza - SAP & COMEX Logística",
-    description: "Monitor empresarial para importaciones de Grupo Roky's S.A.C. (Soc. 1100): integración con operador Beagle, trazabilidad de B/Ls marítimos, control de contenedores, canales aduaneros SUNAT (DAM) y alertas de sobreestadía en APM Terminals y DP World.",
-    category: "operaciones",
-    categoryLabel: "Operaciones & Almacén",
-    sapIcon: "sap-icon://shipping-status",
-    faIcon: "boxes-packing",
-    iconBg: "linear-gradient(135deg, #d92525, #0854a0)",
-    badge: "SAP COMEX / ROKYS",
-    badgeType: "primary",
-    sapModule: "COMEX",
-    tileType: "media",
-    bannerImg: "img/transporte-terrestre.jpg",
-    badgeText: "COMEX / ROKY'S 1100",
-    path: "apps/18_monitor_integracion_rokys/index.html",
-    kpi: {
-      value: "89.3%",
-      label: "Levante Conforme",
-      trend: "up"
-    },
-    tags: ["Rokys", "Grupo Rokys", "COMEX", "Monitor Integración", "Beagle", "Importaciones", "Aduanas", "DAM", "SUNAT", "Sobreestadía", "APM Terminals", "DP World", "Contenedores", "Clean Core"],
-    status: "Active"
   }
 ];
 
