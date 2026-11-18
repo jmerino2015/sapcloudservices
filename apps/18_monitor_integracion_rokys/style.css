@@ -1,0 +1,1154 @@
+/**
+ * SAP Fiori Horizon Stylesheet — Monitor de Integración COMEX Grupo Roky's
+ * Standardized Fiori Design System & Clean Core Architecture
+ */
+
+:root {
+  --sapShellBg: #1d2d3e;
+  --sapPageBg: #f5f6f7;
+  --sapCardBg: #ffffff;
+  --sapTextPrimary: #1e293b;
+  --sapTextSecondary: #64748b;
+  --sapBrand: #0a6ed1;
+  --sapBrandHover: #0854a0;
+  --sapPositive: #107e3e;
+  --sapPositiveBg: #edf8f2;
+  --sapNegative: #bb0000;
+  --sapNegativeBg: #fef0f0;
+  --sapWarning: #e06a3b;
+  --sapWarningBg: #fef4ee;
+  --sapBorder: #eaedf1;
+  --sapBorderLight: #f1f5f9;
+  --sapTableZebra: #fbfcfd;
+  --sapFontFamily: 'Inter', '72', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --rokysRed: #d92525;
+  --rokysGold: #f59e0b;
+}
+
+[data-theme="dark"], body.dark-mode {
+  --sapShellBg: #141b24;
+  --sapPageBg: #0f172a;
+  --sapCardBg: #1e293b;
+  --sapTextPrimary: #f8fafc;
+  --sapTextSecondary: #94a3b8;
+  --sapBrand: #38bdf8;
+  --sapBrandHover: #0284c7;
+  --sapPositive: #22c55e;
+  --sapPositiveBg: #14532d;
+  --sapNegative: #ef4444;
+  --sapNegativeBg: #7f1d1d;
+  --sapWarning: #fb923c;
+  --sapWarningBg: #7c2d12;
+  --sapBorder: #334155;
+  --sapBorderLight: #1e293b;
+  --sapTableZebra: #182234;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: var(--sapFontFamily);
+  background-color: var(--sapPageBg);
+  color: var(--sapTextPrimary);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow-x: hidden;
+  line-height: 1.45;
+}
+
+/* Ocultar shell bar si corre dentro del iframe modal */
+body.in-iframe #sap-shell,
+body.in-iframe .sap-shell {
+  display: none !important;
+}
+
+body.in-iframe .app-wrapper {
+  margin-top: 0 !important;
+  height: 100vh !important;
+}
+
+/* ── Top Shell Bar (#1d2d3e, Logo SAP, < Home, Search, Joule AI) ── */
+.sap-shell {
+  background-color: var(--sapShellBg);
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 16px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.25);
+}
+
+.shell-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.shell-logo-area {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.sap-logo-img {
+  height: 24px;
+  width: auto;
+}
+
+.shell-nav-home-btn {
+  background: transparent;
+  border: none;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  font-family: var(--sapFontFamily);
+  cursor: pointer;
+  padding: 4px 10px;
+  border-radius: 4px;
+  transition: background 0.15s ease;
+}
+
+.shell-nav-home-btn:hover {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.shell-app-title {
+  color: #ffffff;
+  font-size: 13.5px;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+  margin-left: 6px;
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.shell-title-badge {
+  background: #0a6ed1;
+  color: #ffffff;
+  font-size: 10px;
+  font-weight: 800;
+  padding: 2px 7px;
+  border-radius: 4px;
+  letter-spacing: 0.5px;
+}
+
+.shell-rokys-badge {
+  background: #d92525;
+  color: #ffffff;
+  font-size: 10px;
+  font-weight: 800;
+  padding: 2px 7px;
+  border-radius: 4px;
+}
+
+.shell-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.shell-search-box {
+  position: relative;
+  width: 240px;
+}
+
+.shell-search-box input {
+  width: 100%;
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  border-radius: 4px;
+  padding: 5px 30px 5px 12px;
+  color: #ffffff;
+  font-size: 12.5px;
+  font-family: var(--sapFontFamily);
+  outline: none;
+  transition: all 0.2s;
+}
+
+.shell-search-box input::placeholder {
+  color: rgba(255, 255, 255, 0.65);
+}
+
+.shell-search-box input:focus {
+  background: rgba(255, 255, 255, 0.22);
+  border-color: #ffffff;
+}
+
+.shell-search-box i {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 12px;
+  pointer-events: none;
+}
+
+.shell-btn {
+  background: transparent;
+  border: none;
+  color: #ffffff;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  transition: background 0.15s ease;
+  position: relative;
+}
+
+.shell-btn:hover {
+  background: rgba(255,255,255,0.18);
+}
+
+.shell-btn.joule-btn {
+  background: linear-gradient(135deg, #6366f1, #0a6ed1);
+  box-shadow: 0 0 10px rgba(99, 102, 241, 0.4);
+}
+
+.shell-bell-badge {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  background: #bb0000;
+  color: white;
+  font-size: 9px;
+  font-weight: 700;
+  min-width: 15px;
+  height: 15px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 3px;
+}
+
+.shell-avatar {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: #0854a0;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+  border: 1.5px solid rgba(255,255,255,0.5);
+}
+
+/* ── Main Application Flex Wrapper ── */
+.app-wrapper {
+  display: flex;
+  height: calc(100vh - 44px);
+  margin-top: 44px;
+  overflow: hidden;
+  background: var(--sapPageBg);
+  width: 100%;
+}
+
+/* ── Left Sidebar (sap.tnt.SideNavigation: 230px, White, Slate outline icons, blue active box) ── */
+.sidebar {
+  width: 230px;
+  min-width: 230px;
+  background: var(--sapCardBg);
+  color: var(--sapTextPrimary);
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  border-right: 1px solid var(--sapBorder);
+  transition: width 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 50;
+  user-select: none;
+  flex-shrink: 0;
+  overflow: hidden;
+}
+
+.sidebar-nav-scroll {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 10px 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.sidebar-nav-scroll::-webkit-scrollbar { width: 4px; }
+.sidebar-nav-scroll::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 2px; }
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 38px;
+  padding: 0 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  color: var(--sapTextPrimary);
+  font-size: 13.5px;
+  font-weight: 500;
+  transition: all 0.15s ease;
+  border: 1.5px solid transparent;
+  text-decoration: none;
+  position: relative;
+}
+
+.nav-item:hover {
+  background: #f1f5f9;
+  color: #0f172a;
+}
+
+[data-theme="dark"] .nav-item:hover,
+body.dark-mode .nav-item:hover {
+  background: #283344;
+  color: #ffffff;
+}
+
+/* ACTIVE ITEM: Recuadro azul distintivo Horizon */
+.nav-item.active {
+  border: 1.5px solid #0a6ed1 !important;
+  border-radius: 6px;
+  background-color: var(--sapCardBg) !important;
+  color: #0a6ed1 !important;
+  font-weight: 600;
+  box-shadow: 0 1px 3px rgba(10, 110, 209, 0.08);
+}
+
+[data-theme="dark"] .nav-item.active,
+body.dark-mode .nav-item.active {
+  border-color: #38bdf8 !important;
+  color: #38bdf8 !important;
+}
+
+.nav-item-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  overflow: hidden;
+  flex: 1;
+}
+
+.nav-item-icon {
+  font-size: 15px;
+  color: #475569;
+  width: 18px;
+  text-align: center;
+  flex-shrink: 0;
+  transition: color 0.15s ease;
+}
+
+.nav-item:hover .nav-item-icon,
+.nav-item.active .nav-item-icon {
+  color: #0a6ed1;
+}
+
+[data-theme="dark"] .nav-item:hover .nav-item-icon,
+[data-theme="dark"] .nav-item.active .nav-item-icon {
+  color: #38bdf8;
+}
+
+.nav-item-text {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  flex: 1;
+}
+
+.nav-item-right {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+.nav-badge-pill {
+  font-size: 11px;
+  font-weight: 700;
+  padding: 1px 6px;
+  border-radius: 10px;
+  background: #f1f5f9;
+  color: #475569;
+}
+
+.nav-badge-pill.warning {
+  background: #fef4ee;
+  color: #e06a3b;
+}
+
+.nav-pipe {
+  color: #cbd5e1;
+  font-size: 12px;
+  font-weight: 300;
+}
+
+.nav-chevron {
+  font-size: 11px;
+  color: #64748b;
+  transition: transform 0.2s ease;
+}
+
+.nav-group-header {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--sapTextSecondary);
+  padding: 12px 10px 4px 10px;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+.sidebar-fixed-bottom {
+  border-top: 1px solid var(--sapBorder);
+  padding: 6px 8px;
+  background: var(--sapCardBg);
+  flex-shrink: 0;
+  margin-top: auto;
+}
+
+/* ── Main Workspace Area ── */
+.main-pane {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 20px 24px 40px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* ── Header Title & Subtitle Area ── */
+.view-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: -4px;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.view-header-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--sapTextPrimary);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.view-header-subtitle {
+  font-size: 12.5px;
+  color: var(--sapTextSecondary);
+  margin-top: 2px;
+}
+
+.view-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.btn-fiori {
+  padding: 6px 14px;
+  border-radius: 6px;
+  font-size: 12.5px;
+  font-weight: 600;
+  font-family: var(--sapFontFamily);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.15s ease;
+  border: 1px solid transparent;
+}
+
+.btn-fiori-primary {
+  background: #0a6ed1;
+  color: #ffffff;
+  border-color: #0a6ed1;
+}
+.btn-fiori-primary:hover { background: #0854a0; }
+
+.btn-fiori-ghost {
+  background: var(--sapCardBg);
+  color: var(--sapTextPrimary);
+  border-color: var(--sapBorder);
+}
+.btn-fiori-ghost:hover { background: #f1f5f9; }
+
+.btn-fiori-positive {
+  background: #107e3e;
+  color: #ffffff;
+}
+.btn-fiori-positive:hover { background: #0c6130; }
+
+.btn-fiori-beagle {
+  background: #0854a0;
+  color: #ffffff;
+  border-color: #0a6ed1;
+  box-shadow: 0 1px 3px rgba(8, 84, 160, 0.2);
+}
+.btn-fiori-beagle:hover {
+  background: #053b70;
+}
+
+/* ── Franja Superior de 4 Tarjetas KPI (Infografía Cromática Unificada) ── */
+.kpi-strip {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 16px;
+}
+
+.kpi-card {
+  background: var(--sapCardBg);
+  border: 1px solid var(--sapBorder);
+  border-radius: 12px;
+  padding: 16px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 105px;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.kpi-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+}
+
+.kpi-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.kpi-title {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--sapTextSecondary);
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+}
+
+.kpi-icon-wrap {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+}
+
+.kpi-bottom {
+  margin-top: 10px;
+}
+
+.kpi-value {
+  font-size: 26px;
+  font-weight: 800;
+  line-height: 1.1;
+  font-family: var(--sapFontFamily);
+}
+
+.kpi-subtext {
+  font-size: 11.5px;
+  color: var(--sapTextSecondary);
+  margin-top: 4px;
+}
+
+/* Franja cromática oficial de 4 KPIs */
+/* KPI 1: Naranja/Coral (#e06a3b) — Pendientes / Tránsito Activo */
+.kpi-card.kpi-pending .kpi-value { color: #e06a3b; }
+.kpi-card.kpi-pending .kpi-icon-wrap { background: #fef4ee; color: #e06a3b; }
+
+/* KPI 2: Dark Slate (#1e293b) — Volumen Total Base Instalada */
+.kpi-card.kpi-volume .kpi-value { color: #1e293b; }
+.kpi-card.kpi-volume .kpi-icon-wrap { background: #f1f5f9; color: #1e293b; }
+[data-theme="dark"] .kpi-card.kpi-volume .kpi-value { color: #f8fafc; }
+[data-theme="dark"] .kpi-card.kpi-volume .kpi-icon-wrap { background: #334155; color: #38bdf8; }
+
+/* KPI 3: Verde (#107e3e) — Cumplimiento / Conforme */
+.kpi-card.kpi-compliance .kpi-value { color: #107e3e; }
+.kpi-card.kpi-compliance .kpi-icon-wrap { background: #edf8f2; color: #107e3e; }
+
+/* KPI 4: Naranja/Coral / Rojo (#e06a3b / #bb0000) — Alertas de Sobreestadía / Canal Rojo */
+.kpi-card.kpi-critical .kpi-value { color: #bb0000; }
+.kpi-card.kpi-critical .kpi-icon-wrap { background: #fef0f0; color: #bb0000; }
+
+/* ── Smart Filter Bar ── */
+.filter-card {
+  background: var(--sapCardBg);
+  border: 1px solid var(--sapBorder);
+  border-radius: 12px;
+  padding: 16px 20px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.filter-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+  gap: 12px;
+}
+
+.filter-item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.filter-label {
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--sapTextSecondary);
+}
+
+.filter-input, .filter-select {
+  height: 34px;
+  border: 1px solid var(--sapBorder);
+  border-radius: 6px;
+  padding: 0 10px;
+  font-size: 12.5px;
+  color: var(--sapTextPrimary);
+  background: var(--sapCardBg);
+  outline: none;
+  font-family: var(--sapFontFamily);
+  transition: border-color 0.15s ease;
+}
+
+.filter-input:focus, .filter-select:focus {
+  border-color: #0a6ed1;
+  box-shadow: 0 0 0 2px rgba(10, 110, 209, 0.15);
+}
+
+.filter-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 8px;
+  border-top: 1px solid var(--sapBorderLight);
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.filter-actions-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* ── Content Table Card ── */
+.table-card {
+  background: var(--sapCardBg);
+  border: 1px solid var(--sapBorder);
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
+  display: flex;
+  flex-direction: column;
+}
+
+.table-toolbar {
+  padding: 12px 18px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--sapBorder);
+  background: var(--sapCardBg);
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.table-title {
+  font-size: 14.5px;
+  font-weight: 700;
+  color: var(--sapTextPrimary);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.table-count-badge {
+  font-size: 11.5px;
+  font-weight: 600;
+  background: #f1f5f9;
+  color: #475569;
+  padding: 2px 8px;
+  border-radius: 10px;
+}
+
+.table-toolbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.table-responsive-wrap {
+  overflow-x: auto;
+  width: 100%;
+}
+
+.table-responsive-wrap::-webkit-scrollbar { height: 8px; }
+.table-responsive-wrap::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+
+.fiori-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+  text-align: left;
+  white-space: nowrap;
+}
+
+.fiori-table thead th {
+  background: #f8fafc;
+  color: #475569;
+  font-weight: 700;
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--sapBorder);
+  user-select: none;
+  font-size: 11.5px;
+  letter-spacing: 0.2px;
+}
+
+[data-theme="dark"] .fiori-table thead th {
+  background: #1e293b;
+  color: #94a3b8;
+}
+
+.fiori-table tbody tr {
+  border-bottom: 1px solid var(--sapBorder);
+  transition: background 0.1s ease;
+  cursor: pointer;
+}
+
+.fiori-table tbody tr:hover {
+  background-color: #f0f7ff !important;
+}
+
+[data-theme="dark"] .fiori-table tbody tr:hover {
+  background-color: #1e3a5f !important;
+}
+
+.fiori-table tbody tr:nth-child(even) {
+  background-color: var(--sapTableZebra);
+}
+
+.fiori-table td {
+  padding: 8px 12px;
+  color: var(--sapTextPrimary);
+  vertical-align: middle;
+}
+
+/* Status Indicators */
+.status-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  display: inline-block;
+  margin-right: 6px;
+}
+.status-dot.green { background: #107e3e; box-shadow: 0 0 6px rgba(16, 126, 62, 0.4); }
+.status-dot.yellow { background: #e06a3b; box-shadow: 0 0 6px rgba(224, 106, 59, 0.4); }
+.status-dot.blue { background: #0a6ed1; box-shadow: 0 0 6px rgba(10, 110, 209, 0.4); }
+.status-dot.red { background: #bb0000; box-shadow: 0 0 6px rgba(187, 0, 0, 0.4); }
+
+.badge-status {
+  padding: 3px 8px;
+  border-radius: 12px;
+  font-size: 11px;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.badge-status.green { background: #edf8f2; color: #107e3e; }
+.badge-status.yellow { background: #fef4ee; color: #e06a3b; }
+.badge-status.blue { background: #eff6ff; color: #0a6ed1; }
+.badge-status.red { background: #fef0f0; color: #bb0000; }
+
+.badge-channel {
+  padding: 2px 7px;
+  border-radius: 4px;
+  font-size: 10.5px;
+  font-weight: 800;
+  letter-spacing: 0.4px;
+  display: inline-block;
+}
+.badge-channel.verde { background: #107e3e; color: #ffffff; }
+.badge-channel.naranja { background: #e06a3b; color: #ffffff; }
+.badge-channel.rojo { background: #bb0000; color: #ffffff; }
+.badge-channel.pendiente { background: #94a3b8; color: #ffffff; }
+
+.btn-link-action {
+  color: #0a6ed1;
+  text-decoration: underline;
+  cursor: pointer;
+  font-weight: 600;
+  border: none;
+  background: transparent;
+  font-size: 12px;
+  padding: 2px 4px;
+  border-radius: 4px;
+  transition: background 0.12s;
+}
+
+.btn-link-action:hover {
+  background: rgba(10, 110, 209, 0.08);
+  color: #0854a0;
+}
+
+/* ── Stepper / Progress Bar for Row Details ── */
+.stepper-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  background: #f8fafc;
+  border-radius: 8px;
+  margin: 10px 0;
+  position: relative;
+}
+
+[data-theme="dark"] .stepper-container {
+  background: #1e293b;
+}
+
+.step-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  min-width: 90px;
+}
+
+.step-circle {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: #e2e8f0;
+  color: #64748b;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 700;
+  transition: all 0.2s;
+}
+
+.step-item.completed .step-circle {
+  background: #107e3e;
+  color: #ffffff;
+}
+
+.step-item.active .step-circle {
+  background: #0a6ed1;
+  color: #ffffff;
+  box-shadow: 0 0 0 4px rgba(10, 110, 209, 0.2);
+}
+
+.step-item.critical .step-circle {
+  background: #bb0000;
+  color: #ffffff;
+  box-shadow: 0 0 0 4px rgba(187, 0, 0, 0.2);
+}
+
+.step-label {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--sapTextPrimary);
+}
+
+.step-subtext {
+  font-size: 10px;
+  color: var(--sapTextSecondary);
+}
+
+/* ── Modals (Fiori Dialogs) ── */
+.modal-overlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(15, 23, 42, 0.55);
+  backdrop-filter: blur(2px);
+  z-index: 1000;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+}
+
+.modal-overlay.open {
+  display: flex;
+}
+
+.modal-box {
+  background: var(--sapCardBg);
+  border-radius: 12px;
+  width: 100%;
+  max-width: 780px;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+  overflow: hidden;
+  animation: modalPop 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes modalPop {
+  from { transform: scale(0.96); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+.modal-header {
+  padding: 14px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--sapBorder);
+  background: var(--sapCardBg);
+}
+
+.modal-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--sapTextPrimary);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.modal-close-btn {
+  background: transparent;
+  border: none;
+  font-size: 16px;
+  color: #64748b;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 4px;
+}
+
+.modal-close-btn:hover {
+  background: #f1f5f9;
+  color: #0f172a;
+}
+
+.modal-body {
+  padding: 20px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.modal-footer {
+  padding: 12px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+  border-top: 1px solid var(--sapBorder);
+  background: var(--sapCardBg);
+}
+
+/* Code Viewer for Beagle Trama */
+.code-viewer {
+  background: #0f172a;
+  color: #f8fafc;
+  font-family: 'Consolas', 'Courier New', monospace;
+  font-size: 12px;
+  padding: 14px;
+  border-radius: 8px;
+  overflow-x: auto;
+  line-height: 1.5;
+  border: 1px solid #334155;
+  max-height: 380px;
+}
+
+/* ── Joule AI Drawer ── */
+.joule-drawer {
+  position: fixed;
+  top: 44px;
+  right: -380px;
+  width: 360px;
+  height: calc(100vh - 44px);
+  background: var(--sapCardBg);
+  border-left: 1px solid var(--sapBorder);
+  box-shadow: -4px 0 20px rgba(0,0,0,0.12);
+  z-index: 90;
+  display: flex;
+  flex-direction: column;
+  transition: right 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.joule-drawer.open {
+  right: 0;
+}
+
+.joule-header {
+  padding: 14px 18px;
+  background: linear-gradient(135deg, #1d2d3e, #0a6ed1);
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.joule-title {
+  font-size: 14px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.joule-messages {
+  flex: 1;
+  overflow-y: auto;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.joule-msg {
+  padding: 10px 14px;
+  border-radius: 10px;
+  font-size: 12.5px;
+  line-height: 1.45;
+  max-width: 88%;
+}
+
+.joule-msg.ai {
+  background: #f1f5f9;
+  color: #1e293b;
+  align-self: flex-start;
+  border-bottom-left-radius: 2px;
+}
+
+[data-theme="dark"] .joule-msg.ai {
+  background: #334155;
+  color: #f8fafc;
+}
+
+.joule-msg.user {
+  background: #0a6ed1;
+  color: #ffffff;
+  align-self: flex-end;
+  border-bottom-right-radius: 2px;
+}
+
+.joule-quick-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 6px;
+}
+
+.joule-quick-btn {
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  padding: 6px 10px;
+  font-size: 11.5px;
+  text-align: left;
+  cursor: pointer;
+  color: #0a6ed1;
+  font-weight: 500;
+  transition: all 0.15s;
+}
+
+.joule-quick-btn:hover {
+  background: #f0f7ff;
+  border-color: #0a6ed1;
+}
+
+.joule-input-area {
+  padding: 12px;
+  border-top: 1px solid var(--sapBorder);
+  display: flex;
+  gap: 8px;
+}
+
+.joule-input {
+  flex: 1;
+  height: 36px;
+  border: 1px solid var(--sapBorder);
+  border-radius: 6px;
+  padding: 0 10px;
+  font-size: 12px;
+  outline: none;
+  background: var(--sapCardBg);
+  color: var(--sapTextPrimary);
+}
+
+.joule-send-btn {
+  background: #0a6ed1;
+  color: #ffffff;
+  border: none;
+  width: 36px;
+  height: 36px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+/* ── Comparativa View ── */
+.compare-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+@media (max-width: 1024px) {
+  .compare-container {
+    grid-template-columns: 1fr;
+  }
+}
+
+.compare-card {
+  background: var(--sapCardBg);
+  border: 1px solid var(--sapBorder);
+  border-radius: 12px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.compare-title {
+  font-size: 14px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.compare-img {
+  width: 100%;
+  border-radius: 6px;
+  border: 1px solid #cbd5e1;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+}

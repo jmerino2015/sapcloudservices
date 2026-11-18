@@ -116,6 +116,7 @@ flowchart LR
 | **09** | Pedidos de Venta | SAPUI5 Freestyle / TNT | `ZUI_SALES_ORDER_O4` / `/api/sales-orders` | Creación y monitoreo de órdenes comerciales VA01 |
 | **10** | Optimización de Licencias FUE | Executive Dashboard | `ZUI_FUE_OPTIMIZATION_O4` / `/api/fue` | Análisis de licencias S/4HANA y perfiles de uso |
 | **17** | **Mapa 3D de Almacén** | **WebGL Three.js / Fiori Horizon** | `ZUI_WMS_3D_O4` / `/api/wms3d/*` | **Gemelo digital 3D: 1.200 nichos, semáforo de vencimiento, muelles y Joule AI** |
+| **18** | **Monitor Integración Grupo Roky's** | **SAP Fiori Horizon Freestyle** | `ZUI_COMEX_BEAGLE_O4` / `/apps/18_monitor_integracion_rokys` | **COMEX SAP - Beagle: 28 posiciones, B/L marítimo, DAM SUNAT, contenedores, alertas sobreestadía y trama JSON** |
 
 
 
